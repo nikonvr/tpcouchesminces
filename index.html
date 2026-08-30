@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TP Couches Minces Optiques — Portail & Simulateur</title>
+    <title>TP Couches Minces Optiques — Portail Étudiant</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,6 +29,10 @@
                 </div>
             </div>
             <div class="flex items-center gap-3">
+                <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+                    <span class="bg-indigo-600 text-white font-bold px-2.5 py-1 rounded-lg text-xs shadow-sm">🇫🇷 FR</span>
+                    <a href="tp_couches_minces_en.html" class="text-slate-600 hover:text-slate-900 font-medium px-2.5 py-1 rounded-lg text-xs transition">🇬🇧 EN</a>
+                </div>
                 <a href="https://github.com/nikonvr/tpcouchesminces" target="_blank" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
                     <i data-lucide="github" class="w-4 h-4"></i>
                     <span>GitHub Repo</span>
@@ -44,13 +48,13 @@
         <div class="text-center max-w-3xl mx-auto mb-12">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold mb-4">
                 <span class="w-2 h-2 rounded-full bg-indigo-600 animate-pulse"></span>
-                Dispositif Complet 18h • 12h Simulation + Salle Blanche Fresnel
+                Plateforme Pédagogique Étudiant • 12h Simulation + Salle Blanche Fresnel
             </div>
             <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mb-4">
                 Conception, Simulation & Tolérancement de Filtres Optiques
             </h2>
             <p class="text-base text-slate-600 leading-relaxed">
-                Plateforme pédagogique interactive pour la synthèse matricielle d'Abelès (TMM), l'optimisation multi-algorithmes (BFGS, Needle, Recuit), le tolérancement statistique Monte-Carlo et la rétro-ingénierie salle blanche.
+                Espace de travail interactif pour la simulation matricielle d'Abelès (TMM), l'optimisation multi-algorithmes (BFGS, Needle, Recuit), le tolérancement statistique Monte-Carlo et la préparation du dépôt sous vide à l'Institut Fresnel.
             </p>
         </div>
 
@@ -167,57 +171,6 @@
 
         </div>
 
-        <!-- Reference Documents & Corrigés -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm mb-12">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                    <i data-lucide="file-check" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold text-slate-900">Corrigés & Documents Pédagogiques de Référence</h3>
-                    <p class="text-xs text-slate-500 font-mono">Documentation enseignant et traçabilité métrologique</p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <a href="gemini_flash_results.md" target="_blank" class="p-4 rounded-xl border border-slate-200 hover:border-indigo-400 hover:bg-indigo-50/40 transition group flex flex-col justify-between">
-                    <div>
-                        <span class="text-xs font-bold text-indigo-600 font-mono">gemini_flash_results.md</span>
-                        <h4 class="text-sm font-semibold text-slate-900 mt-1 mb-1">Corrigé Télégraphique Node.js</h4>
-                        <p class="text-xs text-slate-500">Valeurs chiffrées exactes issues de l'exécution du banc TMM.</p>
-                    </div>
-                    <span class="text-xs text-indigo-600 font-semibold mt-3 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">Lire le corrigé →</span>
-                </a>
-
-                <a href="GUIDE_MIGRATION_ET_ACTIONS_TP.md" target="_blank" class="p-4 rounded-xl border border-slate-200 hover:border-indigo-400 hover:bg-indigo-50/40 transition group flex flex-col justify-between">
-                    <div>
-                        <span class="text-xs font-bold text-indigo-600 font-mono">GUIDE_MIGRATION.md</span>
-                        <h4 class="text-sm font-semibold text-slate-900 mt-1 mb-1">Guide Pédagogique 12h</h4>
-                        <p class="text-xs text-slate-500">Architecture modulaire, déroulé des 4 séances et objectifs.</p>
-                    </div>
-                    <span class="text-xs text-indigo-600 font-semibold mt-3 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">Consulter le guide →</span>
-                </a>
-
-                <a href="CORRIGE_REPONSES.md" target="_blank" class="p-4 rounded-xl border border-slate-200 hover:border-indigo-400 hover:bg-indigo-50/40 transition group flex flex-col justify-between">
-                    <div>
-                        <span class="text-xs font-bold text-indigo-600 font-mono">CORRIGE_REPONSES.md</span>
-                        <h4 class="text-sm font-semibold text-slate-900 mt-1 mb-1">Guide de Correction Complet</h4>
-                        <p class="text-xs text-slate-500">Justifications physiques et barème de notation.</p>
-                    </div>
-                    <span class="text-xs text-indigo-600 font-semibold mt-3 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">Ouvrir le corrigé →</span>
-                </a>
-
-                <a href="COMPARAISON_IA.md" target="_blank" class="p-4 rounded-xl border border-slate-200 hover:border-indigo-400 hover:bg-indigo-50/40 transition group flex flex-col justify-between">
-                    <div>
-                        <span class="text-xs font-bold text-indigo-600 font-mono">COMPARAISON_IA.md</span>
-                        <h4 class="text-sm font-semibold text-slate-900 mt-1 mb-1">Audit & Métrologie Croisée</h4>
-                        <p class="text-xs text-slate-500">Contre-vérification mathématique et validation d'erreurs.</p>
-                    </div>
-                    <span class="text-xs text-indigo-600 font-semibold mt-3 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">Voir l'audit →</span>
-                </a>
-            </div>
-        </div>
-
     </main>
 
     <!-- Footer -->
@@ -226,8 +179,6 @@
             <p>© 2026 Formation BUT 3 MCPC • Institut Fresnel • Dispositif TP Couches Minces 12h</p>
             <div class="flex items-center gap-4">
                 <a href="https://github.com/nikonvr/tpcouchesminces" target="_blank" class="hover:text-slate-800 transition">GitHub Repository</a>
-                <span>•</span>
-                <a href="A_LIRE_INDEX_ET_LIENS.md" class="hover:text-slate-800 transition">Guide & Liens (Markdown)</a>
             </div>
         </div>
     </footer>
