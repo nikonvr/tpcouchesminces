@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="revision" content="2026-08-30">
+    <title>Optical Thin Films Simulation Lab 2026 — Modular BUT MCPC Path</title>
+    <link rel="stylesheet" href="vendor/css/tailwind.min.css">
+    <link rel="stylesheet" href="vendor/css/offline-fonts.css">
+    <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script id="MathJax-script" async src="vendor/mathjax/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'Fira Code', monospace; }
+        .equation { overflow-x: auto; padding: 0.75rem 0; }
+        .qbox { scroll-margin-top: 5rem; }
+        .navlink.active { background-color: #4f46e5; color: #fff; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 leading-relaxed">
+
+    <!-- Header -->
+    <header class="bg-indigo-900 text-white shadow-2xl border-b-4 border-indigo-500">
+        <div class="max-w-5xl mx-auto px-6 py-10">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Lab Work: Optical Thin Films Simulation 2026</h1>
+                    <p class="text-indigo-200 mt-2 text-lg font-medium">From Transfer Matrix Theory to Cleanroom Vacuum Deposition at Institut Fresnel</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center bg-indigo-950/80 p-1 rounded-xl border border-indigo-700/60 shadow-inner">
+                        <a href="tp_couches_minces_fr.html" class="text-indigo-300 hover:text-white font-medium px-3 py-1 rounded-lg text-xs transition">🇫🇷 FR</a>
+                        <span class="bg-indigo-600 text-white font-bold px-3 py-1 rounded-lg text-xs shadow">🇬🇧 EN</span>
+                    </div>
+                    <a href="simulateur_couches_minces.html" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2.5 rounded-xl shadow-lg transition flex items-center gap-2 text-sm">
+                        <span>🚀 Launch Web Simulator</span>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-2">
+                <span class="inline-block bg-indigo-800 rounded-full px-4 py-1 text-xs font-semibold text-indigo-100 uppercase tracking-wider">
+                    10 major exercises — 32 questions — indicative durations
+                </span>
+                <span class="inline-block bg-emerald-800 rounded-full px-3 py-1 text-xs font-semibold text-emerald-100 uppercase tracking-wider">
+                    BUT 3 FI MCPC Path — L2 · L3 · M1 · M2 students
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Quick navigation -->
+    <nav class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+        <div class="max-w-5xl mx-auto px-6 py-2 flex flex-wrap gap-1 text-[11px] font-bold">
+            <a href="#ex1" class="navlink px-2 py-1 rounded text-slate-600 hover:bg-indigo-50">I</a>
+            <a href="#ex2" class="navlink px-2 py-1 rounded text-slate-600 hover:bg-indigo-50">II</a>
+            <a href="#ex3" class="navlink px-2 py-1 rounded text-slate-600 hover:bg-indigo-50">III</a>
+            <a href="#ex4" class="navlink px-2 py-1 rounded text-slate-600 hover:bg-indigo-50">IV</a>
+            <a href="#ex5" class="navlink px-2 py-1 rounded text-slate-600 hover:bg-indigo-50">V</a>
+            <a href="#ex6" class="navlink px-2 py-1 rounded text-slate-600 hover:bg-indigo-50">VI</a>
+            <a href="#ex7" class="navlink px-2 py-1 rounded text-emerald-700 hover:bg-emerald-50">VII 🎯</a>
+            <a href="#ex8" class="navlink px-2 py-1 rounded text-emerald-700 hover:bg-emerald-50">VIII 🎯</a>
+            <a href="#ex9" class="navlink px-2 py-1 rounded text-emerald-700 hover:bg-emerald-50">IX 🎯</a>
+            <a href="#ex10" class="navlink px-2 py-1 rounded text-emerald-700 hover:bg-emerald-50">X</a>
+            <a href="#atelier" class="navlink px-2 py-1 rounded text-fuchsia-700 hover:bg-fuchsia-50">🎨 Free workshop</a>
+            <span class="ml-auto text-slate-400 font-normal hidden sm:inline">🎯 = cleanroom thread</span>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-6 py-12 space-y-10">
+
+        <!-- Mission -->
+        <section class="bg-gradient-to-br from-indigo-900 to-indigo-700 text-white rounded-2xl shadow-lg p-6">
+            <h3 class="text-lg font-extrabold mb-2">🎬 Your mission</h3>
+            <p class="text-sm text-indigo-100 leading-relaxed">
+                You are the optical engineer responsible for <strong>designing, qualifying and then diagnosing</strong> an interference filter
+                that will be <strong>physically deposited under vacuum</strong> at Institut Fresnel. Between the first calculation and the spectrum
+                measured on the finished component, you must prove — with numbers — that your design is not merely good on paper.
+            </p>
+            <p class="mt-3 text-sm text-indigo-100 leading-relaxed">
+                <strong>The simulator is not an oracle: it is a measurement bench.</strong> It will give you neither the full width at half maximum,
+                nor the right merit function, nor the conclusion. You will enter your layers, take your readings with the cursor,
+                export your data and conclude yourself. An answer that copies a displayed number without understanding it is worth nothing.
+            </p>
+        </section>
+
+        <!-- Difficulty scale -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+            <h3 class="text-sm font-extrabold text-slate-900 mb-3">⭐ Difficulty scale — every question is rated</h3>
+            <div class="grid md:grid-cols-3 gap-3 text-xs">
+                <div class="border border-emerald-200 bg-emerald-50 rounded-lg p-3">
+                    <div class="text-emerald-600 font-bold text-sm tracking-tight">★☆☆ &nbsp;Application</div>
+                    <p class="text-emerald-950 mt-1">Reading, curve inspection, direct formula. No question at this level should block you: if one does, review the theoretical reminder before continuing.</p>
+                    <p class="mt-1.5 font-mono text-[10px] text-emerald-700">7 questions — 19 %</p>
+                </div>
+                <div class="border border-amber-200 bg-amber-50 rounded-lg p-3">
+                    <div class="text-amber-600 font-bold text-sm tracking-tight">★★☆ &nbsp;Analysis</div>
+                    <p class="text-amber-950 mt-1">Several chained steps, data processing, physical interpretation. This is the core of the lab: allow time and use a scratch pad.</p>
+                    <p class="mt-1.5 font-mono text-[10px] text-amber-700">17 questions — 47 %</p>
+                </div>
+                <div class="border border-rose-200 bg-rose-50 rounded-lg p-3">
+                    <div class="text-rose-600 font-bold text-sm tracking-tight">★★★ &nbsp;Expertise</div>
+                    <p class="text-rose-950 mt-1">You build the method, you decide and you argue. There is no single answer to copy: your reasoning is what is assessed.</p>
+                    <p class="mt-1.5 font-mono text-[10px] text-rose-700">12 questions — 33 %</p>
+                </div>
+            </div>
+            <p class="mt-3 text-[11px] text-slate-600 bg-slate-50 border-l-4 border-slate-300 p-2 rounded-r">
+                <strong>How to use this:</strong> the ★★★ questions are not "for the best students". They are the point of the module — the ★ and ★★ exist to get you there. If you are short of time, complete one ★★★ fully rather than three ★: that is where the assessment lies.
+            </p>
+        </section>
+
+        <!-- Objectives & Guide -->
+        <div class="grid md:grid-cols-2 gap-6">
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h3 class="text-lg font-bold text-indigo-900 mb-3 border-l-4 border-indigo-500 pl-3">1. Pedagogical objective</h3>
+                <div class="text-slate-700 text-sm leading-relaxed">
+            This modular path covers the design, optimization, <strong>manufacturability</strong>, and reverse engineering of optical thin-film coatings (AR coatings, Bragg mirrors and resonant filters). A nominal minimum is never accepted as a completed design until process robustness has been demonstrated. Displayed durations are working estimates, not imposed limits; instructors may compose their own path.
+                    <br><br>
+                    <div class="bg-emerald-50 border-l-4 border-emerald-500 p-2.5 rounded text-xs text-emerald-950 font-medium">
+                        🎯 <strong>Cleanroom deposition:</strong> only the <strong>interference bandpass filter</strong> studied in Exercises VII, VIII and X will be physically deposited under vacuum at <strong>Institut Fresnel</strong>, with the cleanroom deposition team.
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h3 class="text-lg font-bold text-indigo-900 mb-3 border-l-4 border-indigo-500 pl-3">🚀 Web Simulator Quickstart</h3>
+                <div class="text-slate-700 text-sm leading-relaxed space-y-2">
+                    <ul class="list-disc list-inside space-y-1 text-xs">
+                        <li><strong>Direct access:</strong> Open <a href="simulateur_couches_minces.html" class="text-indigo-600 font-bold underline" target="_blank">simulateur_couches_minces.html</a> in a browser. All libraries (charts, icons, fonts, equations) are bundled in this folder: no network connection is required.</li>
+                        <li><strong>Virtual Spectrophotometer:</strong> Build your stacks manually, take pointer measurements, and analyze data in Excel.</li>
+                        <li><strong>Symbolic formulas:</strong> Fast formula entry such as <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-indigo-700">(HL)^3 2H (LH)^3</code>.</li>
+                        <li><strong>Exports:</strong> Use <strong>CSV</strong> (for spreadsheet processing) and <strong>Image</strong> for your lab report.</li>
+                        <li><strong>Published grids:</strong> below the merit selector, the simulator displays <strong>the exact grid</strong> it uses. Reproduce it in Excel: you must recover the same number.</li>
+                        <li><strong>Universal CSV export:</strong> <strong>right-click any chart</strong> (or long-press on mobile) to export all its visible curves on the grid actually plotted — including Monte-Carlo envelopes and saved curves.</li>
+                        <li><strong>Keyboard shortcuts:</strong> press <code class="bg-slate-100 px-1 rounded font-mono">?</code> for the full list. Most useful: <code class="bg-slate-100 px-1 rounded font-mono">O</code> optimize, <code class="bg-slate-100 px-1 rounded font-mono">N</code> needle, and <code class="bg-slate-100 px-1 rounded font-mono">M</code> memorize.</li>
+                        <li><strong>Free design:</strong> press <code class="bg-slate-100 px-1 rounded font-mono">D</code> or click <strong>🎯 Free design</strong> — you write <em>your own</em> specification. See the open workshop at the end of this document.</li>
+                        <li><strong>Active workbook:</strong> use the <a href="outputs/tp_couches_minces/squelette_excel_couches_minces.xlsx" class="text-indigo-600 font-bold underline">Q12/Q14 scaffold</a>; calculation cells are intentionally left for you to program.</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <!-- Cross-cutting qualification protocol -->
+        <section class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl shadow-sm border-2 border-amber-300 p-6">
+            <h3 class="text-lg font-extrabold text-amber-950 mb-3 border-l-4 border-amber-600 pl-3">🛡️ Mandatory protocol: from nominal optimum to a manufacturable, robust design</h3>
+            <p class="text-sm text-amber-950 mb-4"><strong>Decision rule:</strong> a stack that is optically excellent at nominal values but impossible to deposit, too thin, too complex, or too sensitive is <strong>rejected</strong>. Every industrial conclusion must separate nominal performance, manufacturability, and statistical yield.</p>
+            <div class="grid md:grid-cols-2 gap-4 text-xs text-slate-800">
+                <ol class="list-decimal list-inside space-y-1.5 bg-white/80 rounded-lg border border-amber-200 p-3">
+                    <li><strong>Specify before optimizing:</strong> window, incidence, polarization, quantity, and acceptance threshold.</li>
+                    <li><strong>Audit the nominal stack:</strong> number of layers and materials, $d_{min}$, $d_{max}$, total thickness, and deposition order.</li>
+                    <li><strong>Declare the process model:</strong> $\Delta d$, minimum thickness, and the layers actually perturbed.</li>
+                    <li><strong>Declare the acceptance tolerances:</strong> without them the yield is undefined — it is the fraction of draws that stay inside the specification.</li>
+                    <li><strong>Make the study reproducible:</strong> record the random seed; compare two designs using the same seed.</li>
+                </ol>
+                <ol start="5" class="list-decimal list-inside space-y-1.5 bg-white/80 rounded-lg border border-amber-200 p-3">
+                    <li><strong>Size the sample:</strong> $N=100$ for exploration, $N=500$ for comparison, and $N=1000$ for educational qualification.</li>
+                    <li><strong>Report robust statistics:</strong> yield, 95% Wilson CI, mean, sample standard deviation, and P05/P50/P95.</li>
+                    <li><strong>Use the adverse percentile:</strong> P95 for a cost to be minimized; P05 for a performance to be maximized.</li>
+                    <li><strong>Decide:</strong> <em>qualified</em>, <em>conditionally qualified</em>, or <em>not qualified</em>, with margins and assumptions.</li>
+                </ol>
+            </div>
+            <div class="mt-3 grid md:grid-cols-2 gap-3">
+                <p class="text-[11px] text-amber-900 bg-white/70 rounded p-2 border border-amber-200"><strong>Warning:</strong> even 1000 successes out of 1000 do not prove a true 100% yield. The displayed confidence interval captures sampling uncertainty; it does not cover index uncertainty, thermal drift, roughness, or unmodelled defects.</p>
+                <p class="text-[11px] text-amber-900 bg-white/70 rounded p-2 border border-amber-200"><strong>Classic trap:</strong> the displayed P05/P50/P95 percentiles cover only the <em>manufacturable</em> realizations. They are therefore <strong>conditional</strong>. The yield, by contrast, is reported over the total number of runs. Never compare the two without saying so.</p>
+            </div>
+        </section>
+
+        <!-- Theoretical Background -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h3 class="text-lg font-bold text-indigo-900 mb-3 border-l-4 border-indigo-500 pl-3">Theoretical Background: Interference & Transfer Matrix Method</h3>
+            <div class="text-slate-700 text-sm leading-relaxed space-y-3">
+                <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100 text-indigo-900 mb-2">
+                    <strong>💡 Physical Principle:</strong> Coatings rely on <strong>multiple beam interference</strong>. Optical path differences govern reflection and transmission. The core metric is the <strong>Optical Thickness</strong> ($n \times d$).
+                </div>
+                <p>
+                    For each layer $i$ with thickness $d_i$ and complex index $N_i = n_i - ik_i$, the optical phase shift is:
+                </p>
+                <div class="equation text-center font-mono text-indigo-900">
+                    $$\phi_i = \frac{2\pi d_i}{\lambda} \sqrt{N_i^2 - N_0^2 \sin^2\theta_0}$$
+                </div>
+                <p>
+                    The characteristic transfer matrix of layer $i$ is:
+                </p>
+                <div class="equation text-center font-mono text-indigo-900">
+                    $$M_i = \begin{pmatrix} \cos \phi_i & \frac{i}{\eta_i} \sin \phi_i \\ i\eta_i \sin \phi_i & \cos \phi_i \end{pmatrix}$$
+                </div>
+                <div class="bg-slate-100 p-3 rounded-lg border border-slate-200 text-xs space-y-1.5 text-slate-800">
+                    <div class="font-bold text-indigo-900">⚡ Polarization States (Incidence $\theta > 0$):</div>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>S-Polarization (TE):</strong> $\vec{E} \perp$ plane of incidence $\implies \eta_i = \gamma_i = \sqrt{N_i^2 - N_0^2\sin^2\theta_0}$.</li>
+                        <li><strong>P-Polarization (TM):</strong> $\vec{E} \parallel$ plane of incidence $\implies \eta_i = N_i^2 / \gamma_i$.</li>
+                        <li><strong>Unpolarized light:</strong> $R_{avg} = \frac{R_s + R_p}{2}$ and $T_{avg} = \frac{T_s + T_p}{2}$.</li>
+                    </ul>
+                </div>
+                <div class="bg-slate-100 p-3 rounded-lg border border-slate-200 text-xs space-y-1 text-slate-800">
+                    <div class="font-bold text-indigo-900">📐 Ordering convention — applies throughout this lab:</div>
+                    <p>Layers are listed in <strong>deposition order, substrate → superstrate</strong>. Layer 1 touches the substrate; the last one touches the air. Light therefore encounters them in reverse order, and the total matrix is $M = M_m \cdots M_2 M_1$.</p>
+                </div>
+            </div>
+        </section>
+
+        
+                <figure id="fig-ordre" class="my-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Ordering convention: substrate → superstrate</figcaption>
+                    <div class="p-3">
+<svg viewBox="0 0 640 235" style="width:100%;height:auto;max-height:320px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="deposition order: 1 → m">
+  <rect x="150" y="170" width="260" height="34" fill="#cbd5e1" stroke="#64748b" stroke-width="0.8"/>
+  <text x="280" y="191" text-anchor="middle" font-size="11" fill="#334155" font-family="Inter,system-ui,sans-serif">Substrate (BK7)</text>
+  <rect x="150" y="62" width="260" height="20" fill="#6366f1" stroke="#4338ca" stroke-width="0.8"/>
+  <text x="280" y="76" text-anchor="middle" font-size="11" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text>
+  <text x="418" y="76" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">5</text>
+  <rect x="150" y="84" width="260" height="20" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.8"/>
+  <text x="280" y="98" text-anchor="middle" font-size="11" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text>
+  <text x="418" y="98" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">4</text>
+  <rect x="150" y="106" width="260" height="20" fill="#6366f1" stroke="#4338ca" stroke-width="0.8"/>
+  <text x="280" y="120" text-anchor="middle" font-size="11" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text>
+  <text x="418" y="120" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">3</text>
+  <rect x="150" y="128" width="260" height="20" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.8"/>
+  <text x="280" y="142" text-anchor="middle" font-size="11" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text>
+  <text x="418" y="142" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">2</text>
+  <rect x="150" y="150" width="260" height="20" fill="#6366f1" stroke="#4338ca" stroke-width="0.8"/>
+  <text x="280" y="164" text-anchor="middle" font-size="11" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text>
+  <text x="418" y="164" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">1</text>
+  <rect x="150" y="26" width="260" height="36" fill="#e0f2fe" stroke="#7dd3fc" stroke-width="0.8"/>
+  <text x="300" y="52" text-anchor="middle" font-size="11" fill="#0369a1" font-family="Inter,system-ui,sans-serif">Superstrate (Air)</text>
+  <line x1="152.0" y1="6.0" x2="206.0" y2="62.0" stroke="#f59e0b" stroke-width="2.5"/>
+  <polygon points="206.0,62.0 196.5,53.8 207.5,49.6" fill="#f59e0b"/>
+  <text x="146" y="16" text-anchor="end" font-size="10" fill="#b45309" font-weight="600" font-family="Inter,system-ui,sans-serif">Incident light</text>
+  <circle cx="206.0" cy="62" r="2.6" fill="#b45309"/>
+  <line x1="452" y1="62" x2="452" y2="170" stroke="#94a3b8" stroke-width="1.2"/>
+  <polygon points="452,170 448,160 456,160" fill="#94a3b8"/>
+  <text x="462" y="112" font-size="10" fill="#475569" font-family="Inter,system-ui,sans-serif">deposition order: 1 → m</text>
+  <line x1="140" y1="170" x2="140" y2="70" stroke="#f59e0b" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <polygon points="140,64 136,74 144,74" fill="#f59e0b"/>
+  <text x="132" y="112" text-anchor="end" font-size="9.5" fill="#b45309" font-family="Inter,system-ui,sans-serif">order encountered</text>
+  <text x="132" y="125" text-anchor="end" font-size="9.5" fill="#b45309" font-weight="700" font-family="Inter,system-ui,sans-serif">m → 1</text>
+  <text x="150" y="220" font-size="11" fill="#312e81" font-weight="700" font-family="Inter,system-ui,sans-serif">M = M</text>
+  <text x="196" y="224" font-size="8" fill="#312e81" font-family="Inter,system-ui,sans-serif">m</text>
+  <text x="203" y="220" font-size="11" fill="#312e81" font-weight="700" font-family="Inter,system-ui,sans-serif">··· M</text>
+  <text x="241" y="224" font-size="8" fill="#312e81" font-family="Inter,system-ui,sans-serif">2</text>
+  <text x="247" y="220" font-size="11" fill="#312e81" font-weight="700" font-family="Inter,system-ui,sans-serif">M</text>
+  <text x="258" y="224" font-size="8" fill="#312e81" font-family="Inter,system-ui,sans-serif">1</text>
+</svg>
+                    </div>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">The layer table follows <strong>deposition</strong> order: layer 1 touches the substrate. Light, however, arrives from the air and meets the layers in <strong>reverse</strong> order. Hence the matrix product M = M<sub>m</sub>···M<sub>1</sub>. Getting the order wrong reverses the whole stack: it is the most common mistake in this lab.</p>
+                </figure>
+
+        <!-- PART -->
+        <section id="ex1" class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-100 border-b px-8 py-4">
+                <h2 class="text-xl font-bold text-slate-900 flex flex-wrap items-center justify-between gap-2">I. Thin-film materials & complex index <span class="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">⏱ 35 min indicative</span></h2>
+            </div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Direct entry — prerequisites:</strong> no previous exercise. Be able to read a graph and handle a complex number written as $N=n-i\kappa$.</div>
+            <div class="p-6 space-y-4">
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q1</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Level 1 — Application: reading, curve inspection, direct formula">&#9733;&#9734;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            In the bottom <i>Materials database</i> panel, inspect dispersion curves $n(\lambda)$ and $k(\lambda)$ for <strong>Si, SiO2, Ge, Al and Au</strong>. Explain the physical nature of each material. Which parameter ($n$ or $k$) dictates opacity?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q2</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p>Rank the following six materials by increasing $k$: <strong>SiO2, YF3, ZnS, Si, Al, Au</strong>. Do it first <strong>at 550 nm</strong>, then rank them again <strong>at 400 nm</strong>: which materials change places? Finally, state which ones satisfy $k < 5\times10^{-4}$ <em>at every point</em> of the visible range ($400-750\,\text{nm}$).</p>
+                            <div class="bg-slate-50 border-l-4 border-slate-300 p-2 rounded-r text-xs text-slate-600">
+                                <strong>Careful — this is the heart of the question:</strong> ZnS is transparent in the green and red but <em>not</em> in the deep blue. Record its $k$ at 400 nm and then at 550 nm. What happens if you inspect a single wavelength only? Also discuss what a $k$ displayed as <strong>exactly</strong> zero means: is it a measurement or a modelling convention?
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q3</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            Compare orders of magnitude of $k$ between metals ($Al, Au$) and semiconductors ($Si, Ge$). Justify with free carriers and bandgap $E_g$.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q4</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Level 1 — Application: reading, curve inspection, direct formula">&#9733;&#9734;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p>Examine <strong>ZnS (High index H)</strong> and <strong>YF3 (Low index L)</strong> used at the Institut Fresnel cleanroom. Record their indices at $550\,\text{nm}$ and compute the contrast $(n_H-n_L)/(n_H+n_L)$.</p>
+                            <div class="bg-amber-50 border-l-4 border-amber-400 p-2 rounded-r text-xs text-amber-900">
+                                🔑 <strong>Keep this number:</strong> it sets the mirror stopband width, $\Delta\lambda \simeq \frac{4\lambda_0}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L}$, which you will need from Exercise VI onwards and above all in IX to place your measurement bands correctly.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART -->
+        <section id="ex2" class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-100 border-b px-8 py-4">
+                <h2 class="text-xl font-bold text-slate-900 flex flex-wrap items-center justify-between gap-2">II. Single interface: BK7 // Air <span class="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">⏱ 50 min indicative</span></h2>
+            </div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Direct entry — prerequisites:</strong> Fresnel coefficients at one interface, incidence-angle definition and S/P distinction. Exercise I is recommended only for dispersion and complex index.</div>
+            <div class="p-6 space-y-4">
+                <figure id="fig-sp" class="my-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">S and P polarizations at oblique incidence</figcaption>
+                    <div class="p-3">
+<svg viewBox="0 0 640 250" style="width:100%;height:auto;max-height:320px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Plane of incidence">
+  <rect x="60" y="130" width="520" height="80" fill="#e2e8f0"/>
+  <line x1="60" y1="130" x2="580" y2="130" stroke="#334155" stroke-width="2"/>
+  <text x="70" y="120" font-size="10" fill="#0369a1" font-family="Inter,system-ui,sans-serif">n₀ = 1 (air)</text>
+  <text x="70" y="150" font-size="10" fill="#475569" font-family="Inter,system-ui,sans-serif">n₁ = 1,5187 (BK7)</text>
+  <line x1="320" y1="30" x2="320" y2="205" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="326" y="42" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">Normal</text>
+  <line x1="180" y1="45" x2="320" y2="130" stroke="#f59e0b" stroke-width="2.5"/>
+  <polygon points="320,130 308,124 312,136" fill="#f59e0b"/>
+  <text x="140" y="40" font-size="10" fill="#b45309" font-family="Inter,system-ui,sans-serif">Incident wave</text>
+  <line x1="320" y1="130" x2="460" y2="45" stroke="#6366f1" stroke-width="2.5"/>
+  <polygon points="460,45 448,48 454,56" fill="#6366f1"/>
+  <text x="466" y="40" font-size="10" fill="#4338ca" font-family="Inter,system-ui,sans-serif">Reflected</text>
+  <line x1="320" y1="130" x2="410" y2="205" stroke="#10b981" stroke-width="2.5"/>
+  <polygon points="410,205 398,198 402,210" fill="#10b981"/>
+  <text x="416" y="205" font-size="10" fill="#047857" font-family="Inter,system-ui,sans-serif">Transmitted</text>
+  <path d="M 320 100 A 30 30 0 0 0 302 111" fill="none" stroke="#94a3b8" stroke-width="1"/>
+  <text x="292" y="102" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">θ₀</text>
+  <circle cx="250" cy="87" r="6" fill="none" stroke="#dc2626" stroke-width="1.6"/>
+  <circle cx="250" cy="87" r="1.8" fill="#dc2626"/>
+  <text x="152" y="70" font-size="10" fill="#dc2626" font-weight="600" font-family="Inter,system-ui,sans-serif">S (TE): E ⊥ to plane</text>
+  <line x1="228" y1="79" x2="242" y2="70" stroke="#7c3aed" stroke-width="2"/>
+  <polygon points="242,70 234,70 238,76" fill="#7c3aed"/>
+  <line x1="228" y1="79" x2="214" y2="88" stroke="#7c3aed" stroke-width="2"/>
+  <polygon points="214,88 222,88 218,82" fill="#7c3aed"/>
+  <text x="152" y="235" font-size="10" fill="#7c3aed" font-weight="600" font-family="Inter,system-ui,sans-serif">P (TM): E in the plane</text>
+  <line x1="196" y1="228" x2="240" y2="228" stroke="#7c3aed" stroke-width="1" stroke-dasharray="2 2"/>
+</svg>
+                    </div>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">In S (TE) the electric field is <strong>perpendicular to the plane of incidence</strong> (⊙ symbol). In P (TM) it <strong>lies in that plane</strong> (double arrow). The two see different admittances, η<sub>s</sub> = γ and η<sub>p</sub> = N²/γ: this is the whole origin of the Brewster angle, where R<sub>p</sub> vanishes while R<sub>s</sub> never does.</p>
+                </figure>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q5</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Level 1 — Application: reading, curve inspection, direct formula">&#9733;&#9734;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Hand Calculation:</strong> Compute normal incidence $R$ and $T$ for the Air/BK7 interface ($n_{BK7} \approx 1.5187$ at $550\,\text{nm}$) with Fresnel equations.</p>
+                            <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">🔍 <strong>Self-check:</strong> your $R$ must fall between 3% and 5%. If you get 0.04, you forgot to convert to a percentage; if you get 20%, you confused $r$ with $R=|r|^2$.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q6</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            Set Superstrate = <code>Air</code> and Substrate = <code>BK7</code> without layers. Compare the simulator value at $550\,\text{nm}$ with your hand calculation. Then enable <i>Backside (bare interface)</i>: reflection rises from about 4.2% to 8.1%. Recover this second figure from the incoherent sum $R_{tot}=R+\frac{(1-R)^2R}{1-R^2}$, then show that it reduces to $R_{tot}=\dfrac{2R}{1+R}$ — a shorter and strictly equivalent form. Finally, explain why the result is <em>not</em> simply $2R$.
+                            <br><span class="text-[11px]">This option applies to the <strong>bare plate only</strong>, with no coating: as soon as you add a layer it has no effect. That is deliberate — the formula above assumes two identical interfaces, which stops being true once one face is coated.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q7</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Level 1 — Application: reading, curve inspection, direct formula">&#9733;&#9734;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            Switch to <code>Angle θ</code> mode (at $\lambda = 550\,\text{nm}$). Record $R(\theta)$ for $\theta \in [0, 80^\circ]$ in $10^\circ$ steps under unpolarized light, then separately in S and in P. Plot all three curves.
+                        </div>
+                    </div>
+                </div>
+
+                <figure id="fig-brewster" class="mb-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Reflectance versus angle: S, P and Brewster</figcaption>
+                        <div class="p-3">
+<svg viewBox="0 0 640 245" style="width:100%;height:auto;max-height:330px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="θ_B ≈ 56.6°">
+  <line x1="70" y1="180" x2="590" y2="180" stroke="#334155" stroke-width="1.2"/>
+  <line x1="70" y1="22" x2="70" y2="180" stroke="#334155" stroke-width="1.2"/>
+  <text x="18" y="14" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">R (%)</text>
+  <text x="398" y="212" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">incidence angle θ (°)</text>
+  <line x1="70" y1="180" x2="70" y2="184" stroke="#94a3b8"/><text x="62" y="196" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">0</text><line x1="237" y1="180" x2="237" y2="184" stroke="#94a3b8"/><text x="229" y="196" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">30</text><line x1="403" y1="180" x2="403" y2="184" stroke="#94a3b8"/><text x="395" y="196" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">60</text><line x1="570" y1="180" x2="570" y2="184" stroke="#94a3b8"/><text x="562" y="196" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">90</text>
+  <line x1="66" y1="180" x2="70" y2="180" stroke="#94a3b8"/><text x="44" y="183" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">0</text><line x1="66" y1="141" x2="70" y2="141" stroke="#94a3b8"/><text x="44" y="144" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">25</text><line x1="66" y1="102" x2="70" y2="102" stroke="#94a3b8"/><text x="44" y="106" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">50</text><line x1="66" y1="64" x2="70" y2="64" stroke="#94a3b8"/><text x="44" y="67" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">75</text><line x1="66" y1="25" x2="70" y2="25" stroke="#94a3b8"/><text x="44" y="28" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">100</text>
+  <polyline points="70.0,173.4 72.8,173.4 75.6,173.4 78.3,173.4 81.1,173.4 83.9,173.4 86.7,173.4 89.4,173.4 92.2,173.4 95.0,173.4 97.8,173.4 100.6,173.3 103.3,173.3 106.1,173.3 108.9,173.3 111.7,173.3 114.4,173.3 117.2,173.2 120.0,173.2 122.8,173.2 125.6,173.2 128.3,173.1 131.1,173.1 133.9,173.1 136.7,173.0 139.4,173.0 142.2,173.0 145.0,172.9 147.8,172.9 150.6,172.8 153.3,172.8 156.1,172.8 158.9,172.7 161.7,172.7 164.4,172.6 167.2,172.6 170.0,172.5 172.8,172.5 175.6,172.4 178.3,172.3 181.1,172.3 183.9,172.2 186.7,172.1 189.4,172.1 192.2,172.0 195.0,171.9 197.8,171.9 200.6,171.8 203.3,171.7 206.1,171.6 208.9,171.5 211.7,171.5 214.4,171.4 217.2,171.3 220.0,171.2 222.8,171.1 225.6,171.0 228.3,170.9 231.1,170.8 233.9,170.7 236.7,170.5 239.4,170.4 242.2,170.3 245.0,170.2 247.8,170.1 250.6,169.9 253.3,169.8 256.1,169.7 258.9,169.5 261.7,169.4 264.4,169.2 267.2,169.1 270.0,168.9 272.8,168.7 275.6,168.6 278.3,168.4 281.1,168.2 283.9,168.0 286.7,167.8 289.4,167.6 292.2,167.4 295.0,167.2 297.8,167.0 300.6,166.8 303.3,166.6 306.1,166.3 308.9,166.1 311.7,165.8 314.4,165.6 317.2,165.3 320.0,165.1 322.8,164.8 325.6,164.5 328.3,164.2 331.1,163.9 333.9,163.6 336.7,163.3 339.4,162.9 342.2,162.6 345.0,162.2 347.8,161.9 350.6,161.5 353.3,161.1 356.1,160.7 358.9,160.3 361.7,159.9 364.4,159.4 367.2,159.0 370.0,158.5 372.8,158.0 375.6,157.5 378.3,157.0 381.1,156.5 383.9,156.0 386.7,155.4 389.4,154.8 392.2,154.2 395.0,153.6 397.8,153.0 400.6,152.3 403.3,151.6 406.1,150.9 408.9,150.2 411.7,149.5 414.4,148.7 417.2,147.9 420.0,147.1 422.8,146.2 425.6,145.4 428.3,144.5 431.1,143.5 433.9,142.6 436.7,141.6 439.4,140.6 442.2,139.5 445.0,138.4 447.8,137.3 450.6,136.1 453.3,134.9 456.1,133.6 458.9,132.4 461.7,131.0 464.4,129.7 467.2,128.2 470.0,126.8 472.8,125.2 475.6,123.7 478.3,122.1 481.1,120.4 483.9,118.7 486.7,116.9 489.4,115.0 492.2,113.1 495.0,111.1 497.8,109.1 500.6,107.0 503.3,104.8 506.1,102.6 508.9,100.3 511.7,97.9 514.4,95.4 517.2,92.8 520.0,90.2 522.8,87.5 525.6,84.6 528.3,81.7 531.1,78.7 533.9,75.6 536.7,72.4 539.4,69.1 542.2,65.7 545.0,62.2 547.8,58.6 550.6,54.8 553.3,50.9 556.1,46.9 558.9,42.8 561.7,38.6 564.4,34.2 567.2,29.7 570.0,25.0" fill="none" stroke="#dc2626" stroke-width="2.2"/>
+  <polyline points="70.0,173.4 72.8,173.4 75.6,173.4 78.3,173.4 81.1,173.4 83.9,173.4 86.7,173.5 89.4,173.5 92.2,173.5 95.0,173.5 97.8,173.5 100.6,173.5 103.3,173.5 106.1,173.5 108.9,173.6 111.7,173.6 114.4,173.6 117.2,173.6 120.0,173.6 122.8,173.7 125.6,173.7 128.3,173.7 131.1,173.7 133.9,173.8 136.7,173.8 139.4,173.8 142.2,173.9 145.0,173.9 147.8,173.9 150.6,174.0 153.3,174.0 156.1,174.1 158.9,174.1 161.7,174.1 164.4,174.2 167.2,174.2 170.0,174.3 172.8,174.3 175.6,174.4 178.3,174.4 181.1,174.5 183.9,174.5 186.7,174.6 189.4,174.7 192.2,174.7 195.0,174.8 197.8,174.8 200.6,174.9 203.3,175.0 206.1,175.0 208.9,175.1 211.7,175.2 214.4,175.2 217.2,175.3 220.0,175.4 222.8,175.4 225.6,175.5 228.3,175.6 231.1,175.7 233.9,175.7 236.7,175.8 239.4,175.9 242.2,176.0 245.0,176.1 247.8,176.1 250.6,176.2 253.3,176.3 256.1,176.4 258.9,176.5 261.7,176.6 264.4,176.7 267.2,176.8 270.0,176.9 272.8,176.9 275.6,177.0 278.3,177.1 281.1,177.2 283.9,177.3 286.7,177.4 289.4,177.5 292.2,177.6 295.0,177.7 297.8,177.8 300.6,177.9 303.3,178.0 306.1,178.1 308.9,178.2 311.7,178.3 314.4,178.4 317.2,178.5 320.0,178.6 322.8,178.7 325.6,178.7 328.3,178.8 331.1,178.9 333.9,179.0 336.7,179.1 339.4,179.2 342.2,179.3 345.0,179.3 347.8,179.4 350.6,179.5 353.3,179.6 356.1,179.6 358.9,179.7 361.7,179.7 364.4,179.8 367.2,179.8 370.0,179.9 372.8,179.9 375.6,180.0 378.3,180.0 381.1,180.0 383.9,180.0 386.7,180.0 389.4,180.0 392.2,180.0 395.0,179.9 397.8,179.9 400.6,179.8 403.3,179.8 406.1,179.7 408.9,179.6 411.7,179.5 414.4,179.3 417.2,179.2 420.0,179.0 422.8,178.8 425.6,178.6 428.3,178.4 431.1,178.1 433.9,177.8 436.7,177.5 439.4,177.1 442.2,176.7 445.0,176.3 447.8,175.8 450.6,175.3 453.3,174.8 456.1,174.2 458.9,173.6 461.7,172.9 464.4,172.1 467.2,171.3 470.0,170.4 472.8,169.5 475.6,168.5 478.3,167.4 481.1,166.2 483.9,165.0 486.7,163.6 489.4,162.2 492.2,160.6 495.0,159.0 497.8,157.2 500.6,155.3 503.3,153.2 506.1,151.0 508.9,148.7 511.7,146.2 514.4,143.5 517.2,140.6 520.0,137.5 522.8,134.2 525.6,130.7 528.3,126.9 531.1,122.9 533.9,118.6 536.7,113.9 539.4,109.0 542.2,103.7 545.0,98.0 547.8,92.0 550.6,85.5 553.3,78.5 556.1,71.1 558.9,63.1 561.7,54.5 564.4,45.4 567.2,35.5 570.0,25.0" fill="none" stroke="#7c3aed" stroke-width="2.2"/>
+  <polyline points="70.0,173.4 72.8,173.4 75.6,173.4 78.3,173.4 81.1,173.4 83.9,173.4 86.7,173.4 89.4,173.4 92.2,173.4 95.0,173.4 97.8,173.4 100.6,173.4 103.3,173.4 106.1,173.4 108.9,173.4 111.7,173.4 114.4,173.4 117.2,173.4 120.0,173.4 122.8,173.4 125.6,173.4 128.3,173.4 131.1,173.4 133.9,173.4 136.7,173.4 139.4,173.4 142.2,173.4 145.0,173.4 147.8,173.4 150.6,173.4 153.3,173.4 156.1,173.4 158.9,173.4 161.7,173.4 164.4,173.4 167.2,173.4 170.0,173.4 172.8,173.4 175.6,173.4 178.3,173.4 181.1,173.4 183.9,173.4 186.7,173.4 189.4,173.4 192.2,173.4 195.0,173.4 197.8,173.3 200.6,173.3 203.3,173.3 206.1,173.3 208.9,173.3 211.7,173.3 214.4,173.3 217.2,173.3 220.0,173.3 222.8,173.3 225.6,173.2 228.3,173.2 231.1,173.2 233.9,173.2 236.7,173.2 239.4,173.2 242.2,173.1 245.0,173.1 247.8,173.1 250.6,173.1 253.3,173.1 256.1,173.0 258.9,173.0 261.7,173.0 264.4,172.9 267.2,172.9 270.0,172.9 272.8,172.8 275.6,172.8 278.3,172.8 281.1,172.7 283.9,172.7 286.7,172.6 289.4,172.6 292.2,172.5 295.0,172.5 297.8,172.4 300.6,172.3 303.3,172.3 306.1,172.2 308.9,172.1 311.7,172.1 314.4,172.0 317.2,171.9 320.0,171.8 322.8,171.7 325.6,171.6 328.3,171.5 331.1,171.4 333.9,171.3 336.7,171.2 339.4,171.0 342.2,170.9 345.0,170.8 347.8,170.6 350.6,170.5 353.3,170.3 356.1,170.2 358.9,170.0 361.7,169.8 364.4,169.6 367.2,169.4 370.0,169.2 372.8,169.0 375.6,168.7 378.3,168.5 381.1,168.2 383.9,168.0 386.7,167.7 389.4,167.4 392.2,167.1 395.0,166.8 397.8,166.4 400.6,166.1 403.3,165.7 406.1,165.3 408.9,164.9 411.7,164.5 414.4,164.0 417.2,163.5 420.0,163.0 422.8,162.5 425.6,162.0 428.3,161.4 431.1,160.8 433.9,160.2 436.7,159.5 439.4,158.8 442.2,158.1 445.0,157.3 447.8,156.6 450.6,155.7 453.3,154.8 456.1,153.9 458.9,153.0 461.7,151.9 464.4,150.9 467.2,149.8 470.0,148.6 472.8,147.4 475.6,146.1 478.3,144.7 481.1,143.3 483.9,141.8 486.7,140.2 489.4,138.6 492.2,136.9 495.0,135.1 497.8,133.1 500.6,131.1 503.3,129.0 506.1,126.8 508.9,124.5 511.7,122.0 514.4,119.4 517.2,116.7 520.0,113.9 522.8,110.8 525.6,107.7 528.3,104.3 531.1,100.8 533.9,97.1 536.7,93.2 539.4,89.1 542.2,84.7 545.0,80.1 547.8,75.3 550.6,70.1 553.3,64.7 556.1,59.0 558.9,53.0 561.7,46.6 564.4,39.8 567.2,32.6 570.0,25.0" fill="none" stroke="#0f172a" stroke-width="1.4" stroke-dasharray="5 3"/>
+  <line x1="384.6" y1="180.0" x2="384.6" y2="40" stroke="#7c3aed" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <circle cx="384.6" cy="180.0" r="4.5" fill="#7c3aed"/>
+  <text x="358.6" y="34" font-size="10.5" fill="#6d28d9" font-weight="700" font-family="Inter,system-ui,sans-serif">θ_B ≈ 56.6°</text>
+  <text x="392.6" y="174.0" font-size="10" fill="#6d28d9" font-family="Inter,system-ui,sans-serif">R_p = 0</text>
+  <text x="96" y="52" font-size="10.5" fill="#dc2626" font-weight="600" font-family="Inter,system-ui,sans-serif">——— R_s (TE)</text>
+  <text x="96" y="68" font-size="10.5" fill="#7c3aed" font-weight="600" font-family="Inter,system-ui,sans-serif">——— R_p (TM)</text>
+  <text x="96" y="84" font-size="10.5" fill="#0f172a" font-family="Inter,system-ui,sans-serif">— — R unpolarized</text>
+  <text x="70" y="222" font-size="10.5" fill="#0f172a" font-family="Inter,system-ui,sans-serif">tan θ_B = n: the P reflection vanishes, the S one never does.</text>
+  <text x="70" y="238" font-size="10.5" fill="#475569" font-family="Inter,system-ui,sans-serif">Unpolarized, R only drops to half of R_s: the minimum is not zero.</text>
+</svg>
+                        </div>
+                        <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">Record these three curves yourself in <code>Angle θ</code> mode. The remarkable point is the vanishing of R<sub>p</sub> at θ<sub>B</sub> = arctan(n) ≈ 56.6°. Note that the unpolarized curve, the average of the two, <strong>never vanishes</strong>: this is why polarizing sunglasses remove a window's glare while a neutral filter cannot.</p>
+                    </figure>
+                    <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q8</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Level 1 — Application: reading, curve inspection, direct formula">&#9733;&#9734;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            <strong>Brewster Angle:</strong> Find angle $\theta_B$ where P-polarized reflection vanishes ($R_p = 0$). Verify $\tan \theta_B = n_{BK7}$. Cite a real-world application.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q9</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Level 1 — Application: reading, curve inspection, direct formula">&#9733;&#9734;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            <strong>Total Internal Reflection:</strong> Set Superstrate = <code>BK7</code> and Substrate = <code>Air</code>. Identify $\theta_{lim}$ and link it to Snell-Descartes law and optical fiber waveguides.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART -->
+        <section id="ex3" class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-100 border-b px-8 py-4">
+                <h2 class="text-xl font-bold text-slate-900 flex flex-wrap items-center justify-between gap-2">III. Single-layer antireflection coating <span class="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">⏱ 60 min indicative</span></h2>
+            </div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Direct entry — prerequisites:</strong> single-interface reflection, optical phase $2\pi nd/\lambda$ and elementary complex matrix calculation. Complete at least Q5 in Exercise II if Fresnel coefficients are not yet secure.</div>
+            <div class="p-6 space-y-4">
+                <figure id="fig-ar" class="my-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Quarter-wave antireflection: the two conditions</figcaption>
+                    <div class="p-3">
+<svg viewBox="0 0 640 245" style="width:100%;height:auto;max-height:320px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Thickness condition: n·d = λ₀/4">
+  <rect x="90" y="60" width="420" height="18" fill="#e0f2fe" stroke="#7dd3fc"/>
+  <text x="98" y="73" font-size="10" fill="#0369a1" font-family="Inter,system-ui,sans-serif">Air</text>
+  <rect x="90" y="78" width="420" height="46" fill="#a5b4fc" stroke="#4338ca"/>
+  <text x="98" y="106" font-size="11" fill="#312e81" font-weight="600" font-family="Inter,system-ui,sans-serif">AR layer</text>
+  <rect x="90" y="124" width="420" height="40" fill="#cbd5e1" stroke="#64748b"/>
+  <text x="98" y="149" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">Substrate</text>
+  <line x1="150" y1="20" x2="230" y2="78" stroke="#f59e0b" stroke-width="2.5"/>
+  <polygon points="230,78 219,73 222,84" fill="#f59e0b"/>
+  <line x1="230" y1="78" x2="300" y2="24" stroke="#dc2626" stroke-width="2.5"/>
+  <polygon points="300,24 289,28 295,35" fill="#dc2626"/>
+  <text x="306" y="22" font-size="10" fill="#dc2626" font-family="Inter,system-ui,sans-serif">r₁ (air / layer interface)</text>
+  <line x1="230" y1="78" x2="300" y2="124" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <line x1="300" y1="124" x2="372" y2="76" stroke="#0891b2" stroke-width="2.5"/>
+  <line x1="372" y1="76" x2="440" y2="24" stroke="#0891b2" stroke-width="2.5"/>
+  <polygon points="440,24 429,28 435,35" fill="#0891b2"/>
+  <text x="446" y="22" font-size="10" fill="#0e7490" font-family="Inter,system-ui,sans-serif">r₂ (layer / substrate interface)</text>
+  <line x1="540" y1="78" x2="540" y2="124" stroke="#334155" stroke-width="1"/>
+  <line x1="536" y1="78" x2="544" y2="78" stroke="#334155" stroke-width="1"/>
+  <line x1="536" y1="124" x2="544" y2="124" stroke="#334155" stroke-width="1"/>
+  <text x="548" y="105" font-size="11" fill="#334155" font-weight="600" font-family="Inter,system-ui,sans-serif">d</text>
+  <text x="90" y="196" font-size="11" fill="#b91c1c" font-weight="600" font-family="Inter,system-ui,sans-serif">π phase shift → destructive interference</text>
+  <text x="90" y="216" font-size="11" fill="#312e81" font-family="Inter,system-ui,sans-serif">Thickness condition: n·d = λ₀/4</text>
+  <text x="330" y="216" font-size="11" fill="#312e81" font-family="Inter,system-ui,sans-serif">Amplitude condition: n = √(n₀·n_s)</text>
+</svg>
+                    </div>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">Ray r₂ travels <strong>2·n·d</strong> further than r₁. For n·d = λ₀/4 this difference is λ₀/2: the two waves are in antiphase. But cancellation is <strong>complete</strong> only if their amplitudes match, which requires n = √(n₀·n<sub>s</sub>). Two independent conditions — question Q10 has you verify that the second one is not exactly met here.</p>
+                </figure>
+
+                <div class="bg-amber-50 border-l-4 border-amber-400 p-3 text-xs text-amber-900 rounded-r-lg mb-2">
+                    <strong>💡 AR principle:</strong> quarter-wave condition $n \cdot d = \lambda_0 / 4$ with $n_{layer} = \sqrt{n_{substrate} \cdot n_{inc}}$.
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q10</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p>Manually add the theoretical material <code>AR (n=1.225)</code> with $d = 112.3\,\text{nm}$. Find the spectral window where $R < 0.5\%$. Prove that $112.3\,\text{nm}$ is indeed the quarter-wave thickness at $550\,\text{nm}$ for this index.</p>
+                            <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                🧠 <strong>Deliberate trap, to be exposed:</strong> the supplied index is exactly $1.22474 = \sqrt{1.50}$. But real BK7 has $n=1.5185$ at 550 nm, so the <em>ideal</em> index would be $\sqrt{1.5185}$. Compute that ideal index, the corresponding quarter-wave thickness, and then the residual $R$ actually obtained at 550 nm with the supplied material. Is it rigorously zero? Conclude: under what condition may one write "perfect antireflection"?
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q11</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            <div class="space-y-2">
+                                <p><strong>Does substrate dispersion actually matter?</strong> First record $n_{BK7}$ at 400, 550 and 750 nm: the variation exceeds 1%. One therefore expects an effect.</p>
+                                <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                    <li>Carefully note the position of the $R$ minimum and the bounds of the $R&lt;0.5\%$ range with the <code>BK7</code> substrate.</li>
+                                    <li>Replace the substrate with <code>Custom index</code> at a <strong>constant</strong> $n = 1.5185$, and repeat both measurements.</li>
+                                </ul>
+                                <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                    🧠 <strong>The difference is below one nanometre — hence negligible.</strong> This is not an error: it is the result. Explain it. Hint: the <em>position</em> of the minimum is set by the phase condition $n_c d = \lambda/4$, which involves only the layer — non-dispersive here. Substrate dispersion acts solely on the <em>amplitude</em> condition $n_c=\sqrt{n_s}$, hence on the <strong>depth</strong> of the minimum, not on its wavelength.
+                                </div>
+                                <p class="text-xs text-slate-600">Conclude by naming, within this lab, <strong>two situations where dispersion does become visible</strong>: you have met one already in Exercise I, and you will meet the other in Exercise VI.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q12</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Demystifying the Black Box in Excel:</strong> Compute reflection $R$ of this layer at $550\,\text{nm}$ in Excel.</p>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li>Compute the optical phase $\phi_1$.</li>
+                                <li>Build matrix $M_1$ using <code>=COMPLEX(real, imag)</code> and <code>=IMPRODUCT(z1, z2)</code>.</li>
+                                <li>Compute the equivalent admittance $Y=\frac{m_{10}+\eta_s m_{11}}{m_{00}+\eta_s m_{01}}$ then $R=\left|\frac{\eta_0-Y}{\eta_0+Y}\right|^2$.</li>
+                                <li>Check that you recover the simulator value.</li>
+                            </ul>
+                            <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">🔍 <strong>Self-check:</strong> your $R$ must match the simulator to better than 0.001 point. If you get a negative $R$ or one above 1, the error is in the squared modulus. If the gap is of order one percent, check the sign of $i$ in the off-diagonal terms of $M_1$.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART -->
+        <section id="ex4" class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-100 border-b px-8 py-4">
+                <h2 class="text-xl font-bold text-slate-900 flex flex-wrap items-center justify-between gap-2">IV. Double-layer antireflection: BK7 / H / L / Air <span class="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">⏱ 70 min indicative</span></h2>
+            </div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Direct entry — prerequisites:</strong> QWOT, substrate-to-superstrate order, matrix products and reflectance reading. Exercise III, especially Q10–Q12, is strongly recommended.</div>
+            <div class="p-6 space-y-4">
+                <div class="bg-amber-50 border-l-4 border-amber-400 p-3 text-xs text-amber-900 rounded-r-lg">
+                    $H = \text{ZnS}$ (high index), $L = \text{YF}_3$ (low index).
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q13</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Level 1 — Application: reading, curve inspection, direct formula">&#9733;&#9734;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            Add two layers ($ZnS$ then $YF_3$). Manually adjust thicknesses $d_{ZnS}$ and $d_{YF3}$ ($< 150\,\text{nm}$) to minimize $R$ at $550\,\text{nm}$. Stop as soon as $R < 0.5\%$, or after ten changes that bring no gain. <strong>Count one change each time you edit a thickness</strong>, and record that total: in Q16 you will compare it with the number of evaluations the optimizer consumes.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q14</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>2D Mapping in Excel:</strong> Explore the parameter landscape topology. At $\lambda = 550\,\text{nm}$:</p>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li>Record $R$ on a grid: $d_{ZnS}$ from <strong>60 to 140 nm</strong> and $d_{YF3}$ from <strong>80 to 160 nm</strong>, in <strong>20 nm</strong> steps — 25 readings. <em>These bounds are not arbitrary: they span roughly one oscillation period of $R$. A coarser step would under-sample the landscape and the valley would vanish.</em></li>
+                                <li>Enter the table into Excel and create a <strong>3D Surface or Contour Plot</strong>.</li>
+                                <li>Locate the coordinates of the minimum valley.</li>
+                                <li>Is your Q13 minimum inside that valley? Is there more than one valley?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q15</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800">
+                            <div class="space-y-2">
+                                <p><strong>First robust qualification — but over which window?</strong></p>
+                                <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                    🧠 <strong>Specification trap, to be dealt with first.</strong> The <code>Mean R</code> merit is offered by default over $400-750\,\text{nm}$. But you have just designed an antireflection coating <em>at 550 nm</em>. Read the merit value over that wide window: it is catastrophic. <strong>Is your design bad, or is your specification off-topic?</strong> Justify, then correct the window.
+                                </div>
+                                <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                    <li>Set the <strong>AR window to 520–580 nm</strong> and the <strong>threshold to 0.8%</strong> (fields below the merit selector). Check that the nominal design now meets the criterion, and with what margin.</li>
+                                    <li>Qualify: $d_{min}=1$ nm, $N=500$. Compare $\Delta d = 3$ and $5\,\text{nm}$; the seed being fixed, both runs use the same realizations.</li>
+                                    <li>Report yield, the 95% Wilson CI and P95 of mean reflectance in both cases. Do the two confidence intervals overlap? Can you claim $\pm5$ is significantly worse, or is it sampling noise?</li>
+                                    <li>Look at P95 at $\pm5\,\text{nm}$: it exceeds the threshold while the mean respects it. What does that gap mean concretely for a production batch?</li>
+                                    <li><strong>Isolate the critical layer — by hand, not with Monte-Carlo.</strong> The draw <em>always</em> perturbs both layers: locking applies to BFGS only, never to manufacturing. So work by sensitivity instead: from the nominal design, add $+3\,\text{nm}$ to ZnS alone and record the merit; return to nominal, add $+3\,\text{nm}$ to YF₃ alone and record. Which one degrades it more? Relate your answer to the index and the optical thickness $n\cdot d$ of each layer.</li>
+                                </ul>
+                                <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">🔍 <strong>Self-check:</strong> with the right window, the yield at $\Delta d=5$ nm must be <strong>lower than or equal to</strong> the one at $\Delta d=3$ nm — that ordering is the only guarantee. If you get 0% everywhere, the merit window is still 400–750 nm. If you get 100% in both cases, your nominal margin is too comfortable for the test to discriminate: tighten the threshold (try 0.3% instead of 0.8%) and rerun both. A protocol that separates nothing is not a protocol.</div>
+                                <p class="text-xs text-slate-500">A standard deviation without an acceptance criterion is not a robustness conclusion.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART -->
+        <section id="ex5" class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-100 border-b px-8 py-4">
+                <h2 class="text-xl font-bold text-slate-900 flex flex-wrap items-center justify-between gap-2">V. Multilayer synthesis & the Needle method <span class="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">⏱ 90 min indicative</span></h2>
+            </div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Direct entry — prerequisites:</strong> be able to define a merit function, distinguish global exploration from local refinement, and build a simple AR coating. Exercises III and IV are recommended; Q14 may be skipped if local minima are already understood.</div>
+            <div class="p-6 space-y-4">
+                <figure id="fig-needle" class="my-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">The needle diagnostic: read π(z) before inserting</figcaption>
+                    <div class="p-3">
+<svg viewBox="0 0 640 245" style="width:100%;height:auto;max-height:320px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="π(z) = [J₀ − J_δ(z)] / δ">
+  <rect x="70" y="168" width="480" height="26" fill="#c7d2fe" stroke="#4338ca"/>
+  <text x="80" y="185" font-size="10" fill="#312e81" font-family="Inter,system-ui,sans-serif">host layer YF₃, 150 nm</text>
+  <line x1="70" y1="120" x2="560" y2="120" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="500" y="115" font-size="9.5" fill="#64748b" font-family="Inter,system-ui,sans-serif">π = 0: neutral insertion</text>
+  <line x1="70" y1="30" x2="70" y2="160" stroke="#334155" stroke-width="1.2"/>
+  <polyline points="86.0,96.6 89.2,94.3 92.4,92.0 95.6,89.6 98.8,87.2 102.0,84.7 105.2,82.3 108.4,80.0 111.6,77.6 114.8,75.4 118.0,73.2 121.2,71.2 124.4,69.4 127.6,67.6 130.8,66.1 134.0,64.8 137.2,63.7 140.4,62.9 143.6,62.3 146.8,61.9 150.0,61.8 153.2,62.0 156.4,62.4 159.6,63.1 162.8,64.1 166.0,65.2 169.2,66.6 172.4,68.3 175.6,70.1 178.8,72.1 182.0,74.2 185.2,76.5 188.4,78.8 191.6,81.3 194.8,83.8 198.0,86.4 201.2,89.0 204.4,91.6 207.6,94.2 210.8,96.8 214.0,99.3 217.2,101.7 220.4,104.1 223.6,106.4 226.8,108.7 230.0,110.8 233.2,112.8 236.4,114.8 239.6,116.6 242.8,118.4 246.0,120.0 249.2,121.6 252.4,123.1 255.6,124.5 258.8,125.8 262.0,127.0 265.2,128.2 268.4,129.3 271.6,130.4 274.8,131.4 278.0,132.4 281.2,133.3 284.4,134.1 287.6,135.0 290.8,135.8 294.0,136.6 297.2,137.3 300.4,138.1 303.6,138.8 306.8,139.4 310.0,140.1 313.2,140.7 316.4,141.3 319.6,141.9 322.8,142.5 326.0,143.0 329.2,143.6 332.4,144.0 335.6,144.5 338.8,144.9 342.0,145.3 345.2,145.7 348.4,146.0 351.6,146.3 354.8,146.6 358.0,146.8 361.2,147.0 364.4,147.1 367.6,147.2 370.8,147.3 374.0,147.3 377.2,147.3 380.4,147.2 383.6,147.1 386.8,147.0 390.0,146.8 393.2,146.6 396.4,146.3 399.6,146.0 402.8,145.7 406.0,145.4 409.2,145.0 412.4,144.6 415.6,144.1 418.8,143.7 422.0,143.2 425.2,142.7 428.4,142.1 431.6,141.6 434.8,141.0 438.0,140.5 441.2,139.9 444.4,139.3 447.6,138.7 450.8,138.1 454.0,137.5 457.2,136.9 460.4,136.4 463.6,135.8 466.8,135.2 470.0,134.6 473.2,134.1 476.4,133.5 479.6,133.0 482.8,132.5 486.0,132.0 489.2,131.5 492.4,131.1 495.6,130.6 498.8,130.2 502.0,129.8 505.2,129.4 508.4,129.0 511.6,128.6 514.8,128.3 518.0,128.0 521.2,127.7 524.4,127.4 527.6,127.1 530.8,126.8 534.0,126.6 537.2,126.4 540.4,126.2 543.6,126.0 546.8,125.8 550.0,125.6" fill="none" stroke="#b45309" stroke-width="2.2"/>
+  <text x="78" y="26" font-size="10.5" fill="#b45309" font-weight="700" font-family="Inter,system-ui,sans-serif">π(z) = [J₀ − J_δ(z)] / δ</text>
+  <circle cx="150.0" cy="61.5" r="4.5" fill="#dc2626"/>
+  <line x1="150.0" y1="61.5" x2="150.0" y2="168" stroke="#dc2626" stroke-width="1.4" stroke-dasharray="3 3"/>
+  <text x="158.0" y="55.5" font-size="10" fill="#b91c1c" font-weight="600" font-family="Inter,system-ui,sans-serif">favourable maximum</text>
+  <rect x="148.5" y="168" width="3" height="26" fill="#dc2626"/>
+  <text x="144.0" y="208" font-size="10" fill="#b91c1c" font-family="Inter,system-ui,sans-serif">z ≈ 25 nm</text>
+  <text x="300" y="208" font-size="10" fill="#312e81" font-family="Inter,system-ui,sans-serif">split: 24.95 / 0.10 / 124.95 nm</text>
+  <text x="70" y="232" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">z from the substrate (nm)</text>
+  <text x="360" y="150" font-size="9.5" fill="#64748b" font-family="Inter,system-ui,sans-serif">π < 0: unfavourable insertion</text>
+</svg>
+                    </div>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">π(z) measures the merit gain an infinitely thin needle would bring at depth z. Where π &gt; 0, inserting improves; where π &lt; 0, inserting degrades. You insert at the <strong>maximum</strong>, then refine with BFGS. Careful: the scan is discrete (5 nm) and never evaluates the interfaces — Q17 asks you to work out the consequences.</p>
+                </figure>
+
+                <figure id="fig-paysage" class="mb-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Why the starting point decides the result</figcaption>
+                        <div class="p-3">
+<svg viewBox="0 0 640 250" style="width:100%;height:auto;max-height:330px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="merit (to minimize)">
+  <line x1="60" y1="178" x2="608" y2="178" stroke="#334155" stroke-width="1.2"/>
+  <line x1="60" y1="18" x2="60" y2="178" stroke="#334155" stroke-width="1.2"/>
+  <text x="14" y="16" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">merit (to minimize)</text>
+  <text x="455" y="194" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">parameter (thickness)</text>
+  <polyline points="60.0,43.2 61.6,43.1 63.2,43.1 64.8,43.1 66.4,43.2 68.0,43.2 69.6,43.3 71.2,43.4 72.7,43.5 74.3,43.7 75.9,43.9 77.5,44.0 79.1,44.3 80.7,44.5 82.3,44.7 83.9,45.0 85.5,45.2 87.1,45.5 88.7,45.8 90.3,46.1 91.9,46.5 93.5,46.8 95.0,47.1 96.6,47.5 98.2,47.8 99.8,48.2 101.4,48.5 103.0,48.9 104.6,49.3 106.2,49.6 107.8,50.0 109.4,50.4 111.0,50.7 112.6,51.1 114.2,51.4 115.8,51.8 117.3,52.1 118.9,52.5 120.5,52.8 122.1,53.2 123.7,53.5 125.3,53.8 126.9,54.1 128.5,54.5 130.1,54.8 131.7,55.1 133.3,55.5 134.9,55.8 136.5,56.2 138.1,56.5 139.6,56.9 141.2,57.4 142.8,57.8 144.4,58.3 146.0,58.8 147.6,59.4 149.2,60.0 150.8,60.7 152.4,61.4 154.0,62.2 155.6,63.1 157.2,64.1 158.8,65.2 160.4,66.3 161.9,67.6 163.5,68.9 165.1,70.3 166.7,71.9 168.3,73.6 169.9,75.3 171.5,77.2 173.1,79.1 174.7,81.2 176.3,83.3 177.9,85.5 179.5,87.7 181.1,90.0 182.7,92.3 184.2,94.7 185.8,97.0 187.4,99.3 189.0,101.6 190.6,103.8 192.2,106.0 193.8,108.0 195.4,109.9 197.0,111.7 198.6,113.2 200.2,114.7 201.8,115.9 203.4,116.9 205.0,117.6 206.5,118.2 208.1,118.4 209.7,118.5 211.3,118.2 212.9,117.8 214.5,117.0 216.1,116.0 217.7,114.8 219.3,113.3 220.9,111.7 222.5,109.8 224.1,107.7 225.7,105.5 227.3,103.1 228.8,100.6 230.4,98.0 232.0,95.4 233.6,92.6 235.2,89.9 236.8,87.1 238.4,84.3 240.0,81.6 241.6,78.9 243.2,76.3 244.8,73.7 246.4,71.3 248.0,68.9 249.6,66.7 251.2,64.6 252.7,62.6 254.3,60.8 255.9,59.1 257.5,57.5 259.1,56.0 260.7,54.7 262.3,53.6 263.9,52.5 265.5,51.6 267.1,50.8 268.7,50.1 270.3,49.6 271.9,49.1 273.5,48.7 275.0,48.4 276.6,48.2 278.2,48.1 279.8,48.0 281.4,48.0 283.0,48.0 284.6,48.1 286.2,48.3 287.8,48.5 289.4,48.7 291.0,48.9 292.6,49.2 294.2,49.6 295.8,49.9 297.3,50.3 298.9,50.7 300.5,51.2 302.1,51.7 303.7,52.3 305.3,52.8 306.9,53.5 308.5,54.2 310.1,54.9 311.7,55.7 313.3,56.6 314.9,57.6 316.5,58.6 318.1,59.8 319.6,61.0 321.2,62.4 322.8,63.9 324.4,65.5 326.0,67.2 327.6,69.1 329.2,71.1 330.8,73.3 332.4,75.7 334.0,78.2 335.6,80.8 337.2,83.6 338.8,86.6 340.4,89.8 341.9,93.1 343.5,96.5 345.1,100.1 346.7,103.8 348.3,107.6 349.9,111.5 351.5,115.5 353.1,119.5 354.7,123.5 356.3,127.6 357.9,131.6 359.5,135.6 361.1,139.5 362.7,143.3 364.2,146.9 365.8,150.4 367.4,153.7 369.0,156.7 370.6,159.5 372.2,162.0 373.8,164.2 375.4,166.1 377.0,167.6 378.6,168.8 380.2,169.6 381.8,170.0 383.4,170.0 385.0,169.6 386.5,168.8 388.1,167.7 389.7,166.1 391.3,164.2 392.9,161.9 394.5,159.3 396.1,156.4 397.7,153.2 399.3,149.7 400.9,146.0 402.5,142.1 404.1,138.1 405.7,133.8 407.3,129.5 408.8,125.1 410.4,120.7 412.0,116.2 413.6,111.8 415.2,107.4 416.8,103.0 418.4,98.8 420.0,94.6 421.6,90.6 423.2,86.7 424.8,83.0 426.4,79.5 428.0,76.1 429.6,73.0 431.2,70.0 432.7,67.2 434.3,64.6 435.9,62.2 437.5,60.0 439.1,58.1 440.7,56.2 442.3,54.6 443.9,53.2 445.5,51.9 447.1,50.7 448.7,49.8 450.3,48.9 451.9,48.2 453.5,47.6 455.0,47.2 456.6,46.9 458.2,46.6 459.8,46.5 461.4,46.5 463.0,46.6 464.6,46.7 466.2,47.0 467.8,47.4 469.4,47.8 471.0,48.4 472.6,49.1 474.2,49.9 475.8,50.8 477.3,51.8 478.9,53.0 480.5,54.3 482.1,55.7 483.7,57.3 485.3,59.0 486.9,60.8 488.5,62.8 490.1,64.9 491.7,67.1 493.3,69.4 494.9,71.9 496.5,74.4 498.1,76.9 499.6,79.5 501.2,82.1 502.8,84.6 504.4,87.1 506.0,89.5 507.6,91.7 509.2,93.8 510.8,95.7 512.4,97.3 514.0,98.7 515.6,99.8 517.2,100.5 518.8,101.0 520.4,101.1 521.9,100.8 523.5,100.2 525.1,99.3 526.7,98.0 528.3,96.4 529.9,94.5 531.5,92.4 533.1,90.0 534.7,87.4 536.3,84.6 537.9,81.6 539.5,78.6 541.1,75.5 542.7,72.4 544.2,69.2 545.8,66.2 547.4,63.1 549.0,60.2 550.6,57.3 552.2,54.6 553.8,52.0 555.4,49.6 557.0,47.4 558.6,45.3 560.2,43.3 561.8,41.6 563.4,39.9 565.0,38.5 566.5,37.2 568.1,36.0 569.7,35.0 571.3,34.1 572.9,33.3 574.5,32.6 576.1,32.0 577.7,31.6 579.3,31.1 580.9,30.8 582.5,30.5 584.1,30.3 585.7,30.2 587.3,30.1 588.8,30.0 590.4,30.0 592.0,30.0 593.6,30.1 595.2,30.2 596.8,30.3 598.4,30.4 600.0,30.6" fill="none" stroke="#4f46e5" stroke-width="2.2"/>
+  <circle cx="136.5" cy="56.2" r="4" fill="#b45309"/>
+  <text x="136.5" y="47.2" font-size="9.5" fill="#b45309" font-weight="600" text-anchor="middle" font-family="Inter,system-ui,sans-serif">start A</text>
+  <path d="M 142.5 61.2 L 202.7 110.5" fill="none" stroke="#b45309" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <polygon points="202.7,110.5 196.0,108.5 199.5,104.3" fill="#b45309"/>
+  <circle cx="453.5" cy="47.6" r="4" fill="#0891b2"/>
+  <text x="453.5" y="38.6" font-size="9.5" fill="#0891b2" font-weight="600" text-anchor="middle" font-family="Inter,system-ui,sans-serif">start B</text>
+  <path d="M 447.5 52.6 L 390.4 162.0" fill="none" stroke="#0891b2" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <polygon points="390.4,162.0 390.9,155.0 395.8,157.5" fill="#0891b2"/>
+  <circle cx="209.7" cy="118.5" r="5" fill="#dc2626"/>
+  <text x="209.7" y="135.5" font-size="10" fill="#b91c1c" font-weight="600" text-anchor="middle" font-family="Inter,system-ui,sans-serif">local minimum</text>
+  <circle cx="383.4" cy="170.0" r="5.5" fill="#059669"/>
+  <text x="383.4" y="187.0" font-size="10" fill="#047857" font-weight="700" text-anchor="middle" font-family="Inter,system-ui,sans-serif">global minimum</text>
+  <circle cx="520.4" cy="101.1" r="3.5" fill="#dc2626" opacity="0.55"/>
+  <text x="60" y="218" font-size="10.5" fill="#0f172a" font-family="Inter,system-ui,sans-serif">BFGS is deterministic: same start, same result. Different start, different minimum.</text>
+  <text x="60" y="234" font-size="10" fill="#475569" font-family="Inter,system-ui,sans-serif">Optimizing only goes downhill. To change valley you must change the problem: that is what the needle does by creating a layer.</text>
+</svg>
+                        </div>
+                        <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">The merit function has more than one valley. <strong>BFGS descends</strong> into the nearest one and stops: two different starting stacks therefore give two different results, and neither is “the optimum”. Since the algorithm is deterministic, re-running changes nothing — what must change is the <strong>starting point</strong>, or the <strong>structure</strong> of the stack. Adding a layer with the needle method adds a dimension to the landscape: a barrier that cannot be crossed in dimension <em>n</em> can be bypassed in dimension <em>n+1</em>.</p>
+                    </figure>
+                    <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q16</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>BFGS local-convergence study.</strong> Activate the <code>Mean R</code> merit over <strong>400–750 nm</strong> with a <strong>0.5%</strong> threshold. Goal: a <em>broadband</em> antireflection coating on BK7 using ZnS/YF₃.</p>
+                            <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                🧠 <strong>Start with the instructive mistake.</strong> First record the merit of <strong>bare glass</strong> (no layer): that is your baseline. Then build the most natural stack — quarter-wave layers <code>H L</code>, then <code>H L H L</code>. <strong>The merit is two to three times WORSE than bare glass.</strong> This is not a handling error. Explain it: from an interference standpoint, what does a quarter-wave <em>high</em>-index layer on glass actually do? Must an antireflection coating be a quarter-wave stack?
+                            </div>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li>Restart from <strong>thin, asymmetric layers</strong> (a few tens of nanometres), not quarter-waves. The optimizer is a <strong>local descent</strong>: it reaches the minimum of the valley you drop it into, and looks for no other.</li>
+                                <li>Run it from <strong>at least three different initial stacks</strong> and record, each time, the initial merit, the final merit and the layer count after cleanup. Since the algorithm is deterministic, the same start returns exactly the same result: every bit of spread you observe comes from the <strong>starting point</strong>, not from the algorithm.</li>
+                                <li><strong>How many layers are needed?</strong> Find the best result you obtain with 2, then 3, then 4 layers. For each case, decide whether the 0.5% threshold is crossed and quantify the margin.</li>
+                                <li>A <em>starting point</em> that stays stuck far above the others tells you nothing about the optimizer — there is only one, and it is deterministic. It tells you about <em>that starting point</em>. Verify this by rerunning from a different initial stack.</li>
+                            </ul>
+                            <div class="bg-slate-50 border-l-4 border-slate-300 p-2 rounded-r text-xs text-slate-600">The exact merit grid is displayed below the selector. Copy it into your report: without it, your value is not reproducible by a third party.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q17</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Guided Synthesis via the Needle Method:</strong></p>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li>Start with a single layer: <code>YF3</code> with physical thickness $150\,\text{nm}$ on BK7 glass.</li>
+                                <li>Click <strong>📍 Analyze Needle</strong>. Read the diagnostic carefully: what material and depth $z$ does the perturbation analysis recommend?</li>
+                                <li>The diagnostic numerically plots $\pi(z)=[J_0-J_{\delta}(z)]/\delta$ every $5\,\text{nm}$ using a virtual needle $\delta=0.1\,\text{nm}$. Locate its positive maximum and the position $z$ from the substrate, then insert the recommended needle.</li>
+                                <li>Click <strong>Insert needle</strong>: the software creates the virtual $0.1\,\text{nm}$ layer and then automatically runs BFGS. Compare the merit immediately before insertion and after this refinement.</li>
+                                <li><strong>Critical analysis:</strong> explain the value of the two-step workflow (nucleation diagnostic $\to$ local refinement).</li>
+                            </ul>
+                            <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                🧠 <strong>Three limitations to identify yourself</strong> (they are not displayed): (a) the scan is <em>discrete</em>, every 5 nm — what if the optimum lay 2.5 nm from a tested point? (b) $\pi(z)$ is <strong>never</strong> evaluated at the interfaces, although that is often where the true optimum sits: why this choice, and what is missed? (c) the derivative is approximated by finite differences with a finite $\delta$. Quantify at least one of these three limitations with a numerical test.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART -->
+        <section id="ex6" class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-100 border-b px-8 py-4">
+                <h2 class="text-xl font-bold text-slate-900 flex flex-wrap items-center justify-between gap-2">VI. Bragg mirrors: BK7 / (HL)^n H / Air <span class="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">⏱ 55 min indicative</span></h2>
+            </div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Direct entry — prerequisites:</strong> QWOT, constructive interference and spectrum reading. Exercise III is sufficient; Exercises IV and V are not required.</div>
+            <div class="p-6 space-y-4">
+<div class="bg-amber-50 border-l-4 border-amber-400 p-3 text-xs text-amber-900 rounded-r-lg mb-2">
+                    <strong>💡 Bragg mirror principle:</strong> <strong>constructive</strong> interference from alternating quarter-wave layers ($n \cdot d = \lambda_0 / 4$).
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q18</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p>Enter formula <code>(HL)^3 H</code> at $\lambda_0 = 550\,\text{nm}$. Measure peak reflectance $R_{max}$ and record <strong>both edges</strong> of the <strong>stopband</strong> — the wavelength range over which the mirror reflects strongly, also called the photonic band gap — using $R \ge 90\%$ as the convention. Note the width you obtain.</p>
+                            <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                🧠 <strong>Do not rush to the formula.</strong> Compare your measured width with the prediction $\Delta\lambda = \frac{4\lambda_0}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L}$ computed in Q4: <strong>the gap is large, of order one third.</strong> This is not a measurement error. Look at $R_{max}$: by how much does it exceed your 90% threshold? What happens to the measured width if $R_{max}$ barely clears the threshold? Formulate a hypothesis — you will test it in Q19.
+                            </div>
+                            <div class="bg-amber-50 border-l-4 border-amber-400 p-2 rounded-r text-xs text-amber-900">
+                                🔑 <strong>Result to keep:</strong> <strong>the stopband edges govern the whole of Exercise IX</strong> — a measurement band placed outside this interval does not measure the filter, it measures the mirror's leakage. You will refine them in Q19 on a thicker mirror.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q19</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            <div class="space-y-2">
+                                <p>Compare <code>(HL)^3 H</code> (7 layers), <code>(HL)^4 H</code> (9), <code>(HL)^5 H</code> (11) and <code>(HL)^6 H</code> (13) using <strong>Save curve</strong> overlays. For each, record <strong>$R_{max}$ and the width at $R \ge 90\%$</strong>. Build the table of the four pairs.</p>
+                                <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                    🧠 <strong>The central result of this exercise.</strong> Both quantities saturate, but not in the same way. Now confront your four widths with the Q4 prediction: it describes <em>none</em> of your four mirrors exactly, yet it describes very well the one they converge towards. <strong>So what does that formula physically represent</strong> — the width of a real mirror, or a limit? Is your Q18 hypothesis confirmed?
+                                </div>
+                                <p class="text-xs text-slate-600">Conclude: from how many periods onwards can the formula be used as an acceptable approximation? That is the value you will use in Q23 to place your measurement bands.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q20</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            <div class="space-y-2">
+                                <p><strong>The outermost layers: a setting, not an improvement.</strong> On the 13-layer mirror, widen the display to $360-800\,\text{nm}$ so you can see the ripples on both sides of the stopband.</p>
+                                <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                    <li><strong>Reference:</strong> record three numbers — $R_{max}$ inside the band, the <strong>highest sidelobe on the blue side</strong> ($360-450\,\text{nm}$) and the <strong>highest sidelobe on the red side</strong> ($660-800\,\text{nm}$).</li>
+                                    <li>Set layers <strong>1 and 13 to $0.5\,\text{QWOT}$</strong> and repeat the three measurements.</li>
+                                    <li>Now set them to <strong>$1.3\,\text{QWOT}$</strong> and repeat again.</li>
+                                </ul>
+                                <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                    🧠 <strong>What you will discover, and it is not what one expects.</strong> The ripples are not <em>suppressed</em>: they are <strong>transferred from one side of the stopband to the other</strong>. Thinning the outermost layers cleans one side and degrades the other; thickening them does the opposite. Explain this in terms of <strong>admittance matching</strong> — the admittance $\eta$ from the theory reminders: what does the wave see on arriving at the first interface, depending on the thickness of the outermost layer?
+                                </div>
+                                <p class="text-xs text-slate-600">Finally look at $R_{max}$: does it change much? Conclude on the nature of this setting — is it a performance gain, or a <strong>trade-off</strong> the designer chooses according to which side of the spectrum must stay clean? Give an example of a component where this choice is forced.</p>
+                                <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">🔍 <strong>Self-check:</strong> if both sidelobes move in the same direction, you have measured only one side of the band, or your display range is too narrow.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART -->
+        <section id="ex7" class="bg-white rounded-3xl shadow-lg border border-emerald-300 overflow-hidden ring-2 ring-emerald-500/30">
+            <div class="bg-emerald-50 border-b border-emerald-200 px-8 py-4 flex justify-between items-center flex-wrap gap-2">
+                <h2 class="text-xl font-bold text-emerald-950 flex flex-wrap items-center justify-between gap-2">VII. Interference bandpass filter (Fabry–Pérot) <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">⏱ 75 min indicative</span></h2>
+                <span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">🎯 Deposited at Fresnel</span>
+            </div>
+            <div class="mx-6 mt-5 bg-emerald-50 border-l-4 border-emerald-500 p-3 rounded-r-lg text-xs text-emerald-950"><strong>Direct entry — prerequisites:</strong> Bragg mirror, resonant cavity and manual spectral-width measurement. Complete Exercise VI or review the Bragg reminder first; optimizer knowledge is not required.</div>
+            <div class="p-6 space-y-4">
+<div class="bg-amber-50 border-l-4 border-amber-400 p-3 text-xs text-amber-900 rounded-r-lg mb-2">
+                    <strong>💡 Fabry–Pérot cavity:</strong> two Bragg mirrors separated by a central half-wave spacer ($2H$ or $2L$). The more reflective the mirrors, the higher the finesse and the narrower the peak.
+                </div>
+
+                <figure id="fig-cavite" class="mb-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Anatomy of the filter: two mirrors and a spacer</figcaption>
+                        <div class="p-3">
+<svg viewBox="0 0 640 240" style="width:100%;height:auto;max-height:330px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Spacer 2H">
+  <rect x="30" y="50" width="66" height="72" fill="#cbd5e1" stroke="#64748b"/>
+  <text x="63" y="92" text-anchor="middle" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">BK7 substrate</text>
+  <rect x="96" y="50" width="22" height="72" fill="#6366f1" stroke="#4338ca" stroke-width="0.7"/><text x="107" y="92" text-anchor="middle" font-size="9" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text><rect x="118" y="50" width="22" height="72" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.7"/><text x="129" y="92" text-anchor="middle" font-size="9" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text><rect x="140" y="50" width="22" height="72" fill="#6366f1" stroke="#4338ca" stroke-width="0.7"/><text x="151" y="92" text-anchor="middle" font-size="9" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text><rect x="162" y="50" width="22" height="72" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.7"/><text x="173" y="92" text-anchor="middle" font-size="9" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text><rect x="184" y="50" width="22" height="72" fill="#6366f1" stroke="#4338ca" stroke-width="0.7"/><text x="195" y="92" text-anchor="middle" font-size="9" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text><rect x="206" y="50" width="22" height="72" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.7"/><text x="217" y="92" text-anchor="middle" font-size="9" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text><rect x="228" y="50" width="46" height="72" fill="#f59e0b" stroke="#b45309" stroke-width="1"/><text x="251" y="92" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">2H</text><rect x="274" y="50" width="22" height="72" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.7"/><text x="285" y="92" text-anchor="middle" font-size="9" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text><rect x="296" y="50" width="22" height="72" fill="#6366f1" stroke="#4338ca" stroke-width="0.7"/><text x="307" y="92" text-anchor="middle" font-size="9" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text><rect x="318" y="50" width="22" height="72" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.7"/><text x="329" y="92" text-anchor="middle" font-size="9" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text><rect x="340" y="50" width="22" height="72" fill="#6366f1" stroke="#4338ca" stroke-width="0.7"/><text x="351" y="92" text-anchor="middle" font-size="9" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text><rect x="362" y="50" width="22" height="72" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.7"/><text x="373" y="92" text-anchor="middle" font-size="9" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text><rect x="384" y="50" width="22" height="72" fill="#6366f1" stroke="#4338ca" stroke-width="0.7"/><text x="395" y="92" text-anchor="middle" font-size="9" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text>
+  <rect x="406" y="50" width="66" height="72" fill="#e0f2fe" stroke="#7dd3fc"/>
+  <text x="439" y="92" text-anchor="middle" font-size="10" fill="#0369a1" font-family="Inter,system-ui,sans-serif">Air</text>
+  <polyline points="228.0,86.0 228.8,83.7 229.5,81.4 230.3,79.2 231.1,77.1 231.8,75.0 232.6,73.1 233.4,71.3 234.1,69.7 234.9,68.2 235.7,66.9 236.4,65.9 237.2,65.1 238.0,64.5 238.7,64.1 239.5,64.0 240.3,64.1 241.0,64.5 241.8,65.1 242.6,65.9 243.3,66.9 244.1,68.2 244.9,69.7 245.6,71.3 246.4,73.1 247.2,75.0 247.9,77.1 248.7,79.2 249.5,81.4 250.2,83.7 251.0,86.0 251.8,88.3 252.5,90.6 253.3,92.8 254.1,94.9 254.8,97.0 255.6,98.9 256.4,100.7 257.1,102.3 257.9,103.8 258.7,105.1 259.4,106.1 260.2,106.9 261.0,107.5 261.7,107.9 262.5,108.0 263.3,107.9 264.0,107.5 264.8,106.9 265.6,106.1 266.3,105.1 267.1,103.8 267.9,102.3 268.6,100.7 269.4,98.9 270.2,97.0 270.9,94.9 271.7,92.8 272.5,90.6 273.2,88.3 274.0,86.0" fill="none" stroke="#dc2626" stroke-width="2"/>
+  <text x="212" y="42" font-size="9.5" fill="#b91c1c" font-family="Inter,system-ui,sans-serif">resonant standing wave</text>
+  <line x1="96" y1="132" x2="228" y2="132" stroke="#4338ca" stroke-width="1.4"/>
+  <text x="162.0" y="146" text-anchor="middle" font-size="10" fill="#3730a3" font-weight="600" font-family="Inter,system-ui,sans-serif">Mirror (HL)³</text>
+  <line x1="228" y1="132" x2="274" y2="132" stroke="#b45309" stroke-width="1.4"/>
+  <text x="251.0" y="146" text-anchor="middle" font-size="10" fill="#b45309" font-weight="700" font-family="Inter,system-ui,sans-serif">Spacer 2H</text>
+  <line x1="274" y1="132" x2="406" y2="132" stroke="#4338ca" stroke-width="1.4"/>
+  <text x="340.0" y="146" text-anchor="middle" font-size="10" fill="#3730a3" font-weight="600" font-family="Inter,system-ui,sans-serif">Mirror (LH)³</text>
+  <text x="30" y="182" font-size="10.5" fill="#0f172a" font-weight="600" font-family="Inter,system-ui,sans-serif">(HL)ⁿ  2H  (LH)ⁿ</text>
+  <text x="30" y="202" font-size="10.5" fill="#3730a3" font-family="Inter,system-ui,sans-serif">n ↑: more reflective mirrors → narrower peak</text>
+  <text x="30" y="220" font-size="10.5" fill="#b45309" font-family="Inter,system-ui,sans-serif">q ↑: thicker cavity → narrower peak, but spurious orders</text>
+</svg>
+                        </div>
+                        <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">The half-wave <strong>2H</strong> spacer is a cavity: at resonance a standing wave builds up inside it and light passes almost entirely through the stack, while it is blocked everywhere else in the stopband. Two independent levers narrow the peak — increasing <strong>n</strong> (more reflective mirrors) or increasing <strong>q</strong> (thicker cavity). Q21 asks you to determine which acts more strongly.</p>
+                    </figure>
+                    <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q21</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p>At $\lambda_0=550\,\text{nm}$, enter <code>(HL)^2 2H (LH)^2</code>, then <code>(HL)^3 2H (LH)^3</code>, then <code>(HL)^4 2H (LH)^4</code>. Measure the full width at half maximum of each.</p>
+                            <p>Then test the cavity order: replace the <code>2H</code> spacer with <code>4H</code> (order $q=2$) then <code>6H</code> ($q=3$). <em>Notation: the prefix is the QWOT multiple, so <code>4H</code> = 4 quarter-waves = 2 half-waves.</em></p>
+                            <p>Establish the relationship between the number of mirror periods $n$, the cavity order $q$, and the resolving power $\lambda/\Delta\lambda$. Which of the two parameters acts most strongly?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q22</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Fresnel prescription that will actually be deposited:</strong> load <code>BK7 / H L 2H L H L H L 2H L H L H L 2H L H L / Air</code> at $\lambda_0=550\,\text{nm}$. Verify yourself that it contains exactly <strong>18 layers</strong>, in substrate-to-air order. This architecture is mandatory: it must neither be shortened nor replaced by a symmetric cavity.</p>
+                            <p><strong>Mandatory manual measurement.</strong> With a $0.1\,\text{nm}$ spectral step, read from the cursor: (a) the maximum $T_{max}$ and its wavelength, (b) the $T_{max}/2$ level, (c) the <strong>two</strong> intersections $\lambda_1$ and $\lambda_2$, (d) the width $\lambda_2-\lambda_1$, (e) the <strong>half-maximum centre</strong> $(\lambda_1+\lambda_2)/2$. Use box zoom to refine each intersection, then <code>Reset view</code> to return to the full spectrum.</p>
+                            <p class="mt-1.5">This prescription contains <strong>three $2H$ spacers</strong>, hence three coupled cavities: that is what makes it a <em>multicavity</em> filter. Its passband is far wider than the single-cavity filters of Q21 — do not transfer their expected scale — and above all its top is <strong>flat and rippled</strong>. You will find several near-equal maxima there, and the highest one can jump from one to another after a tiny change in the stack. <strong>So it is the half-maximum centre (e), not the position of the maximum, that locates the passband reliably</strong>; that is the figure you will reuse in Exercises IX and X.</p>
+                            <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">
+                                🔍 <strong>Method self-check:</strong> measure at half the <em>window</em> height ($T_{max}/2$), never at 50% of the scale. This filter has three cavities: its top is flat and rippled — it is not a peak. Repeat at 0.5 nm and 2 nm steps, compare both intersections, and quantify the reading uncertainty caused by the step.
+                            </div>
+                            <div class="bg-emerald-50 border-l-4 border-emerald-500 p-2 rounded-r text-xs text-emerald-950">
+                                🎯 <strong>Deliverable to keep:</strong> export the nominal CSV and the spectrum image. <strong>This same 18-layer stack is reused without architectural change in Exercises VIII to X, then manufactured at Fresnel.</strong> Without this file, the rest of the project cannot be completed with full traceability.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART -->
+        <!-- PART -->
+        <section id="ex8" class="bg-white rounded-3xl shadow-lg border-2 border-emerald-300 overflow-hidden">
+            <div class="bg-emerald-50 border-b border-emerald-200 px-8 py-4 flex justify-between items-center flex-wrap gap-2">
+                <h2 class="text-xl font-bold text-emerald-950 flex flex-wrap items-center justify-between gap-2">VIII. Cleanroom pre-fabrication project <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">⏱ 75 min indicative</span></h2>
+                <span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">🎯 Deposited at Fresnel</span>
+            </div>
+            <div class="mx-6 mt-5 bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r-lg text-xs text-amber-950"><strong>Direct entry — prerequisites:</strong> retain the nominal Q22 file and understand a cavity passband, a merit function and parameter locking. Exercises VI and VII are required; V is useful for Q24.</div>
+            <div class="p-6 space-y-4">
+
+                <div class="bg-slate-800 text-slate-100 p-4 rounded-lg text-xs space-y-2">
+                    <div class="font-bold text-white text-sm">📋 Component specification</div>
+                    <div class="grid sm:grid-cols-2 gap-x-6 gap-y-1">
+                        <div>• Measured passband: <strong>535 – 565 nm</strong></div>
+                        <div>• Rejection band 1: <strong>460 – 500 nm</strong></div>
+                        <div>• Rejection band 2: <strong>620 – 680 nm</strong></div>
+                        <div>• Calculation grid: <strong>0.5 nm step</strong></div>
+                        <div>• Required rejection factor: <strong>$Q_r \ge 30$</strong></div>
+                        <div>• Required passband transmission: <strong>$\overline{T}_{pass} \ge 85\%$</strong></div>
+                    </div>
+                    <div class="text-amber-200 border-t border-slate-600 pt-2 mt-1">
+                        ⚠ <strong>Why these bands?</strong> They all lie <em>inside</em> the ZnS/YF₃ mirror stopband you measured in Q18. This is an engineering decision, not a natural given: in Q23 you will have to show what happens if it is made at random.
+                    </div>
+                    <div class="font-mono text-emerald-300 border-t border-slate-600 pt-2">
+                        $Q_r=\dfrac{2\,\overline{T}_{535-565}}{\overline{T}_{460-500}+\overline{T}_{620-680}}$
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q23</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Nominal audit and manual $Q_r$ calculation:</strong> reopen the Q22 filter, in the same substrate-to-superstrate deposition order.</p>
+                            <div class="bg-slate-800 text-slate-100 p-2.5 rounded text-xs mb-2">
+                                <strong class="text-white">⚠️ The analyzer does not compute $Q_r$.</strong> It only gives you <strong>measurements</strong>: the average of R, T, or A over a band you define, at a step you choose. It affects neither the optimizer nor Monte-Carlo. The rejection factor is a <em>derived</em> quantity: first build it yourself; the BFGS merit will then use it with fixed bands.
+                            </div>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li>In the analyzer, select only <code>T</code>, enter the three specification bands with a 0.5 nm step, and record the three $\overline{T}$ averages. The <code>R</code> and <code>A</code> choices support other measurements; they never assign a role in a merit.</li>
+                                <li>Compute $Q_r$ yourself from those three numbers, by hand and then in Excel from the exported CSV. Both routes must agree.</li>
+                                <li>Check the effect of the step: repeat the same averages at 0.1 nm and then at 2 nm. Which of the three bands is the most sensitive to the step, and why?</li>
+                                <li>Complete the nominal audit — number of layers, number of materials, $d_{min}$, $d_{max}$, total thickness — <strong>by computing it from the layer table</strong>. The <em>"check my audit"</em> button is only there to verify your result <strong>after</strong> you have established it.</li>
+                            </ul>
+                            <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                🧠 <strong>The decisive experiment:</strong> keep the 535–565 nm passband and 620–680 nm upper rejection band, then <strong>recompute $Q_r$ three times</strong>, changing only the lower rejection band: <code>400–500</code>, then <code>430–500</code>, then the prescribed <code>460–500</code>. <strong>By how much does $Q_r$ vary?</strong> Relate this to the actual spectrum. What is a rejection specification worth if it does not state its bands?
+                                <br><span class="text-[11px]">Note: the 400–500 nm band extends beyond the computed range (430–700 nm) and the software warns you about it. That warning is part of the answer — say what an average computed over a truncated band is worth.</span>
+                            </div>
+                            <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">🔍 <strong>Self-check:</strong> your manual and Excel calculations must agree within rounding. Check that all three bands are fully covered, that the measured quantity is T, and that the denominator is the <em>mean</em> of both rejection values, not their sum.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q24</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Is there really anything to optimize?</strong></p>
+                            <p class="text-xs text-slate-600 mb-1.5">The question is not rhetorical. Start by measuring $Q_r$ and $\overline{T}_{pass}$ <em>before</em> any optimization and compare them with the two requirements of the specification. <strong>If the deposited prescription already meets them, and by a wide margin, say so: that is a result, not a failure on your part.</strong> You then have to answer a more interesting question: what is the point of optimizing a component that already passes? Look at the margin — by how much does the nominal exceed the threshold, and does that margin survive the deposition errors of Q25? That, rather than the nominal value, is where the three free layers earn their keep.</p>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li>Activate the <code>Maximize Qr</code> merit. Its formula already uses exactly the 460–500, 535–565, and 620–680 nm bands; the band analyzer remains an independent measurement instrument.</li>
+                                <li>Set the cleanup threshold to <strong>2 nm</strong>: it is also BFGS's lower bound. Record this constraint in the design dossier; a numerical optimum below it is not admissible.</li>
+                                <li>Choose <code>Specific layers</code>, then allow <strong>layers 16, 17, and 18 only</strong>. Check in the table that layers 1 to 15 are fixed. This constraint belongs to the component that will be deposited and must never be relaxed.</li>
+                                <li>Run BFGS and record $Q_r$, $\overline{T}_{pass}$, and the three thicknesses before/after. Verify that the layer count, ordering, and first fifteen thicknesses are strictly unchanged.</li>
+                                <li>Test reproducibility by reloading the prescription and rerunning BFGS with identical settings. Explain why identical results are expected from a deterministic algorithm.</li>
+                                <li>Reject any nominal improvement that creates a layer below $d_{min}$ or lowers passband transmission below its threshold: an isolated $Q_r$ score is not a manufacturing dossier.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+<div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q25</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Pre-manufacturing review — robust qualification without supplied results.</strong></p>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li><strong>(a)</strong> Keep the Q24 optimized prescription: 18 layers, the first fifteen unchanged, the final three produced by BFGS. Set $d_{min}=1$ nm and write the acceptance thresholds before any simulation.
+                                <br><span class="text-[11px]">Two different thresholds, not to be confused: the <strong>2 nm</strong> of Q24 is a lower bound on what <em>the optimizer</em> may propose; the <strong>$d_{min}=1$ nm</strong> here is the thinnest layer one accepts to <em>deposit</em>, and it is used to sort the Monte-Carlo draws. The first constrains a calculation, the second judges a fabrication. Justify both values in your dossier.</span></li>
+                                <li><strong>(b)</strong> For $\Delta d=1$, 2, and 5 nm, first run $N=100$ to check the protocol, then $N=1000$ for the decision. Keep the seed unchanged.</li>
+                                <li><strong>(c)</strong> For each severity, report yield, 95% Wilson CI, P05($Q_r$), P05($\overline{T}_{pass}$), manufacturability rate, and number of perturbed layers. Monte-Carlo perturbs the <strong>18 deposited layers</strong>: locking the first fifteen applied to BFGS only.</li>
+                                <li><strong>(d)</strong> Plot yield and both adverse percentiles against $\Delta d$. By cautious interpolation, determine the largest $\Delta d$ compatible with the minimum required yield; if the data do not decide, give an interval and propose the additional run needed.</li>
+                                <li><strong>(e)</strong> Clearly distinguish nominal performance, statistical robustness, and manufacturability. Base the deposition recommendation on confidence bounds, without treating $\Delta d$ as an absolute bound: here $\sigma=\Delta d/2$.</li>
+                            </ul>
+                            <div class="bg-rose-50 border-l-4 border-rose-400 p-3 rounded-r text-xs text-rose-900">
+                                🔬 <strong>Evidence requirement:</strong> no yield curve or expected value is supplied. Your plot must show the 1, 2, and 5 nm points, 95% CI bars, seed, $N$, thresholds, and error model. A conclusion without a confidence interval or obtained with mismatched settings is inadmissible.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART -->
+        <section id="ex9" class="bg-white rounded-3xl shadow-lg border-2 border-emerald-300 overflow-hidden">
+            <div class="bg-emerald-50 border-b border-emerald-200 px-8 py-4 flex justify-between items-center flex-wrap gap-2">
+                <h2 class="text-xl font-bold text-emerald-950 flex flex-wrap items-center justify-between gap-2">IX. Cleanroom reverse engineering & defect diagnosis <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">⏱ 45 min indicative</span></h2>
+                <span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">🎯 After deposition</span>
+            </div>
+            <div class="mx-6 mt-5 bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r-lg text-xs text-amber-950"><strong>Direct entry — prerequisites:</strong> have the Q22 nominal spectrum and, if possible, the measured filter spectrum; distinguish spectral shift, shape distortion and transmission loss. Exercises VII and VIII are required for full reverse engineering.</div>
+            <div class="p-6 space-y-4">
+                <figure id="fig-erreurs" class="my-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Two process defects, two spectral signatures</figcaption>
+                    <div class="p-3">
+<svg viewBox="0 0 640 250" style="width:100%;height:auto;max-height:340px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Simulated spectra: effect of a uniform error and of layer-to-layer noise on a two-cavity filter">
+  <rect x="14" y="12" width="300" height="158" fill="#fef2f2" stroke="#fecaca" rx="6"/>
+  <text x="26" y="28" font-size="11" fill="#b91c1c" font-weight="700" font-family="Inter,system-ui,sans-serif">Uniform error (every layer)</text>
+  <text x="26" y="41" font-size="9" fill="#7f1d1d" font-family="Inter,system-ui,sans-serif">every thickness × (1 + b), here b = +2%</text>
+  <line x1="30.0" y1="112" x2="300.0" y2="112" stroke="#334155" stroke-width="1"/>
+  <line x1="41.7" y1="112" x2="41.7" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="41.7" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">500</text>
+  <line x1="100.4" y1="112" x2="100.4" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="100.4" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">525</text>
+  <line x1="159.1" y1="112" x2="159.1" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="159.1" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">550</text>
+  <line x1="217.8" y1="112" x2="217.8" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="217.8" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">575</text>
+  <line x1="276.5" y1="112" x2="276.5" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="276.5" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">600</text>
+  <line x1="30.0" y1="85.0" x2="300.0" y2="85.0" stroke="#b91c1c" stroke-width="0.7" stroke-dasharray="2 3" opacity="0.55"/>
+  <text x="30.0" y="82" font-size="7" fill="#b91c1c" font-family="Inter,system-ui,sans-serif">50 %</text>
+  <polyline points="30.0,111.7 31.2,111.7 32.3,111.7 33.5,111.7 34.7,111.7 35.9,111.7 37.0,111.7 38.2,111.7 39.4,111.7 40.6,111.7 41.7,111.7 42.9,111.7 44.1,111.7 45.3,111.7 46.4,111.7 47.6,111.6 48.8,111.6 50.0,111.6 51.1,111.6 52.3,111.6 53.5,111.6 54.7,111.6 55.8,111.6 57.0,111.6 58.2,111.5 59.3,111.5 60.5,111.5 61.7,111.5 62.9,111.5 64.0,111.4 65.2,111.4 66.4,111.4 67.6,111.4 68.7,111.3 69.9,111.3 71.1,111.3 72.3,111.3 73.4,111.2 74.6,111.2 75.8,111.1 77.0,111.1 78.1,111.0 79.3,111.0 80.5,110.9 81.7,110.9 82.8,110.8 84.0,110.7 85.2,110.7 86.3,110.6 87.5,110.5 88.7,110.4 89.9,110.3 91.0,110.2 92.2,110.1 93.4,109.9 94.6,109.8 95.7,109.6 96.9,109.5 98.1,109.3 99.3,109.1 100.4,108.8 101.6,108.6 102.8,108.3 104.0,108.0 105.1,107.6 106.3,107.2 107.5,106.8 108.7,106.3 109.8,105.8 111.0,105.2 112.2,104.6 113.3,103.8 114.5,103.0 115.7,102.1 116.9,101.0 118.0,99.9 119.2,98.6 120.4,97.2 121.6,95.6 122.7,93.9 123.9,92.0 125.1,89.9 126.3,87.6 127.4,85.2 128.6,82.7 129.8,80.1 131.0,77.4 132.1,74.7 133.3,72.0 134.5,69.5 135.7,67.2 136.8,65.1 138.0,63.3 139.2,61.8 140.3,60.6 141.5,59.8 142.7,59.2 143.9,58.9 145.0,58.9 146.2,59.0 147.4,59.2 148.6,59.5 149.7,59.8 150.9,60.2 152.1,60.6 153.3,60.9 154.4,61.2 155.6,61.4 156.8,61.6 158.0,61.7 159.1,61.8 160.3,61.7 161.5,61.6 162.7,61.4 163.8,61.2 165.0,60.9 166.2,60.6 167.3,60.2 168.5,59.9 169.7,59.5 170.9,59.2 172.0,59.0 173.2,58.9 174.4,58.9 175.6,59.1 176.7,59.4 177.9,60.0 179.1,60.9 180.3,62.0 181.4,63.3 182.6,64.9 183.8,66.7 185.0,68.7 186.1,70.9 187.3,73.1 188.5,75.4 189.7,77.7 190.8,80.1 192.0,82.3 193.2,84.5 194.3,86.5 195.5,88.5 196.7,90.3 197.9,92.0 199.0,93.6 200.2,95.0 201.4,96.4 202.6,97.6 203.7,98.7 204.9,99.7 206.1,100.7 207.3,101.5 208.4,102.3 209.6,103.0 210.8,103.6 212.0,104.2 213.1,104.8 214.3,105.3 215.5,105.7 216.7,106.1 217.8,106.5 219.0,106.8 220.2,107.2 221.3,107.4 222.5,107.7 223.7,108.0 224.9,108.2 226.0,108.4 227.2,108.6 228.4,108.8 229.6,108.9 230.7,109.1 231.9,109.2 233.1,109.4 234.3,109.5 235.4,109.6 236.6,109.7 237.8,109.8 239.0,109.9 240.1,110.0 241.3,110.1 242.5,110.2 243.7,110.3 244.8,110.3 246.0,110.4 247.2,110.5 248.3,110.5 249.5,110.6 250.7,110.6 251.9,110.7 253.0,110.7 254.2,110.8 255.4,110.8 256.6,110.8 257.7,110.9 258.9,110.9 260.1,110.9 261.3,111.0 262.4,111.0 263.6,111.0 264.8,111.1 266.0,111.1 267.1,111.1 268.3,111.1 269.5,111.2 270.7,111.2 271.8,111.2 273.0,111.2 274.2,111.2 275.3,111.3 276.5,111.3 277.7,111.3 278.9,111.3 280.0,111.3 281.2,111.3 282.4,111.3 283.6,111.4 284.7,111.4 285.9,111.4 287.1,111.4 288.3,111.4 289.4,111.4 290.6,111.4 291.8,111.4 293.0,111.4 294.1,111.5 295.3,111.5 296.5,111.5 297.7,111.5 298.8,111.5 300.0,111.5" fill="none" stroke="#64748b" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <polyline points="30.0,111.8 31.2,111.8 32.3,111.8 33.5,111.8 34.7,111.8 35.9,111.8 37.0,111.8 38.2,111.8 39.4,111.8 40.6,111.7 41.7,111.7 42.9,111.7 44.1,111.7 45.3,111.7 46.4,111.7 47.6,111.7 48.8,111.7 50.0,111.7 51.1,111.7 52.3,111.7 53.5,111.7 54.7,111.7 55.8,111.7 57.0,111.7 58.2,111.7 59.3,111.7 60.5,111.7 61.7,111.7 62.9,111.7 64.0,111.7 65.2,111.7 66.4,111.6 67.6,111.6 68.7,111.6 69.9,111.6 71.1,111.6 72.3,111.6 73.4,111.6 74.6,111.6 75.8,111.6 77.0,111.5 78.1,111.5 79.3,111.5 80.5,111.5 81.7,111.5 82.8,111.5 84.0,111.4 85.2,111.4 86.3,111.4 87.5,111.4 88.7,111.3 89.9,111.3 91.0,111.3 92.2,111.3 93.4,111.2 94.6,111.2 95.7,111.2 96.9,111.1 98.1,111.1 99.3,111.0 100.4,111.0 101.6,110.9 102.8,110.9 104.0,110.8 105.1,110.7 106.3,110.7 107.5,110.6 108.7,110.5 109.8,110.4 111.0,110.3 112.2,110.2 113.3,110.1 114.5,110.0 115.7,109.8 116.9,109.7 118.0,109.5 119.2,109.3 120.4,109.1 121.6,108.9 122.7,108.7 123.9,108.4 125.1,108.1 126.3,107.8 127.4,107.5 128.6,107.1 129.8,106.7 131.0,106.2 132.1,105.6 133.3,105.1 134.5,104.4 135.7,103.7 136.8,102.9 138.0,102.0 139.2,101.0 140.3,99.9 141.5,98.6 142.7,97.3 143.9,95.7 145.0,94.1 146.2,92.2 147.4,90.3 148.6,88.1 149.7,85.8 150.9,83.4 152.1,80.9 153.3,78.3 154.4,75.7 155.6,73.1 156.8,70.6 158.0,68.3 159.1,66.1 160.3,64.2 161.5,62.6 162.7,61.3 163.8,60.3 165.0,59.6 166.2,59.1 167.3,58.9 168.5,58.9 169.7,59.0 170.9,59.2 172.0,59.5 173.2,59.8 174.4,60.2 175.6,60.5 176.7,60.9 177.9,61.2 179.1,61.4 180.3,61.6 181.4,61.7 182.6,61.7 183.8,61.7 185.0,61.6 186.1,61.4 187.3,61.2 188.5,60.9 189.7,60.6 190.8,60.3 192.0,60.0 193.2,59.6 194.3,59.3 195.5,59.1 196.7,58.9 197.9,58.8 199.0,58.9 200.2,59.2 201.4,59.6 202.6,60.3 203.7,61.2 204.9,62.4 206.1,63.7 207.3,65.3 208.4,67.1 209.6,69.1 210.8,71.2 212.0,73.4 213.1,75.6 214.3,77.9 215.5,80.1 216.7,82.3 217.8,84.4 219.0,86.4 220.2,88.3 221.3,90.1 222.5,91.8 223.7,93.3 224.9,94.7 226.0,96.1 227.2,97.3 228.4,98.4 229.6,99.4 230.7,100.3 231.9,101.2 233.1,102.0 234.3,102.7 235.4,103.3 236.6,103.9 237.8,104.5 239.0,105.0 240.1,105.4 241.3,105.9 242.5,106.2 243.7,106.6 244.8,106.9 246.0,107.2 247.2,107.5 248.3,107.8 249.5,108.0 250.7,108.2 251.9,108.4 253.0,108.6 254.2,108.8 255.4,108.9 256.6,109.1 257.7,109.2 258.9,109.4 260.1,109.5 261.3,109.6 262.4,109.7 263.6,109.8 264.8,109.9 266.0,110.0 267.1,110.1 268.3,110.2 269.5,110.2 270.7,110.3 271.8,110.4 273.0,110.4 274.2,110.5 275.3,110.5 276.5,110.6 277.7,110.6 278.9,110.7 280.0,110.7 281.2,110.8 282.4,110.8 283.6,110.8 284.7,110.9 285.9,110.9 287.1,110.9 288.3,111.0 289.4,111.0 290.6,111.0 291.8,111.1 293.0,111.1 294.1,111.1 295.3,111.1 296.5,111.2 297.7,111.2 298.8,111.2 300.0,111.2" fill="none" stroke="#dc2626" stroke-width="1.8"/>
+  <text x="26" y="140" font-size="9" fill="#b91c1c" font-weight="600" font-family="Inter,system-ui,sans-serif">→ the band SLIDES, its shape is untouched</text>
+  <text x="26" y="152" font-size="8" fill="#7f1d1d" font-family="Inter,system-ui,sans-serif">centre 550.5 → 560.8 nm  (shift 10.3 nm)</text>
+  <text x="26" y="163" font-size="8" fill="#7f1d1d" font-family="Inter,system-ui,sans-serif">peak 98.4 → 98.4%   width 28.0 → 28.5 nm</text>
+
+  <rect x="326" y="12" width="300" height="158" fill="#eff6ff" stroke="#bfdbfe" rx="6"/>
+  <text x="338" y="28" font-size="11" fill="#1d4ed8" font-weight="700" font-family="Inter,system-ui,sans-serif">Layer-to-layer random noise</text>
+  <text x="338" y="41" font-size="9" fill="#1e3a8a" font-family="Inter,system-ui,sans-serif">each layer ± a Gaussian error, σ = Δd/2 with Δd = 10 nm</text>
+  <line x1="342.0" y1="112" x2="612.0" y2="112" stroke="#334155" stroke-width="1"/>
+  <line x1="353.7" y1="112" x2="353.7" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="353.7" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">500</text>
+  <line x1="412.4" y1="112" x2="412.4" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="412.4" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">525</text>
+  <line x1="471.1" y1="112" x2="471.1" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="471.1" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">550</text>
+  <line x1="529.8" y1="112" x2="529.8" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="529.8" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">575</text>
+  <line x1="588.5" y1="112" x2="588.5" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="588.5" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">600</text>
+  <line x1="342.0" y1="85.0" x2="612.0" y2="85.0" stroke="#1d4ed8" stroke-width="0.7" stroke-dasharray="2 3" opacity="0.55"/>
+  <text x="342.0" y="82" font-size="7" fill="#1d4ed8" font-family="Inter,system-ui,sans-serif">50 %</text>
+  <polyline points="342.0,111.7 343.2,111.7 344.3,111.7 345.5,111.7 346.7,111.7 347.9,111.7 349.0,111.7 350.2,111.7 351.4,111.7 352.6,111.7 353.7,111.7 354.9,111.7 356.1,111.7 357.3,111.7 358.4,111.7 359.6,111.6 360.8,111.6 362.0,111.6 363.1,111.6 364.3,111.6 365.5,111.6 366.7,111.6 367.8,111.6 369.0,111.6 370.2,111.5 371.3,111.5 372.5,111.5 373.7,111.5 374.9,111.5 376.0,111.4 377.2,111.4 378.4,111.4 379.6,111.4 380.7,111.3 381.9,111.3 383.1,111.3 384.3,111.3 385.4,111.2 386.6,111.2 387.8,111.1 389.0,111.1 390.1,111.0 391.3,111.0 392.5,110.9 393.7,110.9 394.8,110.8 396.0,110.7 397.2,110.7 398.3,110.6 399.5,110.5 400.7,110.4 401.9,110.3 403.0,110.2 404.2,110.1 405.4,109.9 406.6,109.8 407.7,109.6 408.9,109.5 410.1,109.3 411.3,109.1 412.4,108.8 413.6,108.6 414.8,108.3 416.0,108.0 417.1,107.6 418.3,107.2 419.5,106.8 420.7,106.3 421.8,105.8 423.0,105.2 424.2,104.6 425.3,103.8 426.5,103.0 427.7,102.1 428.9,101.0 430.0,99.9 431.2,98.6 432.4,97.2 433.6,95.6 434.7,93.9 435.9,92.0 437.1,89.9 438.3,87.6 439.4,85.2 440.6,82.7 441.8,80.1 443.0,77.4 444.1,74.7 445.3,72.0 446.5,69.5 447.7,67.2 448.8,65.1 450.0,63.3 451.2,61.8 452.3,60.6 453.5,59.8 454.7,59.2 455.9,58.9 457.0,58.9 458.2,59.0 459.4,59.2 460.6,59.5 461.7,59.8 462.9,60.2 464.1,60.6 465.3,60.9 466.4,61.2 467.6,61.4 468.8,61.6 470.0,61.7 471.1,61.8 472.3,61.7 473.5,61.6 474.7,61.4 475.8,61.2 477.0,60.9 478.2,60.6 479.3,60.2 480.5,59.9 481.7,59.5 482.9,59.2 484.0,59.0 485.2,58.9 486.4,58.9 487.6,59.1 488.7,59.4 489.9,60.0 491.1,60.9 492.3,62.0 493.4,63.3 494.6,64.9 495.8,66.7 497.0,68.7 498.1,70.9 499.3,73.1 500.5,75.4 501.7,77.7 502.8,80.1 504.0,82.3 505.2,84.5 506.3,86.5 507.5,88.5 508.7,90.3 509.9,92.0 511.0,93.6 512.2,95.0 513.4,96.4 514.6,97.6 515.7,98.7 516.9,99.7 518.1,100.7 519.3,101.5 520.4,102.3 521.6,103.0 522.8,103.6 524.0,104.2 525.1,104.8 526.3,105.3 527.5,105.7 528.7,106.1 529.8,106.5 531.0,106.8 532.2,107.2 533.3,107.4 534.5,107.7 535.7,108.0 536.9,108.2 538.0,108.4 539.2,108.6 540.4,108.8 541.6,108.9 542.7,109.1 543.9,109.2 545.1,109.4 546.3,109.5 547.4,109.6 548.6,109.7 549.8,109.8 551.0,109.9 552.1,110.0 553.3,110.1 554.5,110.2 555.7,110.3 556.8,110.3 558.0,110.4 559.2,110.5 560.3,110.5 561.5,110.6 562.7,110.6 563.9,110.7 565.0,110.7 566.2,110.8 567.4,110.8 568.6,110.8 569.7,110.9 570.9,110.9 572.1,110.9 573.3,111.0 574.4,111.0 575.6,111.0 576.8,111.1 578.0,111.1 579.1,111.1 580.3,111.1 581.5,111.2 582.7,111.2 583.8,111.2 585.0,111.2 586.2,111.2 587.3,111.3 588.5,111.3 589.7,111.3 590.9,111.3 592.0,111.3 593.2,111.3 594.4,111.3 595.6,111.4 596.7,111.4 597.9,111.4 599.1,111.4 600.3,111.4 601.4,111.4 602.6,111.4 603.8,111.4 605.0,111.4 606.1,111.5 607.3,111.5 608.5,111.5 609.7,111.5 610.8,111.5 612.0,111.5" fill="none" stroke="#64748b" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <polyline points="342.0,111.7 343.2,111.7 344.3,111.7 345.5,111.6 346.7,111.6 347.9,111.6 349.0,111.6 350.2,111.6 351.4,111.6 352.6,111.6 353.7,111.6 354.9,111.6 356.1,111.6 357.3,111.6 358.4,111.6 359.6,111.6 360.8,111.6 362.0,111.6 363.1,111.5 364.3,111.5 365.5,111.5 366.7,111.5 367.8,111.5 369.0,111.5 370.2,111.5 371.3,111.5 372.5,111.4 373.7,111.4 374.9,111.4 376.0,111.4 377.2,111.4 378.4,111.3 379.6,111.3 380.7,111.3 381.9,111.3 383.1,111.2 384.3,111.2 385.4,111.2 386.6,111.1 387.8,111.1 389.0,111.0 390.1,111.0 391.3,110.9 392.5,110.9 393.7,110.8 394.8,110.8 396.0,110.7 397.2,110.7 398.3,110.6 399.5,110.5 400.7,110.4 401.9,110.3 403.0,110.2 404.2,110.1 405.4,110.0 406.6,109.9 407.7,109.7 408.9,109.6 410.1,109.4 411.3,109.2 412.4,109.0 413.6,108.8 414.8,108.5 416.0,108.3 417.1,108.0 418.3,107.6 419.5,107.3 420.7,106.9 421.8,106.4 423.0,105.9 424.2,105.3 425.3,104.7 426.5,104.0 427.7,103.3 428.9,102.4 430.0,101.4 431.2,100.4 432.4,99.2 433.6,97.9 434.7,96.4 435.9,94.8 437.1,93.1 438.3,91.2 439.4,89.1 440.6,86.9 441.8,84.6 443.0,82.2 444.1,79.8 445.3,77.4 446.5,75.2 447.7,73.0 448.8,71.2 450.0,69.5 451.2,68.3 452.3,67.3 453.5,66.7 454.7,66.5 455.9,66.5 457.0,66.8 458.2,67.3 459.4,67.9 460.6,68.6 461.7,69.5 462.9,70.3 464.1,71.2 465.3,72.0 466.4,72.8 467.6,73.6 468.8,74.2 470.0,74.9 471.1,75.4 472.3,75.9 473.5,76.4 474.7,76.7 475.8,77.0 477.0,77.2 478.2,77.4 479.3,77.5 480.5,77.5 481.7,77.5 482.9,77.4 484.0,77.3 485.2,77.2 486.4,77.0 487.6,76.8 488.7,76.5 489.9,76.3 491.1,76.0 492.3,75.8 493.4,75.6 494.6,75.5 495.8,75.4 497.0,75.4 498.1,75.5 499.3,75.7 500.5,76.0 501.7,76.4 502.8,77.0 504.0,77.7 505.2,78.6 506.3,79.5 507.5,80.6 508.7,81.8 509.9,83.1 511.0,84.5 512.2,85.8 513.4,87.2 514.6,88.6 515.7,90.0 516.9,91.4 518.1,92.6 519.3,93.9 520.4,95.1 521.6,96.2 522.8,97.3 524.0,98.3 525.1,99.2 526.3,100.0 527.5,100.8 528.7,101.6 529.8,102.3 531.0,102.9 532.2,103.5 533.3,104.1 534.5,104.6 535.7,105.0 536.9,105.4 538.0,105.8 539.2,106.2 540.4,106.5 541.6,106.9 542.7,107.2 543.9,107.4 545.1,107.7 546.3,107.9 547.4,108.1 548.6,108.3 549.8,108.5 551.0,108.7 552.1,108.8 553.3,109.0 554.5,109.1 555.7,109.3 556.8,109.4 558.0,109.5 559.2,109.6 560.3,109.7 561.5,109.8 562.7,109.9 563.9,110.0 565.0,110.1 566.2,110.1 567.4,110.2 568.6,110.3 569.7,110.3 570.9,110.4 572.1,110.4 573.3,110.5 574.4,110.5 575.6,110.6 576.8,110.6 578.0,110.7 579.1,110.7 580.3,110.8 581.5,110.8 582.7,110.8 583.8,110.9 585.0,110.9 586.2,110.9 587.3,111.0 588.5,111.0 589.7,111.0 590.9,111.0 592.0,111.1 593.2,111.1 594.4,111.1 595.6,111.1 596.7,111.1 597.9,111.2 599.1,111.2 600.3,111.2 601.4,111.2 602.6,111.2 603.8,111.2 605.0,111.3 606.1,111.3 607.3,111.3 608.5,111.3 609.7,111.3 610.8,111.3 612.0,111.3" fill="none" stroke="#2563eb" stroke-width="1.8"/>
+  <text x="338" y="140" font-size="9" fill="#1d4ed8" font-weight="600" font-family="Inter,system-ui,sans-serif">→ the band DISTORTS: the peak drops, it broadens</text>
+  <text x="338" y="152" font-size="8" fill="#1e3a8a" font-family="Inter,system-ui,sans-serif">peak 98.4 → 84.3%   width 28.0 → 32.0 nm</text>
+  <text x="338" y="163" font-size="8" fill="#1e3a8a" font-family="Inter,system-ui,sans-serif">centre 550.5 → 552.5 nm — and it changes with every draw</text>
+
+  <line x1="14" y1="187" x2="34" y2="187" stroke="#64748b" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <text x="39" y="190" font-size="9.5" fill="#334155" font-family="Inter,system-ui,sans-serif">nominal</text>
+  <line x1="120" y1="187" x2="140" y2="187" stroke="#334155" stroke-width="1.8"/>
+  <text x="145" y="190" font-size="9.5" fill="#334155" font-family="Inter,system-ui,sans-serif">after defect</text>
+  <text x="300" y="190" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">horizontal axis: wavelength (nm)</text>
+  <text x="14" y="212" font-size="10.5" fill="#0f172a" font-weight="700" font-family="Inter,system-ui,sans-serif">A global defect shifts without distorting; a local defect distorts without shifting much.</text>
+  <text x="14" y="228" font-size="10" fill="#0f172a" font-family="Inter,system-ui,sans-serif">It is that difference, not the size of the shift, that drives the diagnosis.</text>
+  <text x="14" y="243" font-size="8.5" fill="#64748b" font-family="Inter,system-ui,sans-serif">Curves computed with the simulator — two-cavity filter BK7 / H L H L 2H L H L H L H L 2H L H L H L / Air, λ₀ = 550 nm, normal incidence, 0.5 nm step; reproducible random draw (seed 7).</text>
+</svg>
+                    </div>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">A <strong>uniform error</strong> multiplies every thickness by the same factor: the stack stays self-similar, so the spectrum translates without distorting. <strong>Independent noise</strong> detunes the layers relative to one another: the centre barely moves but the peak collapses and broadens. Reading this difference is what lets you diagnose a deposition run (Q26). <strong>What matters is not the shift in nanometres but its ratio to the passband width:</strong> the same 5 nm is nearly the whole band on the narrow Q21 filter, and only a tenth of the band on the much wider Fresnel prescription. Always compare the two.</p>
+                </figure>
+
+                <div class="bg-amber-50 border-l-4 border-amber-400 p-3 text-xs text-amber-900 rounded-r-lg mb-2">
+                    <strong>Real cleanroom scenario:</strong> the Institut Fresnel deposition team has manufactured your bandpass filter. The spectrophotometer readout shows a <strong>shift of about $8\,\text{nm}$ towards the red</strong> and a loss of peak transmission. Your reference is not the $\lambda_0 = 550\,\text{nm}$ setting, but <strong>the half-maximum centre you measured yourself in Q22</strong>: that is what the discrepancy is measured against. So start by retrieving that reading.
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q26</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Shifted-window diagnosis.</strong> Reproduce three defect scenarios in the simulator and compare their spectral signatures:</p>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li><strong>(a)</strong> a <em>uniform</em> scaling of every thickness (multiply them all by the same factor);</li>
+                                <li><strong>(b)</strong> an error on the central $2H$ spacer alone (layer 9);</li>
+                                <li><strong>(c)</strong> an error on a single mirror layer — use <strong>layer 5</strong>, so that every pair compares the same thing.</li>
+                            </ul>
+                            <p>Which one produces a global shift <em>with the least distortion of the window shape</em>? What multiplicative factor is needed to reproduce the observed $8\,\text{nm}$? Convert it into a thickness deviation on the thickest layer, then compare this systematic deviation with the $\Delta d$ severity studied in Q25. Explain why the independent Gaussian model of Q25 cannot, by itself, declare this common bias covered.</p>
+                            <p>Finally, explain why <em>transmission loss</em> alone does not identify a unique layer.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q27</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800">
+                            <strong>Metrology and traceability:</strong> relate the layer-to-layer random error, set by $\Delta d$, to the spread seen across the plotted draws. Derive an optical-thickness tolerance and a resolution requirement from adverse percentiles, not from the nominal result alone. Then translate them into a quartz-monitor recommendation while explicitly listing the missing process data: tooling factor, density, Z-ratio, rate stability, calibration history, and material-specific validation. <strong>No quantified instrument setting may be issued without these data</strong> — state this explicitly in your conclusion.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART -->
+        <!-- PART -->
+        <section id="ex10" class="bg-white rounded-3xl shadow-lg border-2 border-emerald-400 overflow-hidden">
+            <div class="bg-emerald-50 border-b border-emerald-200 px-8 py-4">
+                <h2 class="text-xl font-bold text-emerald-950 flex flex-wrap items-center justify-between gap-2">X. Design review — industrial qualification dossier <span class="text-xs font-bold text-emerald-900 bg-emerald-200 px-3 py-1 rounded-full">⏱ 75 min indicative</span></h2>
+            </div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Direct entry — prerequisites:</strong> complete Q15 and at least one full qualification among Q25 or a personal extension; distinguish independent error, systematic bias, percentile, and confidence interval. The other filter families may be skipped.</div>
+            <div class="p-6 space-y-4">
+                <div class="bg-emerald-50 border-l-4 border-emerald-500 p-3 text-xs text-emerald-950 rounded-r-lg"><strong>Deliverable:</strong> a one-page decision sheet detailed enough for another team to reproduce the simulation and challenge the conclusion.</div>
+
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q28</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Qualification contract:</strong> select the Fresnel bandpass or a previously approved custom extension. Switch the simulator to <code>Student → X. Design review</code>. Check the external media, then state before any calculation the window, incidence, polarization, metric, <strong>the exact bands</strong>, calculation grid, optical threshold, $d_{min}$, resolution, seed, and minimum required yield. Enter the latter in the <em>Required yield</em> field. Distinguish requirements from improvement goals.</div></div></div>
+
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q29</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Nominal manufacturability audit:</strong> produce the material/thickness/order table, then <strong>establish yourself</strong> the number of layers and materials, $d_{min}$, $d_{max}$, and total thickness — the simulator does not display them; the <em>"check my audit"</em> button is only there to verify your result once you have written it down. Identify layers below the threshold, thicknesses incompatible with the resolution, and any complexity not justified by optical gain. <em>Point to discuss:</em> on a quarter-wave stack at 550 nm, the thinnest layer exceeds 55 nm, i.e. more than fifty times the $d_{min}=1$ nm threshold. Is this guard therefore inactive? Under what circumstances does it become binding again?</div></div></div>
+
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q30</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Statistical convergence:</strong> explicitly retain the same value in the <em>Seed</em> field and the same model, then run $N=100$, 500, and 1000. Plot or tabulate yield and the bounds of the 95% Wilson CI. Measure the interval width in all three cases: by what factor does it narrow when $N$ is multiplied by 10, and does that match the $1/\sqrt{N}$ law? Explain why the first 100 runs are useful for exploration but insufficient for a qualification decision.</div></div></div>
+
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q31</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div><div class="text-sm text-slate-800"><strong>Why three verdicts and not two?</strong> At $N=1000$ and $\Delta d=2$ nm, record the yield $\hat p$ and the $p_{low}$, $p_{high}$ bounds of its 95% CI. Then choose three values for <em>Required yield</em>: one strictly below $p_{low}$, one between $p_{low}$ and $\hat p$, and one strictly above $p_{high}$. Record and explain the three verdicts. <em>Why can a design whose point estimate exceeds the requirement remain inconclusive?</em> What would be needed to lift that verdict — and why does increasing $N$ not guarantee qualification?</div></div></div>
+<div class="qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q32</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div><div class="text-sm text-slate-800 space-y-2">
+                    <p><strong>A/B review of the prescription that will actually be manufactured.</strong> Compare two states of the <em>same 18-layer architecture</em>:</p>
+                    <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                        <li><strong>Design A — reference:</strong> reload <code>H L 2H L H L H L 2H L H L H L 2H L H L</code>, without optimization;</li>
+                        <li><strong>Design B — candidate:</strong> start from A exactly, fix layers 1 to 15, and optimize layers 16 to 18 only with BFGS.</li>
+                    </ul>
+                    <p>Before calculation, write a falsifiable hypothesis: will B improve only the nominal result, or also the robust bound? Qualify A and B with the <em>same</em> bands, thresholds, $d_{min}$, $\Delta d$, $N=1000$, seed, and required yield. Capture A and B in the comparator and require its green valid-paired-comparison indicator.</p>
+                    <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                        🧠 <strong>Expected analysis, with no precomputed answer:</strong> compare nominal merit, $\overline T_{pass}$, yield with 95% CI, P05($Q_r$), P05($\overline T_{pass}$), manufacturability, and the paired yield difference with its interval. Identify which indicators move in the same direction and which expose a trade-off.
+                    </div>
+                    <p>Give a reasoned decision for B: <em>adopt</em>, <em>reject</em>, or <em>extend the study</em>. A nominal improvement without a statistically defensible robust gain is insufficient. Your conclusion must also confirm that all 18 layers and the first fifteen thicknesses were preserved, and cite at least two limitations of the manufacturing model.</p>
+                </div></div></div>
+            </div>
+        </section>
+
+        <!-- OPEN WORKSHOP -->
+        <section id="atelier" class="bg-white rounded-3xl shadow-lg border-2 border-fuchsia-400 overflow-hidden">
+            <div class="bg-fuchsia-50 border-b border-fuchsia-200 px-8 py-4">
+                <h2 class="text-xl font-bold text-fuchsia-950 flex flex-wrap items-center justify-between gap-2">
+                    🎨 Open workshop — design your own component
+                    <span class="text-xs font-bold text-fuchsia-900 bg-fuchsia-200 px-3 py-1 rounded-full">Not graded · self-service</span>
+                </h2>
+            </div>
+            <div class="p-6 space-y-4 text-sm text-slate-800">
+                <figure id="fig-cycle" class="my-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">The design cycle, from idea to feasibility dossier</figcaption>
+                    <div class="p-3">
+<svg viewBox="0 0 640 185" style="width:100%;height:auto;max-height:320px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="designer cycle">
+  <rect x="24" y="52" width="92" height="52" rx="8" fill="#4f46e5"/><text x="70.0" y="68" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">Physical</text><text x="70.0" y="81" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">start</text><circle cx="36" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="36" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">1</text><line x1="116" y1="78" x2="128" y2="78" stroke="#64748b" stroke-width="2"/><polygon points="128,78 121,74 121,82" fill="#64748b"/><rect x="128" y="52" width="92" height="52" rx="8" fill="#4f46e5"/><text x="174.0" y="74" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">BFGS</text><circle cx="140" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="140" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">2</text><line x1="220" y1="78" x2="232" y2="78" stroke="#64748b" stroke-width="2"/><polygon points="232,78 225,74 225,82" fill="#64748b"/><rect x="232" y="52" width="92" height="52" rx="8" fill="#f59e0b"/><text x="278.0" y="74" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">Needle</text><circle cx="244" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="244" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">3</text><line x1="324" y1="78" x2="336" y2="78" stroke="#64748b" stroke-width="2"/><polygon points="336,78 329,74 329,82" fill="#64748b"/><rect x="336" y="52" width="92" height="52" rx="8" fill="#ef4444"/><text x="382.0" y="74" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">Cleanup</text><circle cx="348" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="348" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">4</text><line x1="428" y1="78" x2="440" y2="78" stroke="#64748b" stroke-width="2"/><polygon points="440,78 433,74 433,82" fill="#64748b"/><rect x="440" y="52" width="92" height="52" rx="8" fill="#10b981"/><text x="486.0" y="74" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">Arbitration</text><circle cx="452" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="452" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">5</text><line x1="532" y1="78" x2="544" y2="78" stroke="#64748b" stroke-width="2"/><polygon points="544,78 537,74 537,82" fill="#64748b"/><rect x="544" y="52" width="92" height="52" rx="8" fill="#0f172a"/><text x="590.0" y="74" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">Feasibility</text><circle cx="556" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="556" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">6</text>
+  <path d="M 278 110 Q 226.0 156 174 110" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5 3"/><polygon points="174,110 168,122 182,120" fill="#f59e0b"/><text x="164.4" y="150" font-size="10" fill="#b45309" font-weight="600" font-family="Inter,system-ui,sans-serif">repeat while the merit drops</text>
+  <text x="24" y="34" font-size="11" fill="#0f172a" font-weight="700" font-family="Inter,system-ui,sans-serif">The design cycle — record the merit at every step</text>
+  <text x="24" y="178" font-size="10" fill="#475569" font-family="Inter,system-ui,sans-serif">A design without step 6 is not a deliverable: it is a draft.</text>
+</svg>
+                    </div>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">Steps 2 and 3 alternate: BFGS exploits the existing layers, the needle creates a new one when BFGS saturates. Step 4 is the one people forget, and it decides manufacturability. Step 5 arbitrates between performance and simplicity. Step 6 is the only one that turns a calculation into a component.</p>
+                </figure>
+
+                <p class="bg-fuchsia-50 border-l-4 border-fuchsia-500 p-3 rounded-r text-xs text-fuchsia-950">
+                    The ten main exercises imposed specifications on you. <strong>Here, you write them.</strong>
+                    The simulator accepts any spectral target: it becomes a reusable design tool well beyond this lab —
+                    for a project, an internship, or simply to test an idea.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="border border-slate-200 rounded-lg p-3 space-y-2">
+                        <h3 class="font-bold text-slate-900 text-sm">🚀 Declare the target — 30 seconds</h3>
+                        <ol class="list-decimal list-inside text-xs space-y-1 text-slate-700">
+                            <li>Press <code class="bg-slate-100 px-1 rounded font-mono">D</code> — or click <strong>🎯 Free design</strong> in the header.</li>
+                            <li>Click <strong>+ Segment</strong>, then translate each requirement into one row of the table.</li>
+                            <li>Enter λ min, λ max, T/R/A quantity, angle, polarization, target and weight.</li>
+                            <li>Save it (<code>↓</code>): this is your specification, and it must not move during design.</li>
+                        </ol>
+                    </div>
+                    <div class="border border-slate-200 rounded-lg p-3 space-y-2">
+                        <h3 class="font-bold text-slate-900 text-sm">⚙️ What the merit computes</h3>
+                        <p class="text-xs text-slate-700">The score is a <strong>weighted RMSE</strong> between your computed response and your target, over the declared segments only:</p>
+                        <div class="equation text-center text-xs text-fuchsia-900">
+                            $$\mathrm{RMSE}=\sqrt{\frac{\sum_i w_i\left(X_i-C_i\right)^2}{\sum_i w_i}}$$
+                        </div>
+                        <p class="text-xs text-slate-700">Anything you do not cover is <strong>"don't care"</strong> and does not enter the score. The weight $w_i$ lets you state that one band matters more than another. This is exactly the structure of an industrial specification.</p>
+                    </div>
+                </div>
+
+                <!-- The designer's method -->
+                <div class="border-2 border-indigo-300 rounded-xl overflow-hidden">
+                    <div class="bg-indigo-900 text-white px-4 py-2.5">
+                        <h3 class="font-bold text-sm">🛠️ The designer's method — this is a craft, not a click</h3>
+                        <p class="text-[11px] text-indigo-200 mt-0.5">Declaring a target and pressing "Optimize" almost never produces a good component. Real design is an <strong>iterative cycle</strong> that you must run yourself, and it is not finished until the feasibility study.</p>
+                    </div>
+                    <div class="p-4 space-y-3 text-xs">
+
+                        <div class="flex gap-3">
+                            <span class="shrink-0 w-7 h-7 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center">1</span>
+                            <div>
+                                <strong class="text-slate-900">Choose a starting solution — never at random.</strong>
+                                <p class="text-slate-700 mt-0.5">The optimizer is <em>local</em>: it descends into whichever valley you drop it in. Start from a structure that physics justifies — a quarter-wave for antireflection, <code>(HL)^n</code> for a mirror, <code>(HL)^n 2H (LH)^n</code> for a bandpass — centred on the right wavelength. A good initialization beats any algorithm.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <span class="shrink-0 w-7 h-7 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center">2</span>
+                            <div>
+                                <strong class="text-slate-900">Refine the thicknesses with Quasi-Newton (BFGS).</strong>
+                                <p class="text-slate-700 mt-0.5">Run the <strong>Quasi-Newton (BFGS)</strong> optimizer with key <code class="bg-slate-100 px-1 rounded font-mono">O</code>. It adjusts thicknesses <em>at constant structure</em>: it will never create a layer, it only exploits the ones you give it. Record the merit before and after.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <span class="shrink-0 w-7 h-7 rounded-full bg-amber-500 text-white font-bold flex items-center justify-center">3</span>
+                            <div>
+                                <strong class="text-slate-900">Enrich the structure: needle → optimize cycles.</strong>
+                                <p class="text-slate-700 mt-0.5">When BFGS stops progressing, the <em>structure</em> is the limit, not the thicknesses. Run <strong>📍 Analyze Needle</strong> (key <code class="bg-slate-100 px-1 rounded font-mono">N</code>): the $\pi(z)$ diagnostic tells you where to insert an ultra-thin layer of the other material. Insert, then <strong>immediately re-optimize with BFGS</strong>. Repeat.</p>
+                                <p class="text-slate-700 mt-1"><strong>When to stop?</strong> When a full cycle no longer lowers the merit significantly, or when the needle finds no positive maximum. Keep a log: layer count and merit at every cycle. The curve "merit versus number of layers" <em>is</em> a design result.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <span class="shrink-0 w-7 h-7 rounded-full bg-rose-500 text-white font-bold flex items-center justify-center">4</span>
+                            <div>
+                                <strong class="text-slate-900">Clean the stack — the step everyone forgets.</strong>
+                                <p class="text-slate-700 mt-0.5">After a few cycles your stack contains 0.1 nm slices and adjacent layers of the same material. <strong>None of them is depositable.</strong> Two tools:</p>
+                                <ul class="list-disc list-inside text-slate-700 mt-1 space-y-0.5">
+                                    <li><strong>🧹 Clean up button</strong> (top of panel <em>2. Layer stack</em>): set a threshold; it removes every thinner layer <em>and merges</em> adjacent layers of the same material. It then reports how many layers you saved and how much merit you lost.</li>
+                                    <li><strong>Row-by-row deletion:</strong> the <em>Action</em> column of the layer table, to remove one specific layer you judge useless.</li>
+                                </ul>
+                                <p class="text-slate-700 mt-1"><strong>Then re-optimize</strong>: the remaining thicknesses must absorb what was removed. You will often be surprised — a 7-layer stack can shrink to 2 with no measurable loss. A layer that costs nothing to delete was doing nothing.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <span class="shrink-0 w-7 h-7 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center">5</span>
+                            <div>
+                                <strong class="text-slate-900">Arbitrate: performance versus complexity.</strong>
+                                <p class="text-slate-700 mt-0.5">Every added layer costs machine time, one more error source and a scrap risk. Compare your successive designs: how many merit points does the 8th layer buy? If the answer is "almost none", the engineering decision is to drop it. <strong>The best design is not the highest performing one: it is the simplest one that meets the specification.</strong></p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <span class="shrink-0 w-7 h-7 rounded-full bg-slate-800 text-white font-bold flex items-center justify-center">6</span>
+                            <div>
+                                <strong class="text-slate-900">Close with the feasibility study — otherwise the work is not done.</strong>
+                                <p class="text-slate-700 mt-0.5">A design exists only if it can be deposited. Apply the lab protocol to <em>your</em> component:</p>
+                                <ul class="list-disc list-inside text-slate-700 mt-1 space-y-0.5">
+                                    <li><strong>Nominal audit</strong>: number of layers and materials, $d_{min}$, $d_{max}$, total thickness. A layer below the deposition threshold disqualifies the design.</li>
+                                    
+                                    <li><strong>Statistical qualification</strong>: <em>Assess robustness</em>, $N=1000$. Report yield, 95% CI, adverse percentile and manufacturability rate.</li>
+                                    <li><strong>Common-bias sensitivity</strong>: it is almost always the dominant factor. Determine the calibration tolerance to require from the process.</li>
+                                    <li><strong>Decision</strong>: <em>qualified</em>, <em>conditionally qualified</em> or <em>not qualified</em>, with your assumptions and at least two model limitations.</li>
+                                </ul>
+                                <p class="text-slate-700 mt-1">An "optimized" design without a feasibility study is not a deliverable: it is a draft.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-indigo-50 border-l-4 border-indigo-500 p-2.5 rounded-r text-[11px] text-indigo-950">
+                            <strong>The cycle in one line:</strong> <span class="font-mono">physical start → BFGS → (needle → BFGS)ⁿ → cleanup → BFGS → arbitration → feasibility</span>. Record the merit at every step: that is your design trace, and it is what gets assessed.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r text-xs text-amber-950">
+                    <strong>⚠️ Three traps this lab taught you to avoid — they apply here too:</strong>
+                    <ul class="list-disc list-inside mt-1 space-y-0.5">
+                        <li><strong>Do not specify what physics forbids.</strong> A T = 100% target over 400–1000 nm on an absorbing substrate is unreachable: the optimizer will converge to a poor compromise without warning you.</li>
+                        <li><strong>Leave don't-care zones.</strong> A sharp transition needs room: if you specify 100% at 550 nm and 0% at 555 nm, no finite stack will achieve it.</li>
+                        <li><strong>A good nominal score alone is worth nothing.</strong> Always run the statistical qualification before declaring a design good.</li>
+                    </ul>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="font-bold text-slate-900 text-sm">🎯 Six challenges, from simplest to most demanding</h3>
+                    <div class="grid md:grid-cols-2 gap-2 text-xs">
+                        <div class="border border-emerald-200 bg-emerald-50/60 rounded p-2"><span class="text-emerald-600 font-bold">★☆☆</span> <strong>Cold mirror.</strong> $R \ge 95\%$ <em>at every point</em> of $700-850$ nm, and $\overline{T} \ge 85\%$ over $420-650$ nm. How many layers do you need? <em>Hint: a quarter-wave stack centred at 775 nm gets there; find the minimum count.</em></div>
+                        <div class="border border-emerald-200 bg-emerald-50/60 rounded p-2"><span class="text-emerald-600 font-bold">★☆☆</span> <strong>Single-colour antireflection.</strong> Aim for $\overline{R} \le 1\%$ over $530-570$ nm only, with ZnS/YF₃ on BK7. Compare with the broadband design of Q16: the price of bandwidth. <em>You will not reach 0.2%: compare $n_L=1.469$ with the ideal index $\sqrt{n_{BK7}}=1.232$ from Q10, and conclude on what limits you — the algorithm or the materials?</em></div>
+                        <div class="border border-amber-200 bg-amber-50/60 rounded p-2"><span class="text-amber-600 font-bold">★★☆</span> <strong>Notch filter.</strong> Try to block $T \le 1\%$ over $525-545$ nm while keeping $\overline{T} \ge 80\%$ everywhere else in the visible. <em>Measure the width you actually obtain below 10% transmission: it will not drop below ≈ 150 nm, however many layers you add. Relate that limit to the index contrast of Q4, and say which material pair would be needed for a 20 nm notch.</em></div>
+                        <div class="border border-amber-200 bg-amber-50/60 rounded p-2"><span class="text-amber-600 font-bold">★★☆</span> <strong>50/50 beamsplitter.</strong> $R=T=50\%$ over $450-650$ nm, target RMSE $\le 18$ points. <em>A non-extreme target is harder than an extreme one: $R=0$ and $R=1$ are natural points of interference, $R=50\%$ is not. Check that adding layers beyond 3 barely helps, and explain why.</em></div>
+                        <div class="border border-rose-200 bg-rose-50/60 rounded p-2"><span class="text-rose-600 font-bold">★★★</span> <strong>Your own, qualified.</strong> Write a full specification, meet it, then qualify it ($N=1000$). Submit the Q28–Q32 decision sheet on <em>your</em> component.</div>
+                        <div class="border border-rose-200 bg-rose-50/60 rounded p-2"><span class="text-rose-600 font-bold">★★★</span> <strong>The duel.</strong> Have another team design a target, swap JSON files, and qualify each other's design. Defend or refute their conclusion.</div>
+                    </div>
+                </div>
+
+                <p class="text-xs text-slate-600 bg-slate-50 border-l-4 border-slate-300 p-2 rounded-r">
+                    <strong>Keep your work:</strong> the <code>↓</code> and <code>↑</code> buttons in the editor export and re-import your target as JSON. A saved specification can be reused, passed to a classmate, or attached to a report as supporting evidence.
+                </p>
+            </div>
+        </section>
+
+        <!-- BIBLIOGRAPHY -->
+        <section class="bg-slate-800 text-white rounded-3xl shadow-lg border border-slate-700 overflow-hidden mt-8">
+            <div class="bg-slate-900 border-b border-slate-700 px-8 py-4">
+                <h2 class="text-xl font-bold flex items-center gap-2">
+                    📚 Bibliography & Recommended Resources
+                </h2>
+            </div>
+            <div class="p-6 space-y-4 text-sm text-slate-300">
+                <ul class="list-disc list-inside space-y-3">
+                    <li><strong>Course Document:</strong> <a href="theorie en francais.html" target="_blank" class="text-indigo-400 hover:text-indigo-300 hover:underline font-bold">Theory of Optical Thin Films</a>.</li>
+                    <li><strong>The Optical Coating Bible:</strong> H.A. Macleod, <i>"Thin-Film Optical Filters"</i> (CRC Press).</li>
+                    <li><strong>Global Dispersion Database:</strong> <a href="https://refractiveindex.info" target="_blank" class="text-indigo-400 hover:text-indigo-300 hover:underline">refractiveindex.info</a>.</li>
+                    <li><strong>Theoretical Foundations:</strong> Max Born & Emil Wolf, <i>"Principles of Optics"</i>.</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 px-6 text-center text-xs border-t border-slate-800">
+        <p class="font-bold text-white mb-1">BUT 3 FI MCPC Path — L2 · L3 · M1 · M2 students — Institut Fresnel 2026</p>
+        <p class="text-slate-500">Modular optical thin-film simulation lab path</p>
+    </footer>
+
+    <script>
+    // Highlight the current section in the navigation bar.
+    (function () {
+        const links = [...document.querySelectorAll('.navlink')];
+        const targets = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+        if (!targets.length) return;
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (!e.isIntersecting) return;
+                links.forEach(l => l.classList.remove('active'));
+                const link = links.find(l => l.getAttribute('href') === '#' + e.target.id);
+                if (link) link.classList.add('active');
+            });
+        }, { rootMargin: '-20% 0px -70% 0px' });
+        targets.forEach(t => obs.observe(t));
+    })();
+    </script>
+
+</body>
+</html>

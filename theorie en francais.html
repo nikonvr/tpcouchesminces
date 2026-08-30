@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="revision" content="2026-08-30">
+    <title>Théorie des Couches Minces Optiques</title>
+    <!-- Polices scientifiques -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;0,700;1,400&family=Source+Code+Pro:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Moteur unique de rendu mathématique -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <style>
+        /* ═══════════════════════════════════════════
+           Style Document Scientifique (type LaTeX)
+           ═══════════════════════════════════════════ */
+
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #0284c7;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --text-secondary: #64748b;
+            --heading: #0f172a;
+            --border: #cbd5e1;
+            --bg-formula: #ffffff;
+            --warn-bg: #fef2f2;
+            --warn-border: #ef4444;
+            --warn-text: #991b1b;
+            --pedagogy-bg: #f0fdf4;
+            --pedagogy-border: #22c55e;
+            --pedagogy-text: #166534;
+            --adv-bg: #f8fafc;
+            --adv-border: #64748b;
+            --bg-code: #1e1e2e;
+            --serif: 'STIX Two Text', Georgia, serif;
+            --sans: 'Inter', system-ui, sans-serif;
+            --mono: 'Source Code Pro', monospace;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: var(--serif);
+            font-size: 16px;
+            line-height: 1.75;
+            color: var(--text-color);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+            background-color: var(--bg-color);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── En-tête du document ── */
+        .doc-header {
+            text-align: center;
+            padding: 20px 0 40px;
+            border-bottom: 2px solid var(--heading);
+            margin-bottom: 40px;
+        }
+
+        .doc-header h1 {
+            font-family: var(--sans);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--heading);
+            letter-spacing: -0.5px;
+            margin: 0 0 16px;
+        }
+
+        .doc-header .subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin: 0 0 12px;
+        }
+
+        .tag {
+            display: inline-block;
+            font-family: var(--sans);
+            font-size: 12px;
+            color: #ffffff;
+            background-color: var(--secondary-color);
+            padding: 4px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── Titres ── */
+        h1, h2, h3, h4 { color: var(--heading); margin-top: 2.5em; margin-bottom: 0.8em; font-family: var(--sans); }
+        h2 { font-size: 22px; font-weight: 600; color: var(--secondary-color); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        h3 { font-size: 18px; font-weight: 600; margin-top: 2em; }
+
+        p { margin: 1em 0; text-align: justify; hyphens: auto; }
+
+        /* ── Boîtes de formules ── */
+        .formula-box {
+            background-color: var(--bg-formula);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--secondary-color);
+            border-radius: 4px;
+            padding: 20px 24px;
+            margin: 24px 0;
+            overflow-x: auto;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        /* ── Boîtes d'avertissement / Pédagogie ── */
+        .warning-box, .pedagogy-box {
+            border-radius: 4px;
+            padding: 16px 20px;
+            margin: 24px 0;
+            font-size: 15px;
+        }
+        
+        .warning-box {
+            background-color: var(--warn-bg);
+            border: 1px solid #fca5a5;
+            border-left: 4px solid var(--warn-border);
+            color: var(--warn-text);
+        }
+
+        .pedagogy-box {
+            background-color: var(--pedagogy-bg);
+            border: 1px solid #bbf7d0;
+            border-left: 4px solid var(--pedagogy-border);
+            color: var(--pedagogy-text);
+        }
+
+        .box-title {
+            font-family: var(--sans);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* ── Détails Avancés (Collapsible) ── */
+        details.advanced-box {
+            background-color: var(--adv-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--adv-border);
+            border-radius: 4px;
+            padding: 16px 20px;
+            margin: 24px 0;
+            transition: all 0.3s ease;
+        }
+
+        details.advanced-box[open] { padding-bottom: 20px; }
+
+        details.advanced-box summary {
+            font-family: var(--sans);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #334155;
+            outline: none;
+            display: flex;
+            align-items: center;
+        }
+
+        details.advanced-box summary:hover { color: #0f172a; }
+
+        details.advanced-box summary::before {
+            content: "🎓 POUR ALLER PLUS LOIN — ";
+            color: var(--adv-border);
+            margin-right: 8px;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        details.advanced-box > div {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed #cbd5e1;
+            font-size: 15px;
+        }
+
+        /* ── Code ── */
+        code { font-family: var(--mono); font-size: 14px; background-color: #e2e8f0; padding: 2px 6px; border-radius: 4px; color: #b45309; }
+        pre { font-family: var(--mono); font-size: 14px; line-height: 1.6; background-color: var(--bg-code); color: #cdd6f4; padding: 24px; border-radius: 6px; overflow-x: auto; margin: 24px 0; }
+        pre code { background: none; padding: 0; color: inherit; }
+
+        /* ── Listes & Tables ── */
+        ul, ol { padding-left: 24px; margin: 1em 0; }
+        li { margin-bottom: 8px; }
+        table { border-collapse: collapse; width: 100%; margin: 24px 0; font-size: 15px; font-family: var(--sans); }
+        th, td { border: 1px solid var(--border); padding: 12px 16px; text-align: left; vertical-align: top; }
+        th { background-color: var(--secondary-color); color: #ffffff; font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        tr:nth-child(even) { background-color: #f1f5f9; }
+
+        /* ── Table des matières ── */
+        .toc { background: #ffffff; padding: 24px 32px; border-radius: 6px; border: 1px solid var(--border); margin: 0 0 40px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .toc h3 { font-family: var(--sans); font-size: 16px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin: 0 0 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .toc a { font-family: var(--sans); font-size: 15px; text-decoration: none; color: var(--secondary-color); display: block; margin: 8px 0; transition: color 0.2s; }
+        .toc a:hover { color: var(--accent-color); text-decoration: underline; }
+
+        /* ── Guide des niveaux de lecture & Badges ── */
+        .reading-guide {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 24px 0 32px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            font-family: var(--sans);
+        }
+        .reading-level {
+            flex: 1;
+            min-width: 220px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+        .reading-level strong { display: block; font-size: 13.5px; margin-bottom: 2px; color: var(--text-main); }
+        .badge-l1 { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 12px; background: #dcfce7; color: #15803d; vertical-align: middle; margin-left: 6px; }
+        .badge-l2 { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 12px; background: #e0f2fe; color: #0369a1; vertical-align: middle; margin-left: 6px; }
+        .badge-l3 { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 12px; background: #f3e8ff; color: #7e22ce; vertical-align: middle; margin-left: 6px; }
+
+        /* ── L'Essentiel / Takeaway Box ── */
+        .takeaway-box {
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid var(--secondary-color);
+            padding: 16px 20px;
+            border-radius: 0 6px 6px 0;
+            margin: 24px 0;
+            font-size: 14.5px;
+        }
+        .takeaway-box .box-title {
+            color: var(--secondary-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 12px;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .takeaway-box ul { margin: 6px 0 0; padding-left: 20px; }
+        .takeaway-box li { margin-bottom: 4px; font-size: 14px; color: var(--text-main); }
+
+        /* ── SVG Diagrams ── */
+        .diagram-container {
+            text-align: center;
+            margin: 36px 0;
+            overflow-x: auto;
+            padding: 8px 4px;
+        }
+        svg {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+            background: #ffffff;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="doc-header">
+        <h1>Théorie des Couches Minces Optiques</h1>
+        <p class="subtitle">Formalisme matriciel de Macleod et modélisation numérique</p>
+        <span class="tag">Niveau Master (M2)</span>
+    </div>
+    
+    <p>Ce document détaille la physique et les équations permettant de calculer les propriétés optiques d'un empilement de couches minces. Conçu pour les étudiants en physique numérique et optique, il tisse le lien entre l'intuition physique (interférences), les équations de Maxwell, et l'implémentation numérique via la méthode des matrices de transfert (TMM).</p>
+
+    <!-- Guide des 3 Niveaux de Lecture -->
+    <div class="reading-guide">
+        <div class="reading-level">
+            <span class="badge-l1" style="margin: 0; font-size: 12px; padding: 3px 8px;">🟢 Niveau 1</span>
+            <div>
+                <strong>Intuition &amp; Concepts physiques</strong>
+                Découverte des interférences, analogies visuelles et schémas clés.
+            </div>
+        </div>
+        <div class="reading-level">
+            <span class="badge-l2" style="margin: 0; font-size: 12px; padding: 3px 8px;">🔵 Niveau 2</span>
+            <div>
+                <strong>Formalisme &amp; Calculs d'Ingénieur</strong>
+                Équations de Maxwell, matrices 2×2, calcul de $R$ et $T$, code Python.
+            </div>
+        </div>
+        <div class="reading-level">
+            <span class="badge-l3" style="margin: 0; font-size: 12px; padding: 3px 8px;">🎓 Niveau 3</span>
+            <div>
+                <strong>Expertise &amp; Pièges critiques</strong>
+                Coupures complexes (`Branch cut`), profil d'onde $|E(z)|^2$, flux de Poynting.
+            </div>
+        </div>
+    </div>
+
+    <div class="toc">
+        <h3>Sommaire du cours</h3>
+        <a href="#intro">1. Introduction aux interférences en couches minces <span class="badge-l1">Niveau 1</span></a>
+        <a href="#conventions">2. Conventions et notations (Indices complexes) <span class="badge-l2">Niveau 2</span></a>
+        <a href="#maxwell">3. Des équations de Maxwell à la matrice de transfert <span class="badge-l2">Niveau 2</span></a>
+        <div style="padding-left: 18px; margin-bottom: 6px;">
+            <a href="#maxwell_harm" style="font-size: 13.5px; margin: 3px 0; color: var(--text-secondary);">3.1 Équations de Maxwell en régime harmonique</a>
+            <a href="#maxwell_helmholtz" style="font-size: 13.5px; margin: 3px 0; color: var(--text-secondary);">3.2 Équation d'onde et équation de Helmholtz</a>
+            <a href="#maxwell_bc" style="font-size: 13.5px; margin: 3px 0; color: var(--text-secondary);">3.3 Conditions de continuité aux interfaces (Conditions aux limites)</a>
+            <a href="#maxwell_sommerfeld" style="font-size: 13.5px; margin: 3px 0; color: var(--text-secondary);">3.4 Ondes progressives et Condition d'onde sortante (Sommerfeld)</a>
+            <a href="#maxwell_matrix" style="font-size: 13.5px; margin: 3px 0; color: var(--text-secondary);">3.5 Dérivation analytique de la matrice caractéristique 2×2</a>
+        </div>
+        <a href="#tmm">4. Méthode des matrices de transfert (TMM) <span class="badge-l2">Niveau 2</span></a>
+        <a href="#polarization">5. Polarisation (s et p) et admittance optique <span class="badge-l2">Niveau 2</span></a>
+        <a href="#coeffs">6. Coefficients de Fresnel (R, T) et vecteur de Poynting <span class="badge-l2">Niveau 2</span></a>
+        <a href="#finite_sub">7. Substrat d'épaisseur finie (réflexions incohérentes) <span class="badge-l2">Niveau 2</span></a>
+        <a href="#efield">8. [Avancé] Profil du champ électrique $|E(z)|^2$ <span class="badge-l3">Niveau 3</span></a>
+        <a href="#examples">9. Exemples d'application (Couche AR et Filtre multicouche) <span class="badge-l1">Niveau 1 &amp; 2</span></a>
+        <a href="#code_example">10. Implémentation numérique (Code Python) <span class="badge-l2">Niveau 2</span></a>
+    </div>
+
+    <!-- 1. INTRODUCTION -->
+    <h2 id="intro">1. Introduction aux interférences en couches minces <span class="badge-l1">Niveau 1</span></h2>
+    
+    <div class="pedagogy-box">
+        <span class="box-title">L'intuition physique</span>
+        Avez-vous déjà remarqué les couleurs irisées sur une bulle de savon ou une flaque d'huile ? C'est l'optique des couches minces en action. Une partie de la lumière est réfléchie à la première interface (air/huile), tandis qu'une autre partie pénètre, se propage, et est réfléchie à la seconde interface (huile/eau).
+        <br><br>
+        Lorsque ces rayons se recombinent, ils <strong>interfèrent</strong>. Selon l'épaisseur de la couche, certaines longueurs d'onde s'annulent (interférence destructive) et d'autres se renforcent (constructive). L'ingénierie optique consiste à empiler des matériaux avec une précision nanométrique pour façonner sur mesure ces spectres de réflexion et transmission.
+    </div>
+
+    <p>Au lieu de sommer à la main la série infinie des réflexions multiples dans chaque couche (formule d'Airy), on utilise une approche globale dérivée de l'électromagnétisme : <strong>la méthode matricielle</strong>. Chaque couche est modélisée par une matrice 2×2 ; l'effet d'un empilement de 50 couches n'est que le produit de 50 matrices.</p>
+
+    <div class="diagram-container">
+        <svg width="660" height="300" viewBox="0 0 660 300" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <!-- Milieux avec bordures nettes -->
+            <rect x="30" y="200" width="600" height="80" fill="#f0fdf4" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+            <rect x="30" y="100" width="600" height="100" fill="#e0f2fe" opacity="0.6" stroke="#cbd5e1" stroke-width="1"/>
+            
+            <text x="50" y="50" font-family="sans-serif" font-weight="bold" font-size="13" fill="#475569">Milieu incident (Air, n₀ ≈ 1)</text>
+            <text x="50" y="155" font-family="sans-serif" font-weight="bold" font-size="13" fill="#0284c7">Couche mince (Indice n₁, Épaisseur d)</text>
+            <text x="50" y="245" font-family="sans-serif" font-weight="bold" font-size="13" fill="#16a34a">Substrat (Verre, n_sub ≈ 1.5)</text>
+            
+            <!-- Rayon incident -->
+            <path d="M 160 25 L 250 100" stroke="#f59e0b" stroke-width="3" fill="none" marker-end="url(#arr-orange)"/>
+            <text x="150" y="20" font-family="sans-serif" font-size="12" font-weight="bold" fill="#d97706">Lumière incidente</text>
+            
+            <!-- R1 -->
+            <path d="M 250 100 L 340 25" stroke="#ef4444" stroke-width="3" fill="none" stroke-dasharray="4"/>
+            <text x="350" y="25" font-family="sans-serif" font-size="12" font-weight="bold" fill="#ef4444">Réflexion 1ère face (R₁)</text>
+            
+            <!-- R2 -->
+            <path d="M 250 100 L 295 200 L 340 100 L 430 25" stroke="#ef4444" stroke-width="3" fill="none"/>
+            <text x="440" y="25" font-family="sans-serif" font-size="12" font-weight="bold" fill="#ef4444">Réflexion 2ème face (R₂)</text>
+            
+            <text x="330" y="245" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#475569" font-style="italic">Les rayons R₁ et R₂ interfèrent dans l'air.</text>
+            <defs>
+                <marker id="arr-orange" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
+                    <polygon points="0 0, 8 4, 0 8" fill="#f59e0b" />
+                </marker>
+            </defs>
+        </svg>
+    </div>
+
+    <!-- 2. CONVENTIONS -->
+    <h2 id="conventions">2. Conventions et notations <span class="badge-l2">Niveau 2</span></h2>
+
+    <p>Pour garantir une lecture sans ambiguïté, l'ensemble des paramètres, variables et symboles utilisés dans ce document est regroupé ci-dessous selon leur domaine physique :</p>
+
+    <h3>2.1 Paramètres de l'onde et grandeurs spatio-temporelles</h3>
+    <table>
+        <tr><th>Symbole</th><th>Nom</th><th>Unité</th><th>Définition &amp; Signification physique</th></tr>
+        <tr><td>$\lambda$</td><td>Longueur d'onde</td><td>$\text{nm}$ (ou $\mu\text{m}$)</td><td>Longueur d'onde de la lumière incidente dans le vide ($c/f$).</td></tr>
+        <tr><td>$\omega$</td><td>Pulsation angulaire</td><td>$\text{rad}\cdot\text{s}^{-1}$</td><td>$\omega = 2\pi c / \lambda = 2\pi f$, fréquence angulaire de l'oscillation temporelle.</td></tr>
+        <tr><td>$c$</td><td>Célérité de la lumière</td><td>$\text{m}\cdot\text{s}^{-1}$</td><td>Vitesse de la lumière dans le vide ($c = 1/\sqrt{\varepsilon_0\mu_0} \approx 3 \times 10^8\text{ m/s}$).</td></tr>
+        <tr><td>$k_0$</td><td>Nombre d'onde dans le vide</td><td>$\text{rad}\cdot\text{m}^{-1}$</td><td>$k_0 = \omega/c = 2\pi/\lambda$.</td></tr>
+        <tr><td>$z$</td><td>Coordonnée spatiale normale</td><td>$\text{nm}$ (ou $\text{m}$)</td><td>Axe orienté <strong>vers le haut</strong> ($\uparrow$), avec $z=0$ à la surface du substrat.</td></tr>
+        <tr><td>$z_j$</td><td>Altitude d'interface</td><td>$\text{nm}$</td><td>$z_j = \sum_{k=1}^j d_k$, altitude du sommet de la couche $j$ ($z_0 = 0$).</td></tr>
+        <tr><td>$\theta_0$</td><td>Angle d'incidence</td><td>$\text{rad}$ ou $^\circ$</td><td>Angle du faisceau incident dans l'air par rapport à la normale $z$.</td></tr>
+        <tr><td>$\theta_j$</td><td>Angle de réfraction</td><td>$\text{rad}$ (complexe)</td><td>Angle dans la couche $j$ ($\hat{n}_j \sin\theta_j = n_0 \sin\theta_0$).</td></tr>
+        <tr><td>$S_0$</td><td>Invariant de Snell-Descartes</td><td>sans dim.</td><td>$S_0 = n_0 \sin\theta_0$, invariant le long de tout l'empilement multicouche.</td></tr>
+        <tr><td>$k_x$</td><td>Composante transverse d'onde</td><td>$\text{rad}\cdot\text{m}^{-1}$</td><td>$k_x = k_0 S_0 = k_0 n_0 \sin\theta_0$ (conservée par invariance par translation).</td></tr>
+        <tr><td>$k_{z,j}$</td><td>Composante normale d'onde</td><td>$\text{rad}\cdot\text{m}^{-1}$</td><td>$k_{z,j} = k_0 \hat{n}_j \cos\theta_j = k_0 \sqrt{\hat{n}_j^2 - S_0^2}$.</td></tr>
+    </table>
+
+    <h3>2.2 Milieux, matériaux et empilement de couches</h3>
+    <table>
+        <tr><th>Symbole</th><th>Nom</th><th>Unité</th><th>Définition &amp; Signification physique</th></tr>
+        <tr><td>$n$</td><td>Indice de réfraction (réel)</td><td>sans dim.</td><td>Ralentissement de la vitesse de phase ($v_\phi = c/n$) dans le matériau ($n \ge 1$).</td></tr>
+        <tr><td>$\kappa$</td><td>Coefficient d'extinction</td><td>sans dim.</td><td>Atténuation de l'onde par absorption diélectrique/ohmique ($\kappa \ge 0$).</td></tr>
+        <tr><td>$\hat{n}$</td><td>Indice de réfraction complexe</td><td>sans dim.</td><td>$\hat{n} = n - i\kappa$ (convention Macleod $e^{+i\omega t}$ imposant $\mathrm{Im}(\hat{n}) \le 0$).</td></tr>
+        <tr><td>$n_0, \eta_0$</td><td>Indice &amp; Admittance de l'air</td><td>sans dim. / $\mathcal{Y}_0$</td><td>Milieu incident semi-infini au sommet ($z \ge z_N$, avec $n_0 = 1.0$).</td></tr>
+        <tr><td>$n_{sub}, \eta_{sub}$</td><td>Indice &amp; Admittance du substrat</td><td>sans dim. / $\mathcal{Y}_0$</td><td>Milieu émergent semi-infini à la base de l'empilement ($z \le 0$).</td></tr>
+        <tr><td>$d$ ou $d_j$</td><td>Épaisseur physique (géométrique)</td><td>$\text{nm}$</td><td>Épaisseur métrique de la couche ($d_j = z_j - z_{j-1}$).</td></tr>
+        <tr><td>$nd$ ou $n_j d_j$</td><td>Épaisseur optique</td><td>$\text{nm}$</td><td>Chemin optique effectif traversé par la lumière ($n \times d$).</td></tr>
+        <tr><td>$\delta$ ou $\delta_j$</td><td>Déphasage optique de couche</td><td>$\text{rad}$</td><td>$\delta_j = k_{z,j} d_j = \frac{2\pi}{\lambda} \hat{n}_j d_j \cos\theta_j$.</td></tr>
+        <tr><td>$N$</td><td>Nombre total de couches</td><td>entier</td><td>Nombre de couches du multicouche (numérotées de $j=1$ à la base à $j=N$ au sommet).</td></tr>
+    </table>
+
+    <h3>2.3 Électromagnétisme, champs et formalisme matriciel (Macleod)</h3>
+    <table>
+        <tr><th>Symbole</th><th>Nom</th><th>Unité</th><th>Définition &amp; Signification physique</th></tr>
+        <tr><td>$\vec{E}, \vec{H}$</td><td>Champs $\vec{E}$ et $\vec{H}$</td><td>$\text{V}\cdot\text{m}^{-1}$, $\text{A}\cdot\text{m}^{-1}$</td><td>Vecteurs champs électrique et magnétique complexes.</td></tr>
+        <tr><td>$E_\parallel, H_\parallel$</td><td>Champs tangentiels</td><td>$\text{V}\cdot\text{m}^{-1}$, $\text{A}\cdot\text{m}^{-1}$</td><td>Composantes parallèles aux plans des interfaces (strictement continues à $z=z_j$).</td></tr>
+        <tr><td>$E_j^+, E_j^-$</td><td>Ondes montante / descendante</td><td>$\text{V}\cdot\text{m}^{-1}$</td><td>Amplitudes des ondes se propageant vers le haut ($+$, réflexion) et vers le bas ($-$).</td></tr>
+        <tr><td>$\eta_j$</td><td>Admittance optique inclinée</td><td>sans dim. (norm.)</td><td>Rapport des champs tangentiels $H_\parallel / E_\parallel$ dans la couche $j$.</td></tr>
+        <tr><td>$\eta_{j,s}$</td><td>Admittance en polarisation TE (s)</td><td>sans dim.</td><td>$\eta_{j,s} = \hat{n}_j \cos\theta_j$ ($\vec{E}$ perpendiculaire au plan d'incidence).</td></tr>
+        <tr><td>$\eta_{j,p}$</td><td>Admittance en polarisation TM (p)</td><td>sans dim.</td><td>$\eta_{j,p} = \hat{n}_j / \cos\theta_j$ ($\vec{H}$ perpendiculaire au plan d'incidence).</td></tr>
+        <tr><td>$M_j$</td><td>Matrice de transfert de couche</td><td>matrice $2\times 2$</td><td>Relie $[E(z_j), H(z_j)]^T = M_j [E(z_{j-1}), H(z_{j-1})]^T$ ($\det M_j = 1$).</td></tr>
+        <tr><td>$M$</td><td>Matrice caractéristique globale</td><td>matrice $2\times 2$</td><td>Produit ordonné de bas en haut : $M = M_N M_{N-1} \cdots M_1$.</td></tr>
+        <tr><td>$B, C$</td><td>Vecteur de champ équivalent</td><td>sans dim. / admittance</td><td>$\begin{pmatrix} B \\ C \end{pmatrix} = M \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$, champ total normalisé au sommet ($z=z_N$).</td></tr>
+    </table>
+
+    <h3>2.4 Coefficients optiques, bilans énergétiques &amp; photométrie</h3>
+    <table>
+        <tr><th>Symbole</th><th>Nom</th><th>Unité</th><th>Définition &amp; Signification physique</th></tr>
+        <tr><td>$r, t$</td><td>Coefficients de Fresnel complexes</td><td>sans dim. (complexes)</td><td>Amplitudes : $r = \frac{\eta_0 B - C}{\eta_0 B + C}$ (réflexion) et $t = \frac{2\eta_0}{\eta_0 B + C}$ (transmission).</td></tr>
+        <tr><td>$R$</td><td>Réflectance énergétique</td><td>sans dim. ($[0, 1]$)</td><td>Fraction de puissance réfléchie : $R = |r|^2$.</td></tr>
+        <tr><td>$T$</td><td>Transmittance énergétique</td><td>sans dim. ($[0, 1]$)</td><td>Fraction de puissance transmise : $T = \frac{\mathrm{Re}(\eta_{sub})}{\mathrm{Re}(\eta_0)} |t|^2$.</td></tr>
+        <tr><td>$A$</td><td>Absorbance énergétique</td><td>sans dim. ($[0, 1]$)</td><td>Fraction de puissance absorbée dans les couches : $A = 1 - R - T$.</td></tr>
+        <tr><td>$\vec{S}, S_z$</td><td>Vecteur de Poynting &amp; Flux normal</td><td>$\text{W}\cdot\text{m}^{-2}$</td><td>Densité de puissance traversant l'interface : $S_z = \frac{1}{2}\mathrm{Re}(\eta) |E_\parallel|^2$.</td></tr>
+        <tr><td>$R_{total}, T_{total}$</td><td>Coefficients avec face arrière</td><td>sans dim.</td><td>Coefficients photométriques incohérents tenant compte de la seconde face du verre.</td></tr>
+    </table>
+
+    <div class="pedagogy-box" style="margin-top: 15px;">
+        <span class="box-title">Précision sur les unités d'admittance optique ($\eta$) et les constantes fondamentales</span>
+        <ul>
+            <li><strong>Constantes fondamentales du vide :</strong>
+                <ul>
+                    <li>Permittivité diélectrique du vide : $\varepsilon_0 \approx 8.854 \times 10^{-12}\text{ F}\cdot\text{m}^{-1}$ ($\text{C}^2\cdot\text{N}^{-1}\cdot\text{m}^{-2}$).</li>
+                    <li>Perméabilité magnétique du vide : $\mu_0 = 4\pi \times 10^{-7}\text{ H}\cdot\text{m}^{-1} \approx 1.257 \times 10^{-6}\text{ N}\cdot\text{A}^{-2}$.</li>
+                    <li>Admittance intrinsèque du vide : $\mathcal{Y}_0 = \sqrt{\varepsilon_0 / \mu_0} \approx \frac{1}{376.73\,\Omega} \approx 2.654 \times 10^{-3}\ \Omega^{-1}$ (Siemens, $\text{S}$).</li>
+                </ul>
+            </li>
+            <li><strong>Admittance normalisée (Convention de Macleod) :</strong> Dans la théorie des couches minces, on travaille quasi-systématiquement avec l'admittance optique <em>normalisée par rapport au vide</em> : $\eta = \mathcal{Y} / \mathcal{Y}_0$. Par conséquent, $\eta$, $\eta_s = \hat{n}\cos\theta$ et $\eta_p = \hat{n}/\cos\theta$ sont manipulées comme des <strong>grandeurs sans dimension</strong> (exprimées en "unités d'indice de réfraction").</li>
+        </ul>
+    </div>
+
+    <p style="font-size: 14.5px; color: var(--text-secondary); margin-bottom: 20px;">
+        <em>Convention de repère et de numérotation : l'axe $z$ est orienté <strong>vers le haut</strong> ($\uparrow$), dans le sens de croissance physique du dépôt. Le plan $z=0$ correspond à la surface du substrat, la couche 1 est collée au substrat ($0 \le z \le d_1$), et la couche $N$ est la dernière couche déposée, en contact avec l'air à $z = z_N = \sum_{j=1}^N d_j$.</em>
+    </p>
+
+    <div class="pedagogy-box">
+        <span class="box-title">Choix du repère spatial : Pourquoi $z=0$ au substrat et orienté vers le haut ?</span>
+        Ce choix correspond exactement à la <strong>réalité expérimentale du dépôt en laboratoire</strong> (PVD, ALD, évaporation) :
+        <ul>
+            <li><strong>Croissance physique :</strong> Le substrat nu sert de socle de référence ($z=0$). L'épaisseur s'accumule vers le haut au fur et à mesure du dépôt des couches ($j=1, 2, \dots, N$).</li>
+            <li><strong>Harmonie avec le formalisme matriciel de Macleod :</strong> Les conditions aux limites s'initialisent sur le substrat à la base ($z=0$) : $\begin{pmatrix} E(0) \\ H(0) \end{pmatrix} = \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$. En remontant couche par couche vers le haut, on multiplie successivement par $M_1$, $M_2$, ..., jusqu'à $M_N$. Au sommet de l'empilement ($z=z_N$), le champ total en contact avec l'air incident est directement donné par le vecteur caractéristique $\begin{pmatrix} B \\ C \end{pmatrix} = M_N \cdots M_1 \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$.</li>
+            <li><strong>Sens d'éclairement :</strong> La lumière incidente arrive depuis l'air ($z \ge z_N$) et se propage vers le bas (vers les $z$ décroissants, en direction du substrat).</li>
+        </ul>
+    </div>
+
+    <div class="warning-box">
+        <span class="box-title">Démonstration fondamentale : Pourquoi $\mathrm{Im}(\hat{n}) \le 0$ avec la convention $e^{+i\omega t}$ ?</span>
+        <p>En électromagnétisme harmonique, le choix de la dépendance temporelle fixe de manière univoque le signe de la partie imaginaire de l'indice de réfraction. Démonstration :</p>
+        <p>1. Sous la convention de <strong>Macleod / Ingénierie</strong>, les champs varient en $e^{+i\omega t}$. Une onde plane se propageant dans le sens direct ($+z$) s'écrit :</p>
+        $$\vec{E}(z,t) = \vec{E}_0 \, e^{i(\omega t - k z)} \quad \text{avec} \quad k = k_0 \hat{n} = \frac{\omega}{c} \hat{n}$$
+        <p>2. Écrivons l'indice complexe avec sa partie réelle $n$ et sa partie imaginaire $\mathrm{Im}(\hat{n})$ :</p>
+        $$\vec{E}(z,t) = \vec{E}_0 \, e^{i\left(\omega t - k_0 (n + i\,\mathrm{Im}(\hat{n})) z\right)} = \vec{E}_0 \, \underbrace{e^{k_0 \mathrm{Im}(\hat{n}) z}}_{\text{Atténuation spatiale}} \, \underbrace{e^{i(\omega t - k_0 n z)}}_{\text{Phase oscillante}}$$
+        <p>3. Pour un milieu passif <strong>absorbant</strong>, l'amplitude doit décroître exponentiellement selon $e^{-k_0 \kappa z}$ (loi de Beer-Lambert, avec le coefficient d'extinction $\kappa \ge 0$).</p>
+        <p>Par identification directe du facteur d'amplitude :</p>
+        $$\mathrm{Im}(\hat{n}) = -\kappa \le 0 \implies \mathbf{\hat{n} = n - i\kappa \quad (\kappa \ge 0)}$$
+        <p style="margin-bottom: 0;"><em>Avertissement :</em> Si vous utilisiez par erreur un signe plus ($\hat{n} = n + i\kappa$) avec $e^{+i\omega t}$, le facteur spatial deviendrait $e^{+k_0 \kappa z}$, simulant une <strong>amplification exponentielle non physique</strong> (création spontanée d'énergie infinie dans le matériau passif).</p>
+    </div>
+
+    <div class="pedagogy-box">
+        <span class="box-title">Culture scientifique : L'autre convention ($e^{-i\omega t}$) en Physique Théorique</span>
+        Il est capital de savoir qu'une seconde convention coexiste dans la littérature scientifique (physique quantique, optique fondamentale, traités de Born &amp; Wolf, Jackson, Landau) :
+        <p>Dans cette seconde convention, le temps est choisi en <strong>$e^{-i\omega t}$</strong>. L'onde se propageant vers $+z$ s'écrit alors $\vec{E}(z,t) = \vec{E}_0 e^{-i(\omega t - kz)} = \vec{E}_0 e^{i(kz - \omega t)}$. Pour assurer l'atténuation en $e^{-k_0 \kappa z}$, l'indice complexe s'écrit alors avec un <strong>signe plus</strong> :</p>
+        $$\mathbf{\hat{n} = n + i\kappa \quad (\text{Convention Physique Théorique } e^{-i\omega t})}$$
+
+        <table>
+            <tr><th>Critère</th><th>Convention Couches Minces (Macleod)</th><th>Convention Physique Théorique (Born &amp; Wolf)</th></tr>
+            <tr><td><strong>Dépendance temporelle</strong></td><td>$e^{+i\omega t}$ (ou $\partial_t \to +i\omega$)</td><td>$e^{-i\omega t}$ (ou $\partial_t \to -i\omega$)</td></tr>
+            <tr><td><strong>Onde progressive ($+z$)</strong></td><td>$\exp[i(\omega t - kz)]$</td><td>$\exp[-i(\omega t - kz)] = \exp[i(kz - \omega t)]$</td></tr>
+            <tr><td><strong>Indice complexe $\hat{n}$</strong></td><td>$\mathbf{\hat{n} = n - i\kappa}$</td><td>$\mathbf{\hat{n} = n + i\kappa}$</td></tr>
+            <tr><td><strong>Partie imaginaire $\mathrm{Im}(\hat{n})$</strong></td><td><strong>Strictement négative</strong> ($-\kappa \le 0$)</td><td><strong>Strictement positive</strong> ($+\kappa \ge 0$)</td></tr>
+            <tr><td><strong>Usage dominant</strong></td><td>Logiciels de couches minces (OptiLayer, TFCalc, Code Python de ce cours)</td><td>Électrodynamique classique, mécanique quantique, optique non linéaire</td></tr>
+        </table>
+        <p style="font-size: 13.5px; margin-bottom: 0;">
+            <em>Conseil pour l'ingénieur :</em> Les bases de données (ex: <code>refractiveindex.info</code>) fournissent toujours $k$ (ou $\kappa$) sous forme d'un nombre réel positif. Dans notre formalisme de Macleod, vous devez <strong>toujours injecter</strong> <code>n_complex = n - 1j * k</code>.
+        </p>
+    </div>
+
+    <!-- 3. MAXWELL -->
+    <h2 id="maxwell">3. Des équations de Maxwell à la matrice de transfert <span class="badge-l2">Niveau 2</span></h2>
+    
+    <p>Cette section établit rigoureusement, à partir des premiers principes de l'électromagnétisme, comment les équations de Maxwell se réduisent à l'équation de Helmholtz, puis comment les conditions aux limites et la condition d'onde sortante permettent de formuler la matrice de transfert $2 \times 2$ d'une couche mince.</p>
+
+    <!-- 3.1 MAXWELL HARMONIQUE -->
+    <h3 id="maxwell_harm">3.1 Équations de Maxwell en régime harmonique</h3>
+    <p>On adopte la convention temporelle de <strong>Macleod</strong> où tous les champs oscillent à la pulsation $\omega$ selon $e^{+i\omega t}$. Pour un champ électrique réel $\vec{\mathcal{E}}_{phys}(\vec{r}, t) = \mathrm{Re}[\vec{E}(\vec{r}) \, e^{i\omega t}]$, la dérivation temporelle devient un simple produit algébrique : $\frac{\partial}{\partial t} \longrightarrow +i\omega$.</p>
+    
+    <p>Dans un milieu diélectrique ou conducteur linéaire, homogène, isotrope (LHI) et non magnétique ($\mu_r = 1$), sans charges libres macroscopiques ($\rho = 0$), les équations de Maxwell s'écrivent sous forme complexe :</p>
+    
+    <div class="formula-box">
+        $$\begin{aligned}
+        \nabla \cdot \vec{D} &= 0 \quad \text{avec} \quad \vec{D} = \varepsilon_0 \varepsilon_r \vec{E} & \text{(Maxwell-Gauss)} \\[6pt]
+        \nabla \cdot \vec{B} &= 0 \quad \text{avec} \quad \vec{B} = \mu_0 \vec{H} & \text{(Maxwell-Thomson)} \\[6pt]
+        \nabla \times \vec{E} &= -i\omega \mu_0 \vec{H} & \text{(Maxwell-Faraday)} \\[6pt]
+        \nabla \times \vec{H} &= \vec{j} + i\omega \vec{D} = (\sigma + i\omega \varepsilon_0 \varepsilon_r)\vec{E} = i\omega \varepsilon_0 \hat{\varepsilon}_r \vec{E} & \text{(Maxwell-Ampère)}
+        \end{aligned}$$
+    </div>
+
+    <p>La permittivité diélectrique complexe relative $\hat{\varepsilon}_r$ unifie la constante diélectrique $\varepsilon_r$ et la conductivité ohmique $\sigma$. Elle est directement reliée à l'<strong>indice de réfraction complexe</strong> $\hat{n} = n - i\kappa$ :</p>
+    <div class="formula-box">
+        $$\hat{\varepsilon}_r = \varepsilon_r - i\frac{\sigma}{\omega \varepsilon_0} = \hat{n}^2 = (n - i\kappa)^2 = (n^2 - \kappa^2) - 2in\kappa$$
+    </div>
+
+    <!-- 3.2 HELMHOLTZ -->
+    <h3 id="maxwell_helmholtz">3.2 Équation d'onde et équation de Helmholtz</h3>
+    <p>En appliquant l'opérateur rotationnel à l'équation de Maxwell-Faraday et en utilisant l'identité vectorielle $\nabla \times (\nabla \times \vec{E}) = \nabla(\nabla \cdot \vec{E}) - \Delta \vec{E}$ avec $\nabla \cdot \vec{E} = 0$ (milieu homogène), on obtient :</p>
+    
+    $$\nabla(\underbrace{\nabla \cdot \vec{E}}_{=0}) - \Delta \vec{E} = -i\omega \mu_0 (\nabla \times \vec{H}) = -i\omega \mu_0 (i\omega \varepsilon_0 \hat{n}^2 \vec{E}) = \omega^2 \mu_0 \varepsilon_0 \hat{n}^2 \vec{E}$$
+
+    <p>Comme la vitesse de la lumière dans le vide est $c = 1/\sqrt{\varepsilon_0 \mu_0}$ et le nombre d'onde dans le vide est $k_0 = \omega/c = 2\pi/\lambda$, on aboutit à l'<strong>équation vectorielle de Helmholtz</strong> :</p>
+    <div class="formula-box">
+        $$\Delta \vec{E}(\vec{r}) + k_0^2 \hat{n}^2 \vec{E}(\vec{r}) = 0$$
+    </div>
+
+    <p>Considérons une onde plane incidente se propageant dans le plan d'incidence $(x,z)$, où $z$ est l'axe perpendiculaire aux couches et $x$ l'axe parallèle aux interfaces. Par invariance par translation selon l'axe transverse $y$, on a $\partial/\partial y = 0$. La dépendance spatiale selon $x$ est commune à toutes les couches et fixée par le milieu incident :</p>
+    <div class="formula-box">
+        $$\vec{E}(x,z) = \vec{\mathcal{E}}(z) \, e^{-i k_x x} \quad \text{avec} \quad k_x = k_0 n_0 \sin \theta_0 = k_0 S_0 \quad \text{(Invariant de Snell-Descartes)}$$
+    </div>
+
+    <p>L'équation de Helmholtz se réduit alors à une équation différentielle scalaire unidimensionnelle selon la coordonnée $z$ pour chaque composante :</p>
+    <div class="formula-box">
+        $$\frac{d^2 \vec{\mathcal{E}}(z)}{dz^2} + k_z^2 \vec{\mathcal{E}}(z) = 0 \quad \text{avec} \quad k_z = \sqrt{k_0^2 \hat{n}^2 - k_x^2} = k_0 \sqrt{\hat{n}^2 - S_0^2} = k_0 \hat{n} \cos \theta$$
+    </div>
+
+    <!-- 3.3 CONDITIONS AUX LIMITES -->
+    <h3 id="maxwell_bc">3.3 Conditions de continuité aux interfaces (Conditions aux limites)</h3>
+    <p>À chaque interface $z = z_k$ séparant deux milieux d'indices $\hat{n}_1$ et $\hat{n}_2$, les équations de Maxwell imposent des relations de continuité strictes. En intégrant Maxwell-Faraday et Maxwell-Ampère sur un contour rectangulaire infinitésimal chevauchant l'interface (largeur $\Delta l$, hauteur $\Delta h \to 0$), le flux magnétique et le courant traversant la boucle tendent vers zéro :</p>
+
+    <div class="diagram-container">
+        <svg width="660" height="260" viewBox="0 0 660 260" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <!-- Milieux avec bordures nettes -->
+            <rect x="35" y="20" width="590" height="100" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+            <rect x="35" y="120" width="590" height="70" fill="#e0f2fe" opacity="0.6" stroke="#cbd5e1" stroke-width="1"/>
+            <line x1="35" y1="120" x2="625" y2="120" stroke="#0f172a" stroke-width="2.5" />
+            
+            <text x="55" y="60" font-family="sans-serif" font-weight="bold" font-size="13" fill="#334155">Milieu 1 (n̂₁, z &lt; zₖ)</text>
+            <text x="55" y="160" font-family="sans-serif" font-weight="bold" font-size="13" fill="#0284c7">Milieu 2 (n̂₂, z &gt; zₖ)</text>
+            <text x="600" y="112" text-anchor="end" font-family="sans-serif" font-size="12" font-style="italic" fill="#0f172a">Interface z = zₖ</text>
+
+            <!-- Stokes loop -->
+            <rect x="250" y="90" width="160" height="60" fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="4" rx="3"/>
+            
+            <!-- Arrows on loop -->
+            <path d="M 270 90 L 370 90" stroke="#dc2626" stroke-width="2" fill="none" marker-end="url(#arr-red)"/>
+            <path d="M 390 150 L 290 150" stroke="#dc2626" stroke-width="2" fill="none" marker-end="url(#arr-red)"/>
+            
+            <!-- Dimensions -->
+            <line x1="420" y1="90" x2="420" y2="150" stroke="#64748b" stroke-width="1.5" />
+            <line x1="415" y1="90" x2="425" y2="90" stroke="#64748b" stroke-width="1.5" />
+            <line x1="415" y1="150" x2="425" y2="150" stroke="#64748b" stroke-width="1.5" />
+            <text x="432" y="125" font-family="sans-serif" font-size="11" fill="#64748b">Δh → 0</text>
+
+            <line x1="250" y1="165" x2="410" y2="165" stroke="#64748b" stroke-width="1.5" />
+            <text x="330" y="180" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#64748b">Δl</text>
+
+            <!-- Vectors -->
+            <text x="320" y="80" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#dc2626">E_∥(zₖ⁻)</text>
+            <text x="320" y="142" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#dc2626">E_∥(zₖ⁺)</text>
+
+            <!-- Result box inside SVG -->
+            <rect x="55" y="200" width="550" height="40" fill="#ffffff" stroke="#cbd5e1" rx="4"/>
+            <text x="330" y="225" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#0f172a">
+                ∮ E · dl = (E_∥₁ - E_∥₂) Δl + O(Δh) = 0  ⟹  E_∥(zₖ⁻) = E_∥(zₖ⁺)
+            </text>
+
+            <defs>
+                <marker id="arr-red" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto">
+                    <polygon points="0 0, 6 3, 0 6" fill="#dc2626" />
+                </marker>
+            </defs>
+        </svg>
+    </div>
+
+    <p>En l'absence de charges et de courants superficiels libres, les <strong>composantes tangentielles</strong> du champ électrique et du champ magnétique sont strictement continues :</p>
+    <div class="formula-box">
+        $$E_\parallel(z_k^-) = E_\parallel(z_k^+) \qquad \text{et} \qquad H_\parallel(z_k^-) = H_\parallel(z_k^+)$$
+    </div>
+
+    <!-- 3.4 ONDES ALLER/RETOUR ET SOMMERFELD -->
+    <h3 id="maxwell_sommerfeld">3.4 Ondes progressives et Condition d'onde sortante (Sommerfeld)</h3>
+    <p>Dans chaque couche homogène $j$ (délimitée entre sa base $z_{j-1}$ et son sommet $z_j = z_{j-1} + d_j$), la solution générale de l'équation de Helmholtz 1D est la superposition exacte d'une onde se propageant vers le bas (vers le substrat, dans le sens des $z$ décroissants, notée $E_j^-$) et d'une onde réfléchie se propageant vers le haut (vers l'air, dans le sens des $z$ croissants, notée $E_j^+$) :</p>
+    
+    <div class="formula-box">
+        $$E_{\parallel, j}(z) = E_j^+ \, e^{-i k_{z,j} (z - z_{j-1})} + E_j^- \, e^{+i k_{z,j} (z - z_j)}$$
+    </div>
+
+    <div class="diagram-container">
+        <svg width="740" height="430" viewBox="0 0 740 430" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <!-- 1. Milieu incident (Air) - En haut -->
+            <rect x="30" y="20" width="520" height="80" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+            <text x="45" y="45" font-family="sans-serif" font-weight="bold" font-size="13" fill="#334155">Milieu incident (Air, n₀)</text>
+            <text x="45" y="62" font-family="sans-serif" font-size="11" fill="#64748b">z ≥ z_N</text>
+
+            <!-- Onde incidente E0- (descendante) -->
+            <path d="M 160 35 L 240 95" stroke="#f59e0b" stroke-width="2.5" fill="none" marker-end="url(#arr-orange-vert)"/>
+            <text x="140" y="30" font-family="sans-serif" font-size="11" font-weight="bold" fill="#d97706">E₀⁻ (Incidente descendante)</text>
+
+            <!-- Onde réfléchie E0+ (montante) -->
+            <path d="M 255 95 L 335 35" stroke="#dc2626" stroke-width="2.5" fill="none" marker-end="url(#arr-red-vert)"/>
+            <text x="345" y="35" font-family="sans-serif" font-size="11" font-weight="bold" fill="#dc2626">E₀⁺ = r · E₀⁻ (Réfléchie)</text>
+
+            <!-- Interface Air / Empilement (z = z_N) -->
+            <line x1="30" y1="100" x2="550" y2="100" stroke="#0f172a" stroke-width="2" />
+
+            <!-- 2. Empilement de couches minces (croissance de bas en haut) -->
+            <!-- Couche N (Sommet) -->
+            <rect x="30" y="100" width="520" height="50" fill="#e0f2fe" opacity="0.4" stroke="#cbd5e1" stroke-width="1"/>
+            <text x="45" y="130" font-family="sans-serif" font-weight="bold" font-size="12" fill="#0369a1">Couche N (Sommet)</text>
+            <text x="190" y="130" font-family="sans-serif" font-size="11" fill="#0284c7">(Indice n̂_N, Épaisseur d_N = z_N - z_{N-1})</text>
+            <line x1="30" y1="150" x2="550" y2="150" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3" />
+
+            <!-- Couche j (détaillée) -->
+            <rect x="30" y="150" width="520" height="90" fill="#bae6fd" opacity="0.5" stroke="#cbd5e1" stroke-width="1"/>
+            <text x="45" y="195" font-family="sans-serif" font-weight="bold" font-size="13" fill="#0284c7">Couche j</text>
+            <text x="45" y="212" font-family="sans-serif" font-size="11" fill="#0369a1">(Indice n̂_j, Épaisseur d_j)</text>
+
+            <!-- Ondes dans la couche j -->
+            <!-- Onde descendante vers le substrat -->
+            <path d="M 270 160 L 270 230" stroke="#0284c7" stroke-width="2.5" fill="none" marker-end="url(#arr-blue-down)"/>
+            <text x="260" y="195" text-anchor="end" font-family="sans-serif" font-size="11" font-weight="bold" fill="#0284c7">Vers substrat : Eⱼ⁻ (descente)</text>
+
+            <!-- Onde montante vers l'air -->
+            <path d="M 370 230 L 370 160" stroke="#0284c7" stroke-width="2.5" stroke-dasharray="4" fill="none" marker-end="url(#arr-blue-up)"/>
+            <text x="380" y="195" text-anchor="start" font-family="sans-serif" font-size="11" font-weight="bold" fill="#0284c7">Vers air : Eⱼ⁺ (montée)</text>
+
+            <line x1="30" y1="240" x2="550" y2="240" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3" />
+
+            <!-- Couche 1 (Base) -->
+            <rect x="30" y="240" width="520" height="50" fill="#e0f2fe" opacity="0.4" stroke="#cbd5e1" stroke-width="1"/>
+            <text x="45" y="270" font-family="sans-serif" font-weight="bold" font-size="12" fill="#0369a1">Couche 1 (Base)</text>
+            <text x="165" y="270" font-family="sans-serif" font-size="11" fill="#0284c7">(Indice n̂₁, Épaisseur d₁ = z₁) — collée au substrat (z = 0)</text>
+
+            <!-- Interface Substrat / Empilement (z = 0) -->
+            <line x1="30" y1="290" x2="550" y2="290" stroke="#0f172a" stroke-width="2" />
+
+            <!-- 3. Substrat (Base semi-infinie) - En bas -->
+            <rect x="30" y="290" width="520" height="100" fill="#f0fdf4" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+            <text x="45" y="320" font-family="sans-serif" font-weight="bold" font-size="13" fill="#166534">Substrat semi-infini (n_sub)</text>
+            <text x="45" y="337" font-family="sans-serif" font-size="11" fill="#15803d">z ≤ 0</text>
+
+            <!-- Onde transmise E_sub- s'enfonçant vers -infini -->
+            <path d="M 230 300 L 300 365" stroke="#16a34a" stroke-width="2.5" fill="none" marker-end="url(#arr-green-vert)"/>
+            <text x="310" y="340" font-family="sans-serif" font-size="11" font-weight="bold" fill="#16a34a">E_sub⁻ = t · E₀⁻ (Transmise vers -∞)</text>
+
+            <!-- Onde interdite E_sub+ = 0 (Sommerfeld) -->
+            <g opacity="0.8">
+                <path d="M 440 365 L 370 300" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3" fill="none" marker-end="url(#arr-gray-vert)"/>
+                <line x1="395" y1="320" x2="420" y2="345" stroke="#ef4444" stroke-width="3" />
+                <line x1="395" y1="345" x2="420" y2="320" stroke="#ef4444" stroke-width="3" />
+                <text x="415" y="375" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#ef4444">E_sub⁺ = 0 (Sommerfeld)</text>
+            </g>
+
+            <!-- Axe z vertical (dirigé vers le HAUT : sens du dépôt physique) -->
+            <line x1="590" y1="390" x2="590" y2="25" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis-up)"/>
+            <text x="590" y="15" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="13" fill="#334155">z</text>
+
+            <!-- Repères z -->
+            <line x1="585" y1="100" x2="595" y2="100" stroke="#334155" stroke-width="1.5"/>
+            <text x="605" y="104" font-family="sans-serif" font-size="11" fill="#475569">z = z_N</text>
+
+            <line x1="585" y1="150" x2="595" y2="150" stroke="#94a3b8" stroke-width="1"/>
+            <text x="605" y="154" font-family="sans-serif" font-size="10" fill="#94a3b8">z_{N-1}</text>
+
+            <line x1="585" y1="240" x2="595" y2="240" stroke="#94a3b8" stroke-width="1"/>
+            <text x="605" y="244" font-family="sans-serif" font-size="10" fill="#94a3b8">z₁ = d₁</text>
+
+            <line x1="585" y1="290" x2="595" y2="290" stroke="#334155" stroke-width="1.5"/>
+            <text x="605" y="294" font-family="sans-serif" font-size="11" fill="#475569">z = 0 (Substrat)</text>
+
+            <!-- Définitions des marqueurs de flèches -->
+            <defs>
+                <marker id="arr-orange-vert" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#f59e0b" /></marker>
+                <marker id="arr-red-vert" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#dc2626" /></marker>
+                <marker id="arr-blue-down" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#0284c7" /></marker>
+                <marker id="arr-blue-up" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#0284c7" /></marker>
+                <marker id="arr-green-vert" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#16a34a" /></marker>
+                <marker id="arr-gray-vert" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#94a3b8" /></marker>
+                <marker id="arr-axis-up" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#334155" /></marker>
+            </defs>
+        </svg>
+    </div>
+
+    <div class="pedagogy-box">
+        <span class="box-title">La condition de rayonnement de Sommerfeld (Onde sortante)</span>
+        Dans le substrat semi-infini ($z \le 0$), l'onde transmise s'éloigne vers le bas ($z \to -\infty$). En l'absence de source lumineuse située à $-\infty$, <strong>il ne peut exister aucune onde régressive remontant du fond du substrat</strong> :
+        $$\mathbf{E_{sub}^+ = 0}$$
+        C'est cette condition aux limites essentielle à l'infini qui ferme mathématiquement le système et permet de calculer de manière unique les coefficients de Fresnel $r$ et $t$.
+    </div>
+
+    <!-- 3.5 DÉRIVATION DE LA MATRICE CARACTÉRISTIQUE -->
+    <h3 id="maxwell_matrix">3.5 Dérivation analytique de la matrice caractéristique 2×2</h3>
+    <p>Pour relier le champ magnétique tangentiel $H_\parallel$ au champ électrique tangentiel $E_\parallel$, on utilise l'équation de Maxwell-Faraday $\nabla \times \vec{E} = -i\omega\mu_0 \vec{H}$ :</p>
+    <ul>
+        <li><strong>Polarisation TE (s) :</strong> $\vec{E} = (0, E_y, 0)$. Alors $H_x = -\frac{1}{i\omega\mu_0} \frac{\partial E_y}{\partial z} = \eta_s (E^- e^{+ik_z z} - E^+ e^{-ik_z z})$ avec l'admittance $\eta_s = \hat{n}\cos\theta$.</li>
+        <li><strong>Polarisation TM (p) :</strong> $\vec{H} = (0, H_y, 0)$. Alors $E_x = \frac{1}{i\omega\varepsilon_0\hat{n}^2} \frac{\partial H_y}{\partial z}$ avec l'admittance $\eta_p = \frac{\hat{n}}{\cos\theta}$.</li>
+    </ul>
+
+    <p>Considérons une couche $j$ d'épaisseur $d$ comprise entre son <strong>interface supérieure d'entrée</strong> $a$ ($z = z_j$) et son <strong>interface inférieure de sortie</strong> $b$ ($z = z_{j-1} = z_j - d$) :</p>
+
+    <div class="diagram-container">
+        <svg width="720" height="270" viewBox="0 0 720 270" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <!-- Descriptions interfaces à gauche -->
+            <text x="35" y="45" font-family="sans-serif" font-weight="bold" font-size="12" fill="#0284c7">Interface a (z = z_j)</text>
+            <text x="35" y="60" font-family="sans-serif" font-size="11" fill="#64748b">Entrée (Haut)</text>
+
+            <text x="35" y="165" font-family="sans-serif" font-weight="bold" font-size="12" fill="#0284c7">Interface b (z = z_{j-1})</text>
+            <text x="35" y="180" font-family="sans-serif" font-size="11" fill="#64748b">Sortie (Bas)</text>
+
+            <!-- Interfaces et Couche au milieu -->
+            <rect x="180" y="50" width="370" height="120" fill="#e0f2fe" opacity="0.6" stroke="#cbd5e1" stroke-width="1"/>
+            <line x1="180" y1="50" x2="550" y2="50" stroke="#0284c7" stroke-width="2.5" />
+            <line x1="180" y1="170" x2="550" y2="170" stroke="#0284c7" stroke-width="2.5" />
+
+            <text x="345" y="115" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="12" fill="#0369a1">Couche j (Indice n̂_j, Épaisseur d_j = z_j - z_{j-1})</text>
+
+            <!-- Flèche de phase δ à l'intérieur -->
+            <path d="M 520 65 L 520 155" stroke="#0284c7" stroke-width="2" fill="none" marker-end="url(#arr-blue-down-mat)"/>
+            <text x="510" y="115" text-anchor="end" font-family="sans-serif" font-size="11" font-weight="bold" fill="#0284c7">δ = k_z d</text>
+
+            <!-- Boîte Champs d'entrée a -->
+            <rect x="235" y="15" width="220" height="28" fill="#ffffff" stroke="#cbd5e1" rx="4"/>
+            <text x="345" y="34" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#0f172a">Champs d'entrée : (E_a, H_a)</text>
+
+            <!-- Boîte Champs de sortie b -->
+            <rect x="235" y="178" width="220" height="28" fill="#ffffff" stroke="#cbd5e1" rx="4"/>
+            <text x="345" y="197" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#0f172a">Champs de sortie : (E_b, H_b)</text>
+
+            <!-- Axe z dirigé vers le haut à droite -->
+            <line x1="590" y1="210" x2="590" y2="25" stroke="#334155" stroke-width="1.5" marker-end="url(#arr-axis-up-mat)"/>
+            <text x="590" y="15" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="12" fill="#334155">z</text>
+            <line x1="585" y1="50" x2="595" y2="50" stroke="#334155" stroke-width="1.5"/>
+            <text x="605" y="54" font-family="sans-serif" font-size="11" fill="#475569">z = z_j</text>
+            <line x1="585" y1="170" x2="595" y2="170" stroke="#334155" stroke-width="1.5"/>
+            <text x="605" y="174" font-family="sans-serif" font-size="11" fill="#475569">z = z_{j-1}</text>
+
+            <!-- Résumé relation matricielle -->
+            <text x="350" y="245" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#0f172a">
+                [ E(z_j) , H(z_j) ]ᵀ = M_j · [ E(z_{j-1}) , H(z_{j-1}) ]ᵀ
+            </text>
+
+            <defs>
+                <marker id="arr-blue-down-mat" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#0284c7" /></marker>
+                <marker id="arr-axis-up-mat" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#334155" /></marker>
+            </defs>
+        </svg>
+    </div>
+
+    <p>1. <strong>À l'interface supérieure d'entrée ($z = z_j$) :</strong></p>
+    $$E_a = E^- + E^+ \qquad \text{et} \qquad H_a = \eta (E^- - E^+)$$
+    <p>Ce qui permet d'exprimer les amplitudes d'ondes en fonction des champs totaux d'entrée :</p>
+    $$E^- = \frac{1}{2}\left(E_a + \frac{H_a}{\eta}\right) \qquad \text{et} \qquad E^+ = \frac{1}{2}\left(E_a - \frac{H_a}{\eta}\right)$$
+
+    <p>2. <strong>À l'interface inférieure de sortie ($z = z_{j-1} = z_j - d$), en posant le déphasage $\delta = k_z d$ :</strong></p>
+    $$\begin{aligned}
+    E_b &= E^- e^{-i\delta} + E^+ e^{+i\delta} = \frac{1}{2}\left(E_a + \frac{H_a}{\eta}\right)e^{-i\delta} + \frac{1}{2}\left(E_a - \frac{H_a}{\eta}\right)e^{+i\delta} = E_a \cos\delta - \frac{i}{\eta} H_a \sin\delta \\[8pt]
+    H_b &= \eta\left(E^- e^{-i\delta} - E^+ e^{+i\delta}\right) = -i\eta E_a \sin\delta + H_a \cos\delta
+    \end{aligned}$$
+
+    <p>3. <strong>Inversion matricielle pour exprimer les champs d'entrée $(E_a, H_a)$ en fonction des champs de sortie $(E_b, H_b)$ :</strong></p>
+    <div class="formula-box">
+        $$\begin{pmatrix} E(z_j) \\ H(z_j) \end{pmatrix} = \begin{pmatrix} \cos \delta & \frac{i}{\eta} \sin \delta \\ i \eta \sin \delta & \cos \delta \end{pmatrix} \begin{pmatrix} E(z_{j-1}) \\ H(z_{j-1}) \end{pmatrix} = M_j \begin{pmatrix} E(z_{j-1}) \\ H(z_{j-1}) \end{pmatrix}$$
+    </div>
+
+    <div class="warning-box">
+        <span class="box-title">Propriété fondamentale : Unimodularité</span>
+        Le déterminant de la matrice caractéristique d'une couche vaut rigoureusement l'unité :
+        $$\det(M) = (\cos\delta)(\cos\delta) - \left(\frac{i}{\eta}\sin\delta\right)(i\eta\sin\delta) = \cos^2\delta + \sin^2\delta = 1$$
+        Cette propriété d'<strong>unimodularité</strong> ($\det M = 1$) garantit la réciprocité électromagnétique et la stricte conservation du flux d'énergie dans les milieux transparents.
+    </div>
+
+    <!-- Takeaway Section 3 -->
+    <div class="takeaway-box">
+        <span class="box-title">⚡ L'Essentiel de la Section 3 en 4 points clés</span>
+        <ul>
+            <li><strong>Convention harmonique :</strong> Dépendance temporelle en $e^{+i\omega t} \implies$ Indice complexe $\hat{n} = n - i\kappa$ avec $\mathrm{Im}(\hat{n}) \le 0$.</li>
+            <li><strong>Continuité aux interfaces :</strong> Les composantes tangentielles $E_\parallel$ et $H_\parallel$ sont strictement continues à chaque frontière.</li>
+            <li><strong>Matrice élémentaire :</strong> $M_j = \begin{pmatrix} \cos\delta_j & \frac{i}{\eta_j}\sin\delta_j \\ i\eta_j\sin\delta_j & \cos\delta_j \end{pmatrix}$ relie l'entrée au sommet ($z_j$) à la sortie à la base ($z_{j-1}$) avec $\det(M_j) = 1$.</li>
+            <li><strong>Condition de Sommerfeld :</strong> Dans le substrat semi-infini ($z \le 0$), aucune onde ne remonte de $-\infty$ ($E_{sub}^+ = 0$).</li>
+        </ul>
+    </div>
+
+    <!-- 4. TMM -->
+    <h2 id="tmm">4. Méthode des matrices de transfert (TMM) <span class="badge-l2">Niveau 2</span></h2>
+
+    <h3>4.1 Matrice caractéristique d'une couche $j$</h3>
+    <p>Pour une couche d'indice complexe $\hat{n}_j$ et d'épaisseur $d_j$, la matrice $M_j$ s'écrit :</p>
+    <div class="formula-box">
+        $$M_j = \begin{pmatrix} \cos \delta_j & \frac{i}{\eta_j} \sin \delta_j \\ i \eta_j \sin \delta_j & \cos \delta_j \end{pmatrix}$$
+    </div>
+    <p>Où $\delta_j$ est la <strong>phase optique</strong> accumulée : $\delta_j = \frac{2\pi}{\lambda} (\hat{n}_j) d_j \cos \theta_j$.</p>
+
+    <!-- ADVANCED: BRANCH CUT -->
+    <details class="advanced-box">
+        <summary>Le piège de la coupure complexe (Branch Cut) pour les ondes évanescentes</summary>
+        <div>
+            <p><strong>Contexte :</strong> La loi de Snell-Descartes donne $S_0 = n_0 \sin \theta_0$. Pour obtenir l'angle de propagation dans la couche $j$, on utilise l'identité trigonométrique $\cos \theta_j = \frac{\sqrt{\hat{n}_j^2 - S_0^2}}{\hat{n}_j}$. Le piège réside dans le calcul informatique de la racine carrée $\sqrt{z}$.</p>
+            <p>La fonction $f(z) = \sqrt{z}$ est multivaluée dans $\mathbb{C}$. Dans Python/NumPy, <code>np.sqrt(z)</code> renvoie par défaut la racine avec une partie réelle $\ge 0$ et impose une coupure (branch cut) sur l'axe réel négatif.</p>
+
+            <div class="diagram-container">
+                <svg width="560" height="380" viewBox="0 0 560 380" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
+                    <line x1="40" y1="190" x2="500" y2="190" stroke="#475569" stroke-width="1.5" />
+                    <line x1="270" y1="20" x2="270" y2="360" stroke="#475569" stroke-width="1.5" />
+                    <text x="505" y="184" font-family="sans-serif" font-size="12" font-weight="bold" fill="#334155">Re(z)</text>
+                    <text x="278" y="32" font-family="sans-serif" font-size="12" font-weight="bold" fill="#334155">Im(z)</text>
+                    <text x="274" y="204" font-family="sans-serif" font-size="11" fill="#94a3b8">0</text>
+                    
+                    <!-- Branch cut on negative real axis -->
+                    <line x1="40" y1="190" x2="270" y2="190" stroke="#dc2626" stroke-width="4" stroke-linecap="round" />
+                    <text x="90" y="175" font-family="sans-serif" font-size="11" font-weight="bold" fill="#dc2626">Coupure de np.sqrt (Axe Réel -)</text>
+                    
+                    <!-- Danger zone TIR -->
+                    <rect x="40" y="186" width="230" height="8" fill="#fef2f2" opacity="0.8" />
+                    <text x="60" y="160" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b91c1c">Zone de danger : TIR</text>
+                    <text x="60" y="145" font-family="sans-serif" font-size="10" fill="#b91c1c">(Réflexion Totale Interne)</text>
+                    <circle cx="150" cy="190" r="5" fill="#dc2626" />
+                    <text x="145" y="210" font-family="sans-serif" font-size="10" font-weight="bold" fill="#dc2626">z = -0.125</text>
+                    
+                    <!-- Safe zone Dielectrics -->
+                    <text x="370" y="160" font-family="sans-serif" font-size="11" font-weight="bold" fill="#15803d">Diélectriques</text>
+                    <circle cx="400" cy="190" r="5" fill="#15803d" />
+                    <text x="400" y="210" font-family="sans-serif" font-size="10" fill="#15803d">z = 0.13</text>
+
+                    <!-- Safe zone Metals -->
+                    <text x="90" y="280" font-family="sans-serif" font-size="11" font-weight="bold" fill="#0284c7">Métaux (avec Macleod)</text>
+                    <text x="90" y="295" font-family="sans-serif" font-size="10" fill="#0284c7">z se trouve naturellement ici</text>
+                    <circle cx="120" cy="250" r="5" fill="#0284c7" />
+                    <text x="130" y="255" font-family="sans-serif" font-size="10" fill="#0284c7">Ag (-12.4, -0.8i)</text>
+                </svg>
+            </div>
+            
+            <h4>Condition physique d'atténuation</h4>
+            <p>Le champ électrique dans la couche $j$ évolue en $E_j(z,t) \propto \exp[-i k_{z,j} z]$ avec $k_{z,j} = \frac{2\pi}{\lambda} \hat{n}_j \cos\theta_j$. Pour que l'amplitude <strong>s'atténue</strong> en pénétrant dans la matière (absorption ou onde évanescente), il faut impérativement satisfaire :</p>
+            <div class="formula-box" style="margin: 10px 0; padding: 10px;">
+                $$ \text{Im}(\hat{n}_j \cos\theta_j) \leq 0 \quad \text{(Avec la convention } n-i\kappa \text{)}$$
+            </div>
+            
+            <h4>Le cas critique : La Réflexion Totale Interne (TIR)</h4>
+            <p>Contrairement à une croyance répandue, les métaux ne posent pas de problème avec la convention de Macleod : $\hat{n}_{Ag} = 0.12 - 3.45i$ donne $z \approx -12.4 - 0.8i$ (demi-plan inférieur). <code>np.sqrt(z)</code> renvoie $0.11 - 3.52i$, ce qui satisfait bien $\text{Im} \le 0$.</p>
+            
+            <p>Le véritable problème survient lors d'une <strong>Réflexion Totale Interne</strong> dans un diélectrique (ex: lumière passant du verre $n=1.5$ à l'air $n=1.0$ à $45^\circ$). On a alors $S_0 = 1.06$ et $z = n^2 - S_0^2 = -0.125$ (pur réel négatif). Dans ce cas précis, <code>np.sqrt(-0.125 + 0j)</code> renvoie <code>+0.353j</code>. <strong>La partie imaginaire est positive !</strong> L'onde simulée va croître exponentiellement au lieu de s'évanouir.</p>
+
+            <p>Il est donc crucial de forcer manuellement le bon signe dans le code pour les ondes évanescentes (voir Section 10) :</p>
+            <pre style="margin: 10px 0; padding: 10px;"><code>if n_cos_th.imag > 0: 
+    n_cos_th = -n_cos_th  # Force l'atténuation physique</code></pre>
+        </div>
+    </details>
+
+    <h3>4.2 Matrice globale de l'empilement</h3>
+    <p>La matrice globale $M$ du système est le produit matriciel des matrices de chaque couche. On multiplie en partant de la base sur le substrat ($z=0$, couche 1) vers le sommet en contact avec l'air ($z=z_N$, couche $N$) :</p>
+    <div class="formula-box">
+        $$\begin{pmatrix} E(z_N) \\ H(z_N) \end{pmatrix} = M_N \cdot M_{N-1} \cdots M_1 \begin{pmatrix} E(0) \\ H(0) \end{pmatrix} = M \begin{pmatrix} E(0) \\ H(0) \end{pmatrix}$$
+        $$\text{avec} \quad M = \begin{pmatrix} m_{11} & m_{12} \\ m_{21} & m_{22} \end{pmatrix} = M_N \cdot M_{N-1} \cdots M_1$$
+    </div>
+
+    <!-- 5. POLARISATION -->
+    <h2 id="polarization">5. Polarisation et admittance optique <span class="badge-l2">Niveau 2</span></h2>
+    <p>L'admittance optique $\eta_j$ caractérise le rapport entre les champs tangentiels ($H_\parallel / E_\parallel$). En incidence oblique, elle dépend de la polarisation de la lumière :</p>
+    <table>
+        <tr><th>Polarisation</th><th>Description physique</th><th>Admittance $\eta_j$</th></tr>
+        <tr><td><strong>TE (s)</strong></td><td>Champ électrique transverse (parallèle à l'interface)</td><td>$$\eta_{j,s} = \hat{n}_j \cos \theta_j$$</td></tr>
+        <tr><td><strong>TM (p)</strong></td><td>Champ magnétique transverse (parallèle à l'interface)</td><td>$$\eta_{j,p} = \frac{\hat{n}_j}{\cos \theta_j}$$</td></tr>
+    </table>
+
+    <!-- 6. COEFFICIENTS R & T -->
+    <h2 id="coeffs">6. Coefficients de Fresnel et puissances (R, T) <span class="badge-l2">Niveau 2</span></h2>
+    
+    <p>Pour l'empilement complet, on définit le vecteur caractéristique $\begin{pmatrix} B \\ C \end{pmatrix}$ en multipliant la matrice globale $M$ par le vecteur des conditions aux limites du substrat :</p>
+    <div class="formula-box">
+        $$\begin{pmatrix} B \\ C \end{pmatrix} = M \cdot \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$$
+    </div>
+
+    <p>Les coefficients d'amplitude en réflexion ($r$) et en transmission ($t$) s'écrivent :</p>
+    <div class="formula-box">
+        $$r = \frac{\eta_0 B - C}{\eta_0 B + C} \qquad \text{et} \qquad t = \frac{2 \eta_0}{\eta_0 B + C}$$
+    </div>
+
+    <p>On en déduit les grandeurs mesurables expérimentalement, à savoir la réflectance $R$ et la transmittance $T$ (avec conservation de l'énergie $R+T+A=1$, où $A$ est l'absorption) :</p>
+    <div class="formula-box">
+        $$R = |r|^2 \qquad \text{et} \qquad T = \frac{\mathrm{Re}(\eta_{sub})}{\mathrm{Re}(\eta_0)} |t|^2$$
+    </div>
+
+    <!-- ADVANCED: POYNTING -->
+    <details class="advanced-box">
+        <summary>Pourquoi $T \neq |t|^2$ ? Le flux de Poynting en incidence oblique</summary>
+        <div>
+            <p>Une erreur classique chez les étudiants est d'écrire $T = |t|^2$. Or, la transmittance est le ratio des <strong>puissances surfaciques</strong> (liées au flux du vecteur de Poynting $\vec{S}$), et non pas le simple ratio des carrés des champs électriques.</p>
+            
+            <p>La puissance transportée par une onde est $|\vec{S}| = \frac{1}{2} \mathrm{Re}(\hat{n}) |E|^2$. Mais la conservation de l'énergie à l'interface dépend de l'énergie qui <em>traverse effectivement</em> cette surface, c'est-à-dire la composante <strong>normale</strong> du flux : $S_z$.</p>
+            
+            <p>En incidence oblique (angle $\theta$), un faisceau de largeur spatiale $W$ "s'étale" sur l'interface pour occuper une empreinte de taille $W/\cos\theta$. La puissance par unité de surface de l'interface diminue donc géométriquement d'un facteur $\cos\theta$.</p>
+
+            <div class="diagram-container">
+                <svg width="500" height="230" viewBox="0 0 500 230" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
+                    <!-- Interface -->
+                    <rect x="35" y="160" width="430" height="45" fill="#f0fdf4" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+                    <line x1="35" y1="160" x2="465" y2="160" stroke="#475569" stroke-width="2" />
+                    <!-- Beam (Collimated plane wave) -->
+                    <polygon points="140,25 260,25 330,160 210,160" fill="#e0f2fe" opacity="0.8" stroke="#0284c7" stroke-dasharray="3" stroke-width="1"/>
+                    <!-- Normal -->
+                    <line x1="270" y1="30" x2="270" y2="180" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5" />
+                    <!-- Angle theta -->
+                    <path d="M 270 95 A 60 60 0 0 0 243 102" fill="none" stroke="#475569" stroke-width="1.5" />
+                    <text x="252" y="90" font-family="sans-serif" font-size="14" fill="#475569" font-style="italic">θ</text>
+                    <!-- Beam width W (orthogonal) -->
+                    <line x1="165" y1="85" x2="260" y2="35" stroke="#0284c7" stroke-width="2" />
+                    <text x="195" y="50" font-family="sans-serif" font-size="11" font-weight="bold" fill="#0284c7" transform="rotate(-26.5 195 50)">Largeur faisceau (W)</text>
+                    <!-- Interface footprint -->
+                    <line x1="210" y1="165" x2="330" y2="165" stroke="#dc2626" stroke-width="3" />
+                    <text x="270" y="185" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#dc2626">Empreinte étalée (W / cos θ)</text>
+                </svg>
+            </div>
+
+            <p>Mathématiquement, projeter ce flux sur la normale donne :</p>
+            <div class="formula-box" style="margin: 10px 0; padding: 10px;">
+                $$S_z = |\vec{S}| \cos\theta = \frac{1}{2} \mathrm{Re}(\underbrace{\hat{n} \cos\theta}_{\text{Admittance }\eta_s}) \, |E_\parallel|^2$$
+            </div>
+
+            <p>Remarquez le terme $\hat{n} \cos\theta$ : il correspond *exactement* à la définition de l'admittance optique $\eta_s$ en polarisation TE (s). L'admittance $\eta$ n'est donc pas qu'une commodité mathématique matricielle, elle intègre intrinsèquement l'indice matériel et la projection géométrique du faisceau (cette démonstration est également valide pour TM avec $\eta_p$).</p>
+            
+            <p>La réflectance reste simple $R = |r|^2$ car l'onde incidente et réfléchie évoluent dans le même milieu (l'admittance s'annule dans le ratio). Mais l'onde transmise entre dans un nouveau substrat, d'où le facteur correctif de transmission faisant intervenir la partie réelle des admittances.</p>
+        </div>
+    </details>
+
+    <!-- Takeaway Section 6 -->
+    <div class="takeaway-box">
+        <span class="box-title">⚡ L'Essentiel de la Section 6 en 3 formules indispensables</span>
+        <ul>
+            <li><strong>Vecteur caractéristique :</strong> $\begin{pmatrix} B \\ C \end{pmatrix} = M_{sys} \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix} = M_N \cdot M_{N-1} \cdots M_1 \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$</li>
+            <li><strong>Réflectance &amp; Transmittance :</strong> $R = |r|^2 = \left|\frac{\eta_0 B - C}{\eta_0 B + C}\right|^2 \qquad \text{et} \qquad T = \frac{\mathrm{Re}(\eta_{sub})}{\mathrm{Re}(\eta_0)} |t|^2 = \frac{\mathrm{Re}(\eta_{sub})}{\mathrm{Re}(\eta_0)} \left|\frac{2\eta_0}{\eta_0 B + C}\right|^2$</li>
+            <li><strong>Bilan de conservation :</strong> $R + T + A = 1$ (où $A = 1 - R - T$ quantifie l'absorption thermique nette dans les couches).</li>
+        </ul>
+    </div>
+
+    <!-- 7. BACKSIDE CORRECTION -->
+    <h2 id="finite_sub">7. Substrat d'épaisseur finie <span class="badge-l2">Niveau 2</span></h2>
+    <p>Les équations précédentes supposent un substrat de sortie semi-infini. En réalité, une lame de verre possède une face arrière. En raison de l'épaisseur importante du substrat (millimétrique, $\gg \lambda$), la cohérence optique spatiale est perdue. On ne somme donc plus les amplitudes complexes (interférences), mais les <strong>intensités</strong> des rebonds multiples incohérents dans le verre.</p>
+
+    <div class="formula-box">
+        <strong>Formule générale pour une lame à face arrière incohérente</strong>
+        <ol style="text-align: left;">
+            <li>On calcule d'abord la face traitée éclairée depuis l'air : $R_{front}$ et $T_{front}$.</li>
+            <li>On calcule ensuite la même face vue depuis l'intérieur du substrat : $R'_{front}$ et $T'_{front}$.</li>
+            <li>On prend la face arrière nue : $R_{back}$ et $T_{back}$.</li>
+        </ol>
+        On obtient alors :
+        $$R_{total} = R_{front} + \frac{T_{front} \cdot T'_{front} \cdot R_{back}}{1 - R'_{front} \cdot R_{back}}$$
+        $$T_{total} = \frac{T_{front} \cdot T_{back}}{1 - R'_{front} \cdot R_{back}}$$
+    </div>
+    <p><em>À retenir : en optique linéaire passive, la transmittance de puissance est réciproque. Autrement dit, si elle est bien définie et bien normalisée, on a $T'_{front} = T_{front}$. Ce qui peut changer avec le sens d'illumination, ce sont surtout $R$ et $A$.</em></p>
+    <p><em>Important : dans le cas d'un substrat fini, $T_{total}$ n'est pas la même chose que $T_{front}$. Il faut appliquer la formule complète ci-dessus ; sinon, on commet une erreur de physique.</em></p>
+    <p><em>Exemple rapide : un verre nu réfléchit environ 4% par face ($R_{front} = R'_{front} = R_{back} \approx 0.04$). La réflectance totale d'une vitre simple vaut alors environ $7.7\%$. La transmittance totale doit, elle aussi, être recalculée avec la formule de substrat fini.</em></p>
+    <div class="warning-box">
+        <span class="box-title">Correction conceptuelle : puissance transmise et absorption</span>
+        La présence d'un milieu absorbant ne suffit pas à créer une différence entre $T$ et $T'$ si l'on compare bien la <strong>transmittance de puissance</strong>. La bonne subtilité est ailleurs : l'absorption modifie le bilan $R + T + A = 1$ et peut changer $R$ et $A$ selon le sens d'illumination, mais pas la transmission de puissance d'un système réciproque correctement définie.
+    </div>
+
+    <!-- 8. E-FIELD (Advanced Section) -->
+    <h2 id="efield">8. [Avancé] Profil d'intensité du champ électrique $|E(z)|^2$ <span class="badge-l3">Niveau 3</span></h2>
+    
+    <p>Calculer le profil d'intensité à l'intérieur de l'empilement est fondamental, notamment pour évaluer les seuils de dommage laser (LIDT) ou optimiser l'absorption dans des cellules solaires.</p>
+    
+    <p><strong>Méthode :</strong> On connaît le champ transmis dans le substrat à $z=0$ (qui vaut l'amplitude transmise $t$). On peut remonter mathématiquement le long de l'axe $z$ (dans le sens de croissance des couches, de $z=0$ jusqu'au sommet $z=z_N$) en multipliant par les matrices partielles locales calculées à l'altitude $z$ :</p>
+    <div class="formula-box">
+        $$\begin{pmatrix} E(z) \\ H(z) \end{pmatrix} = \begin{pmatrix} \cos \delta(z) & \frac{i}{\eta_j} \sin \delta(z) \\ i \eta_j \sin \delta(z) & \cos \delta(z) \end{pmatrix} \begin{pmatrix} E(0) \\ H(0) \end{pmatrix}$$
+    </div>
+    <p>Où $\delta(z) = \frac{2\pi}{\lambda} \hat{n}_j z \cos \theta_j$ est le déphasage accumulé depuis l'interface du substrat.</p>
+
+    <div class="diagram-container">
+        <svg width="660" height="300" viewBox="0 0 660 300" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <!-- Backgrounds des milieux (Substrat à gauche z<=0, Couche au milieu 0<=z<=d, Air à droite z>=d) -->
+            <rect x="50" y="30" width="150" height="210" fill="#f0fdf4" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+            <rect x="200" y="30" width="200" height="210" fill="#e0f2fe" opacity="0.7" stroke="#cbd5e1" stroke-width="1"/>
+            <rect x="400" y="30" width="200" height="210" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" rx="4"/>
+            
+            <!-- Interfaces -->
+            <line x1="200" y1="30" x2="200" y2="240" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4"/>
+            <line x1="400" y1="30" x2="400" y2="240" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4"/>
+            
+            <!-- Noms des milieux -->
+            <text x="125" y="50" text-anchor="middle" fill="#16a34a" font-family="sans-serif" font-weight="bold" font-size="13">Substrat (n_sub = 1.5)</text>
+            <text x="300" y="50" text-anchor="middle" fill="#0284c7" font-family="sans-serif" font-weight="bold" font-size="13">Couche TiO₂ (n₁ = 2.35)</text>
+            <text x="500" y="50" text-anchor="middle" fill="#334155" font-family="sans-serif" font-weight="bold" font-size="13">Air incident (n₀ = 1.0)</text>
+
+            <!-- Ligne de référence |E_inc|² = 1.0 -->
+            <line x1="50" y1="168" x2="600" y2="168" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3"/>
+            <text x="595" y="163" text-anchor="end" fill="#64748b" font-family="sans-serif" font-size="10" font-style="italic">Niveau incident |E₀|² = 1</text>
+
+            <!-- Axes Y et X -->
+            <line x1="50" y1="240" x2="615" y2="240" stroke="#334155" stroke-width="1.5" />
+            <line x1="50" y1="240" x2="50" y2="30" stroke="#334155" stroke-width="1.5" />
+            
+            <!-- Graduations Y -->
+            <text x="42" y="244" text-anchor="end" fill="#64748b" font-family="sans-serif" font-size="11">0</text>
+            <text x="42" y="172" text-anchor="end" fill="#64748b" font-family="sans-serif" font-size="11">1</text>
+            <line x1="46" y1="168" x2="50" y2="168" stroke="#334155" stroke-width="1.5"/>
+            <text x="42" y="100" text-anchor="end" fill="#64748b" font-family="sans-serif" font-size="11">2</text>
+            <line x1="46" y1="96" x2="50" y2="96" stroke="#334155" stroke-width="1.5"/>
+            
+            <text x="30" y="38" fill="#0f172a" font-family="sans-serif" font-weight="bold" font-size="12">|E|²</text>
+            <text x="625" y="244" fill="#334155" font-family="sans-serif" font-weight="bold" font-size="12">z</text>
+
+            <!-- Repères z sur l'axe X -->
+            <line x1="200" y1="240" x2="200" y2="246" stroke="#334155" stroke-width="1.5"/>
+            <text x="200" y="258" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#475569">z = 0 (Substrat)</text>
+
+            <line x1="400" y1="240" x2="400" y2="246" stroke="#334155" stroke-width="1.5"/>
+            <text x="400" y="258" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#475569">z = d (Air)</text>
+
+            <!-- Courbes calculées par TMM exacte (de z <= 0 à z >= d) -->
+            <!-- 1. Substrat (z <= 0) : Onde transmise progressive pure (Intensité constante) -->
+            <path d="M 60.0,207.4 L 62.9,207.4 L 65.7,207.4 L 68.6,207.4 L 71.4,207.4 L 74.3,207.4 L 77.1,207.4 L 80.0,207.4 L 82.9,207.4 L 85.7,207.4 L 88.6,207.4 L 91.4,207.4 L 94.3,207.4 L 97.1,207.4 L 100.0,207.4 L 102.9,207.4 L 105.7,207.4 L 108.6,207.4 L 111.4,207.4 L 114.3,207.4 L 117.1,207.4 L 120.0,207.4 L 122.9,207.4 L 125.7,207.4 L 128.6,207.4 L 131.4,207.4 L 134.3,207.4 L 137.1,207.4 L 140.0,207.4 L 142.9,207.4 L 145.7,207.4 L 148.6,207.4 L 151.4,207.4 L 154.3,207.4 L 157.1,207.4 L 160.0,207.4 L 162.9,207.4 L 165.7,207.4 L 168.6,207.4 L 171.4,207.4 L 174.3,207.4 L 177.1,207.4 L 180.0,207.4 L 182.9,207.4 L 185.7,207.4 L 188.6,207.4 L 191.4,207.4 L 194.3,207.4 L 197.1,207.4 L 200.0,207.4" fill="none" stroke="#16a34a" stroke-width="2.5" />
+            
+            <!-- 2. Couche TiO₂ (0 <= z <= d) : Onde stationnaire comprimée par le fort indice -->
+            <path d="M 200.0,207.4 L 202.0,207.5 L 204.0,207.9 L 206.1,208.5 L 208.1,209.3 L 210.1,210.4 L 212.1,211.6 L 214.1,213.0 L 216.2,214.5 L 218.2,216.0 L 220.2,217.6 L 222.2,219.1 L 224.2,220.6 L 226.3,222.0 L 228.3,223.3 L 230.3,224.4 L 232.3,225.3 L 234.3,226.0 L 236.4,226.5 L 238.4,226.7 L 240.4,226.6 L 242.4,226.3 L 244.4,225.8 L 246.5,225.0 L 248.5,224.0 L 250.5,222.8 L 252.5,221.5 L 254.5,220.1 L 256.6,218.5 L 258.6,217.0 L 260.6,215.4 L 262.6,213.9 L 264.6,212.4 L 266.7,211.1 L 268.7,210.0 L 270.7,209.0 L 272.7,208.2 L 274.7,207.7 L 276.8,207.4 L 278.8,207.4 L 280.8,207.6 L 282.8,208.1 L 284.8,208.8 L 286.9,209.7 L 288.9,210.8 L 290.9,212.1 L 292.9,213.5 L 294.9,215.0 L 297.0,216.6 L 299.0,218.2 L 301.0,219.7 L 303.0,221.2 L 305.1,222.5 L 307.1,223.8 L 309.1,224.8 L 311.1,225.6 L 313.1,226.2 L 315.2,226.6 L 317.2,226.7 L 319.2,226.6 L 321.2,226.2 L 323.2,225.5 L 325.3,224.7 L 327.3,223.6 L 329.3,222.4 L 331.3,221.0 L 333.3,219.5 L 335.4,217.9 L 337.4,216.4 L 339.4,214.8 L 341.4,213.3 L 343.4,211.9 L 345.5,210.7 L 347.5,209.6 L 349.5,208.7 L 351.5,208.0 L 353.5,207.6 L 355.6,207.4 L 357.6,207.4 L 359.6,207.8 L 361.6,208.3 L 363.6,209.1 L 365.7,210.1 L 367.7,211.3 L 369.7,212.7 L 371.7,214.1 L 373.7,215.6 L 375.8,217.2 L 377.8,218.8 L 379.8,220.3 L 381.8,221.7 L 383.8,223.0 L 385.9,224.2 L 387.9,225.1 L 389.9,225.9 L 391.9,226.4 L 393.9,226.7 L 396.0,226.7 L 398.0,226.4 L 400.0,225.9" fill="none" stroke="#0284c7" stroke-width="2.5" />
+            
+            <!-- 3. Air incident (z >= d) : Onde stationnaire (Interférence Incidente + Réfléchie) -->
+            <path d="M 400.0,225.9 L 401.6,224.8 L 403.2,222.9 L 404.8,220.4 L 406.5,217.3 L 408.1,213.5 L 409.7,209.2 L 411.3,204.3 L 412.9,198.9 L 414.5,193.0 L 416.2,186.8 L 417.8,180.1 L 419.4,173.2 L 421.0,166.0 L 422.6,158.7 L 424.2,151.2 L 425.9,143.7 L 427.5,136.2 L 429.1,128.8 L 430.7,121.5 L 432.3,114.4 L 433.9,107.6 L 435.6,101.1 L 437.2,94.9 L 438.8,89.2 L 440.4,84.0 L 442.0,79.3 L 443.6,75.1 L 445.3,71.5 L 446.9,68.6 L 448.5,66.3 L 450.1,64.7 L 451.7,63.7 L 453.3,63.5 L 454.9,63.9 L 456.6,65.1 L 458.2,66.9 L 459.8,69.4 L 461.4,72.5 L 463.0,76.3 L 464.6,80.6 L 466.3,85.5 L 467.9,90.9 L 469.5,96.7 L 471.1,103.0 L 472.7,109.6 L 474.3,116.5 L 476.0,123.6 L 477.6,131.0 L 479.2,138.4 L 480.8,145.9 L 482.4,153.5 L 484.0,160.9 L 485.7,168.2 L 487.3,175.3 L 488.9,182.1 L 490.5,188.6 L 492.1,194.8 L 493.7,200.5 L 495.4,205.8 L 497.0,210.5 L 498.6,214.7 L 500.2,218.3 L 501.8,221.2 L 503.4,223.6 L 505.1,225.2 L 506.7,226.2 L 508.3,226.4 L 509.9,226.0 L 511.5,224.9 L 513.1,223.1 L 514.7,220.6 L 516.4,217.5 L 518.0,213.8 L 519.6,209.5 L 521.2,204.6 L 522.8,199.2 L 524.4,193.4 L 526.1,187.2 L 527.7,180.6 L 529.3,173.7 L 530.9,166.5 L 532.5,159.2 L 534.1,151.7 L 535.8,144.2 L 537.4,136.7 L 539.0,129.3 L 540.6,122.0 L 542.2,114.8 L 543.8,108.0 L 545.5,101.5 L 547.1,95.3 L 548.7,89.6 L 550.3,84.3 L 551.9,79.5 L 553.5,75.3 L 555.2,71.7 L 556.8,68.8 L 558.4,66.4 L 560.0,64.8" fill="none" stroke="#0f172a" stroke-width="2.5" />
+            
+            <!-- Annotations explicatives -->
+            <text x="125" y="280" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#16a34a">Onde transmise pure</text>
+            <text x="300" y="280" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#0284c7">Onde comprimée (fort indice)</text>
+            <text x="500" y="280" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#475569">Onde stationnaire (Air)</text>
+        </svg>
+        <p style="font-size: 13px; color: var(--text-secondary); margin-top: 10px;">
+            Profil d'intensité $|E(z)|^2$ calculé par TMM pour une couche de TiO₂ ($n=2.35$) sur substrat ($n_{sub}=1.5$), éclairée depuis l'air à droite ($z \ge d$). <br>
+            <strong>Note physique :</strong> L'axe $z$ débute à la surface du substrat ($z=0$) et croît vers la surface en contact avec l'air ($z=d$).
+        </p>
+    </div>
+
+    <!-- 9. EXEMPLES -->
+    <h2 id="examples">9. Exemples d'application numérique <span class="badge-l1">Niveau 1 &amp; 2</span></h2>
+    
+    <h3>Cas 1 : Couche Anti-Reflet (AR) quart-d'onde ($\lambda/4$)</h3>
+    <p>L'objectif est d'annuler les $\sim 4\%$ de réflexion parasite du verre. On dépose une épaisseur telle que le déphasage aller-retour soit de $\pi$ (interférence totalement destructive). L'épaisseur optique requise est $nd = \lambda / 4$.</p>
+    
+    <div class="diagram-container">
+        <svg width="480" height="250" viewBox="0 0 480 250" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <!-- Axes -->
+            <line x1="50" y1="190" x2="400" y2="190" stroke="#334155" stroke-width="1.5" />
+            <line x1="50" y1="190" x2="50" y2="30" stroke="#334155" stroke-width="1.5" />
+            
+            <text x="405" y="194" font-family="sans-serif" font-weight="bold" font-size="11" fill="#334155">λ (nm)</text>
+            <text x="30" y="30" font-family="sans-serif" font-weight="bold" font-size="12" fill="#0f172a">R (%)</text>
+            
+            <!-- Ticks X -->
+            <text x="60" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">300</text>
+            <line x1="60" y1="190" x2="60" y2="195" stroke="#334155" stroke-width="1.5"/>
+            <text x="225" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">550</text>
+            <line x1="225" y1="190" x2="225" y2="195" stroke="#334155" stroke-width="1.5"/>
+            <text x="390" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">800</text>
+            <line x1="390" y1="190" x2="390" y2="195" stroke="#334155" stroke-width="1.5"/>
+            
+            <!-- Ticks Y -->
+            <text x="40" y="194" text-anchor="end" font-family="sans-serif" font-size="10" fill="#64748b">0</text>
+            <text x="40" y="84" text-anchor="end" font-family="sans-serif" font-size="10" fill="#64748b">4</text>
+            <line x1="46" y1="80" x2="50" y2="80" stroke="#334155" stroke-width="1.5"/>
+            
+            <!-- Bare glass (R = 4%) -->
+            <line x1="50" y1="80" x2="390" y2="80" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5"/>
+            <text x="330" y="70" font-family="sans-serif" font-size="11" fill="#64748b">Verre nu (4%)</text>
+            
+            <!-- AR Curve -->
+            <path d="M 60 100 Q 140 190 225 190 T 390 100" fill="none" stroke="#d97706" stroke-width="3" />
+            <text x="225" y="175" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#d97706" font-weight="bold">Verre + AR (MgF₂)</text>
+        </svg>
+    </div>
+    
+    <p>La réflexion s'annule complètement si l'indice de la couche vérifie $n_{couche} = \sqrt{n_{air} \cdot n_{verre}}$. Pour un verre standard, on voudrait $n \approx 1.22$. Le Fluorure de Magnésium (MgF₂, $n=1.38$) est le matériau approchant le plus couramment utilisé en optique classique pour s'approcher de cet idéal.</p>
+
+
+    <div class="pedagogy-box" style="margin-top: 24px;">
+        <span class="box-title">Encart ingénierie — un optimum nominal n'est pas encore un design</span>
+        <p>Une épaisseur calculée à six décimales n'est pas une prescription industrielle. La fabrication introduit une résolution finie, des erreurs aléatoires couche par couche et des erreurs corrélées, par exemple un biais de calibration du quartz. La décision doit donc suivre la chaîne complète ci-dessous.</p>
+
+        <div class="formula-box" style="margin: 14px 0; background: rgba(255,255,255,0.94);">
+            <p><strong>Fil rouge expérimental — prescription Fresnel imposée.</strong></p>
+            <p style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap:anywhere;">BK7 / H L 2H L H L H L 2H L H L H L 2H L H L / Air</p>
+            <p>L'empilement comporte exactement <strong>18 couches</strong>, numérotées du substrat BK7 vers l'air. En pré-fabrication, BFGS ne peut modifier que les couches <strong>16, 17 et 18</strong> ; les quinze premières définissent l'architecture qui sera déposée. La performance est évaluée sur la fenêtre utile, et non sur tout le spectre :</p>
+            $$Q_r=\frac{2\,\overline T_{535-565}}{\overline T_{460-500}+\overline T_{620-680}},\qquad \overline T_{pass}=\overline T_{535-565}.$$
+            <p>Ces moyennes doivent d'abord être mesurées séparément sur T puis combinées par l'étudiant. L'optimisation n'autorise pas à changer le nombre de couches ni à « améliorer » le résultat en libérant les quinze premières. En revanche, la qualification perturbe les <strong>18 couches réellement déposées</strong> : une couche figée en conception n'est pas une couche sans erreur en fabrication.</p>
+        </div>
+
+        <svg viewBox="0 0 980 150" role="img" aria-label="Chaîne de qualification d'un design optique" style="width:100%; height:auto; margin:12px 0;">
+            <defs><marker id="robust-arrow" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#b45309"/></marker></defs>
+            <g font-family="Inter, sans-serif" font-size="15" text-anchor="middle">
+                <rect x="15" y="35" width="155" height="70" rx="12" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/><text x="92" y="64" font-weight="700">Performance</text><text x="92" y="86">nominale</text>
+                <line x1="175" y1="70" x2="210" y2="70" stroke="#b45309" stroke-width="2.5" marker-end="url(#robust-arrow)"/>
+                <rect x="220" y="35" width="155" height="70" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="2"/><text x="297" y="64" font-weight="700">Audit de</text><text x="297" y="86">fabricabilité</text>
+                <line x1="380" y1="70" x2="415" y2="70" stroke="#b45309" stroke-width="2.5" marker-end="url(#robust-arrow)"/>
+                <rect x="425" y="35" width="155" height="70" rx="12" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/><text x="502" y="64" font-weight="700">Modèle</text><text x="502" y="86">d'incertitude</text>
+                <line x1="585" y1="70" x2="620" y2="70" stroke="#b45309" stroke-width="2.5" marker-end="url(#robust-arrow)"/>
+                <rect x="630" y="35" width="155" height="70" rx="12" fill="#fefce8" stroke="#ca8a04" stroke-width="2"/><text x="707" y="64" font-weight="700">Monte-Carlo</text><text x="707" y="86">et centiles</text>
+                <line x1="790" y1="70" x2="825" y2="70" stroke="#b45309" stroke-width="2.5" marker-end="url(#robust-arrow)"/>
+                <rect x="835" y="35" width="130" height="70" rx="12" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/><text x="900" y="64" font-weight="700">Décision</text><text x="900" y="86">documentée</text>
+            </g>
+        </svg>
+
+        <p><strong>Fabricabilité nominale.</strong> On vérifie au minimum le nombre de couches et de matériaux, l'ordre de dépôt, $d_{min}$, $d_{max}$, l'épaisseur totale et la compatibilité de chaque valeur avec la résolution du procédé. Une couche sous le seuil de continuité retenu rend la prescription non fabricable, même si son spectre nominal est excellent.</p>
+
+        <p><strong>Modèle pédagogique unique.</strong> Chaque couche déposée reçoit une erreur gaussienne indépendante d'écart-type $\sigma=\Delta d/2$. La graine pseudo-aléatoire est figée afin de rendre les études reproductibles et les comparaisons A/B appariées. Le verrou de couche appartient uniquement à l'optimisation BFGS : une couche figée pendant la conception reste physiquement déposée et est donc perturbée pendant la qualification.</p>
+
+        <div class="warning-box" style="margin-top: 14px;">
+            <span class="box-title">Interprétation de $\Delta d$</span>
+            $\Delta d$ est le paramètre de sévérité du modèle, et non une borne absolue : avec $\sigma=\Delta d/2$, environ 95 % des erreurs idéalisées se trouvent dans $\pm\Delta d$. Ce modèle ne représente ni un biais commun de calibration, ni une quantification du moniteur quartz, ni une dérive corrélée du taux de dépôt.
+        </div>
+
+        <p><strong>Rendement et incertitude.</strong> Si $x$ réalisations parmi $N$ satisfont à la fois la fabricabilité et le cahier des charges optique, le rendement estimé est $\hat p=x/N$. L'intervalle de Wilson à 95 % est :</p>
+        <div class="formula-box" style="margin: 12px 0; background: rgba(255,255,255,0.94);">
+            $$IC_{95\%}=\frac{\hat p+z^2/(2N)\ \pm\ z\sqrt{\hat p(1-\hat p)/N+z^2/(4N^2)}}{1+z^2/N},\qquad z=1{,}96.$$
+        </div>
+        <p>Il faut rapporter le rendement <em>avec</em> cet intervalle. Une valeur affichée de 100 % sur un nombre fini de tirages ne signifie jamais « zéro risque ».</p>
+
+        <table style="margin-top: 12px;">
+            <tr><th>Indicateur</th><th>Question d'ingénierie</th><th>Usage correct</th></tr>
+            <tr><td>Moyenne ± écart-type</td><td>Où se situe la population et quelle est sa dispersion ?</td><td>Description, pas décision unique</td></tr>
+            <tr><td>P05</td><td>Quelle performance basse reste dépassée par 95 % des réalisations ?</td><td>Grandeur à maximiser : $Q_r$, $T_{pass}$</td></tr>
+            <tr><td>P95</td><td>Quel coût élevé n'est dépassé que par 5 % des réalisations ?</td><td>Grandeur à minimiser : $\overline R$, RMSE</td></tr>
+            <tr><td>IC95 % de Wilson</td><td>Quelle est l'incertitude d'échantillonnage sur le rendement ?</td><td>Comparer la borne basse à l'exigence</td></tr>
+        </table>
+
+        <div class="warning-box" style="margin-top: 14px;">
+            <span class="box-title">Limite de validité</span>
+            Le Monte-Carlo ne vaut que par ses hypothèses. Il ne couvre ni une erreur d'indice, ni la rugosité, ni l'inhomogénéité latérale, ni la température, ni le vieillissement, sauf si ces phénomènes sont explicitement introduits. Une qualification pédagogique est donc une <strong>décision conditionnelle au modèle</strong>, pas une certification de procédé.
+        </div>
+    </div>
+
+    <h3>Cas 2 : Filtre de validation à 5 couches (avec métal absorbant)</h3>
+    <p>Ce cas de test complexe permet de valider le code Python, car il inclut des angles obliques, de la polarisation et de l'absorption. Il sert surtout à vérifier deux choses :</p>
+    <ul>
+        <li>la conservation énergétique <strong>$R + T + A = 1$</strong>,</li>
+        <li>la réciprocité de la <strong>transmittance de puissance</strong> : <strong>$T = T'$</strong>, même dans un milieu absorbant, dès lors que la comparaison est faite avec la même normalisation physique.</li>
+    </ul>
+    <ul>
+        <li><strong>Incidence :</strong> Air ($n=1.0$) | <strong>Substrat :</strong> Verre ($n=1.52$) à $\lambda$ = 550 nm.</li>
+        <li><strong>Empilement (numéroté du substrat vers l'air) :</strong>
+            <ol>
+                <li>TiO₂ ($n=2.35$), 85 nm</li>
+                <li>SiO₂ ($n=1.46$), 110 nm</li>
+                <li><strong>Ag ($n=0.12 - 3.45i$), 15 nm</strong> (Couche de métal absorbant)</li>
+                <li>TiO₂ ($n=2.35$), 85 nm</li>
+                <li>SiO₂ ($n=1.46$), 90 nm</li>
+            </ol>
+        </li>
+    </ul>
+
+    <div class="pedagogy-box">
+        <span class="box-title">Tableau de référence validé</span>
+        Le tableau ci-dessous regroupe les résultats théoriques exacts pour la face traitée seule (substrat semi-infini) et pour la lame complète (avec prise en compte des rebonds multiples incohérents sur la face arrière en verre nu) :
+    </div>
+
+    <table>
+        <tr>
+            <th rowspan="2">Angle et Polarisation</th>
+            <th colspan="3">Face avant seule (semi-infini)</th>
+            <th colspan="2">Lame avec face arrière nue</th>
+        </tr>
+        <tr><th>Réflectance $R$</th><th>Transmittance $T$</th><th>Absorption $A$</th><th>$R_{total}$</th><th>$T_{total}$</th></tr>
+        <tr><td><strong>0° (Normale)</strong></td><td>0.357319</td><td>0.556823</td><td>0.085858</td><td>0.370750</td><td>0.542352</td></tr>
+        <tr><td><strong>45° (Polarisation s / TE)</strong></td><td>0.586690</td><td>0.324859</td><td>0.088451</td><td>0.597575</td><td>0.312870</td></tr>
+        <tr><td><strong>45° (Polarisation p / TM)</strong></td><td>0.482173</td><td>0.446639</td><td>0.071187</td><td>0.484049</td><td>0.444613</td></tr>
+    </table>
+
+    <!-- 10. CODE PYTHON -->
+    <h2 id="code_example">10. Implémentation Numérique (Python) <span class="badge-l2">Niveau 2</span></h2>
+    <p>Le code ci-dessous résume mathématiquement la théorie exposée. Il prend en compte l'absorption, l'angle d'incidence, les polarisations et corrige le problème de la racine complexe pour les ondes évanescentes (voir § 4.1).</p>
+
+    <details class="advanced-box" open>
+        <summary>Afficher le script Python didactique de la TMM</summary>
+        <div>
+<pre><code>import numpy as np
+
+def compute_tmm(n_inc, n_exit, n_layers, d_layers, wl, theta0=0.0, pol='s'):
+    """
+    Calcule les propriétés optiques d'un empilement de couches minces (TMM).
+    
+    Arguments :
+      n_inc, n_exit : Indices complexes du milieu incident (air) et du substrat.
+      n_layers      : Liste des indices complexes des couches (n - i*k).
+      d_layers      : Liste des épaisseurs physiques des couches (en nm).
+      wl            : Longueur d'onde de travail (en nm).
+      theta0        : Angle d'incidence dans le milieu incident (en radians).
+      pol           : Polarisation ('s' pour TE, 'p' pour TM).
+      
+    Retourne :
+      R (Réflectance), T (Transmittance), A (Absorption)
+    """
+    
+    # =====================================================================
+    # Étape 1 : Protection de la Convention de Macleod (Assure n - ik)
+    # =====================================================================
+    # En optique des couches minces, l'onde s'écrit formellement exp(i(wt - kz)).
+    # Pour que le milieu absorbe l'énergie (et ne l'amplifie pas), la partie 
+    # imaginaire de l'indice complexe doit être strictement négative.
+    def enforce_macleod(n): 
+        return n if n.imag <= 0 else n.real - 1j * n.imag
+    
+    n_inc = enforce_macleod(n_inc)
+    n_exit = enforce_macleod(n_exit)
+    n_layers = [enforce_macleod(n) for n in n_layers]
+    
+    # Nombre d'onde dans le vide
+    k0 = 2 * np.pi / wl
+    
+    # =====================================================================
+    # Étape 2 : Loi de Snell-Descartes et Angles Complexes (Correction TIR)
+    # =====================================================================
+    # L'invariant de Snell-Descartes (n * sin(theta)) est conservé partout.
+    S0 = n_inc * np.sin(theta0) 
+    
+    def safe_cos_th(n_val):
+        # On utilise l'identité trigonométrique classique : 
+        # cos(theta) = sqrt(n^2 - (n*sin(theta))^2) / n
+        n_cos_th = np.sqrt(n_val**2 - S0**2 + 0j)
+        
+        # ATTENTION AU PIÈGE NUMÉRIQUE (Coupure complexe / Branch cut) :
+        # En cas de Réflexion Totale Interne (TIR) ou d'onde évanescente, 
+        # numpy peut renvoyer une partie imaginaire positive, ce qui simule 
+        # un gain non-physique d'énergie. On force la décroissance physique :
+        if n_cos_th.imag > 0: 
+            n_cos_th = -n_cos_th 
+        return n_cos_th / n_val
+
+    # Calcul des cosinus (complexes si TIR/absorption) pour chaque milieu
+    cos_inc = np.cos(theta0) 
+    cos_exit = safe_cos_th(n_exit)
+    cos_layers = [safe_cos_th(n) for n in n_layers]
+    
+    # =====================================================================
+    # Étape 3 : Calcul des Admittances optiques (eta)
+    # =====================================================================
+    # L'admittance relie le champ magnétique au champ électrique (H = eta * E)
+    def get_eta(n_val, cos_th, pol):
+        if pol.lower() == 's':
+            # Polarisation TE (Champ E transverse) : projection par multiplication
+            return n_val * cos_th       
+        else:
+            # Polarisation TM (Champ H transverse) : projection par division
+            return n_val / cos_th       
+            
+    eta_inc = get_eta(n_inc, cos_inc, pol)
+    eta_exit = get_eta(n_exit, cos_exit, pol)
+    eta_layers = [get_eta(n_layers[i], cos_layers[i], pol) for i in range(len(n_layers))]
+    
+    # =====================================================================
+    # Étape 4 : Multiplication Matricielle (Du substrat vers l'air)
+    # =====================================================================
+    # On initialise la matrice système globale à la matrice Identité
+    M_sys = np.eye(2, dtype=complex)
+        
+    for i in range(len(n_layers)):
+        # Calcul du déphasage optique local (delta) accumulé dans la couche i
+        delta = k0 * n_layers[i] * d_layers[i] * cos_layers[i]
+        c, s = np.cos(delta), 1j * np.sin(delta)
+        eta = eta_layers[i]
+        
+        # Construction de la matrice caractéristique 2x2 de la couche locale i
+        M_i = np.array([
+            [c, s / eta], 
+            [s * eta, c]
+        ], dtype=complex)
+        
+        # Accumulation : M_sys = M_i * M_sys
+        # L'ordre de multiplication est crucial : on part du substrat (sortie) 
+        # vers le milieu incident (entrée), donc de droite à gauche.
+        M_sys = np.dot(M_i, M_sys)
+
+    # =====================================================================
+    # Étape 5 : Extraction des coefficients d'amplitude de Fresnel
+    # =====================================================================
+    # On applique la matrice globale aux conditions aux limites du substrat
+    # Équation matricielle : [B, C]^T = M_sys * [1, eta_exit]^T
+    B = M_sys[0,0]*1 + M_sys[0,1]*eta_exit
+    C = M_sys[1,0]*1 + M_sys[1,1]*eta_exit
+    
+    # Calcul des coefficients complexes de réflexion (r) et transmission (t)
+    r = (eta_inc * B - C) / (eta_inc * B + C)
+    t = (2.0 * eta_inc) / (eta_inc * B + C)
+    
+    # =====================================================================
+    # Étape 6 : Bilan des puissances (Conservation de l'énergie)
+    # =====================================================================
+    # La réflectance se mesure dans le même milieu, donc un simple module carré
+    R = abs(r)**2
+    
+    # Correction du vecteur de Poynting (Flux d'énergie) :
+    # La transmittance nécessite de comparer la partie réelle des admittances
+    # des milieux extrêmes car l'onde change de milieu de propagation.
+    T_factor = (eta_exit.real) / (eta_inc.real) if eta_inc.real > 1e-12 else 0.0
+    T = T_factor * abs(t)**2
+    
+    # L'énergie manquante est nécessairement absorbée par l'empilement
+    A = 1.0 - R - T
+    
+    return R, T, A
+
+# --- Exemple d'utilisation simple (Verre nu) ---
+# Pour un verre d'indice 1.5 dans l'air (1.0) à 550 nm en incidence normale :
+# R, T, A = compute_tmm(1.0, 1.5, [], [], 550) 
+# print(f"Réflectance du verre nu : {R*100:.2f}%") # Affichera ~4.00%
+</code></pre>
+        </div>
+    </details>
+
+    <hr>
+    <footer>
+        <p><em>Document pédagogique (Niveau Master 2) — Basé sur H.A. Macleod, <i>Thin-Film Optical Filters</i>.</em></p>
+    </footer>
+</body>
+</html>

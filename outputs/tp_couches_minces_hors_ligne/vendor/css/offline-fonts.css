@@ -1,0 +1,78 @@
+/* Polices locales figées avec @fontsource 5.3.0. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../fonts/inter-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url('../fonts/inter-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url('../fonts/inter-latin-600-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url('../fonts/inter-latin-700-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 800;
+  src: url('../fonts/inter-latin-800-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../fonts/fira-code-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url('../fonts/fira-code-latin-600-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'STIX Two Text';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../fonts/stix-two-text-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'STIX Two Text';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../fonts/stix-two-text-latin-400-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'STIX Two Text';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url('../fonts/stix-two-text-latin-700-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../fonts/source-code-pro-latin-400-normal.woff2') format('woff2');
+}

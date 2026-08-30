@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.class
+*.pyc
+
+# Temporary test files
+temp_*.js
+temp_*.py
+qs.txt
+extracted_theory_*.txt
+target_Q*.txt
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="revision" content="2026-08-30">
+    <title>TP Simulations Couches Minces Optiques 2026 — Parcours modulaire BUT MCPC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Fira+Code:wght@400;600&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'Fira Code', monospace; }
+        .equation { overflow-x: auto; padding: 0.75rem 0; }
+        .qbox { scroll-margin-top: 5rem; }
+        .navlink.active { background-color: #4f46e5; color: #fff; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 leading-relaxed">
+
+    <!-- En-tête -->
+    <header class="bg-indigo-900 text-white shadow-2xl border-b-4 border-indigo-500">
+        <div class="max-w-5xl mx-auto px-6 py-10">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">TP Simulations Couches Minces Optiques 2026</h1>
+                    <p class="text-indigo-200 mt-2 text-lg font-medium">De la théorie matricielle à la fabrication sous vide à l'Institut Fresnel</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center bg-indigo-950/80 p-1 rounded-xl border border-indigo-700/60 shadow-inner">
+                        <span class="bg-indigo-600 text-white font-bold px-3 py-1 rounded-lg text-xs shadow">🇫🇷 FR</span>
+                        <a href="tp_couches_minces_en.html" class="text-indigo-300 hover:text-white font-medium px-3 py-1 rounded-lg text-xs transition">🇬🇧 EN</a>
+                    </div>
+                    <a href="simulateur_couches_minces.html" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2.5 rounded-xl shadow-lg transition flex items-center gap-2 text-sm">
+                        <span>🚀 Ouvrir le Simulateur Web</span>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-2">
+                <span class="inline-block bg-indigo-800 rounded-full px-4 py-1 text-xs font-semibold text-indigo-100 uppercase tracking-wider">
+                    10 grands exercices — 32 questions — durées indicatives
+                </span>
+                <span class="inline-block bg-emerald-800 rounded-full px-3 py-1 text-xs font-semibold text-emerald-100 uppercase tracking-wider">
+                    BUT 3 FI Parcours MCPC — étudiants L2 · L3 · M1 · M2
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation rapide -->
+    <nav class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+        <div class="max-w-5xl mx-auto px-6 py-2 flex flex-wrap gap-1 text-[11px] font-bold">
+            <a href="#ex1" class="navlink px-2 py-1 rounded text-slate-600 hover:bg-indigo-50">I</a>
+            <a href="#ex2" class="navlink px-2 py-1 rounded text-slate-600 hover:bg-indigo-50">II</a>
+            <a href="#ex3" class="navlink px-2 py-1 rounded text-slate-600 hover:bg-indigo-50">III</a>
+            <a href="#ex4" class="navlink px-2 py-1 rounded text-slate-600 hover:bg-indigo-50">IV</a>
+            <a href="#ex5" class="navlink px-2 py-1 rounded text-slate-600 hover:bg-indigo-50">V</a>
+            <a href="#ex6" class="navlink px-2 py-1 rounded text-slate-600 hover:bg-indigo-50">VI</a>
+            <a href="#ex7" class="navlink px-2 py-1 rounded text-emerald-700 hover:bg-emerald-50">VII 🎯</a>
+            <a href="#ex8" class="navlink px-2 py-1 rounded text-emerald-700 hover:bg-emerald-50">VIII 🎯</a>
+            <a href="#ex9" class="navlink px-2 py-1 rounded text-emerald-700 hover:bg-emerald-50">IX 🎯</a>
+            <a href="#ex10" class="navlink px-2 py-1 rounded text-emerald-700 hover:bg-emerald-50">X</a>
+            <a href="#atelier" class="navlink px-2 py-1 rounded text-fuchsia-700 hover:bg-fuchsia-50">🎨 Atelier libre</a>
+            <span class="ml-auto text-slate-400 font-normal hidden sm:inline">🎯 = fil rouge salle blanche</span>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-6 py-12 space-y-10">
+
+        <!-- Mission -->
+        <section class="bg-gradient-to-br from-indigo-900 to-indigo-700 text-white rounded-2xl shadow-lg p-6">
+            <h3 class="text-lg font-extrabold mb-2">🎬 Votre mission</h3>
+            <p class="text-sm text-indigo-100 leading-relaxed">
+                Vous êtes l'ingénieur optique chargé de <strong>concevoir, qualifier puis diagnostiquer</strong> un filtre interférentiel
+                qui sera <strong>réellement déposé sous vide</strong> à l'Institut Fresnel. Entre le premier calcul et le spectre mesuré
+                sur le composant fini, vous devrez prouver — chiffres à l'appui — que votre design ne se contente pas d'être bon sur le papier.
+            </p>
+            <p class="mt-3 text-sm text-indigo-100 leading-relaxed">
+                <strong>Le simulateur n'est pas un oracle : c'est un banc de mesure.</strong> Il ne vous donnera ni la largeur à mi-hauteur,
+                ni la bonne fonction de mérite, ni la conclusion. Vous saisirez vos couches, pointerez vos mesures au curseur,
+                exporterez vos données et conclurez vous-même. Une réponse qui recopie un nombre affiché sans le comprendre ne vaut rien.
+            </p>
+        </section>
+
+        <!-- Échelle de difficulté -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+            <h3 class="text-sm font-extrabold text-slate-900 mb-3">⭐ Échelle de difficulté — chaque question est graduée</h3>
+            <div class="grid md:grid-cols-3 gap-3 text-xs">
+                <div class="border border-emerald-200 bg-emerald-50 rounded-lg p-3">
+                    <div class="text-emerald-600 font-bold text-sm tracking-tight">★☆☆ &nbsp;Application</div>
+                    <p class="text-emerald-950 mt-1">Relevé, lecture de courbe, formule directe. Aucune question de ce niveau ne doit vous bloquer : si c'est le cas, revoyez le rappel théorique avant de continuer.</p>
+                    <p class="mt-1.5 font-mono text-[10px] text-emerald-700">7 questions — 19 %</p>
+                </div>
+                <div class="border border-amber-200 bg-amber-50 rounded-lg p-3">
+                    <div class="text-amber-600 font-bold text-sm tracking-tight">★★☆ &nbsp;Analyse</div>
+                    <p class="text-amber-950 mt-1">Plusieurs étapes enchaînées, traitement de données, interprétation physique. C'est le cœur du TP : prévoyez du temps et un brouillon.</p>
+                    <p class="mt-1.5 font-mono text-[10px] text-amber-700">17 questions — 47 %</p>
+                </div>
+                <div class="border border-rose-200 bg-rose-50 rounded-lg p-3">
+                    <div class="text-rose-600 font-bold text-sm tracking-tight">★★★ &nbsp;Expertise</div>
+                    <p class="text-rose-950 mt-1">Vous construisez la méthode, vous décidez et vous argumentez. Il n'y a pas de réponse unique à recopier : c'est votre raisonnement qui est évalué.</p>
+                    <p class="mt-1.5 font-mono text-[10px] text-rose-700">12 questions — 33 %</p>
+                </div>
+            </div>
+            <p class="mt-3 text-[11px] text-slate-600 bg-slate-50 border-l-4 border-slate-300 p-2 rounded-r">
+                <strong>Comment s'en servir :</strong> les ★★★ ne sont pas « pour les meilleurs ». Elles sont le but du module — les ★ et ★★ existent pour vous y amener. Si vous manquez de temps, traitez intégralement une ★★★ plutôt que trois ★ : c'est là que se joue l'évaluation.
+            </p>
+        </section>
+
+        <!-- Objectifs & Guide d'Utilisation du Simulateur Web -->
+        <div class="grid md:grid-cols-2 gap-6">
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h3 class="text-lg font-bold text-indigo-900 mb-3 border-l-4 border-indigo-500 pl-3">1. Objectif pédagogique</h3>
+                <div class="text-slate-700 text-sm leading-relaxed">
+            Ce parcours modulaire vise la maîtrise du calcul, de l'optimisation, de la <strong>fabricabilité</strong> et du diagnostic d'empilements optiques (antireflets, miroirs de Bragg et filtres résonnants). Un minimum nominal n'est jamais considéré comme un design abouti tant que sa robustesse au procédé n'est pas démontrée. Les durées affichées sont des repères de travail, non des limites imposées ; l'enseignant compose librement son parcours.
+                    <br><br>
+                    <div class="bg-emerald-50 border-l-4 border-emerald-500 p-2.5 rounded text-xs text-emerald-950 font-medium">
+                        🎯 <strong>Projet Salle Blanche :</strong> seul le <strong>filtre passe-bande interférentiel</strong> des exercices VII, VIII et X fera l'objet d'un dépôt réel sous vide à l'<strong>Institut Fresnel</strong>, avec l'équipe de dépôt de la salle blanche.
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <h3 class="text-lg font-bold text-indigo-900 mb-3 border-l-4 border-indigo-500 pl-3">🚀 Guide du Simulateur Web</h3>
+                <div class="text-slate-700 text-sm leading-relaxed space-y-2">
+                    <ul class="list-disc list-inside space-y-1 text-xs">
+                        <li><strong>Accès direct :</strong> Ouvrez <a href="simulateur_couches_minces.html" class="text-indigo-600 font-bold underline" target="_blank">simulateur_couches_minces.html</a> dans votre navigateur. Une connexion réseau est requise pour charger les bibliothèques graphiques (une distribution hors ligne existe : voir votre enseignant).</li>
+                        <li><strong>Banc de mesure virtuel :</strong> Le simulateur ne donne pas de résultats pré-mâchés. Vous devez saisir vos couches, pointer vos mesures au curseur et traiter vos données sous Excel.</li>
+                        <li><strong>Formules symboliques :</strong> Saisie rapide d'empilements comme <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-indigo-700">(HL)^3 2H (LH)^3</code>.</li>
+                        <li><strong>Exports :</strong> Boutons <strong>CSV</strong> (données pour Excel/Python) et <strong>Image</strong> pour vos comptes-rendus.</li>
+                        <li><strong>Grilles publiées :</strong> sous le sélecteur de mérite, le simulateur affiche <strong>la grille exacte</strong> de son calcul. Reprenez-la à l'identique sous Excel : vous devez retrouver le même nombre.</li>
+                        <li><strong>Export CSV universel :</strong> <strong>clic droit sur n'importe quel graphique</strong> (ou appui long sur mobile) exporte toutes ses courbes visibles, sur la grille réellement tracée — y compris les enveloppes Monte-Carlo et les courbes mémorisées.</li>
+                        <li><strong>Raccourcis clavier :</strong> touche <code class="bg-slate-100 px-1 rounded font-mono">?</code> pour la liste complète. Les plus utiles : <code class="bg-slate-100 px-1 rounded font-mono">O</code> optimiser, <code class="bg-slate-100 px-1 rounded font-mono">N</code> aiguille et <code class="bg-slate-100 px-1 rounded font-mono">M</code> mémoriser.</li>
+                        <li><strong>Design libre :</strong> touche <code class="bg-slate-100 px-1 rounded font-mono">D</code> ou bouton <strong>🎯 Design libre</strong> — vous définissez <em>votre</em> cahier des charges. Voir l'atelier libre en fin de document.</li>
+                        <li><strong>Classeur actif :</strong> utilisez <a href="outputs/tp_couches_minces/squelette_excel_couches_minces.xlsx" class="text-indigo-600 font-bold underline">le squelette Q12/Q14</a> ; les cellules de calcul restent à programmer.</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <!-- Protocole transversal de qualification -->
+        <section class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl shadow-sm border-2 border-amber-300 p-6">
+            <h3 class="text-lg font-extrabold text-amber-950 mb-3 border-l-4 border-amber-600 pl-3">🛡️ Protocole obligatoire : de l'optimum nominal au design fabricable et robuste</h3>
+            <p class="text-sm text-amber-950 mb-4"><strong>Règle de décision :</strong> un empilement optiquement excellent au nominal mais impossible à déposer, trop fin, trop complexe ou trop sensible est <strong>refusé</strong>. Toute conclusion industrielle doit séparer performance nominale, fabricabilité et rendement statistique.</p>
+            <div class="grid md:grid-cols-2 gap-4 text-xs text-slate-800">
+                <ol class="list-decimal list-inside space-y-1.5 bg-white/80 rounded-lg border border-amber-200 p-3">
+                    <li><strong>Spécifier avant d'optimiser :</strong> fenêtre, incidence, polarisation, grandeur et seuil d'acceptation.</li>
+                    <li><strong>Auditer le nominal :</strong> nombre de couches et de matériaux, $d_{min}$, $d_{max}$, épaisseur totale et ordre de dépôt.</li>
+                    <li><strong>Déclarer le procédé :</strong> $\Delta d$, épaisseur minimale et couches réellement perturbées.</li>
+                    <li><strong>Déclarer les tolérances d'acceptation :</strong> sans elles, le rendement n'est pas défini — c'est la fraction des tirages qui restent dans le cahier des charges.</li>
+                </ol>
+                <ol start="5" class="list-decimal list-inside space-y-1.5 bg-white/80 rounded-lg border border-amber-200 p-3">
+                    <li><strong>Dimensionner l'échantillon :</strong> $N=100$ pour explorer, $N=500$ pour comparer, $N=1000$ pour une qualification pédagogique.</li>
+                    <li><strong>Rapporter des statistiques robustes :</strong> rendement, IC95 % de Wilson, moyenne, écart-type d'échantillon et P05/P50/P95.</li>
+                    <li><strong>Regarder le centile défavorable :</strong> P95 d'un coût à minimiser ; P05 d'une performance à maximiser.</li>
+                    <li><strong>Décider :</strong> <em>qualifié</em>, <em>qualifié sous conditions</em> ou <em>non qualifié</em>, avec marges et hypothèses.</li>
+                </ol>
+            </div>
+            <div class="mt-3 grid md:grid-cols-2 gap-3">
+                <p class="text-[11px] text-amber-900 bg-white/70 rounded p-2 border border-amber-200"><strong>Attention :</strong> même 1000 succès sur 1000 ne prouvent pas un rendement réel de 100 %. L'intervalle de confiance affiché matérialise l'incertitude d'échantillonnage ; il ne couvre pas l'incertitude des indices, la dérive thermique, la rugosité ou les défauts non modélisés.</p>
+                <p class="text-[11px] text-amber-900 bg-white/70 rounded p-2 border border-amber-200"><strong>Piège classique :</strong> les centiles P05/P50/P95 rapportés ne portent que sur les réalisations <em>fabricables</em>. Ils sont donc <strong>conditionnels</strong>. Le rendement, lui, est rapporté sur le nombre total de tirages. Ne comparez jamais les deux sans le dire.</p>
+            </div>
+        </section>
+
+        <!-- Rappels Théoriques -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h3 class="text-lg font-bold text-indigo-900 mb-3 border-l-4 border-indigo-500 pl-3">Rappels Théoriques : Interférences et Formalisme Matriciel d'Abelès</h3>
+            <div class="text-slate-700 text-sm leading-relaxed space-y-3">
+                <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100 text-indigo-900 mb-2">
+                    <strong>💡 Le phénomène physique :</strong> Les propriétés d'un empilement optique reposent sur les <strong>interférences multiples</strong>. À chaque interface, la lumière est partiellement réfléchie et transmise. La notion clé est l'<strong>épaisseur optique</strong> ($n \times d$).
+                </div>
+                <p>
+                    Pour chaque couche $i$ d'épaisseur $d_i$ et d'indice complexe $N_i = n_i - ik_i$, le déphasage optique vaut :
+                </p>
+                <div class="equation text-center font-mono text-indigo-900">
+                    $$\phi_i = \frac{2\pi d_i}{\lambda} \sqrt{N_i^2 - N_0^2 \sin^2\theta_0}$$
+                </div>
+                <p>
+                    La matrice caractéristique unitaire d'une couche est :
+                </p>
+                <div class="equation text-center font-mono text-indigo-900">
+                    $$M_i = \begin{pmatrix} \cos \phi_i & \frac{i}{\eta_i} \sin \phi_i \\ i\eta_i \sin \phi_i & \cos \phi_i \end{pmatrix}$$
+                </div>
+                <div class="bg-slate-100 p-3 rounded-lg border border-slate-200 text-xs space-y-1.5 text-slate-800">
+                    <div class="font-bold text-indigo-900">⚡ Rappel sur les états de Polarisation (Incidence $\theta > 0$) :</div>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>Polarisation S (TE) :</strong> $\vec{E} \perp$ au plan d'incidence $\implies \eta_i = \gamma_i = \sqrt{N_i^2 - N_0^2\sin^2\theta_0}$.</li>
+                        <li><strong>Polarisation P (TM) :</strong> $\vec{E} \parallel$ au plan d'incidence $\implies \eta_i = N_i^2 / \gamma_i$.</li>
+                        <li><strong>Lumière non polarisée :</strong> $R_{moy} = \frac{R_s + R_p}{2}$ et $T_{moy} = \frac{T_s + T_p}{2}$.</li>
+                    </ul>
+                </div>
+                <div class="bg-slate-100 p-3 rounded-lg border border-slate-200 text-xs space-y-1 text-slate-800">
+                    <div class="font-bold text-indigo-900">📐 Convention d'ordre — à retenir pour tout le TP :</div>
+                    <p>Les couches sont listées dans <strong>l'ordre de dépôt, substrat → superstrat</strong>. La couche n° 1 touche le substrat ; la dernière touche l'air. La lumière les rencontre donc dans l'ordre inverse, et la matrice totale vaut $M = M_m \cdots M_2 M_1$.</p>
+                </div>
+            </div>
+        </section>
+
+        
+                <figure id="fig-ordre" class="my-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Convention d'ordre : substrat → superstrat</figcaption>
+                    <div class="p-3">
+<svg viewBox="0 0 640 235" style="width:100%;height:auto;max-height:320px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ordre de dépôt : 1 → m">
+  <rect x="150" y="170" width="260" height="34" fill="#cbd5e1" stroke="#64748b" stroke-width="0.8"/>
+  <text x="280" y="191" text-anchor="middle" font-size="11" fill="#334155" font-family="Inter,system-ui,sans-serif">Substrat (BK7)</text>
+  <rect x="150" y="62" width="260" height="20" fill="#6366f1" stroke="#4338ca" stroke-width="0.8"/>
+  <text x="280" y="76" text-anchor="middle" font-size="11" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text>
+  <text x="418" y="76" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">5</text>
+  <rect x="150" y="84" width="260" height="20" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.8"/>
+  <text x="280" y="98" text-anchor="middle" font-size="11" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text>
+  <text x="418" y="98" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">4</text>
+  <rect x="150" y="106" width="260" height="20" fill="#6366f1" stroke="#4338ca" stroke-width="0.8"/>
+  <text x="280" y="120" text-anchor="middle" font-size="11" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text>
+  <text x="418" y="120" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">3</text>
+  <rect x="150" y="128" width="260" height="20" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.8"/>
+  <text x="280" y="142" text-anchor="middle" font-size="11" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text>
+  <text x="418" y="142" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">2</text>
+  <rect x="150" y="150" width="260" height="20" fill="#6366f1" stroke="#4338ca" stroke-width="0.8"/>
+  <text x="280" y="164" text-anchor="middle" font-size="11" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text>
+  <text x="418" y="164" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">1</text>
+  <rect x="150" y="26" width="260" height="36" fill="#e0f2fe" stroke="#7dd3fc" stroke-width="0.8"/>
+  <text x="300" y="52" text-anchor="middle" font-size="11" fill="#0369a1" font-family="Inter,system-ui,sans-serif">Superstrat (Air)</text>
+  <line x1="152.0" y1="6.0" x2="206.0" y2="62.0" stroke="#f59e0b" stroke-width="2.5"/>
+  <polygon points="206.0,62.0 196.5,53.8 207.5,49.6" fill="#f59e0b"/>
+  <text x="146" y="16" text-anchor="end" font-size="10" fill="#b45309" font-weight="600" font-family="Inter,system-ui,sans-serif">Lumière incidente</text>
+  <circle cx="206.0" cy="62" r="2.6" fill="#b45309"/>
+  <line x1="452" y1="62" x2="452" y2="170" stroke="#94a3b8" stroke-width="1.2"/>
+  <polygon points="452,170 448,160 456,160" fill="#94a3b8"/>
+  <text x="462" y="112" font-size="10" fill="#475569" font-family="Inter,system-ui,sans-serif">ordre de dépôt : 1 → m</text>
+  <line x1="140" y1="170" x2="140" y2="70" stroke="#f59e0b" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <polygon points="140,64 136,74 144,74" fill="#f59e0b"/>
+  <text x="132" y="112" text-anchor="end" font-size="9.5" fill="#b45309" font-family="Inter,system-ui,sans-serif">ordre de rencontre</text>
+  <text x="132" y="125" text-anchor="end" font-size="9.5" fill="#b45309" font-weight="700" font-family="Inter,system-ui,sans-serif">m → 1</text>
+  <text x="150" y="220" font-size="11" fill="#312e81" font-weight="700" font-family="Inter,system-ui,sans-serif">M = M</text>
+  <text x="196" y="224" font-size="8" fill="#312e81" font-family="Inter,system-ui,sans-serif">m</text>
+  <text x="203" y="220" font-size="11" fill="#312e81" font-weight="700" font-family="Inter,system-ui,sans-serif">··· M</text>
+  <text x="241" y="224" font-size="8" fill="#312e81" font-family="Inter,system-ui,sans-serif">2</text>
+  <text x="247" y="220" font-size="11" fill="#312e81" font-weight="700" font-family="Inter,system-ui,sans-serif">M</text>
+  <text x="258" y="224" font-size="8" fill="#312e81" font-family="Inter,system-ui,sans-serif">1</text>
+</svg>
+                    </div>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">Le tableau des couches suit l'ordre de <strong>dépôt</strong> : la couche 1 touche le substrat. La lumière, elle, arrive par l'air et rencontre les couches dans l'ordre <strong>inverse</strong>. D'où le produit matriciel M = M<sub>m</sub>···M<sub>1</sub>. Se tromper d'ordre inverse tout l'empilement : c'est l'erreur la plus fréquente du TP.</p>
+                </figure>
+
+        <!-- PARTIE -->
+        <section id="ex1" class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-100 border-b px-8 py-4">
+                <h2 class="text-xl font-bold text-slate-900 flex flex-wrap items-center justify-between gap-2">I. Les matériaux couches minces <span class="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">⏱ 35 min indicatives</span></h2>
+            </div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Accès direct — prérequis :</strong> aucun exercice antérieur. Savoir lire une courbe et manipuler un nombre complexe sous la forme $N=n-i\kappa$.</div>
+            <div class="p-6 space-y-4">
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q1</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Niveau 1 — Application : relevé, lecture de courbe, formule directe">&#9733;&#9734;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            Dans le panneau inférieur <i>Base Matériaux</i> du simulateur, examinez les courbes de $n(\lambda)$ et $k(\lambda)$ pour : <strong>Si, SiO2, Ge, Al, Au</strong>. Expliquez brièvement la nature physique de chaque matériau. Quel paramètre ($n$ ou $k$) dicte l'opacité ?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q2</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p>Classez par $k$ croissant les six matériaux suivants : <strong>SiO2, YF3, ZnS, Si, Al, Au</strong>. Faites-le d'abord <strong>à 550 nm</strong>, puis refaites le classement <strong>à 400 nm</strong> : quels matériaux changent de rang ? Indiquez enfin lesquels respectent $k < 5\times10^{-4}$ <em>en tout point</em> du visible ($400-750\,\text{nm}$).</p>
+                            <div class="bg-slate-50 border-l-4 border-slate-300 p-2 rounded-r text-xs text-slate-600">
+                                <strong>Attention, c'est le cœur de la question :</strong> ZnS est transparent dans le vert et le rouge mais <em>pas</em> dans le bleu profond. Relevez son $k$ à 400 nm puis à 550 nm. Que se passe-t-il si vous n'examinez qu'une seule longueur d'onde ? Discutez également ce que signifie un $k$ affiché <strong>exactement</strong> égal à zéro : est-ce une mesure ou une convention du modèle ?
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q3</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            Comparez les ordres de grandeur de $k$ pour un métal ($Al, Au$) et un semi-conducteur ($Si, Ge$). Justifiez la différence en terme de porteurs libres et de gap électronique $E_g$.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q4</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Niveau 1 — Application : relevé, lecture de courbe, formule directe">&#9733;&#9734;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p>Examinez les matériaux <strong>ZnS (Haut indice H)</strong> et <strong>YF3 (Bas indice L)</strong> utilisés en salle blanche à l'Institut Fresnel. Relevez leurs indices à $550\,\text{nm}$ et calculez le contraste $(n_H-n_L)/(n_H+n_L)$.</p>
+                            <div class="bg-amber-50 border-l-4 border-amber-400 p-2 rounded-r text-xs text-amber-900">
+                                🔑 <strong>Gardez ce nombre :</strong> il fixe la largeur de la bande interdite du miroir, $\Delta\lambda \simeq \frac{4\lambda_0}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L}$, dont vous aurez besoin dès l'exercice VI et surtout en IX pour placer correctement vos bandes de mesure.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PARTIE -->
+        <section id="ex2" class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-100 border-b px-8 py-4">
+                <h2 class="text-xl font-bold text-slate-900 flex flex-wrap items-center justify-between gap-2">II. Une interface simple : BK7 // Air <span class="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">⏱ 50 min indicatives</span></h2>
+            </div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Accès direct — prérequis :</strong> coefficients de Fresnel d'un dioptre, définition de l'angle d'incidence et distinction S/P. L'exercice I est recommandé seulement pour la dispersion et l'indice complexe.</div>
+            <div class="p-6 space-y-4">
+                <figure id="fig-sp" class="my-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Polarisations S et P à incidence oblique</figcaption>
+                    <div class="p-3">
+<svg viewBox="0 0 640 250" style="width:100%;height:auto;max-height:320px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Plan d'incidence">
+  <rect x="60" y="130" width="520" height="80" fill="#e2e8f0"/>
+  <line x1="60" y1="130" x2="580" y2="130" stroke="#334155" stroke-width="2"/>
+  <text x="70" y="120" font-size="10" fill="#0369a1" font-family="Inter,system-ui,sans-serif">n₀ = 1 (air)</text>
+  <text x="70" y="150" font-size="10" fill="#475569" font-family="Inter,system-ui,sans-serif">n₁ = 1,5187 (BK7)</text>
+  <line x1="320" y1="30" x2="320" y2="205" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="326" y="42" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">Normale</text>
+  <line x1="180" y1="45" x2="320" y2="130" stroke="#f59e0b" stroke-width="2.5"/>
+  <polygon points="320,130 308,124 312,136" fill="#f59e0b"/>
+  <text x="140" y="40" font-size="10" fill="#b45309" font-family="Inter,system-ui,sans-serif">Onde incidente</text>
+  <line x1="320" y1="130" x2="460" y2="45" stroke="#6366f1" stroke-width="2.5"/>
+  <polygon points="460,45 448,48 454,56" fill="#6366f1"/>
+  <text x="466" y="40" font-size="10" fill="#4338ca" font-family="Inter,system-ui,sans-serif">Réfléchie</text>
+  <line x1="320" y1="130" x2="410" y2="205" stroke="#10b981" stroke-width="2.5"/>
+  <polygon points="410,205 398,198 402,210" fill="#10b981"/>
+  <text x="416" y="205" font-size="10" fill="#047857" font-family="Inter,system-ui,sans-serif">Transmise</text>
+  <path d="M 320 100 A 30 30 0 0 0 302 111" fill="none" stroke="#94a3b8" stroke-width="1"/>
+  <text x="292" y="102" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">θ₀</text>
+  <circle cx="250" cy="87" r="6" fill="none" stroke="#dc2626" stroke-width="1.6"/>
+  <circle cx="250" cy="87" r="1.8" fill="#dc2626"/>
+  <text x="152" y="70" font-size="10" fill="#dc2626" font-weight="600" font-family="Inter,system-ui,sans-serif">S (TE) : E ⊥ au plan</text>
+  <line x1="228" y1="79" x2="242" y2="70" stroke="#7c3aed" stroke-width="2"/>
+  <polygon points="242,70 234,70 238,76" fill="#7c3aed"/>
+  <line x1="228" y1="79" x2="214" y2="88" stroke="#7c3aed" stroke-width="2"/>
+  <polygon points="214,88 222,88 218,82" fill="#7c3aed"/>
+  <text x="152" y="235" font-size="10" fill="#7c3aed" font-weight="600" font-family="Inter,system-ui,sans-serif">P (TM) : E dans le plan</text>
+  <line x1="196" y1="228" x2="240" y2="228" stroke="#7c3aed" stroke-width="1" stroke-dasharray="2 2"/>
+</svg>
+                    </div>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">En S (TE), le champ électrique est <strong>perpendiculaire au plan d'incidence</strong> (symbole ⊙). En P (TM), il est <strong>contenu dans ce plan</strong> (double flèche). Les deux voient des admittances différentes, η<sub>s</sub> = γ et η<sub>p</sub> = N²/γ : c'est toute l'origine de l'angle de Brewster, où R<sub>p</sub> s'annule alors que R<sub>s</sub> ne s'annule jamais.</p>
+                </figure>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q5</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Niveau 1 — Application : relevé, lecture de courbe, formule directe">&#9733;&#9734;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Calcul théorique :</strong> Déterminez $R$ et $T$ en incidence normale pour une interface Air/BK7 ($n_{BK7} \approx 1.5187$ à $550\,\text{nm}$) à l'aide des formules de Fresnel.</p>
+                            <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">🔍 <strong>Auto-contrôle :</strong> votre $R$ doit tomber entre 3 % et 5 %. Si vous trouvez 0,04, vous avez oublié de convertir en pourcentage ; si vous trouvez 20 %, vous avez confondu $r$ et $R=|r|^2$.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q6</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            Définissez Superstrat = <code>Air</code> et Substrat = <code>BK7</code> sans couche. Comparez la valeur affichée à $550\,\text{nm}$ avec votre calcul. Activez ensuite l'option <i>Face arrière (verre)</i> : la réflexion passe d'environ 4,2 % à 8,1 %. Retrouvez ce second chiffre par la somme incohérente $R_{tot}=R+\frac{(1-R)^2R}{1-R^2}$, puis montrez que cette expression se réduit à $R_{tot}=\dfrac{2R}{1+R}$ — forme plus courte et strictement équivalente. Expliquez enfin pourquoi le résultat n'est <em>pas</em> simplement $2R$.
+                            <br><span class="text-[11px]">Cette option ne s'applique qu'à la <strong>lame nue</strong>, sans aucune couche : dès que vous en ajoutez une, elle reste sans effet. C'est voulu — la formule ci-dessus suppose deux dioptres identiques, ce qui cesse d'être vrai dès qu'une face est traitée.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q7</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Niveau 1 — Application : relevé, lecture de courbe, formule directe">&#9733;&#9734;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            Basculez en mode <code>Angle θ</code> (à $\lambda = 550\,\text{nm}$). Relevez $R(\theta)$ pour $\theta \in [0, 80^\circ]$ par pas de $10^\circ$ en lumière non polarisée, puis séparément en S et en P. Tracez les trois courbes.
+                        </div>
+                    </div>
+                </div>
+
+                <figure id="fig-brewster" class="mb-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Réflectivité en fonction de l’angle : S, P et Brewster</figcaption>
+                        <div class="p-3">
+<svg viewBox="0 0 640 245" style="width:100%;height:auto;max-height:330px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="θ_B ≈ 56.6°">
+  <line x1="70" y1="180" x2="590" y2="180" stroke="#334155" stroke-width="1.2"/>
+  <line x1="70" y1="22" x2="70" y2="180" stroke="#334155" stroke-width="1.2"/>
+  <text x="18" y="14" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">R (%)</text>
+  <text x="398" y="212" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">angle d’incidence θ (°)</text>
+  <line x1="70" y1="180" x2="70" y2="184" stroke="#94a3b8"/><text x="62" y="196" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">0</text><line x1="237" y1="180" x2="237" y2="184" stroke="#94a3b8"/><text x="229" y="196" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">30</text><line x1="403" y1="180" x2="403" y2="184" stroke="#94a3b8"/><text x="395" y="196" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">60</text><line x1="570" y1="180" x2="570" y2="184" stroke="#94a3b8"/><text x="562" y="196" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">90</text>
+  <line x1="66" y1="180" x2="70" y2="180" stroke="#94a3b8"/><text x="44" y="183" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">0</text><line x1="66" y1="141" x2="70" y2="141" stroke="#94a3b8"/><text x="44" y="144" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">25</text><line x1="66" y1="102" x2="70" y2="102" stroke="#94a3b8"/><text x="44" y="106" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">50</text><line x1="66" y1="64" x2="70" y2="64" stroke="#94a3b8"/><text x="44" y="67" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">75</text><line x1="66" y1="25" x2="70" y2="25" stroke="#94a3b8"/><text x="44" y="28" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">100</text>
+  <polyline points="70.0,173.4 72.8,173.4 75.6,173.4 78.3,173.4 81.1,173.4 83.9,173.4 86.7,173.4 89.4,173.4 92.2,173.4 95.0,173.4 97.8,173.4 100.6,173.3 103.3,173.3 106.1,173.3 108.9,173.3 111.7,173.3 114.4,173.3 117.2,173.2 120.0,173.2 122.8,173.2 125.6,173.2 128.3,173.1 131.1,173.1 133.9,173.1 136.7,173.0 139.4,173.0 142.2,173.0 145.0,172.9 147.8,172.9 150.6,172.8 153.3,172.8 156.1,172.8 158.9,172.7 161.7,172.7 164.4,172.6 167.2,172.6 170.0,172.5 172.8,172.5 175.6,172.4 178.3,172.3 181.1,172.3 183.9,172.2 186.7,172.1 189.4,172.1 192.2,172.0 195.0,171.9 197.8,171.9 200.6,171.8 203.3,171.7 206.1,171.6 208.9,171.5 211.7,171.5 214.4,171.4 217.2,171.3 220.0,171.2 222.8,171.1 225.6,171.0 228.3,170.9 231.1,170.8 233.9,170.7 236.7,170.5 239.4,170.4 242.2,170.3 245.0,170.2 247.8,170.1 250.6,169.9 253.3,169.8 256.1,169.7 258.9,169.5 261.7,169.4 264.4,169.2 267.2,169.1 270.0,168.9 272.8,168.7 275.6,168.6 278.3,168.4 281.1,168.2 283.9,168.0 286.7,167.8 289.4,167.6 292.2,167.4 295.0,167.2 297.8,167.0 300.6,166.8 303.3,166.6 306.1,166.3 308.9,166.1 311.7,165.8 314.4,165.6 317.2,165.3 320.0,165.1 322.8,164.8 325.6,164.5 328.3,164.2 331.1,163.9 333.9,163.6 336.7,163.3 339.4,162.9 342.2,162.6 345.0,162.2 347.8,161.9 350.6,161.5 353.3,161.1 356.1,160.7 358.9,160.3 361.7,159.9 364.4,159.4 367.2,159.0 370.0,158.5 372.8,158.0 375.6,157.5 378.3,157.0 381.1,156.5 383.9,156.0 386.7,155.4 389.4,154.8 392.2,154.2 395.0,153.6 397.8,153.0 400.6,152.3 403.3,151.6 406.1,150.9 408.9,150.2 411.7,149.5 414.4,148.7 417.2,147.9 420.0,147.1 422.8,146.2 425.6,145.4 428.3,144.5 431.1,143.5 433.9,142.6 436.7,141.6 439.4,140.6 442.2,139.5 445.0,138.4 447.8,137.3 450.6,136.1 453.3,134.9 456.1,133.6 458.9,132.4 461.7,131.0 464.4,129.7 467.2,128.2 470.0,126.8 472.8,125.2 475.6,123.7 478.3,122.1 481.1,120.4 483.9,118.7 486.7,116.9 489.4,115.0 492.2,113.1 495.0,111.1 497.8,109.1 500.6,107.0 503.3,104.8 506.1,102.6 508.9,100.3 511.7,97.9 514.4,95.4 517.2,92.8 520.0,90.2 522.8,87.5 525.6,84.6 528.3,81.7 531.1,78.7 533.9,75.6 536.7,72.4 539.4,69.1 542.2,65.7 545.0,62.2 547.8,58.6 550.6,54.8 553.3,50.9 556.1,46.9 558.9,42.8 561.7,38.6 564.4,34.2 567.2,29.7 570.0,25.0" fill="none" stroke="#dc2626" stroke-width="2.2"/>
+  <polyline points="70.0,173.4 72.8,173.4 75.6,173.4 78.3,173.4 81.1,173.4 83.9,173.4 86.7,173.5 89.4,173.5 92.2,173.5 95.0,173.5 97.8,173.5 100.6,173.5 103.3,173.5 106.1,173.5 108.9,173.6 111.7,173.6 114.4,173.6 117.2,173.6 120.0,173.6 122.8,173.7 125.6,173.7 128.3,173.7 131.1,173.7 133.9,173.8 136.7,173.8 139.4,173.8 142.2,173.9 145.0,173.9 147.8,173.9 150.6,174.0 153.3,174.0 156.1,174.1 158.9,174.1 161.7,174.1 164.4,174.2 167.2,174.2 170.0,174.3 172.8,174.3 175.6,174.4 178.3,174.4 181.1,174.5 183.9,174.5 186.7,174.6 189.4,174.7 192.2,174.7 195.0,174.8 197.8,174.8 200.6,174.9 203.3,175.0 206.1,175.0 208.9,175.1 211.7,175.2 214.4,175.2 217.2,175.3 220.0,175.4 222.8,175.4 225.6,175.5 228.3,175.6 231.1,175.7 233.9,175.7 236.7,175.8 239.4,175.9 242.2,176.0 245.0,176.1 247.8,176.1 250.6,176.2 253.3,176.3 256.1,176.4 258.9,176.5 261.7,176.6 264.4,176.7 267.2,176.8 270.0,176.9 272.8,176.9 275.6,177.0 278.3,177.1 281.1,177.2 283.9,177.3 286.7,177.4 289.4,177.5 292.2,177.6 295.0,177.7 297.8,177.8 300.6,177.9 303.3,178.0 306.1,178.1 308.9,178.2 311.7,178.3 314.4,178.4 317.2,178.5 320.0,178.6 322.8,178.7 325.6,178.7 328.3,178.8 331.1,178.9 333.9,179.0 336.7,179.1 339.4,179.2 342.2,179.3 345.0,179.3 347.8,179.4 350.6,179.5 353.3,179.6 356.1,179.6 358.9,179.7 361.7,179.7 364.4,179.8 367.2,179.8 370.0,179.9 372.8,179.9 375.6,180.0 378.3,180.0 381.1,180.0 383.9,180.0 386.7,180.0 389.4,180.0 392.2,180.0 395.0,179.9 397.8,179.9 400.6,179.8 403.3,179.8 406.1,179.7 408.9,179.6 411.7,179.5 414.4,179.3 417.2,179.2 420.0,179.0 422.8,178.8 425.6,178.6 428.3,178.4 431.1,178.1 433.9,177.8 436.7,177.5 439.4,177.1 442.2,176.7 445.0,176.3 447.8,175.8 450.6,175.3 453.3,174.8 456.1,174.2 458.9,173.6 461.7,172.9 464.4,172.1 467.2,171.3 470.0,170.4 472.8,169.5 475.6,168.5 478.3,167.4 481.1,166.2 483.9,165.0 486.7,163.6 489.4,162.2 492.2,160.6 495.0,159.0 497.8,157.2 500.6,155.3 503.3,153.2 506.1,151.0 508.9,148.7 511.7,146.2 514.4,143.5 517.2,140.6 520.0,137.5 522.8,134.2 525.6,130.7 528.3,126.9 531.1,122.9 533.9,118.6 536.7,113.9 539.4,109.0 542.2,103.7 545.0,98.0 547.8,92.0 550.6,85.5 553.3,78.5 556.1,71.1 558.9,63.1 561.7,54.5 564.4,45.4 567.2,35.5 570.0,25.0" fill="none" stroke="#7c3aed" stroke-width="2.2"/>
+  <polyline points="70.0,173.4 72.8,173.4 75.6,173.4 78.3,173.4 81.1,173.4 83.9,173.4 86.7,173.4 89.4,173.4 92.2,173.4 95.0,173.4 97.8,173.4 100.6,173.4 103.3,173.4 106.1,173.4 108.9,173.4 111.7,173.4 114.4,173.4 117.2,173.4 120.0,173.4 122.8,173.4 125.6,173.4 128.3,173.4 131.1,173.4 133.9,173.4 136.7,173.4 139.4,173.4 142.2,173.4 145.0,173.4 147.8,173.4 150.6,173.4 153.3,173.4 156.1,173.4 158.9,173.4 161.7,173.4 164.4,173.4 167.2,173.4 170.0,173.4 172.8,173.4 175.6,173.4 178.3,173.4 181.1,173.4 183.9,173.4 186.7,173.4 189.4,173.4 192.2,173.4 195.0,173.4 197.8,173.3 200.6,173.3 203.3,173.3 206.1,173.3 208.9,173.3 211.7,173.3 214.4,173.3 217.2,173.3 220.0,173.3 222.8,173.3 225.6,173.2 228.3,173.2 231.1,173.2 233.9,173.2 236.7,173.2 239.4,173.2 242.2,173.1 245.0,173.1 247.8,173.1 250.6,173.1 253.3,173.1 256.1,173.0 258.9,173.0 261.7,173.0 264.4,172.9 267.2,172.9 270.0,172.9 272.8,172.8 275.6,172.8 278.3,172.8 281.1,172.7 283.9,172.7 286.7,172.6 289.4,172.6 292.2,172.5 295.0,172.5 297.8,172.4 300.6,172.3 303.3,172.3 306.1,172.2 308.9,172.1 311.7,172.1 314.4,172.0 317.2,171.9 320.0,171.8 322.8,171.7 325.6,171.6 328.3,171.5 331.1,171.4 333.9,171.3 336.7,171.2 339.4,171.0 342.2,170.9 345.0,170.8 347.8,170.6 350.6,170.5 353.3,170.3 356.1,170.2 358.9,170.0 361.7,169.8 364.4,169.6 367.2,169.4 370.0,169.2 372.8,169.0 375.6,168.7 378.3,168.5 381.1,168.2 383.9,168.0 386.7,167.7 389.4,167.4 392.2,167.1 395.0,166.8 397.8,166.4 400.6,166.1 403.3,165.7 406.1,165.3 408.9,164.9 411.7,164.5 414.4,164.0 417.2,163.5 420.0,163.0 422.8,162.5 425.6,162.0 428.3,161.4 431.1,160.8 433.9,160.2 436.7,159.5 439.4,158.8 442.2,158.1 445.0,157.3 447.8,156.6 450.6,155.7 453.3,154.8 456.1,153.9 458.9,153.0 461.7,151.9 464.4,150.9 467.2,149.8 470.0,148.6 472.8,147.4 475.6,146.1 478.3,144.7 481.1,143.3 483.9,141.8 486.7,140.2 489.4,138.6 492.2,136.9 495.0,135.1 497.8,133.1 500.6,131.1 503.3,129.0 506.1,126.8 508.9,124.5 511.7,122.0 514.4,119.4 517.2,116.7 520.0,113.9 522.8,110.8 525.6,107.7 528.3,104.3 531.1,100.8 533.9,97.1 536.7,93.2 539.4,89.1 542.2,84.7 545.0,80.1 547.8,75.3 550.6,70.1 553.3,64.7 556.1,59.0 558.9,53.0 561.7,46.6 564.4,39.8 567.2,32.6 570.0,25.0" fill="none" stroke="#0f172a" stroke-width="1.4" stroke-dasharray="5 3"/>
+  <line x1="384.6" y1="180.0" x2="384.6" y2="40" stroke="#7c3aed" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <circle cx="384.6" cy="180.0" r="4.5" fill="#7c3aed"/>
+  <text x="358.6" y="34" font-size="10.5" fill="#6d28d9" font-weight="700" font-family="Inter,system-ui,sans-serif">θ_B ≈ 56.6°</text>
+  <text x="392.6" y="174.0" font-size="10" fill="#6d28d9" font-family="Inter,system-ui,sans-serif">R_p = 0</text>
+  <text x="96" y="52" font-size="10.5" fill="#dc2626" font-weight="600" font-family="Inter,system-ui,sans-serif">——— R_s (TE)</text>
+  <text x="96" y="68" font-size="10.5" fill="#7c3aed" font-weight="600" font-family="Inter,system-ui,sans-serif">——— R_p (TM)</text>
+  <text x="96" y="84" font-size="10.5" fill="#0f172a" font-family="Inter,system-ui,sans-serif">— — R non polarisé</text>
+  <text x="70" y="222" font-size="10.5" fill="#0f172a" font-family="Inter,system-ui,sans-serif">tan θ_B = n : la réflexion en P s’annule, jamais celle en S.</text>
+  <text x="70" y="238" font-size="10.5" fill="#475569" font-family="Inter,system-ui,sans-serif">En non polarisé, R ne descend qu’à la moitié de R_s : le minimum n’est pas nul.</text>
+</svg>
+                        </div>
+                        <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">Relevez ces trois courbes vous-même en mode <code>Angle θ</code>. Le point remarquable est l’annulation de R<sub>p</sub> à θ<sub>B</sub> = arctan(n) ≈ 56,6°. Notez que la courbe non polarisée, moyenne des deux, <strong>ne s’annule jamais</strong> : c’est pourquoi des lunettes polarisantes suppriment le reflet d’une vitre, alors qu’un filtre neutre ne le peut pas.</p>
+                    </figure>
+                    <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q8</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Niveau 1 — Application : relevé, lecture de courbe, formule directe">&#9733;&#9734;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            <strong>Angle de Brewster :</strong> Identifiez l'angle $\theta_B$ où la réflexion en polarisation $p$ s'annule ($R_p = 0$). Vérifiez la relation $\tan \theta_B = n_{BK7}$. Citez une application pratique macroscopique de cet angle.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q9</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Niveau 1 — Application : relevé, lecture de courbe, formule directe">&#9733;&#9734;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            <strong>Inversion des milieux :</strong> Définissez Superstrat = <code>BK7</code> et Substrat = <code>Air</code>. Identifiez l'angle de réflexion totale interne $\theta_{lim}$ et reliez-le à la loi de Snell-Descartes et aux fibres optiques.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PARTIE -->
+        <section id="ex3" class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-100 border-b px-8 py-4">
+                <h2 class="text-xl font-bold text-slate-900 flex flex-wrap items-center justify-between gap-2">III. Monocouche antireflet sur substrat <span class="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">⏱ 60 min indicatives</span></h2>
+            </div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Accès direct — prérequis :</strong> réflexion à un dioptre, phase optique $2\pi nd/\lambda$ et calcul matriciel complexe élémentaire. Faire au minimum Q5 de l'exercice II si les coefficients de Fresnel ne sont pas maîtrisés.</div>
+            <div class="p-6 space-y-4">
+                <figure id="fig-ar" class="my-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Antireflet quart d'onde : les deux conditions</figcaption>
+                    <div class="p-3">
+<svg viewBox="0 0 640 245" style="width:100%;height:auto;max-height:320px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Condition d'épaisseur : n·d = λ₀/4">
+  <rect x="90" y="60" width="420" height="18" fill="#e0f2fe" stroke="#7dd3fc"/>
+  <text x="98" y="73" font-size="10" fill="#0369a1" font-family="Inter,system-ui,sans-serif">Air</text>
+  <rect x="90" y="78" width="420" height="46" fill="#a5b4fc" stroke="#4338ca"/>
+  <text x="98" y="106" font-size="11" fill="#312e81" font-weight="600" font-family="Inter,system-ui,sans-serif">Couche AR</text>
+  <rect x="90" y="124" width="420" height="40" fill="#cbd5e1" stroke="#64748b"/>
+  <text x="98" y="149" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">Substrat</text>
+  <line x1="150" y1="20" x2="230" y2="78" stroke="#f59e0b" stroke-width="2.5"/>
+  <polygon points="230,78 219,73 222,84" fill="#f59e0b"/>
+  <line x1="230" y1="78" x2="300" y2="24" stroke="#dc2626" stroke-width="2.5"/>
+  <polygon points="300,24 289,28 295,35" fill="#dc2626"/>
+  <text x="306" y="22" font-size="10" fill="#dc2626" font-family="Inter,system-ui,sans-serif">r₁ (interface air / couche)</text>
+  <line x1="230" y1="78" x2="300" y2="124" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <line x1="300" y1="124" x2="372" y2="76" stroke="#0891b2" stroke-width="2.5"/>
+  <line x1="372" y1="76" x2="440" y2="24" stroke="#0891b2" stroke-width="2.5"/>
+  <polygon points="440,24 429,28 435,35" fill="#0891b2"/>
+  <text x="446" y="22" font-size="10" fill="#0e7490" font-family="Inter,system-ui,sans-serif">r₂ (interface couche / substrat)</text>
+  <line x1="540" y1="78" x2="540" y2="124" stroke="#334155" stroke-width="1"/>
+  <line x1="536" y1="78" x2="544" y2="78" stroke="#334155" stroke-width="1"/>
+  <line x1="536" y1="124" x2="544" y2="124" stroke="#334155" stroke-width="1"/>
+  <text x="548" y="105" font-size="11" fill="#334155" font-weight="600" font-family="Inter,system-ui,sans-serif">d</text>
+  <text x="90" y="196" font-size="11" fill="#b91c1c" font-weight="600" font-family="Inter,system-ui,sans-serif">déphasage de π → interférence destructive</text>
+  <text x="90" y="216" font-size="11" fill="#312e81" font-family="Inter,system-ui,sans-serif">Condition d'épaisseur : n·d = λ₀/4</text>
+  <text x="330" y="216" font-size="11" fill="#312e81" font-family="Inter,system-ui,sans-serif">Condition d'amplitude : n = √(n₀·n_s)</text>
+</svg>
+                    </div>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">Le rayon r₂ parcourt <strong>2·n·d</strong> de plus que r₁. Pour n·d = λ₀/4, cet écart vaut λ₀/2 : les deux ondes sont en opposition de phase. Mais l'annulation n'est <strong>totale</strong> que si leurs amplitudes sont égales, ce qui impose n = √(n₀·n<sub>s</sub>). Deux conditions indépendantes — la question Q10 vous fait vérifier que la seconde n'est ici pas exactement satisfaite.</p>
+                </figure>
+
+                <div class="bg-amber-50 border-l-4 border-amber-400 p-3 text-xs text-amber-900 rounded-r-lg mb-2">
+                    <strong>💡 Principe de l'antireflet :</strong> Condition quart d'onde : $n \cdot d = \lambda_0 / 4$ et $n_{couche} = \sqrt{n_{substrat} \cdot n_{inc}}$.
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q10</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p>Ajoutez manuellement une couche avec le matériau <code>Matériau AR n=1.225</code> ($d = 112.3\,\text{nm}$). Déterminez la plage spectrale où $R < 0.5\%$. Prouvez que $112.3\,\text{nm}$ est bien l'épaisseur quart d'onde à $550\,\text{nm}$ pour cet indice.</p>
+                            <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                🧠 <strong>Piège volontaire, à débusquer :</strong> l'indice fourni vaut exactement $1{,}22474 = \sqrt{1{,}50}$. Or le BK7 réel a $n=1{,}5185$ à 550 nm, donc l'indice <em>idéal</em> serait $\sqrt{1{,}5185}$. Calculez cet indice idéal, l'épaisseur quart d'onde correspondante, puis le $R$ résiduel réellement obtenu à 550 nm avec le matériau fourni. Est-il rigoureusement nul ? Concluez : à quelle condition a-t-on le droit d'écrire « antireflet parfait » ?
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q11</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            <div class="space-y-2">
+                                <p><strong>La dispersion du substrat compte-t-elle vraiment ?</strong> Relevez d'abord $n_{BK7}$ à 400, 550 et 750 nm : la variation atteint plus de 1 %. On s'attend donc à un effet.</p>
+                                <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                    <li>Notez précisément la position du minimum de $R$ et les bornes de la plage $R&lt;0{,}5\,\%$ avec le substrat <code>BK7</code>.</li>
+                                    <li>Remplacez le substrat par <code>Indice personnalisé</code> avec $n = 1{,}5185$ <strong>constant</strong>, et refaites les deux mesures.</li>
+                                </ul>
+                                <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                    🧠 <strong>L'écart est inférieur au nanomètre — donc négligeable.</strong> Ce n'est pas une erreur : c'est le résultat. Expliquez-le. Indice : la <em>position</em> du minimum est fixée par la condition de phase $n_c d = \lambda/4$, qui ne fait intervenir que la couche — non dispersive ici. La dispersion du substrat n'agit que sur la condition d'<em>amplitude</em> $n_c=\sqrt{n_s}$, donc sur la <strong>profondeur</strong> du minimum, pas sur sa longueur d'onde.
+                                </div>
+                                <p class="text-xs text-slate-600">Concluez en désignant, dans ce TP, <strong>deux situations où la dispersion devient au contraire visible</strong> : vous en avez déjà rencontré une à l'exercice I, et vous rencontrerez l'autre à l'exercice VI.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q12</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Niveau 3 — Expertise : construction méthodologique, décision argumentée, esprit critique">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Démystifier la boîte noire avec Excel :</strong> Calculez vous-même la réflectivité $R$ de cette monocouche à $550\,\text{nm}$ sous Excel.</p>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li>Calculez le déphasage $\phi_1$.</li>
+                                <li>Construisez la matrice $M_1$. <i>Astuce Excel : <code>=COMPLEXE(reel; imag)</code> et <code>=IMPRODUIT(z1; z2)</code>.</i></li>
+                                <li>Calculez l'admittance équivalente $Y=\frac{m_{10}+\eta_s m_{11}}{m_{00}+\eta_s m_{01}}$ puis $R=\left|\frac{\eta_0-Y}{\eta_0+Y}\right|^2$.</li>
+                                <li>Vérifiez que vous retrouvez la valeur du simulateur.</li>
+                            </ul>
+                            <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">🔍 <strong>Auto-contrôle :</strong> votre $R$ doit coïncider avec le simulateur à mieux que 0,001 point. Si vous trouvez un $R$ négatif ou supérieur à 1, l'erreur est dans le module au carré. Si l'écart est de l'ordre du pourcent, vérifiez le signe du $i$ dans les termes non diagonaux de $M_1$.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PARTIE -->
+        <section id="ex4" class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-100 border-b px-8 py-4">
+                <h2 class="text-xl font-bold text-slate-900 flex flex-wrap items-center justify-between gap-2">IV. Antireflet bicouche : BK7 / H / L / Air <span class="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">⏱ 70 min indicatives</span></h2>
+            </div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Accès direct — prérequis :</strong> QWOT, ordre substrat → superstrat, produit de matrices et lecture d'une réflectivité. L'exercice III, en particulier Q10–Q12, est fortement recommandé.</div>
+            <div class="p-6 space-y-4">
+                <div class="bg-amber-50 border-l-4 border-amber-400 p-3 text-xs text-amber-900 rounded-r-lg">
+                    $H = \text{ZnS}$ (Haut indice), $L = \text{YF}_3$ (Bas indice).
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q13</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Niveau 1 — Application : relevé, lecture de courbe, formule directe">&#9733;&#9734;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            Ajoutez deux couches ($ZnS$ puis $YF_3$). Ajustez manuellement les épaisseurs physiques $d_{ZnS}$ et $d_{YF3}$ ($< 150\,\text{nm}$) pour minimiser $R$ à $550\,\text{nm}$ (le minimum absolu théorique se situe vers $d_{ZnS} \approx 15\text{--}16\,\text{nm}$ et $d_{YF3} \approx 124\text{--}125\,\text{nm}$, où $R < 0{,}001\,\%$). Arrêtez-vous dès que $R < 0{,}5\,\%$, ou après dix modifications sans gain. <strong>Comptez une modification chaque fois que vous changez une épaisseur</strong>, et notez ce total : vous le comparerez en Q16 au nombre d'évaluations que consomme l'optimiseur.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q14</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Cartographie 2D sous Excel :</strong> Avant d'utiliser les optimiseurs automatiques, étudiez la topologie du problème. Pour $\lambda = 550\,\text{nm}$ :</p>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li>Relevez $R$ sur une grille croisée : $d_{ZnS}$ de <strong>60 à 140 nm</strong> et $d_{YF3}$ de <strong>80 à 160 nm</strong>, par pas de <strong>20 nm</strong> — soit 25 mesures. <em>Ces bornes ne sont pas arbitraires : elles couvrent environ une période d'oscillation de $R$. Un pas plus large sous-échantillonnerait le paysage et la vallée disparaîtrait.</em></li>
+                                <li>Saisissez ce tableau à double entrée dans Excel et tracez un graphique de type <strong>Surface 3D ou Contour</strong>.</li>
+                                <li>Observez la vallée de minimum et repérez les coordonnées du point optimal.</li>
+                                <li>Votre minimum de Q13 est-il dans cette vallée ? Y a-t-il plusieurs vallées ?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q15</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Niveau 3 — Expertise : construction méthodologique, décision argumentée, esprit critique">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800">
+                            <div class="space-y-2">
+                                <p><strong>Première qualification robuste — mais sur quelle fenêtre ?</strong></p>
+                                <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                    🧠 <strong>Piège de spécification, à traiter d'abord.</strong> Le mérite <code>R moyen</code> est proposé par défaut sur $400-750\,\text{nm}$. Or vous venez de concevoir un antireflet <em>à 550 nm</em>. Relevez la valeur du mérite sur cette fenêtre large : elle est catastrophique. <strong>Est-ce votre design qui est mauvais, ou votre spécification qui est hors sujet ?</strong> Justifiez, puis corrigez la fenêtre.
+                                </div>
+                                <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                    <li>Réglez la <strong>fenêtre AR à 520–580 nm</strong> et le <strong>seuil à 0,8 %</strong> (champs situés sous le sélecteur de mérite). Vérifiez que le nominal passe désormais le critère, et avec quelle marge.</li>
+                                    <li>Qualifiez : $d_{min}=1$ nm, $N=500$. Comparez $\Delta d = 3$ puis $5\,\text{nm}$ ; la graine étant figée, les deux essais portent sur les mêmes réalisations.</li>
+                                    <li>Rapportez rendement, IC95 % de Wilson et P95 de $R_{moy}$ dans les deux cas. Les deux intervalles de confiance se recouvrent-ils ? Pouvez-vous affirmer que $\pm5$ est significativement pire, ou est-ce du bruit d'échantillonnage ?</li>
+                                    <li>Regardez le P95 à $\pm5\,\text{nm}$ : il dépasse le seuil alors que la moyenne le respecte. Que signifie concrètement cet écart pour un lot de production ?</li>
+                                    <li><strong>Isolez la couche critique — à la main, pas au Monte-Carlo.</strong> Le tirage perturbe <em>toujours</em> les deux couches : le verrouillage ne concerne que BFGS, jamais la fabrication. Procédez donc par sensibilité : partez du nominal, ajoutez $+3\,\text{nm}$ à ZnS seul et relevez le mérite ; revenez au nominal, ajoutez $+3\,\text{nm}$ à YF₃ seul et relevez. Laquelle des deux dégrade le plus ? Reliez votre réponse à l'indice et à l'épaisseur optique $n\cdot d$ de chaque couche.</li>
+                                </ul>
+                                <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">🔍 <strong>Auto-contrôle :</strong> avec la bonne fenêtre, le rendement à $\Delta d=5$ nm doit être <strong>inférieur ou égal</strong> à celui à $\Delta d=3$ nm — c'est le seul ordre garanti. Si vous obtenez 0 % partout, la fenêtre du mérite est restée à 400–750 nm. Si vous obtenez 100 % dans les deux cas, votre marge nominale est trop confortable pour que l'épreuve discrimine : resserrez le seuil (essayez 0,3 % au lieu de 0,8 %) et refaites les deux tirages. Un protocole qui ne sépare rien n'est pas un protocole.</div>
+                                <p class="text-xs text-slate-500">Un simple écart-type sans critère d'acceptation ne constitue pas une conclusion de robustesse.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PARTIE -->
+        <section id="ex5" class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-100 border-b px-8 py-4">
+                <h2 class="text-xl font-bold text-slate-900 flex flex-wrap items-center justify-between gap-2">V. Synthèse multicouche & méthode de l'aiguille <span class="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">⏱ 90 min indicatives</span></h2>
+            </div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Accès direct — prérequis :</strong> savoir définir une fonction de mérite, distinguer exploration globale et raffinement local, et construire un antireflet simple. Les exercices III et IV sont recommandés ; Q14 peut être omise si la notion de minimum local est déjà acquise.</div>
+            <div class="p-6 space-y-4">
+                <figure id="fig-needle" class="my-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Le diagnostic d'aiguille : lire π(z) avant d'insérer</figcaption>
+                    <div class="p-3">
+<svg viewBox="0 0 640 245" style="width:100%;height:auto;max-height:320px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="π(z) = [J₀ − J_δ(z)] / δ">
+  <rect x="70" y="168" width="480" height="26" fill="#c7d2fe" stroke="#4338ca"/>
+  <text x="80" y="185" font-size="10" fill="#312e81" font-family="Inter,system-ui,sans-serif">couche hôte YF₃, 150 nm</text>
+  <line x1="70" y1="120" x2="560" y2="120" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="500" y="115" font-size="9.5" fill="#64748b" font-family="Inter,system-ui,sans-serif">π = 0 : insertion neutre</text>
+  <line x1="70" y1="30" x2="70" y2="160" stroke="#334155" stroke-width="1.2"/>
+  <polyline points="86.0,96.6 89.2,94.3 92.4,92.0 95.6,89.6 98.8,87.2 102.0,84.7 105.2,82.3 108.4,80.0 111.6,77.6 114.8,75.4 118.0,73.2 121.2,71.2 124.4,69.4 127.6,67.6 130.8,66.1 134.0,64.8 137.2,63.7 140.4,62.9 143.6,62.3 146.8,61.9 150.0,61.8 153.2,62.0 156.4,62.4 159.6,63.1 162.8,64.1 166.0,65.2 169.2,66.6 172.4,68.3 175.6,70.1 178.8,72.1 182.0,74.2 185.2,76.5 188.4,78.8 191.6,81.3 194.8,83.8 198.0,86.4 201.2,89.0 204.4,91.6 207.6,94.2 210.8,96.8 214.0,99.3 217.2,101.7 220.4,104.1 223.6,106.4 226.8,108.7 230.0,110.8 233.2,112.8 236.4,114.8 239.6,116.6 242.8,118.4 246.0,120.0 249.2,121.6 252.4,123.1 255.6,124.5 258.8,125.8 262.0,127.0 265.2,128.2 268.4,129.3 271.6,130.4 274.8,131.4 278.0,132.4 281.2,133.3 284.4,134.1 287.6,135.0 290.8,135.8 294.0,136.6 297.2,137.3 300.4,138.1 303.6,138.8 306.8,139.4 310.0,140.1 313.2,140.7 316.4,141.3 319.6,141.9 322.8,142.5 326.0,143.0 329.2,143.6 332.4,144.0 335.6,144.5 338.8,144.9 342.0,145.3 345.2,145.7 348.4,146.0 351.6,146.3 354.8,146.6 358.0,146.8 361.2,147.0 364.4,147.1 367.6,147.2 370.8,147.3 374.0,147.3 377.2,147.3 380.4,147.2 383.6,147.1 386.8,147.0 390.0,146.8 393.2,146.6 396.4,146.3 399.6,146.0 402.8,145.7 406.0,145.4 409.2,145.0 412.4,144.6 415.6,144.1 418.8,143.7 422.0,143.2 425.2,142.7 428.4,142.1 431.6,141.6 434.8,141.0 438.0,140.5 441.2,139.9 444.4,139.3 447.6,138.7 450.8,138.1 454.0,137.5 457.2,136.9 460.4,136.4 463.6,135.8 466.8,135.2 470.0,134.6 473.2,134.1 476.4,133.5 479.6,133.0 482.8,132.5 486.0,132.0 489.2,131.5 492.4,131.1 495.6,130.6 498.8,130.2 502.0,129.8 505.2,129.4 508.4,129.0 511.6,128.6 514.8,128.3 518.0,128.0 521.2,127.7 524.4,127.4 527.6,127.1 530.8,126.8 534.0,126.6 537.2,126.4 540.4,126.2 543.6,126.0 546.8,125.8 550.0,125.6" fill="none" stroke="#b45309" stroke-width="2.2"/>
+  <text x="78" y="26" font-size="10.5" fill="#b45309" font-weight="700" font-family="Inter,system-ui,sans-serif">π(z) = [J₀ − J_δ(z)] / δ</text>
+  <circle cx="150.0" cy="61.5" r="4.5" fill="#dc2626"/>
+  <line x1="150.0" y1="61.5" x2="150.0" y2="168" stroke="#dc2626" stroke-width="1.4" stroke-dasharray="3 3"/>
+  <text x="158.0" y="55.5" font-size="10" fill="#b91c1c" font-weight="600" font-family="Inter,system-ui,sans-serif">maximum favorable</text>
+  <rect x="148.5" y="168" width="3" height="26" fill="#dc2626"/>
+  <text x="144.0" y="208" font-size="10" fill="#b91c1c" font-family="Inter,system-ui,sans-serif">z ≈ 25 nm</text>
+  <text x="300" y="208" font-size="10" fill="#312e81" font-family="Inter,system-ui,sans-serif">découpage : 24,95 / 0,10 / 124,95 nm</text>
+  <text x="70" y="232" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">z depuis le substrat (nm)</text>
+  <text x="360" y="150" font-size="9.5" fill="#64748b" font-family="Inter,system-ui,sans-serif">π < 0 : insertion défavorable</text>
+</svg>
+                    </div>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">π(z) mesure le gain de mérite qu'apporterait une aiguille infiniment fine insérée à la profondeur z. Là où π &gt; 0, insérer améliore ; là où π &lt; 0, insérer dégrade. On insère au <strong>maximum</strong>, puis on raffine par BFGS. Attention : le balayage est discret (5 nm) et n'évalue jamais les interfaces — Q17 vous demande d'en tirer les conséquences.</p>
+                </figure>
+
+                <figure id="fig-paysage" class="mb-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Pourquoi le point de départ décide du résultat</figcaption>
+                        <div class="p-3">
+<svg viewBox="0 0 640 250" style="width:100%;height:auto;max-height:330px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="mérite (à minimiser)">
+  <line x1="60" y1="178" x2="608" y2="178" stroke="#334155" stroke-width="1.2"/>
+  <line x1="60" y1="18" x2="60" y2="178" stroke="#334155" stroke-width="1.2"/>
+  <text x="14" y="16" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">mérite (à minimiser)</text>
+  <text x="455" y="194" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">paramètre (épaisseur)</text>
+  <polyline points="60.0,43.2 61.6,43.1 63.2,43.1 64.8,43.1 66.4,43.2 68.0,43.2 69.6,43.3 71.2,43.4 72.7,43.5 74.3,43.7 75.9,43.9 77.5,44.0 79.1,44.3 80.7,44.5 82.3,44.7 83.9,45.0 85.5,45.2 87.1,45.5 88.7,45.8 90.3,46.1 91.9,46.5 93.5,46.8 95.0,47.1 96.6,47.5 98.2,47.8 99.8,48.2 101.4,48.5 103.0,48.9 104.6,49.3 106.2,49.6 107.8,50.0 109.4,50.4 111.0,50.7 112.6,51.1 114.2,51.4 115.8,51.8 117.3,52.1 118.9,52.5 120.5,52.8 122.1,53.2 123.7,53.5 125.3,53.8 126.9,54.1 128.5,54.5 130.1,54.8 131.7,55.1 133.3,55.5 134.9,55.8 136.5,56.2 138.1,56.5 139.6,56.9 141.2,57.4 142.8,57.8 144.4,58.3 146.0,58.8 147.6,59.4 149.2,60.0 150.8,60.7 152.4,61.4 154.0,62.2 155.6,63.1 157.2,64.1 158.8,65.2 160.4,66.3 161.9,67.6 163.5,68.9 165.1,70.3 166.7,71.9 168.3,73.6 169.9,75.3 171.5,77.2 173.1,79.1 174.7,81.2 176.3,83.3 177.9,85.5 179.5,87.7 181.1,90.0 182.7,92.3 184.2,94.7 185.8,97.0 187.4,99.3 189.0,101.6 190.6,103.8 192.2,106.0 193.8,108.0 195.4,109.9 197.0,111.7 198.6,113.2 200.2,114.7 201.8,115.9 203.4,116.9 205.0,117.6 206.5,118.2 208.1,118.4 209.7,118.5 211.3,118.2 212.9,117.8 214.5,117.0 216.1,116.0 217.7,114.8 219.3,113.3 220.9,111.7 222.5,109.8 224.1,107.7 225.7,105.5 227.3,103.1 228.8,100.6 230.4,98.0 232.0,95.4 233.6,92.6 235.2,89.9 236.8,87.1 238.4,84.3 240.0,81.6 241.6,78.9 243.2,76.3 244.8,73.7 246.4,71.3 248.0,68.9 249.6,66.7 251.2,64.6 252.7,62.6 254.3,60.8 255.9,59.1 257.5,57.5 259.1,56.0 260.7,54.7 262.3,53.6 263.9,52.5 265.5,51.6 267.1,50.8 268.7,50.1 270.3,49.6 271.9,49.1 273.5,48.7 275.0,48.4 276.6,48.2 278.2,48.1 279.8,48.0 281.4,48.0 283.0,48.0 284.6,48.1 286.2,48.3 287.8,48.5 289.4,48.7 291.0,48.9 292.6,49.2 294.2,49.6 295.8,49.9 297.3,50.3 298.9,50.7 300.5,51.2 302.1,51.7 303.7,52.3 305.3,52.8 306.9,53.5 308.5,54.2 310.1,54.9 311.7,55.7 313.3,56.6 314.9,57.6 316.5,58.6 318.1,59.8 319.6,61.0 321.2,62.4 322.8,63.9 324.4,65.5 326.0,67.2 327.6,69.1 329.2,71.1 330.8,73.3 332.4,75.7 334.0,78.2 335.6,80.8 337.2,83.6 338.8,86.6 340.4,89.8 341.9,93.1 343.5,96.5 345.1,100.1 346.7,103.8 348.3,107.6 349.9,111.5 351.5,115.5 353.1,119.5 354.7,123.5 356.3,127.6 357.9,131.6 359.5,135.6 361.1,139.5 362.7,143.3 364.2,146.9 365.8,150.4 367.4,153.7 369.0,156.7 370.6,159.5 372.2,162.0 373.8,164.2 375.4,166.1 377.0,167.6 378.6,168.8 380.2,169.6 381.8,170.0 383.4,170.0 385.0,169.6 386.5,168.8 388.1,167.7 389.7,166.1 391.3,164.2 392.9,161.9 394.5,159.3 396.1,156.4 397.7,153.2 399.3,149.7 400.9,146.0 402.5,142.1 404.1,138.1 405.7,133.8 407.3,129.5 408.8,125.1 410.4,120.7 412.0,116.2 413.6,111.8 415.2,107.4 416.8,103.0 418.4,98.8 420.0,94.6 421.6,90.6 423.2,86.7 424.8,83.0 426.4,79.5 428.0,76.1 429.6,73.0 431.2,70.0 432.7,67.2 434.3,64.6 435.9,62.2 437.5,60.0 439.1,58.1 440.7,56.2 442.3,54.6 443.9,53.2 445.5,51.9 447.1,50.7 448.7,49.8 450.3,48.9 451.9,48.2 453.5,47.6 455.0,47.2 456.6,46.9 458.2,46.6 459.8,46.5 461.4,46.5 463.0,46.6 464.6,46.7 466.2,47.0 467.8,47.4 469.4,47.8 471.0,48.4 472.6,49.1 474.2,49.9 475.8,50.8 477.3,51.8 478.9,53.0 480.5,54.3 482.1,55.7 483.7,57.3 485.3,59.0 486.9,60.8 488.5,62.8 490.1,64.9 491.7,67.1 493.3,69.4 494.9,71.9 496.5,74.4 498.1,76.9 499.6,79.5 501.2,82.1 502.8,84.6 504.4,87.1 506.0,89.5 507.6,91.7 509.2,93.8 510.8,95.7 512.4,97.3 514.0,98.7 515.6,99.8 517.2,100.5 518.8,101.0 520.4,101.1 521.9,100.8 523.5,100.2 525.1,99.3 526.7,98.0 528.3,96.4 529.9,94.5 531.5,92.4 533.1,90.0 534.7,87.4 536.3,84.6 537.9,81.6 539.5,78.6 541.1,75.5 542.7,72.4 544.2,69.2 545.8,66.2 547.4,63.1 549.0,60.2 550.6,57.3 552.2,54.6 553.8,52.0 555.4,49.6 557.0,47.4 558.6,45.3 560.2,43.3 561.8,41.6 563.4,39.9 565.0,38.5 566.5,37.2 568.1,36.0 569.7,35.0 571.3,34.1 572.9,33.3 574.5,32.6 576.1,32.0 577.7,31.6 579.3,31.1 580.9,30.8 582.5,30.5 584.1,30.3 585.7,30.2 587.3,30.1 588.8,30.0 590.4,30.0 592.0,30.0 593.6,30.1 595.2,30.2 596.8,30.3 598.4,30.4 600.0,30.6" fill="none" stroke="#4f46e5" stroke-width="2.2"/>
+  <circle cx="136.5" cy="56.2" r="4" fill="#b45309"/>
+  <text x="136.5" y="47.2" font-size="9.5" fill="#b45309" font-weight="600" text-anchor="middle" font-family="Inter,system-ui,sans-serif">départ A</text>
+  <path d="M 142.5 61.2 L 202.7 110.5" fill="none" stroke="#b45309" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <polygon points="202.7,110.5 196.0,108.5 199.5,104.3" fill="#b45309"/>
+  <circle cx="453.5" cy="47.6" r="4" fill="#0891b2"/>
+  <text x="453.5" y="38.6" font-size="9.5" fill="#0891b2" font-weight="600" text-anchor="middle" font-family="Inter,system-ui,sans-serif">départ B</text>
+  <path d="M 447.5 52.6 L 390.4 162.0" fill="none" stroke="#0891b2" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <polygon points="390.4,162.0 390.9,155.0 395.8,157.5" fill="#0891b2"/>
+  <circle cx="209.7" cy="118.5" r="5" fill="#dc2626"/>
+  <text x="209.7" y="135.5" font-size="10" fill="#b91c1c" font-weight="600" text-anchor="middle" font-family="Inter,system-ui,sans-serif">minimum local</text>
+  <circle cx="383.4" cy="170.0" r="5.5" fill="#059669"/>
+  <text x="383.4" y="187.0" font-size="10" fill="#047857" font-weight="700" text-anchor="middle" font-family="Inter,system-ui,sans-serif">minimum global</text>
+  <circle cx="520.4" cy="101.1" r="3.5" fill="#dc2626" opacity="0.55"/>
+  <text x="60" y="218" font-size="10.5" fill="#0f172a" font-family="Inter,system-ui,sans-serif">BFGS est déterministe : même départ, même résultat. Départ différent, minimum différent.</text>
+  <text x="60" y="234" font-size="10" fill="#475569" font-family="Inter,system-ui,sans-serif">Optimiser ne fait que descendre. Pour changer de vallée, il faut changer le problème : c'est ce que fait l'aiguille en créant une couche.</text>
+</svg>
+                        </div>
+                        <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">La fonction de mérite n'a pas un seul creux. <strong>BFGS descend</strong> vers la vallée la plus proche et s'y arrête : deux empilements de départ différents donnent donc deux résultats différents, sans qu'aucun des deux ne soit « l'optimum ». L'algorithme étant déterministe, relancer ne change rien — c'est le <strong>point de départ</strong>, ou la <strong>structure</strong> de l'empilement, qu'il faut changer. Ajouter une couche par la méthode de l'aiguille ajoute une dimension au paysage : une barrière infranchissable en dimension <em>n</em> peut se contourner en dimension <em>n+1</em>.</p>
+                    </figure>
+                    <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q16</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Étude de convergence locale de BFGS.</strong> Activez le mérite <code>R moyen</code> sur <strong>400–750 nm</strong> avec un seuil de <strong>0,5 %</strong>. Objectif : un antireflet <em>large bande</em> sur BK7 en ZnS/YF₃.</p>
+                            <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                🧠 <strong>Commencez par l'erreur instructive.</strong> Relevez d'abord le mérite du <strong>verre nu</strong> (aucune couche) : c'est votre point de comparaison. Construisez ensuite l'empilement le plus naturel — des couches quart d'onde <code>H L</code>, puis <code>H L H L</code>. <strong>Le mérite est deux à trois fois PIRE que le verre nu.</strong> Ce n'est pas une erreur de manipulation. Expliquez-le : que fait une couche quart d'onde de <em>haut</em> indice posée sur du verre, du point de vue de l'interférence ? Un antireflet est-il forcément un empilement quart d'onde ?
+                            </div>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li>Repartez de couches <strong>fines et dissymétriques</strong> (quelques dizaines de nanomètres), et non de quarts d'onde. L'optimiseur est une <strong>descente locale</strong> : il rejoint le minimum de la vallée où vous le posez, et n'en cherche aucune autre.</li>
+                                <li>Lancez-le depuis <strong>au moins trois empilements initiaux différents</strong> et consignez à chaque fois mérite initial, mérite final et nombre de couches après nettoyage. L'algorithme étant déterministe, un même départ redonne exactement le même résultat : toute la dispersion que vous observerez vient du <strong>point de départ</strong>, pas de l'algorithme.</li>
+                                <li><strong>Combien de couches faut-il ?</strong> Cherchez le meilleur résultat que vous obtenez à 2, puis 3, puis 4 couches. Pour chaque cas, concluez sur le franchissement éventuel du seuil de 0,5 % et quantifiez la marge.</li>
+                                <li>Un <em>départ</em> qui reste bloqué très au-dessus des autres ne vous apprend rien sur l'optimiseur — il n'y en a qu'un, et il est déterministe. Il vous renseigne sur <em>ce point de départ</em>. Vérifiez-le en relançant depuis un autre empilement initial.</li>
+                            </ul>
+                            <div class="bg-slate-50 border-l-4 border-slate-300 p-2 rounded-r text-xs text-slate-600">La grille exacte du mérite est affichée sous le sélecteur. Recopiez-la dans votre compte rendu : sans elle, votre valeur n'est pas reproductible par un tiers.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q17</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Niveau 3 — Expertise : construction méthodologique, décision argumentée, esprit critique">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Synthèse Guidée par Méthode de l'Aiguille (Needle Method) :</strong></p>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li>Partez d'une seule couche de départ : <code>YF3</code> d'épaisseur physique $150\,\text{nm}$ sur verre BK7.</li>
+                                <li>Cliquez sur le bouton <strong>📍 Analyser Aiguille</strong>. Lisez attentivement le diagnostic : quel matériau et quelle position physique $z$ l'analyse de perturbation vous recommande-t-elle ?</li>
+                                <li>Le diagnostic trace numériquement la fonction $\pi(z)=[J_0-J_{\delta}(z)]/\delta$ tous les $5\,\text{nm}$ avec une aiguille virtuelle $\delta=0{,}1\,\text{nm}$. Repérez la position physique $z$ (depuis le substrat) où la fonction de perturbation $\pi(z)$ atteint son maximum positif ($z \approx 25\text{--}30\,\text{nm}$), puis insérez l'aiguille recommandée.</li>
+                                <li>Cliquez sur <strong>Insérer l'aiguille</strong> : le logiciel crée la couche virtuelle de $0{,}1\,\text{nm}$ puis lance automatiquement une optimisation BFGS. Comparez le mérite juste avant l'insertion et après ce raffinement.</li>
+                                <li><strong>Analyse critique :</strong> Expliquez l'intérêt de la démarche en deux étapes (diagnostic de nucléation $\to$ raffinement local).</li>
+                            </ul>
+                            <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                🧠 <strong>Trois limites à identifier vous-même</strong> (elles ne sont pas dans l'affichage) : (a) le balayage est <em>discret</em>, tous les 5 nm — que se passerait-il si l'optimum était à 2,5 nm d'un point testé ? (b) $\pi(z)$ n'est <strong>jamais</strong> évaluée aux interfaces, alors que c'est souvent là que se situe l'optimum réel : pourquoi ce choix, et que rate-t-on ? (c) la dérivée est approchée par différences finies avec $\delta$ fini. Quantifiez au moins l'une de ces trois limites par un essai numérique.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PARTIE -->
+        <section id="ex6" class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+            <div class="bg-slate-100 border-b px-8 py-4">
+                <h2 class="text-xl font-bold text-slate-900 flex flex-wrap items-center justify-between gap-2">VI. Miroir de Bragg : BK7 / (HL)^n H / Air <span class="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">⏱ 55 min indicatives</span></h2>
+            </div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Accès direct — prérequis :</strong> QWOT, interférence constructive et lecture d'un spectre. L'exercice III suffit ; les exercices IV et V ne sont pas nécessaires.</div>
+            <div class="p-6 space-y-4">
+<div class="bg-amber-50 border-l-4 border-amber-400 p-3 text-xs text-amber-900 rounded-r-lg mb-2">
+                    <strong>💡 Principe du Miroir de Bragg :</strong> Interférences <strong>constructives</strong> par alternance de couches quart d'onde ($n \cdot d = \lambda_0 / 4$).
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q18</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p>Saisissez la formule symbolique <code>(HL)^3 H</code> avec $\lambda_0 = 550\,\text{nm}$. Mesurez la réflectivité maximale $R_{max}$ et relevez les <strong>deux bornes</strong> de la <strong>bande d'arrêt</strong> — l'intervalle de longueurs d'onde où le miroir réfléchit fortement, aussi appelé bande interdite photonique — en adoptant la convention $R \ge 90\,\%$. Notez la largeur obtenue.</p>
+                            <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                🧠 <strong>Ne vous précipitez pas sur la formule.</strong> Comparez votre largeur mesurée à la prédiction $\Delta\lambda = \frac{4\lambda_0}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L}$ calculée en Q4 : <strong>l'écart est important, de l'ordre du tiers.</strong> Ce n'est pas une erreur de mesure. Regardez $R_{max}$ : de combien dépasse-t-il votre seuil de 90 % ? Que se passe-t-il pour la largeur mesurée si $R_{max}$ frôle le seuil ? Formulez une hypothèse — vous la testerez en Q19.
+                            </div>
+                            <div class="bg-amber-50 border-l-4 border-amber-400 p-2 rounded-r text-xs text-amber-900">
+                                🔑 <strong>Résultat à conserver :</strong> <strong>les bornes de bande interdite conditionnent tout l'exercice IX</strong> — une bande de mesure placée hors de cet intervalle ne mesure pas le filtre, elle mesure la fuite du miroir. Vous les affinerez en Q19 sur un miroir plus épais.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q19</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            <div class="space-y-2">
+                                <p>Comparez <code>(HL)^3 H</code> (7 couches), <code>(HL)^4 H</code> (9), <code>(HL)^5 H</code> (11) et <code>(HL)^6 H</code> (13) via le bouton <strong>Mémoriser Courbe</strong>. Pour chacun, relevez <strong>$R_{max}$ et la largeur à $R \ge 90\,\%$</strong>. Dressez le tableau des quatre couples.</p>
+                                <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                    🧠 <strong>Le résultat central de cet exercice.</strong> Les deux grandeurs saturent, mais pas de la même façon. Confrontez maintenant vos quatre largeurs à la prédiction de Q4 : elle ne décrit <em>aucun</em> de vos quatre miroirs exactement, mais elle décrit très bien celui vers lequel ils tendent. <strong>Que représente donc physiquement cette formule</strong> — la largeur d'un miroir réel, ou une limite ? Votre hypothèse de Q18 est-elle confirmée ?
+                                </div>
+                                <p class="text-xs text-slate-600">Concluez : à partir de combien de périodes peut-on utiliser la formule comme une approximation acceptable ? C'est cette valeur que vous emploierez en Q23 pour placer vos bandes de mesure.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q20</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800">
+                            <div class="space-y-2">
+                                <p><strong>Les couches extrêmes : un réglage, pas une amélioration.</strong> Sur le miroir 13 couches, élargissez l'affichage à $360-800\,\text{nm}$ pour voir les ondulations de part et d'autre de la bande interdite.</p>
+                                <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                    <li><strong>Référence :</strong> relevez trois nombres — $R_{max}$ dans la bande, le <strong>lobe le plus haut du côté bleu</strong> ($360-450\,\text{nm}$) et le <strong>lobe le plus haut du côté rouge</strong> ($660-800\,\text{nm}$).</li>
+                                    <li>Passez les couches <strong>1 et 13 à $0{,}5\,\text{QWOT}$</strong> et refaites les trois mesures.</li>
+                                    <li>Passez-les maintenant à <strong>$1{,}3\,\text{QWOT}$</strong> et recommencez.</li>
+                                </ul>
+                                <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                    🧠 <strong>Ce que vous allez découvrir, et qui n'est pas ce qu'on attend.</strong> Les ondulations ne sont pas <em>supprimées</em> : elles sont <strong>transférées d'un côté de la bande interdite à l'autre</strong>. Amincir les couches extrêmes nettoie un côté et dégrade l'autre ; les épaissir fait l'inverse. Expliquez ce comportement en termes d'<strong>adaptation d'admittance</strong> — l'admittance $\eta$ des rappels théoriques : que voit l'onde en arrivant sur la première interface, selon l'épaisseur de la couche extrême ?
+                                </div>
+                                <p class="text-xs text-slate-600">Regardez enfin $R_{max}$ : varie-t-il beaucoup ? Concluez sur la nature du réglage — s'agit-il d'un gain de performance, ou d'un <strong>arbitrage</strong> que le concepteur choisit selon le côté du spectre qu'il doit garder propre ? Donnez un exemple de composant où ce choix s'impose.</p>
+                                <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">🔍 <strong>Auto-contrôle :</strong> si vos deux lobes bougent dans le même sens, vous n'avez mesuré qu'un seul côté de la bande, ou votre plage d'affichage est trop étroite.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PARTIE -->
+        <section id="ex7" class="bg-white rounded-3xl shadow-lg border border-emerald-300 overflow-hidden ring-2 ring-emerald-500/30">
+            <div class="bg-emerald-50 border-b border-emerald-200 px-8 py-4 flex justify-between items-center flex-wrap gap-2">
+                <h2 class="text-xl font-bold text-emerald-950 flex flex-wrap items-center justify-between gap-2">VII. Filtre passe-bande interférentiel (Fabry-Pérot) <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">⏱ 75 min indicatives</span></h2>
+                <span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">🎯 Déposé à Fresnel</span>
+            </div>
+            <div class="mx-6 mt-5 bg-emerald-50 border-l-4 border-emerald-500 p-3 rounded-r-lg text-xs text-emerald-950"><strong>Accès direct — prérequis :</strong> miroir de Bragg, cavité résonante et mesure manuelle d'une largeur spectrale. Réaliser l'exercice VI ou relire le rappel Bragg avant de commencer ; aucune maîtrise des optimiseurs n'est requise.</div>
+            <div class="p-6 space-y-4">
+<div class="bg-amber-50 border-l-4 border-amber-400 p-3 text-xs text-amber-900 rounded-r-lg mb-2">
+                    <strong>💡 Cavité de Fabry-Pérot :</strong> Deux miroirs de Bragg séparés par une couche espaceur centrale demi-onde ($2H$ ou $2L$). Plus les miroirs sont réfléchissants, plus la finesse est grande et plus le pic est étroit.
+                </div>
+
+                <figure id="fig-cavite" class="mb-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Anatomie du filtre : deux miroirs et un espaceur</figcaption>
+                        <div class="p-3">
+<svg viewBox="0 0 640 240" style="width:100%;height:auto;max-height:330px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Espaceur 2H">
+  <rect x="30" y="50" width="66" height="72" fill="#cbd5e1" stroke="#64748b"/>
+  <text x="63" y="92" text-anchor="middle" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">Substrat BK7</text>
+  <rect x="96" y="50" width="22" height="72" fill="#6366f1" stroke="#4338ca" stroke-width="0.7"/><text x="107" y="92" text-anchor="middle" font-size="9" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text><rect x="118" y="50" width="22" height="72" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.7"/><text x="129" y="92" text-anchor="middle" font-size="9" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text><rect x="140" y="50" width="22" height="72" fill="#6366f1" stroke="#4338ca" stroke-width="0.7"/><text x="151" y="92" text-anchor="middle" font-size="9" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text><rect x="162" y="50" width="22" height="72" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.7"/><text x="173" y="92" text-anchor="middle" font-size="9" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text><rect x="184" y="50" width="22" height="72" fill="#6366f1" stroke="#4338ca" stroke-width="0.7"/><text x="195" y="92" text-anchor="middle" font-size="9" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text><rect x="206" y="50" width="22" height="72" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.7"/><text x="217" y="92" text-anchor="middle" font-size="9" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text><rect x="228" y="50" width="46" height="72" fill="#f59e0b" stroke="#b45309" stroke-width="1"/><text x="251" y="92" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">2H</text><rect x="274" y="50" width="22" height="72" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.7"/><text x="285" y="92" text-anchor="middle" font-size="9" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text><rect x="296" y="50" width="22" height="72" fill="#6366f1" stroke="#4338ca" stroke-width="0.7"/><text x="307" y="92" text-anchor="middle" font-size="9" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text><rect x="318" y="50" width="22" height="72" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.7"/><text x="329" y="92" text-anchor="middle" font-size="9" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text><rect x="340" y="50" width="22" height="72" fill="#6366f1" stroke="#4338ca" stroke-width="0.7"/><text x="351" y="92" text-anchor="middle" font-size="9" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text><rect x="362" y="50" width="22" height="72" fill="#c7d2fe" stroke="#4338ca" stroke-width="0.7"/><text x="373" y="92" text-anchor="middle" font-size="9" fill="#312e81" font-family="Inter,system-ui,sans-serif">L</text><rect x="384" y="50" width="22" height="72" fill="#6366f1" stroke="#4338ca" stroke-width="0.7"/><text x="395" y="92" text-anchor="middle" font-size="9" fill="#fff" font-family="Inter,system-ui,sans-serif">H</text>
+  <rect x="406" y="50" width="66" height="72" fill="#e0f2fe" stroke="#7dd3fc"/>
+  <text x="439" y="92" text-anchor="middle" font-size="10" fill="#0369a1" font-family="Inter,system-ui,sans-serif">Air</text>
+  <polyline points="228.0,86.0 228.8,83.7 229.5,81.4 230.3,79.2 231.1,77.1 231.8,75.0 232.6,73.1 233.4,71.3 234.1,69.7 234.9,68.2 235.7,66.9 236.4,65.9 237.2,65.1 238.0,64.5 238.7,64.1 239.5,64.0 240.3,64.1 241.0,64.5 241.8,65.1 242.6,65.9 243.3,66.9 244.1,68.2 244.9,69.7 245.6,71.3 246.4,73.1 247.2,75.0 247.9,77.1 248.7,79.2 249.5,81.4 250.2,83.7 251.0,86.0 251.8,88.3 252.5,90.6 253.3,92.8 254.1,94.9 254.8,97.0 255.6,98.9 256.4,100.7 257.1,102.3 257.9,103.8 258.7,105.1 259.4,106.1 260.2,106.9 261.0,107.5 261.7,107.9 262.5,108.0 263.3,107.9 264.0,107.5 264.8,106.9 265.6,106.1 266.3,105.1 267.1,103.8 267.9,102.3 268.6,100.7 269.4,98.9 270.2,97.0 270.9,94.9 271.7,92.8 272.5,90.6 273.2,88.3 274.0,86.0" fill="none" stroke="#dc2626" stroke-width="2"/>
+  <text x="212" y="42" font-size="9.5" fill="#b91c1c" font-family="Inter,system-ui,sans-serif">onde stationnaire résonante</text>
+  <line x1="96" y1="132" x2="228" y2="132" stroke="#4338ca" stroke-width="1.4"/>
+  <text x="162.0" y="146" text-anchor="middle" font-size="10" fill="#3730a3" font-weight="600" font-family="Inter,system-ui,sans-serif">Miroir (HL)³</text>
+  <line x1="228" y1="132" x2="274" y2="132" stroke="#b45309" stroke-width="1.4"/>
+  <text x="251.0" y="146" text-anchor="middle" font-size="10" fill="#b45309" font-weight="700" font-family="Inter,system-ui,sans-serif">Espaceur 2H</text>
+  <line x1="274" y1="132" x2="406" y2="132" stroke="#4338ca" stroke-width="1.4"/>
+  <text x="340.0" y="146" text-anchor="middle" font-size="10" fill="#3730a3" font-weight="600" font-family="Inter,system-ui,sans-serif">Miroir (LH)³</text>
+  <text x="30" y="182" font-size="10.5" fill="#0f172a" font-weight="600" font-family="Inter,system-ui,sans-serif">(HL)ⁿ  2H  (LH)ⁿ</text>
+  <text x="30" y="202" font-size="10.5" fill="#3730a3" font-family="Inter,system-ui,sans-serif">n ↑ : miroirs plus réfléchissants → pic plus étroit</text>
+  <text x="30" y="220" font-size="10.5" fill="#b45309" font-family="Inter,system-ui,sans-serif">q ↑ : cavité plus épaisse → pic plus étroit, mais ordres parasites</text>
+</svg>
+                        </div>
+                        <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">L’espaceur demi-onde <strong>2H</strong> est une cavité : à la résonance, une onde stationnaire s’y établit et la lumière traverse presque intégralement l’empilement, alors qu’elle est bloquée partout ailleurs dans la bande interdite. Deux leviers indépendants resserrent le pic — augmenter <strong>n</strong> (miroirs plus réfléchissants) ou augmenter <strong>q</strong> (cavité plus épaisse). Q21 vous fait déterminer lequel agit le plus fort.</p>
+                    </figure>
+                    <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q21</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p>À $\lambda_0=550\,\text{nm}$, saisissez <code>(HL)^2 2H (LH)^2</code>, puis <code>(HL)^3 2H (LH)^3</code>, puis <code>(HL)^4 2H (LH)^4</code>. Mesurez la largeur à mi-hauteur de chacun.</p>
+                            <p>Testez ensuite l'ordre de cavité : remplacez l'espaceur <code>2H</code> par <code>4H</code> (ordre $q=2$) puis <code>6H</code> ($q=3$). <em>Notation : le préfixe est le multiple de QWOT, donc <code>4H</code> = 4 quarts d'onde = 2 demi-ondes.</em></p>
+                            <p>Établissez la relation entre le nombre de périodes $n$ des miroirs, l'ordre $q$ de la cavité et le pouvoir de résolution $\lambda/\Delta\lambda$. Lequel des deux paramètres agit le plus fortement ?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q22</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Prescription Fresnel qui sera effectivement déposée :</strong> chargez l’empilement <code>BK7 / H L 2H L H L H L 2H L H L H L 2H L H L / Air</code> à $\lambda_0=550\,\text{nm}$. Vérifiez vous-même qu’il comporte exactement <strong>18 couches</strong>, dans l’ordre substrat → air. Cette architecture est imposée : elle ne doit ni être raccourcie ni remplacée par une cavité symétrique.</p>
+                            <p><strong>Mesure manuelle imposée.</strong> Avec un pas spectral de $0{,}1\,\text{nm}$, relevez au curseur : (a) le maximum $T_{max}$ et sa longueur d’onde, (b) le niveau $T_{max}/2$, (c) les <strong>deux</strong> intersections $\lambda_1$ et $\lambda_2$, (d) la largeur $\lambda_2-\lambda_1$, (e) le <strong>centre à mi-hauteur</strong> $(\lambda_1+\lambda_2)/2$. Utilisez le zoom par zone pour affiner chaque intersection, puis le bouton <code>Vue initiale</code> pour revenir au spectre complet.</p>
+                            <p class="mt-1.5">Cette prescription contient <strong>trois espaceurs $2H$</strong>, donc trois cavités couplées : c'est ce qu'on appelle un filtre <em>multicavité</em>. Sa passante est bien plus large que celle des filtres à une seule cavité de Q21 — ne transposez pas leur ordre de grandeur — et surtout son sommet est <strong>plat et ondulé</strong>. Vous y trouverez plusieurs maxima presque égaux : le plus haut peut basculer de l'un à l'autre pour une variation minime de l'empilement. <strong>C'est donc le centre à mi-hauteur (e), et non la position du maximum, qui repère la passante de façon fiable</strong> ; c'est lui que vous reprendrez aux exercices IX et X.</p>
+                            <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">
+                                🔍 <strong>Auto-contrôle méthodologique :</strong> mesurez à mi-hauteur de la <em>fenêtre</em> ($T_{max}/2$), jamais à 50 % de l’échelle. Ce filtre a trois cavités : son sommet est plat et ondulé, ce n’est pas un pic. Recommencez aux pas de 0,5 nm puis 2 nm, comparez les deux intersections et chiffrez l’incertitude de lecture induite par le pas.
+                            </div>
+                            <div class="bg-emerald-50 border-l-4 border-emerald-500 p-2 rounded-r text-xs text-emerald-950">
+                                🎯 <strong>Livrable à conserver :</strong> exportez le CSV nominal et l'image du spectre. <strong>Ce même empilement à 18 couches est repris sans modification d’architecture dans les exercices VIII à X, puis fabriqué à Fresnel.</strong> Sans ce fichier, la suite du projet ne peut pas être menée de façon traçable.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PARTIE -->
+        <!-- PARTIE -->
+        <section id="ex8" class="bg-white rounded-3xl shadow-lg border-2 border-emerald-300 overflow-hidden">
+            <div class="bg-emerald-50 border-b border-emerald-200 px-8 py-4 flex justify-between items-center flex-wrap gap-2">
+                <h2 class="text-xl font-bold text-emerald-950 flex flex-wrap items-center justify-between gap-2">VIII. Projet pré-fabrication salle blanche <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">⏱ 75 min indicatives</span></h2>
+                <span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">🎯 Déposé à Fresnel</span>
+            </div>
+            <div class="mx-6 mt-5 bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r-lg text-xs text-amber-950"><strong>Accès direct — prérequis :</strong> conserver le fichier nominal de Q22, comprendre la passante d'une cavité, une fonction de mérite et le verrouillage des paramètres. Les exercices VI et VII sont requis ; V est utile pour Q24.</div>
+            <div class="p-6 space-y-4">
+
+                <div class="bg-slate-800 text-slate-100 p-4 rounded-lg text-xs space-y-2">
+                    <div class="font-bold text-white text-sm">📋 Cahier des charges du composant</div>
+                    <div class="grid sm:grid-cols-2 gap-x-6 gap-y-1">
+                        <div>• Bande passante mesurée : <strong>535 – 565 nm</strong></div>
+                        <div>• Bande de réjection 1 : <strong>460 – 500 nm</strong></div>
+                        <div>• Bande de réjection 2 : <strong>620 – 680 nm</strong></div>
+                        <div>• Grille de calcul : <strong>pas de 0,5 nm</strong></div>
+                        <div>• Facteur de réjection exigé : <strong>$Q_r \ge 30$</strong></div>
+                        <div>• Transmission passante exigée : <strong>$\overline{T}_{pass} \ge 85\,\%$</strong></div>
+                    </div>
+                    <div class="text-amber-200 border-t border-slate-600 pt-2 mt-1">
+                        ⚠ <strong>Pourquoi ces bandes-là ?</strong> Elles sont toutes situées <em>à l'intérieur</em> de la bande interdite du miroir ZnS/YF₃ que vous avez mesurée en Q18. C'est une décision d'ingénierie, pas une donnée naturelle : en Q23 vous devrez montrer ce qui se passe si on la prend au hasard.
+                    </div>
+                    <div class="font-mono text-emerald-300 border-t border-slate-600 pt-2">
+                        $Q_r=\dfrac{2\,\overline{T}_{535-565}}{\overline{T}_{460-500}+\overline{T}_{620-680}}$
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q23</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Niveau 3 — Expertise : construction méthodologique, décision argumentée, esprit critique">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Audit nominal et calcul manuel de $Q_r$ :</strong> rouvrez le filtre de Q22, dans le même ordre de dépôt substrat → superstrat.</p>
+                            <div class="bg-slate-800 text-slate-100 p-2.5 rounded text-xs mb-2">
+                                <strong class="text-white">⚠️ L’analyseur ne calcule pas $Q_r$.</strong> Il ne vous donne que des <strong>mesures</strong> : la moyenne de R, T ou A sur une bande que vous définissez, au pas que vous choisissez. Il n'agit ni sur l'optimiseur ni sur le Monte-Carlo. Le facteur de réjection est une grandeur <em>dérivée</em> : vous devez d'abord le construire vous-même ; le mérite BFGS l'utilisera ensuite avec ses bandes fixes.
+                            </div>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li>Dans l'analyseur, choisissez exclusivement la grandeur <code>T</code>, saisissez les trois bandes du cahier des charges avec un pas de 0,5 nm, et relevez les trois moyennes $\overline{T}$. Les choix <code>R</code> et <code>A</code> servent à d'autres mesures, jamais à définir un rôle dans un mérite.</li>
+                                <li>Calculez $Q_r$ vous-même à partir de ces trois nombres, à la main puis sous Excel à partir du CSV exporté. Les deux voies doivent coïncider.</li>
+                                <li>Vérifiez l'effet du pas : refaites les mêmes moyennes à 0,1 nm puis à 2 nm. Laquelle des trois bandes est la plus sensible au pas, et pourquoi ?</li>
+                                <li>Complétez l'audit nominal — nombre de couches, nombre de matériaux, $d_{min}$, $d_{max}$, épaisseur totale — <strong>en le calculant depuis le tableau des couches</strong>. Le bouton <em>« vérifier mon audit »</em> ne sert qu'à contrôler votre résultat <strong>après</strong> l'avoir établi.</li>
+                            </ul>
+                            <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                                🧠 <strong>L'expérience décisive :</strong> gardez la passante 535–565 nm et le rejet haut 620–680 nm, puis <strong>recalculez $Q_r$ trois fois</strong>, en changeant seulement la bande de rejet bas : <code>400–500</code>, puis <code>430–500</code>, puis la prescription <code>460–500</code>. <strong>De combien $Q_r$ varie-t-il ?</strong> Reliez ce résultat au spectre réellement obtenu. Que vaut une spécification de réjection qui ne précise pas ses bandes ?
+                                <br><span class="text-[11px]">Note : la bande 400–500 nm déborde de la plage calculée (430–700 nm) et le logiciel vous en avertit. Cet avertissement fait partie de la réponse — dites ce que vaut une moyenne calculée sur une bande tronquée.</span>
+                            </div>
+                            <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">🔍 <strong>Auto-contrôle :</strong> votre calcul manuel et votre calcul Excel doivent coïncider à l'arrondi près. Vérifiez que les trois bandes sont entièrement couvertes, que la grandeur est T, et que le dénominateur est la <em>moyenne</em> des deux rejets, non leur somme.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q24</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Niveau 3 — Expertise : construction méthodologique, décision argumentée, esprit critique">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Y a-t-il vraiment quelque chose à optimiser ?</strong></p>
+                            <p class="text-xs text-slate-600 mb-1.5">La question n'est pas rhétorique. Commencez par mesurer $Q_r$ et $\overline{T}_{pass}$ <em>avant</em> toute optimisation et comparez-les aux deux exigences du cahier des charges. <strong>Si la prescription déposée les satisfait déjà, et largement, dites-le : c'est un résultat, pas un échec de votre part.</strong> Vous devrez alors répondre à une autre question, plus intéressante : à quoi sert d'optimiser un composant qui passe déjà ? Regardez du côté de la marge — de combien le nominal dépasse-t-il le seuil, et cette marge survit-elle aux erreurs de dépôt de Q25 ? C'est là, et non sur le nominal, que se joue l'intérêt des trois couches libres.</p>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li>Activez le mérite <code>Maximiser Qr</code>. Sa formule reprend strictement les bandes 460–500, 535–565 et 620–680 nm ; l'analyseur de bandes reste un instrument de mesure indépendant.</li>
+                                <li>Fixez à <strong>2 nm</strong> le seuil de nettoyage : il devient aussi la borne basse de BFGS. Notez cette contrainte dans le dossier de conception ; un optimum numérique sous ce seuil n'est pas admissible.</li>
+                                <li>Choisissez <code>Couches spécifiques</code>, puis autorisez <strong>uniquement les couches 16, 17 et 18</strong>. Contrôlez dans le tableau que les couches 1 à 15 sont figées. Cette contrainte correspond au composant qui sera déposé et ne doit jamais être relâchée.</li>
+                                <li>Lancez BFGS et consignez $Q_r$, $\overline{T}_{pass}$ et les trois épaisseurs avant/après. Notez le compromis physique : BFGS maximise $Q_r$ (qui dépasse 200) en écrasant la réjection hors bande, mais au détriment de la transmission passante $\overline{T}_{pass}$ qui fléchit (de $\approx 97{,}9\,\%$ à $\approx 93{,}7\,\%$) tandis que la couche 18 s'amenuise. Vérifiez que le nombre de couches, leur ordre et les quinze premières épaisseurs sont rigoureusement inchangés.</li>
+                                <li>Testez la reproductibilité en rechargeant la prescription puis en relançant BFGS avec les mêmes réglages. Expliquez pourquoi l'identité des résultats est attendue d'un algorithme déterministe.</li>
+                                <li>Refusez toute amélioration nominale qui crée une couche sous $d_{min}$ ou dégrade la transmission passante sous le seuil : un score $Q_r$ isolé n'est pas un dossier de fabrication.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+<div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q25</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Niveau 3 — Expertise : construction méthodologique, décision argumentée, esprit critique">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Revue pré-fabrication — qualification robuste sans résultat préfourni.</strong></p>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li><strong>(a)</strong> Conservez la prescription optimisée de Q24 : 18 couches, quinze premières inchangées, trois dernières issues de BFGS. Fixez $d_{min}=1$ nm et écrivez les critères de conformité stricts du lot : un tirage est accepté si et seulement si $Q_r \ge 50$ ET $\overline{T}_{pass} \ge 95\,\%$ (spécification haute exigence) ou $\ge 90\,\%$ (spécification nominale).
+                                <br><span class="text-[11px]">Deux seuils différents, à ne pas confondre : les <strong>2 nm</strong> de Q24 bornent par le bas ce que <em>l'optimiseur</em> a le droit de proposer ; le <strong>$d_{min}=1$ nm</strong> d'ici est l'épaisseur minimale que l'on accepte de <em>déposer</em>, et il sert à trier les tirages du Monte-Carlo. Le premier contraint un calcul, le second juge une fabrication. Justifiez leurs valeurs dans votre dossier.</span></li>
+                                <li><strong>(b)</strong> Pour $\Delta d=1$, 2 puis 5 nm, exécutez d'abord $N=100$ pour contrôler le protocole, puis $N=1000$ pour la décision. La graine doit rester identique.</li>
+                                <li><strong>(c)</strong> Pour chaque sévérité, rapportez rendement, IC95 % de Wilson, P05($Q_r$), P05($\overline{T}_{pass}$), taux de fabricabilité et nombre de couches perturbées. Le Monte-Carlo perturbe les <strong>18 couches déposées</strong> : le verrouillage des quinze premières ne concernait que BFGS.</li>
+                                <li><strong>(d)</strong> Tracez le rendement et les deux centiles défavorables en fonction de $\Delta d$. Déterminez par interpolation prudente la plus grande valeur de $\Delta d$ compatible avec le rendement minimal exigé ; si les données ne permettent pas de conclure, donnez un intervalle et proposez le calcul supplémentaire nécessaire.</li>
+                                <li><strong>(e)</strong> Distinguez clairement performance nominale, robustesse statistique et fabricabilité. Formulez une recommandation de dépôt fondée sur les bornes de confiance, sans transformer $\Delta d$ en borne absolue : ici $\sigma=\Delta d/2$.</li>
+                            </ul>
+                            <div class="bg-rose-50 border-l-4 border-rose-400 p-3 rounded-r text-xs text-rose-900">
+                                🔬 <strong>Exigence de preuve :</strong> aucune courbe de rendement ni valeur attendue n'est fournie. Votre graphe doit porter les trois points 1, 2 et 5 nm, les barres d'IC95 %, la graine, $N$, les seuils et le modèle d'erreur. Une conclusion sans intervalle de confiance ou obtenue avec des réglages différents est irrecevable.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PARTIE -->
+        <section id="ex9" class="bg-white rounded-3xl shadow-lg border-2 border-emerald-300 overflow-hidden">
+            <div class="bg-emerald-50 border-b border-emerald-200 px-8 py-4 flex justify-between items-center flex-wrap gap-2">
+                <h2 class="text-xl font-bold text-emerald-950 flex flex-wrap items-center justify-between gap-2">IX. Rétro-ingénierie & diagnostic de défauts salle blanche <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">⏱ 45 min indicatives</span></h2>
+                <span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">🎯 Après dépôt</span>
+            </div>
+            <div class="mx-6 mt-5 bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r-lg text-xs text-amber-950"><strong>Accès direct — prérequis :</strong> disposer du spectre nominal de Q22 et, si possible, du spectre mesuré du filtre ; savoir distinguer décalage spectral, déformation et perte de transmission. Les exercices VII et VIII sont requis pour une rétro-ingénierie complète.</div>
+            <div class="p-6 space-y-4">
+                <figure id="fig-erreurs" class="my-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Deux défauts de procédé, deux signatures spectrales</figcaption>
+                    <div class="p-3">
+<svg viewBox="0 0 640 250" style="width:100%;height:auto;max-height:340px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Spectres simules : effet d une erreur uniforme et d un bruit couche a couche sur un filtre a deux cavites">
+  <rect x="14" y="12" width="300" height="158" fill="#fef2f2" stroke="#fecaca" rx="6"/>
+  <text x="26" y="28" font-size="11" fill="#b91c1c" font-weight="700" font-family="Inter,system-ui,sans-serif">Erreur uniforme (toutes les couches)</text>
+  <text x="26" y="41" font-size="9" fill="#7f1d1d" font-family="Inter,system-ui,sans-serif">toutes les épaisseurs × (1 + b), ici b = +2 %</text>
+  <line x1="30.0" y1="112" x2="300.0" y2="112" stroke="#334155" stroke-width="1"/>
+  <line x1="41.7" y1="112" x2="41.7" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="41.7" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">500</text>
+  <line x1="100.4" y1="112" x2="100.4" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="100.4" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">525</text>
+  <line x1="159.1" y1="112" x2="159.1" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="159.1" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">550</text>
+  <line x1="217.8" y1="112" x2="217.8" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="217.8" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">575</text>
+  <line x1="276.5" y1="112" x2="276.5" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="276.5" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">600</text>
+  <line x1="30.0" y1="85.0" x2="300.0" y2="85.0" stroke="#b91c1c" stroke-width="0.7" stroke-dasharray="2 3" opacity="0.55"/>
+  <text x="30.0" y="82" font-size="7" fill="#b91c1c" font-family="Inter,system-ui,sans-serif">50 %</text>
+  <polyline points="30.0,111.7 31.2,111.7 32.3,111.7 33.5,111.7 34.7,111.7 35.9,111.7 37.0,111.7 38.2,111.7 39.4,111.7 40.6,111.7 41.7,111.7 42.9,111.7 44.1,111.7 45.3,111.7 46.4,111.7 47.6,111.6 48.8,111.6 50.0,111.6 51.1,111.6 52.3,111.6 53.5,111.6 54.7,111.6 55.8,111.6 57.0,111.6 58.2,111.5 59.3,111.5 60.5,111.5 61.7,111.5 62.9,111.5 64.0,111.4 65.2,111.4 66.4,111.4 67.6,111.4 68.7,111.3 69.9,111.3 71.1,111.3 72.3,111.3 73.4,111.2 74.6,111.2 75.8,111.1 77.0,111.1 78.1,111.0 79.3,111.0 80.5,110.9 81.7,110.9 82.8,110.8 84.0,110.7 85.2,110.7 86.3,110.6 87.5,110.5 88.7,110.4 89.9,110.3 91.0,110.2 92.2,110.1 93.4,109.9 94.6,109.8 95.7,109.6 96.9,109.5 98.1,109.3 99.3,109.1 100.4,108.8 101.6,108.6 102.8,108.3 104.0,108.0 105.1,107.6 106.3,107.2 107.5,106.8 108.7,106.3 109.8,105.8 111.0,105.2 112.2,104.6 113.3,103.8 114.5,103.0 115.7,102.1 116.9,101.0 118.0,99.9 119.2,98.6 120.4,97.2 121.6,95.6 122.7,93.9 123.9,92.0 125.1,89.9 126.3,87.6 127.4,85.2 128.6,82.7 129.8,80.1 131.0,77.4 132.1,74.7 133.3,72.0 134.5,69.5 135.7,67.2 136.8,65.1 138.0,63.3 139.2,61.8 140.3,60.6 141.5,59.8 142.7,59.2 143.9,58.9 145.0,58.9 146.2,59.0 147.4,59.2 148.6,59.5 149.7,59.8 150.9,60.2 152.1,60.6 153.3,60.9 154.4,61.2 155.6,61.4 156.8,61.6 158.0,61.7 159.1,61.8 160.3,61.7 161.5,61.6 162.7,61.4 163.8,61.2 165.0,60.9 166.2,60.6 167.3,60.2 168.5,59.9 169.7,59.5 170.9,59.2 172.0,59.0 173.2,58.9 174.4,58.9 175.6,59.1 176.7,59.4 177.9,60.0 179.1,60.9 180.3,62.0 181.4,63.3 182.6,64.9 183.8,66.7 185.0,68.7 186.1,70.9 187.3,73.1 188.5,75.4 189.7,77.7 190.8,80.1 192.0,82.3 193.2,84.5 194.3,86.5 195.5,88.5 196.7,90.3 197.9,92.0 199.0,93.6 200.2,95.0 201.4,96.4 202.6,97.6 203.7,98.7 204.9,99.7 206.1,100.7 207.3,101.5 208.4,102.3 209.6,103.0 210.8,103.6 212.0,104.2 213.1,104.8 214.3,105.3 215.5,105.7 216.7,106.1 217.8,106.5 219.0,106.8 220.2,107.2 221.3,107.4 222.5,107.7 223.7,108.0 224.9,108.2 226.0,108.4 227.2,108.6 228.4,108.8 229.6,108.9 230.7,109.1 231.9,109.2 233.1,109.4 234.3,109.5 235.4,109.6 236.6,109.7 237.8,109.8 239.0,109.9 240.1,110.0 241.3,110.1 242.5,110.2 243.7,110.3 244.8,110.3 246.0,110.4 247.2,110.5 248.3,110.5 249.5,110.6 250.7,110.6 251.9,110.7 253.0,110.7 254.2,110.8 255.4,110.8 256.6,110.8 257.7,110.9 258.9,110.9 260.1,110.9 261.3,111.0 262.4,111.0 263.6,111.0 264.8,111.1 266.0,111.1 267.1,111.1 268.3,111.1 269.5,111.2 270.7,111.2 271.8,111.2 273.0,111.2 274.2,111.2 275.3,111.3 276.5,111.3 277.7,111.3 278.9,111.3 280.0,111.3 281.2,111.3 282.4,111.3 283.6,111.4 284.7,111.4 285.9,111.4 287.1,111.4 288.3,111.4 289.4,111.4 290.6,111.4 291.8,111.4 293.0,111.4 294.1,111.5 295.3,111.5 296.5,111.5 297.7,111.5 298.8,111.5 300.0,111.5" fill="none" stroke="#64748b" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <polyline points="30.0,111.8 31.2,111.8 32.3,111.8 33.5,111.8 34.7,111.8 35.9,111.8 37.0,111.8 38.2,111.8 39.4,111.8 40.6,111.7 41.7,111.7 42.9,111.7 44.1,111.7 45.3,111.7 46.4,111.7 47.6,111.7 48.8,111.7 50.0,111.7 51.1,111.7 52.3,111.7 53.5,111.7 54.7,111.7 55.8,111.7 57.0,111.7 58.2,111.7 59.3,111.7 60.5,111.7 61.7,111.7 62.9,111.7 64.0,111.7 65.2,111.7 66.4,111.6 67.6,111.6 68.7,111.6 69.9,111.6 71.1,111.6 72.3,111.6 73.4,111.6 74.6,111.6 75.8,111.6 77.0,111.5 78.1,111.5 79.3,111.5 80.5,111.5 81.7,111.5 82.8,111.5 84.0,111.4 85.2,111.4 86.3,111.4 87.5,111.4 88.7,111.3 89.9,111.3 91.0,111.3 92.2,111.3 93.4,111.2 94.6,111.2 95.7,111.2 96.9,111.1 98.1,111.1 99.3,111.0 100.4,111.0 101.6,110.9 102.8,110.9 104.0,110.8 105.1,110.7 106.3,110.7 107.5,110.6 108.7,110.5 109.8,110.4 111.0,110.3 112.2,110.2 113.3,110.1 114.5,110.0 115.7,109.8 116.9,109.7 118.0,109.5 119.2,109.3 120.4,109.1 121.6,108.9 122.7,108.7 123.9,108.4 125.1,108.1 126.3,107.8 127.4,107.5 128.6,107.1 129.8,106.7 131.0,106.2 132.1,105.6 133.3,105.1 134.5,104.4 135.7,103.7 136.8,102.9 138.0,102.0 139.2,101.0 140.3,99.9 141.5,98.6 142.7,97.3 143.9,95.7 145.0,94.1 146.2,92.2 147.4,90.3 148.6,88.1 149.7,85.8 150.9,83.4 152.1,80.9 153.3,78.3 154.4,75.7 155.6,73.1 156.8,70.6 158.0,68.3 159.1,66.1 160.3,64.2 161.5,62.6 162.7,61.3 163.8,60.3 165.0,59.6 166.2,59.1 167.3,58.9 168.5,58.9 169.7,59.0 170.9,59.2 172.0,59.5 173.2,59.8 174.4,60.2 175.6,60.5 176.7,60.9 177.9,61.2 179.1,61.4 180.3,61.6 181.4,61.7 182.6,61.7 183.8,61.7 185.0,61.6 186.1,61.4 187.3,61.2 188.5,60.9 189.7,60.6 190.8,60.3 192.0,60.0 193.2,59.6 194.3,59.3 195.5,59.1 196.7,58.9 197.9,58.8 199.0,58.9 200.2,59.2 201.4,59.6 202.6,60.3 203.7,61.2 204.9,62.4 206.1,63.7 207.3,65.3 208.4,67.1 209.6,69.1 210.8,71.2 212.0,73.4 213.1,75.6 214.3,77.9 215.5,80.1 216.7,82.3 217.8,84.4 219.0,86.4 220.2,88.3 221.3,90.1 222.5,91.8 223.7,93.3 224.9,94.7 226.0,96.1 227.2,97.3 228.4,98.4 229.6,99.4 230.7,100.3 231.9,101.2 233.1,102.0 234.3,102.7 235.4,103.3 236.6,103.9 237.8,104.5 239.0,105.0 240.1,105.4 241.3,105.9 242.5,106.2 243.7,106.6 244.8,106.9 246.0,107.2 247.2,107.5 248.3,107.8 249.5,108.0 250.7,108.2 251.9,108.4 253.0,108.6 254.2,108.8 255.4,108.9 256.6,109.1 257.7,109.2 258.9,109.4 260.1,109.5 261.3,109.6 262.4,109.7 263.6,109.8 264.8,109.9 266.0,110.0 267.1,110.1 268.3,110.2 269.5,110.2 270.7,110.3 271.8,110.4 273.0,110.4 274.2,110.5 275.3,110.5 276.5,110.6 277.7,110.6 278.9,110.7 280.0,110.7 281.2,110.8 282.4,110.8 283.6,110.8 284.7,110.9 285.9,110.9 287.1,110.9 288.3,111.0 289.4,111.0 290.6,111.0 291.8,111.1 293.0,111.1 294.1,111.1 295.3,111.1 296.5,111.2 297.7,111.2 298.8,111.2 300.0,111.2" fill="none" stroke="#dc2626" stroke-width="1.8"/>
+  <text x="26" y="140" font-size="9" fill="#b91c1c" font-weight="600" font-family="Inter,system-ui,sans-serif">→ la bande GLISSE, sa forme est intacte</text>
+  <text x="26" y="152" font-size="8" fill="#7f1d1d" font-family="Inter,system-ui,sans-serif">centre 550,5 → 560,8 nm  (décalage 10,3 nm)</text>
+  <text x="26" y="163" font-size="8" fill="#7f1d1d" font-family="Inter,system-ui,sans-serif">sommet 98,4 → 98,4 %   largeur 28,0 → 28,5 nm</text>
+
+  <rect x="326" y="12" width="300" height="158" fill="#eff6ff" stroke="#bfdbfe" rx="6"/>
+  <text x="338" y="28" font-size="11" fill="#1d4ed8" font-weight="700" font-family="Inter,system-ui,sans-serif">Bruit aléatoire couche à couche</text>
+  <text x="338" y="41" font-size="9" fill="#1e3a8a" font-family="Inter,system-ui,sans-serif">chaque couche ± une erreur gaussienne, σ = Δd/2 avec Δd = 10 nm</text>
+  <line x1="342.0" y1="112" x2="612.0" y2="112" stroke="#334155" stroke-width="1"/>
+  <line x1="353.7" y1="112" x2="353.7" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="353.7" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">500</text>
+  <line x1="412.4" y1="112" x2="412.4" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="412.4" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">525</text>
+  <line x1="471.1" y1="112" x2="471.1" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="471.1" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">550</text>
+  <line x1="529.8" y1="112" x2="529.8" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="529.8" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">575</text>
+  <line x1="588.5" y1="112" x2="588.5" y2="115" stroke="#94a3b8" stroke-width="0.8"/>
+  <text x="588.5" y="124" font-size="7.5" fill="#64748b" text-anchor="middle" font-family="Inter,system-ui,sans-serif">600</text>
+  <line x1="342.0" y1="85.0" x2="612.0" y2="85.0" stroke="#1d4ed8" stroke-width="0.7" stroke-dasharray="2 3" opacity="0.55"/>
+  <text x="342.0" y="82" font-size="7" fill="#1d4ed8" font-family="Inter,system-ui,sans-serif">50 %</text>
+  <polyline points="342.0,111.7 343.2,111.7 344.3,111.7 345.5,111.7 346.7,111.7 347.9,111.7 349.0,111.7 350.2,111.7 351.4,111.7 352.6,111.7 353.7,111.7 354.9,111.7 356.1,111.7 357.3,111.7 358.4,111.7 359.6,111.6 360.8,111.6 362.0,111.6 363.1,111.6 364.3,111.6 365.5,111.6 366.7,111.6 367.8,111.6 369.0,111.6 370.2,111.5 371.3,111.5 372.5,111.5 373.7,111.5 374.9,111.5 376.0,111.4 377.2,111.4 378.4,111.4 379.6,111.4 380.7,111.3 381.9,111.3 383.1,111.3 384.3,111.3 385.4,111.2 386.6,111.2 387.8,111.1 389.0,111.1 390.1,111.0 391.3,111.0 392.5,110.9 393.7,110.9 394.8,110.8 396.0,110.7 397.2,110.7 398.3,110.6 399.5,110.5 400.7,110.4 401.9,110.3 403.0,110.2 404.2,110.1 405.4,109.9 406.6,109.8 407.7,109.6 408.9,109.5 410.1,109.3 411.3,109.1 412.4,108.8 413.6,108.6 414.8,108.3 416.0,108.0 417.1,107.6 418.3,107.2 419.5,106.8 420.7,106.3 421.8,105.8 423.0,105.2 424.2,104.6 425.3,103.8 426.5,103.0 427.7,102.1 428.9,101.0 430.0,99.9 431.2,98.6 432.4,97.2 433.6,95.6 434.7,93.9 435.9,92.0 437.1,89.9 438.3,87.6 439.4,85.2 440.6,82.7 441.8,80.1 443.0,77.4 444.1,74.7 445.3,72.0 446.5,69.5 447.7,67.2 448.8,65.1 450.0,63.3 451.2,61.8 452.3,60.6 453.5,59.8 454.7,59.2 455.9,58.9 457.0,58.9 458.2,59.0 459.4,59.2 460.6,59.5 461.7,59.8 462.9,60.2 464.1,60.6 465.3,60.9 466.4,61.2 467.6,61.4 468.8,61.6 470.0,61.7 471.1,61.8 472.3,61.7 473.5,61.6 474.7,61.4 475.8,61.2 477.0,60.9 478.2,60.6 479.3,60.2 480.5,59.9 481.7,59.5 482.9,59.2 484.0,59.0 485.2,58.9 486.4,58.9 487.6,59.1 488.7,59.4 489.9,60.0 491.1,60.9 492.3,62.0 493.4,63.3 494.6,64.9 495.8,66.7 497.0,68.7 498.1,70.9 499.3,73.1 500.5,75.4 501.7,77.7 502.8,80.1 504.0,82.3 505.2,84.5 506.3,86.5 507.5,88.5 508.7,90.3 509.9,92.0 511.0,93.6 512.2,95.0 513.4,96.4 514.6,97.6 515.7,98.7 516.9,99.7 518.1,100.7 519.3,101.5 520.4,102.3 521.6,103.0 522.8,103.6 524.0,104.2 525.1,104.8 526.3,105.3 527.5,105.7 528.7,106.1 529.8,106.5 531.0,106.8 532.2,107.2 533.3,107.4 534.5,107.7 535.7,108.0 536.9,108.2 538.0,108.4 539.2,108.6 540.4,108.8 541.6,108.9 542.7,109.1 543.9,109.2 545.1,109.4 546.3,109.5 547.4,109.6 548.6,109.7 549.8,109.8 551.0,109.9 552.1,110.0 553.3,110.1 554.5,110.2 555.7,110.3 556.8,110.3 558.0,110.4 559.2,110.5 560.3,110.5 561.5,110.6 562.7,110.6 563.9,110.7 565.0,110.7 566.2,110.8 567.4,110.8 568.6,110.8 569.7,110.9 570.9,110.9 572.1,110.9 573.3,111.0 574.4,111.0 575.6,111.0 576.8,111.1 578.0,111.1 579.1,111.1 580.3,111.1 581.5,111.2 582.7,111.2 583.8,111.2 585.0,111.2 586.2,111.2 587.3,111.3 588.5,111.3 589.7,111.3 590.9,111.3 592.0,111.3 593.2,111.3 594.4,111.3 595.6,111.4 596.7,111.4 597.9,111.4 599.1,111.4 600.3,111.4 601.4,111.4 602.6,111.4 603.8,111.4 605.0,111.4 606.1,111.5 607.3,111.5 608.5,111.5 609.7,111.5 610.8,111.5 612.0,111.5" fill="none" stroke="#64748b" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <polyline points="342.0,111.7 343.2,111.7 344.3,111.7 345.5,111.6 346.7,111.6 347.9,111.6 349.0,111.6 350.2,111.6 351.4,111.6 352.6,111.6 353.7,111.6 354.9,111.6 356.1,111.6 357.3,111.6 358.4,111.6 359.6,111.6 360.8,111.6 362.0,111.6 363.1,111.5 364.3,111.5 365.5,111.5 366.7,111.5 367.8,111.5 369.0,111.5 370.2,111.5 371.3,111.5 372.5,111.4 373.7,111.4 374.9,111.4 376.0,111.4 377.2,111.4 378.4,111.3 379.6,111.3 380.7,111.3 381.9,111.3 383.1,111.2 384.3,111.2 385.4,111.2 386.6,111.1 387.8,111.1 389.0,111.0 390.1,111.0 391.3,110.9 392.5,110.9 393.7,110.8 394.8,110.8 396.0,110.7 397.2,110.7 398.3,110.6 399.5,110.5 400.7,110.4 401.9,110.3 403.0,110.2 404.2,110.1 405.4,110.0 406.6,109.9 407.7,109.7 408.9,109.6 410.1,109.4 411.3,109.2 412.4,109.0 413.6,108.8 414.8,108.5 416.0,108.3 417.1,108.0 418.3,107.6 419.5,107.3 420.7,106.9 421.8,106.4 423.0,105.9 424.2,105.3 425.3,104.7 426.5,104.0 427.7,103.3 428.9,102.4 430.0,101.4 431.2,100.4 432.4,99.2 433.6,97.9 434.7,96.4 435.9,94.8 437.1,93.1 438.3,91.2 439.4,89.1 440.6,86.9 441.8,84.6 443.0,82.2 444.1,79.8 445.3,77.4 446.5,75.2 447.7,73.0 448.8,71.2 450.0,69.5 451.2,68.3 452.3,67.3 453.5,66.7 454.7,66.5 455.9,66.5 457.0,66.8 458.2,67.3 459.4,67.9 460.6,68.6 461.7,69.5 462.9,70.3 464.1,71.2 465.3,72.0 466.4,72.8 467.6,73.6 468.8,74.2 470.0,74.9 471.1,75.4 472.3,75.9 473.5,76.4 474.7,76.7 475.8,77.0 477.0,77.2 478.2,77.4 479.3,77.5 480.5,77.5 481.7,77.5 482.9,77.4 484.0,77.3 485.2,77.2 486.4,77.0 487.6,76.8 488.7,76.5 489.9,76.3 491.1,76.0 492.3,75.8 493.4,75.6 494.6,75.5 495.8,75.4 497.0,75.4 498.1,75.5 499.3,75.7 500.5,76.0 501.7,76.4 502.8,77.0 504.0,77.7 505.2,78.6 506.3,79.5 507.5,80.6 508.7,81.8 509.9,83.1 511.0,84.5 512.2,85.8 513.4,87.2 514.6,88.6 515.7,90.0 516.9,91.4 518.1,92.6 519.3,93.9 520.4,95.1 521.6,96.2 522.8,97.3 524.0,98.3 525.1,99.2 526.3,100.0 527.5,100.8 528.7,101.6 529.8,102.3 531.0,102.9 532.2,103.5 533.3,104.1 534.5,104.6 535.7,105.0 536.9,105.4 538.0,105.8 539.2,106.2 540.4,106.5 541.6,106.9 542.7,107.2 543.9,107.4 545.1,107.7 546.3,107.9 547.4,108.1 548.6,108.3 549.8,108.5 551.0,108.7 552.1,108.8 553.3,109.0 554.5,109.1 555.7,109.3 556.8,109.4 558.0,109.5 559.2,109.6 560.3,109.7 561.5,109.8 562.7,109.9 563.9,110.0 565.0,110.1 566.2,110.1 567.4,110.2 568.6,110.3 569.7,110.3 570.9,110.4 572.1,110.4 573.3,110.5 574.4,110.5 575.6,110.6 576.8,110.6 578.0,110.7 579.1,110.7 580.3,110.8 581.5,110.8 582.7,110.8 583.8,110.9 585.0,110.9 586.2,110.9 587.3,111.0 588.5,111.0 589.7,111.0 590.9,111.0 592.0,111.1 593.2,111.1 594.4,111.1 595.6,111.1 596.7,111.1 597.9,111.2 599.1,111.2 600.3,111.2 601.4,111.2 602.6,111.2 603.8,111.2 605.0,111.3 606.1,111.3 607.3,111.3 608.5,111.3 609.7,111.3 610.8,111.3 612.0,111.3" fill="none" stroke="#2563eb" stroke-width="1.8"/>
+  <text x="338" y="140" font-size="9" fill="#1d4ed8" font-weight="600" font-family="Inter,system-ui,sans-serif">→ la bande se DÉFORME : le sommet tombe, elle s’élargit</text>
+  <text x="338" y="152" font-size="8" fill="#1e3a8a" font-family="Inter,system-ui,sans-serif">sommet 98,4 → 84,3 %   largeur 28,0 → 32,0 nm</text>
+  <text x="338" y="163" font-size="8" fill="#1e3a8a" font-family="Inter,system-ui,sans-serif">centre 550,5 → 552,5 nm — et il change à chaque tirage</text>
+
+  <line x1="14" y1="187" x2="34" y2="187" stroke="#64748b" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <text x="39" y="190" font-size="9.5" fill="#334155" font-family="Inter,system-ui,sans-serif">nominal</text>
+  <line x1="120" y1="187" x2="140" y2="187" stroke="#334155" stroke-width="1.8"/>
+  <text x="145" y="190" font-size="9.5" fill="#334155" font-family="Inter,system-ui,sans-serif">après défaut</text>
+  <text x="300" y="190" font-size="9" fill="#64748b" font-family="Inter,system-ui,sans-serif">axe horizontal : longueur d’onde (nm)</text>
+  <text x="14" y="212" font-size="10.5" fill="#0f172a" font-weight="700" font-family="Inter,system-ui,sans-serif">Un défaut global déplace sans déformer ; un défaut local déforme sans déplacer franchement.</text>
+  <text x="14" y="228" font-size="10" fill="#0f172a" font-family="Inter,system-ui,sans-serif">C’est cette différence, et non l’amplitude du décalage, qui oriente le diagnostic.</text>
+  <text x="14" y="243" font-size="8.5" fill="#64748b" font-family="Inter,system-ui,sans-serif">Courbes calculées avec le simulateur — filtre à deux cavités BK7 / H L H L 2H L H L H L H L 2H L H L H L / Air, λ₀ = 550 nm, incidence normale, pas 0,5 nm ; tirage aléatoire reproductible (graine 7).</text>
+</svg>
+                    </div>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">Une <strong>erreur uniforme</strong> multiplie toutes les épaisseurs par le même facteur : l'empilement reste homothétique, donc le spectre se translate sans se déformer. Un <strong>bruit indépendant</strong> désaccorde les couches entre elles : le centre bouge peu mais le pic s'écrase et s'élargit. Savoir lire cette différence, c'est savoir diagnostiquer un dépôt (Q26). <strong>Ce qui compte n'est pas le décalage en nanomètres, mais son rapport à la largeur de la passante :</strong> les mêmes 5 nm valent presque toute la bande sur le filtre étroit de Q21, et un dixième de bande seulement sur la prescription Fresnel, bien plus large. Comparez toujours les deux.</p>
+                </figure>
+
+                <div class="bg-amber-50 border-l-4 border-amber-400 p-3 text-xs text-amber-900 rounded-r-lg mb-2">
+                    <strong>Mise en situation réelle :</strong> l'équipe de dépôt de l'Institut Fresnel a réalisé votre filtre passe-bande. La mesure au spectrophotomètre montre un <strong>décalage d'environ $8\,\text{nm}$ vers le rouge</strong> et une perte de transmission au sommet. Votre référence n'est pas la consigne $\lambda_0 = 550\,\text{nm}$, mais <strong>le centre à mi-hauteur que vous avez vous-même relevé en Q22</strong> : c'est par rapport à lui que l'écart se mesure. Commencez donc par ressortir ce relevé.
+                </div>
+
+                <div class="border-b border-slate-100 pb-4 qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q26</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Niveau 3 — Expertise : construction méthodologique, décision argumentée, esprit critique">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Diagnostic de la fenêtre décalée.</strong> Reproduisez trois scénarios de défaut dans le simulateur et comparez leur signature spectrale :</p>
+                            <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                                <li><strong>(a)</strong> une variation <em>uniforme</em> de toutes les épaisseurs (multipliez-les toutes par le même facteur) ;</li>
+                                <li><strong>(b)</strong> une erreur sur le seul espaceur central $2H$ (couche 9) ;</li>
+                                <li><strong>(c)</strong> une erreur sur une seule couche de miroir — prenez la <strong>couche 5</strong>, pour que tous les binômes comparent la même chose.</li>
+                            </ul>
+                            <p>Lequel produit un décalage global <em>avec la plus faible déformation</em> de la forme de la fenêtre ? Quel facteur multiplicatif faut-il pour reproduire les $8\,\text{nm}$ observés ? Convertissez-le en écart d'épaisseur sur la couche la plus épaisse, puis comparez cet écart systématique à la sévérité $\Delta d$ étudiée en Q25. Expliquez pourquoi le modèle gaussien indépendant de Q25 ne permet pas, à lui seul, de déclarer ce biais commun couvert.</p>
+                            <p>Expliquez enfin pourquoi la <em>perte de transmission</em> seule ne suffit pas à désigner une couche unique.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qbox">
+                    <div class="flex items-start gap-3">
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q27</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Niveau 3 — Expertise : construction méthodologique, décision argumentée, esprit critique">&#9733;&#9733;&#9733;</span></div>
+                        <div class="text-sm text-slate-800">
+                            <strong>Bilan métrologique et traçabilité :</strong> reliez l'erreur aléatoire couche par couche, mesurée par $\Delta d$, à la dispersion observée sur les tirages. Formulez une tolérance d'épaisseur issue des centiles défavorables, pas du seul nominal. Traduisez-les ensuite en recommandation pour la balance à quartz en indiquant explicitement les données encore nécessaires : facteur d'outillage, densité, Z-ratio, stabilité du taux, historique de calibration et validation matériau par matériau. <strong>Aucune consigne instrumentale chiffrée ne doit être donnée sans ces données</strong> — dites-le explicitement dans votre conclusion.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PARTIE -->
+        <!-- PARTIE -->
+        <section id="ex10" class="bg-white rounded-3xl shadow-lg border-2 border-emerald-400 overflow-hidden">
+            <div class="bg-emerald-50 border-b border-emerald-200 px-8 py-4">
+                <h2 class="text-xl font-bold text-emerald-950 flex flex-wrap items-center justify-between gap-2">X. Revue de conception — dossier de qualification industriel <span class="text-xs font-bold text-emerald-900 bg-emerald-200 px-3 py-1 rounded-full">⏱ 75 min indicatives</span></h2>
+            </div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Accès direct — prérequis :</strong> avoir réalisé Q15 et au moins une qualification complète parmi Q25 ou une extension personnelle ; savoir lire un centile, un intervalle de confiance et un rendement. Les autres familles de filtres peuvent être omises.</div>
+            <div class="p-6 space-y-4">
+                <div class="bg-emerald-50 border-l-4 border-emerald-500 p-3 text-xs text-emerald-950 rounded-r-lg"><strong>Livrable :</strong> une fiche de décision d'une page, suffisamment explicite pour qu'un autre binôme puisse reproduire la simulation et contester la conclusion.</div>
+
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q28</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Contrat de qualification :</strong> choisissez le passe-bande Fresnel ou une extension personnalisée préalablement validée. Passez le simulateur en mode <code>Étudiant → X. Revue de conception</code>. Vérifiez les milieux extérieurs, puis écrivez avant tout calcul la fenêtre, l'incidence, la polarisation, la métrique, <strong>les bandes exactes</strong>, la grille de calcul, les <strong>tolérances d'acceptation</strong>, $d_{min}$, $\Delta d$ et le rendement minimal exigé. Reportez ce dernier dans le champ <em>Rendement exigé</em>. Distinguez exigences et simples objectifs d'amélioration.</div></div></div>
+
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q29</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Audit de fabricabilité nominale :</strong> produisez le tableau matériau/épaisseur/ordre, puis <strong>établissez vous-même</strong> nombre de couches et de matériaux, $d_{min}$, $d_{max}$ et épaisseur totale — le simulateur ne les affiche pas ; le bouton <em>« vérifier mon audit »</em> n'est là que pour contrôler votre résultat une fois celui-ci écrit. Identifiez les couches sous le seuil, les épaisseurs incompatibles avec la résolution et toute complexité non justifiée par le gain optique. <em>Remarque à discuter :</em> sur un empilement quart d'onde à 550 nm, la couche la plus fine mesure $d_{min} = 58{,}0\,\text{nm}$ ($ZnS$), soit près de soixante fois le seuil $d_{min}=1$ nm. Ce garde-fou est-il alors inactif ? Dans quelles circonstances redevient-il contraignant ?</div></div></div>
+
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q30</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Convergence statistique :</strong> la graine étant figée, les tirages sont rigoureusement identiques d'une exécution à l'autre : exécutez $N=100$, 500 et 1000. Tracez ou tabulez rendement et bornes de l'IC95 % de Wilson. Mesurez la largeur de l'intervalle dans les trois cas : par quel facteur se resserre-t-elle quand $N$ est multiplié par 10, et cela correspond-il à la loi en $1/\sqrt{N}$ ? Expliquez pourquoi les 100 premiers tirages sont utiles pour explorer mais insuffisants pour prononcer la qualification.</div></div></div>
+
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q31</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Niveau 3 — Expertise : construction méthodologique, décision argumentée, esprit critique">&#9733;&#9733;&#9733;</span></div><div class="text-sm text-slate-800"><strong>Pourquoi trois verdicts et non deux ?</strong> À $N=1000$ et $\Delta d=2$ nm, relevez le rendement $\hat p$ et les bornes $p_{inf}$, $p_{sup}$ de son IC95 %. Choisissez ensuite trois valeurs du champ <em>Rendement exigé</em> : une strictement sous $p_{inf}$, une comprise entre $p_{inf}$ et $\hat p$, et une strictement au-dessus de $p_{sup}$. Notez et expliquez les trois verdicts. <em>Pourquoi un design dont l’estimation ponctuelle dépasse l’exigence peut-il rester inconclusif ?</em> Que faudrait-il faire pour lever ce verdict — et pourquoi augmenter $N$ ne garantit-il pas la qualification ?</div></div></div>
+<div class="qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q32</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Niveau 3 — Expertise : construction méthodologique, décision argumentée, esprit critique">&#9733;&#9733;&#9733;</span></div><div class="text-sm text-slate-800 space-y-2">
+                    <p><strong>Revue A/B de la prescription réellement fabriquée.</strong> Vous comparez deux états de la <em>même architecture à 18 couches</em> :</p>
+                    <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                        <li><strong>Design A — référence :</strong> rechargez <code>H L 2H L H L H L 2H L H L H L 2H L H L</code>, sans optimisation ;</li>
+                        <li><strong>Design B — candidat :</strong> repartez exactement de A, figez les couches 1 à 15 et optimisez uniquement 16 à 18 par BFGS.</li>
+                    </ul>
+                    <p>Avant le calcul, écrivez une hypothèse falsifiable : B améliorera-t-il seulement le nominal, ou aussi la borne robuste ? Qualifiez A puis B avec les <em>mêmes</em> bandes, seuils, $d_{min}$, $\Delta d$, $N=1000$, graine et rendement exigé. Capturez A et B dans le comparateur et exigez le voyant vert de comparaison appariée.</p>
+                    <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                        🧠 <strong>Analyse attendue, sans réponse pré-mâchée :</strong> comparez le mérite nominal, $\overline T_{pass}$, le rendement avec IC95 %, P05($Q_r$), P05($\overline T_{pass}$), la fabricabilité et la différence appariée de rendement avec son intervalle. Identifiez les indicateurs qui évoluent dans le même sens et ceux qui révèlent un compromis.
+                    </div>
+                    <p>Prononcez une décision argumentée pour B : <em>adopter</em>, <em>rejeter</em> ou <em>compléter l'étude</em>. Une amélioration nominale sans gain robuste statistiquement défendable ne suffit pas. Votre conclusion doit aussi confirmer que les 18 couches et les quinze premières épaisseurs ont été conservées, puis citer au moins deux limites du modèle de fabrication.</p>
+                </div></div></div>
+            </div>
+        </section>
+
+        <!-- ATELIER LIBRE -->
+        <section id="atelier" class="bg-white rounded-3xl shadow-lg border-2 border-fuchsia-400 overflow-hidden">
+            <div class="bg-fuchsia-50 border-b border-fuchsia-200 px-8 py-4">
+                <h2 class="text-xl font-bold text-fuchsia-950 flex flex-wrap items-center justify-between gap-2">
+                    🎨 Atelier libre — concevez votre propre composant
+                    <span class="text-xs font-bold text-fuchsia-900 bg-fuchsia-200 px-3 py-1 rounded-full">Hors barème · en libre service</span>
+                </h2>
+            </div>
+            <div class="p-6 space-y-4 text-sm text-slate-800">
+                <figure id="fig-cycle" class="my-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Le cycle de conception, de l'idée au dossier de faisabilité</figcaption>
+                    <div class="p-3">
+<svg viewBox="0 0 640 185" style="width:100%;height:auto;max-height:320px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="cycle du concepteur">
+  <rect x="24" y="52" width="92" height="52" rx="8" fill="#4f46e5"/><text x="70.0" y="68" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">Départ</text><text x="70.0" y="81" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">physique</text><circle cx="36" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="36" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">1</text><line x1="116" y1="78" x2="128" y2="78" stroke="#64748b" stroke-width="2"/><polygon points="128,78 121,74 121,82" fill="#64748b"/><rect x="128" y="52" width="92" height="52" rx="8" fill="#4f46e5"/><text x="174.0" y="74" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">BFGS</text><circle cx="140" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="140" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">2</text><line x1="220" y1="78" x2="232" y2="78" stroke="#64748b" stroke-width="2"/><polygon points="232,78 225,74 225,82" fill="#64748b"/><rect x="232" y="52" width="92" height="52" rx="8" fill="#f59e0b"/><text x="278.0" y="74" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">Aiguille</text><circle cx="244" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="244" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">3</text><line x1="324" y1="78" x2="336" y2="78" stroke="#64748b" stroke-width="2"/><polygon points="336,78 329,74 329,82" fill="#64748b"/><rect x="336" y="52" width="92" height="52" rx="8" fill="#ef4444"/><text x="382.0" y="74" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">Nettoyage</text><circle cx="348" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="348" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">4</text><line x1="428" y1="78" x2="440" y2="78" stroke="#64748b" stroke-width="2"/><polygon points="440,78 433,74 433,82" fill="#64748b"/><rect x="440" y="52" width="92" height="52" rx="8" fill="#10b981"/><text x="486.0" y="74" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">Arbitrage</text><circle cx="452" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="452" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">5</text><line x1="532" y1="78" x2="544" y2="78" stroke="#64748b" stroke-width="2"/><polygon points="544,78 537,74 537,82" fill="#64748b"/><rect x="544" y="52" width="92" height="52" rx="8" fill="#0f172a"/><text x="590.0" y="74" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">Faisabilité</text><circle cx="556" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="556" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">6</text>
+  <path d="M 278 110 Q 226.0 156 174 110" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5 3"/><polygon points="174,110 168,122 182,120" fill="#f59e0b"/><text x="164.4" y="150" font-size="10" fill="#b45309" font-weight="600" font-family="Inter,system-ui,sans-serif">répéter tant que le mérite baisse</text>
+  <text x="24" y="34" font-size="11" fill="#0f172a" font-weight="700" font-family="Inter,system-ui,sans-serif">Le cycle de conception — consignez le mérite à chaque étape</text>
+  <text x="24" y="178" font-size="10" fill="#475569" font-family="Inter,system-ui,sans-serif">Un design sans étape 6 n'est pas un livrable : c'est un brouillon.</text>
+</svg>
+                    </div>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">Les étapes 2 et 3 alternent : BFGS exploite les couches existantes, l'aiguille en crée une nouvelle quand BFGS sature. L'étape 4 est celle que l'on oublie et qui décide de la fabricabilité. L'étape 5 tranche entre performance et simplicité. L'étape 6 est la seule qui transforme un calcul en composant.</p>
+                </figure>
+
+                <p class="bg-fuchsia-50 border-l-4 border-fuchsia-500 p-3 rounded-r text-xs text-fuchsia-950">
+                    Les dix grands exercices vous ont imposé des cahiers des charges. <strong>Ici, c'est vous qui les écrivez.</strong>
+                    Le simulateur accepte n'importe quelle cible spectrale : il devient un outil de conception réutilisable
+                    bien au-delà de ce TP — pour un projet, un stage, ou simplement pour tester une idée.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="border border-slate-200 rounded-lg p-3 space-y-2">
+                        <h3 class="font-bold text-slate-900 text-sm">🚀 Déclarer la cible — 30 secondes</h3>
+                        <ol class="list-decimal list-inside text-xs space-y-1 text-slate-700">
+                            <li>Touche <code class="bg-slate-100 px-1 rounded font-mono">D</code> — ou bouton <strong>🎯 Design libre</strong> dans l'en-tête.</li>
+                            <li>Cliquez sur <strong>+ Segment</strong>, puis traduisez chaque exigence en une ligne du tableau.</li>
+                            <li>Saisissez λ min, λ max, grandeur T/R/A, angle, polarisation, cible et poids.</li>
+                            <li>Sauvegardez-la (<code>↓</code>) : c'est votre cahier des charges, il ne doit plus bouger pendant la conception.</li>
+                        </ol>
+                    </div>
+                    <div class="border border-slate-200 rounded-lg p-3 space-y-2">
+                        <h3 class="font-bold text-slate-900 text-sm">⚙️ Ce que fait le mérite</h3>
+                        <p class="text-xs text-slate-700">La note est une <strong>RMSE pondérée</strong> entre votre réponse calculée et votre cible, sur les seuls segments que vous avez déclarés :</p>
+                        <div class="equation text-center text-xs text-fuchsia-900">
+                            $$\mathrm{RMSE}=\sqrt{\frac{\sum_i w_i\left(X_i-C_i\right)^2}{\sum_i w_i}}$$
+                        </div>
+                        <p class="text-xs text-slate-700">Tout ce que vous ne couvrez pas est <strong>« indifférent »</strong> et n'entre pas dans le score. Le poids $w_i$ permet de dire qu'une bande compte plus qu'une autre. C'est exactement la structure d'une spécification industrielle.</p>
+                    </div>
+                </div>
+
+                <!-- Méthode du concepteur -->
+                <div class="border-2 border-indigo-300 rounded-xl overflow-hidden">
+                    <div class="bg-indigo-900 text-white px-4 py-2.5">
+                        <h3 class="font-bold text-sm">🛠️ La méthode du concepteur — c'est un métier, pas un clic</h3>
+                        <p class="text-[11px] text-indigo-200 mt-0.5">Déclarer une cible et appuyer sur « Optimiser » ne produit presque jamais un bon composant. La conception réelle est un <strong>cycle itératif</strong> que vous devez conduire vous-même, et qui ne s'achève qu'à l'étude de faisabilité.</p>
+                    </div>
+                    <div class="p-4 space-y-3 text-xs">
+
+                        <div class="flex gap-3">
+                            <span class="shrink-0 w-7 h-7 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center">1</span>
+                            <div>
+                                <strong class="text-slate-900">Choisir une solution de départ — jamais au hasard.</strong>
+                                <p class="text-slate-700 mt-0.5">L'optimiseur est <em>local</em> : il descend dans la vallée où vous le posez. Partez d'une structure que la physique justifie — un quart d'onde pour un antireflet, <code>(HL)^n</code> pour un miroir, <code>(HL)^n 2H (LH)^n</code> pour un passe-bande — et centrée sur la bonne longueur d'onde. Une bonne initialisation vaut mieux que n'importe quel algorithme.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <span class="shrink-0 w-7 h-7 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center">2</span>
+                            <div>
+                                <strong class="text-slate-900">Raffiner les épaisseurs par Quasi-Newton (BFGS).</strong>
+                                <p class="text-slate-700 mt-0.5">Lancez l'optimiseur <strong>Quasi-Newton (BFGS)</strong> avec la touche <code class="bg-slate-100 px-1 rounded font-mono">O</code>. Il ajuste les épaisseurs <em>à structure constante</em> : il ne créera jamais une couche, il ne fera qu'exploiter au mieux celles que vous lui donnez. Notez le mérite avant et après.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <span class="shrink-0 w-7 h-7 rounded-full bg-amber-500 text-white font-bold flex items-center justify-center">3</span>
+                            <div>
+                                <strong class="text-slate-900">Enrichir la structure : cycles aiguille → optimisation.</strong>
+                                <p class="text-slate-700 mt-0.5">Quand BFGS ne progresse plus, c'est que la <em>structure</em> est limitante, pas les épaisseurs. Lancez <strong>📍 Analyser Aiguille</strong> (touche <code class="bg-slate-100 px-1 rounded font-mono">N</code>) : le diagnostic $\pi(z)$ vous indique où insérer une couche ultra-fine d'un autre matériau. Insérez, puis <strong>réoptimisez immédiatement par BFGS</strong>. Recommencez.</p>
+                                <p class="text-slate-700 mt-1"><strong>Quand s'arrêter ?</strong> Quand un cycle complet ne fait plus baisser le mérite de façon significative, ou quand l'aiguille ne trouve plus de maximum positif. Tenez un journal : nombre de couches et mérite à chaque cycle. La courbe « mérite en fonction du nombre de couches » <em>est</em> un résultat de conception.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <span class="shrink-0 w-7 h-7 rounded-full bg-rose-500 text-white font-bold flex items-center justify-center">4</span>
+                            <div>
+                                <strong class="text-slate-900">Nettoyer l'empilement — l'étape que tout le monde oublie.</strong>
+                                <p class="text-slate-700 mt-0.5">Après quelques cycles, votre empilement contient des tranches de 0,1 nm et des couches voisines du même matériau. <strong>Aucune n'est déposable.</strong> Deux outils :</p>
+                                <ul class="list-disc list-inside text-slate-700 mt-1 space-y-0.5">
+                                    <li><strong>Bouton 🧹 Nettoyer</strong> (en haut du panneau <em>2. Empilement de Couches</em>) : fixez un seuil, il supprime toutes les couches plus fines <em>et fusionne</em> les couches adjacentes de même matériau. Il vous annonce ensuite le nombre de couches gagnées et le mérite perdu.</li>
+                                    <li><strong>Suppression ligne à ligne :</strong> colonne <em>Action</em> du tableau des couches, pour retirer une couche précise que vous jugez inutile.</li>
+                                </ul>
+                                <p class="text-slate-700 mt-1"><strong>Puis réoptimisez</strong> : les épaisseurs restantes doivent absorber ce qui a été retiré. Vous serez souvent surpris — un empilement de 7 couches peut se réduire à 2 sans perte mesurable. Une couche qui ne coûte rien à supprimer ne servait à rien.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <span class="shrink-0 w-7 h-7 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center">5</span>
+                            <div>
+                                <strong class="text-slate-900">Arbitrer : performance contre complexité.</strong>
+                                <p class="text-slate-700 mt-0.5">Chaque couche ajoutée coûte du temps machine, une source d'erreur supplémentaire et un risque de rebut. Comparez vos designs successifs : combien de points de mérite gagne la 8ᵉ couche ? Si la réponse est « presque rien », la bonne décision d'ingénieur est de la supprimer. <strong>Le meilleur design n'est pas le plus performant : c'est le plus simple qui satisfait le cahier des charges.</strong></p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <span class="shrink-0 w-7 h-7 rounded-full bg-slate-800 text-white font-bold flex items-center justify-center">6</span>
+                            <div>
+                                <strong class="text-slate-900">Conclure par l'étude de faisabilité — sinon le travail n'est pas fini.</strong>
+                                <p class="text-slate-700 mt-0.5">Un design n'existe que s'il est déposable. Reprenez le protocole du TP sur <em>votre</em> composant :</p>
+                                <ul class="list-disc list-inside text-slate-700 mt-1 space-y-0.5">
+                                    <li><strong>Audit nominal</strong> : nombre de couches et de matériaux, $d_{min}$, $d_{max}$, épaisseur totale. Une couche sous le seuil de dépôt disqualifie le design.</li>
+                                    <li><strong>Qualification statistique</strong> : <em>Évaluer la robustesse</em>, $N=1000$. Rapportez rendement, IC95 %, centile défavorable et taux de fabricabilité.</li>
+                                    <li><strong>Sensibilité à $\Delta d$</strong> : déterminez la précision de dépôt à exiger du procédé pour tenir le rendement visé.</li>
+                                    <li><strong>Décision</strong> : <em>qualifié</em>, <em>qualifié sous conditions</em> ou <em>non qualifié</em>, avec vos hypothèses et au moins deux limites du modèle.</li>
+                                </ul>
+                                <p class="text-slate-700 mt-1">Un design « optimisé » sans étude de faisabilité n'est pas un livrable : c'est un brouillon.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-indigo-50 border-l-4 border-indigo-500 p-2.5 rounded-r text-[11px] text-indigo-950">
+                            <strong>Le cycle en une ligne :</strong> <span class="font-mono">départ physique → BFGS → (aiguille → BFGS)ⁿ → nettoyage → BFGS → arbitrage → faisabilité</span>. Consignez le mérite à chaque étape : c'est votre trace de conception, et c'est ce qui est évalué.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r text-xs text-amber-950">
+                    <strong>⚠️ Trois pièges que le TP vous a appris à éviter — ils s'appliquent aussi ici :</strong>
+                    <ul class="list-disc list-inside mt-1 space-y-0.5">
+                        <li><strong>Ne spécifiez pas ce que la physique interdit.</strong> Une cible T = 100 % sur 400–1000 nm avec un substrat absorbant est irréalisable : l'optimiseur convergera vers un compromis médiocre sans vous prévenir.</li>
+                        <li><strong>Laissez des zones indifférentes.</strong> Une transition abrupte a besoin de place : si vous spécifiez 100 % à 550 nm et 0 % à 555 nm, aucun empilement fini n'y parviendra.</li>
+                        <li><strong>Un bon score nominal ne vaut rien seul.</strong> Passez systématiquement par la qualification statistique avant de déclarer un design bon.</li>
+                    </ul>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="font-bold text-slate-900 text-sm">🎯 Six défis, du plus simple au plus exigeant</h3>
+                    <div class="grid md:grid-cols-2 gap-2 text-xs">
+                        <div class="border border-emerald-200 bg-emerald-50/60 rounded p-2"><span class="text-emerald-600 font-bold">★☆☆</span> <strong>Miroir froid.</strong> $R \ge 95\,\%$ <em>en tout point</em> de $700-850$ nm, et $\overline{T} \ge 85\,\%$ sur $420-650$ nm. Combien de couches vous faut-il ? <em>Repère : un empilement quart d'onde centré à 775 nm y parvient ; cherchez le nombre minimal.</em></div>
+                        <div class="border border-emerald-200 bg-emerald-50/60 rounded p-2"><span class="text-emerald-600 font-bold">★☆☆</span> <strong>Antireflet d'une seule couleur.</strong> Visez $\overline{R} \le 1\,\%$ sur $530-570$ nm uniquement, avec ZnS/YF₃ sur BK7. Comparez au large bande de Q16 : le prix de la largeur de bande. <em>Vous n'atteindrez pas 0,2 % : comparez $n_L=1{,}469$ à l'indice idéal $\sqrt{n_{BK7}}=1{,}232$ de Q10, et concluez sur ce qui limite — l'algorithme ou les matériaux ?</em></div>
+                        <div class="border border-amber-200 bg-amber-50/60 rounded p-2"><span class="text-amber-600 font-bold">★★☆</span> <strong>Filtre coupe-bande (notch).</strong> Essayez de bloquer $T \le 1\,\%$ sur $525-545$ nm en gardant $\overline{T} \ge 80\,\%$ ailleurs dans le visible. <em>Mesurez la largeur réellement obtenue sous 10 % de transmission : elle ne descendra pas sous ≈ 150 nm, quel que soit le nombre de couches. Reliez cette limite au contraste d'indice de Q4 et dites quel couple de matériaux il faudrait pour un notch de 20 nm.</em></div>
+                        <div class="border border-amber-200 bg-amber-50/60 rounded p-2"><span class="text-amber-600 font-bold">★★☆</span> <strong>Séparateur 50/50.</strong> $R=T=50\,\%$ sur $450-650$ nm, RMSE visée $\le 18$ points. <em>Une cible non extrême est plus dure qu'une cible extrême : $R=0$ ou $R=1$ sont des points naturels de l'interférence, $R=50\,\%$ ne l'est pas. Vérifiez qu'ajouter des couches n'aide presque plus au-delà de 3, et expliquez pourquoi.</em></div>
+                        <div class="border border-rose-200 bg-rose-50/60 rounded p-2"><span class="text-rose-600 font-bold">★★★</span> <strong>Le vôtre, qualifié.</strong> Écrivez un cahier des charges complet, atteignez-le, puis qualifiez-le ($N=1000$). Rendez la fiche de décision de Q28–Q32 sur <em>votre</em> composant.</div>
+                        <div class="border border-rose-200 bg-rose-50/60 rounded p-2"><span class="text-rose-600 font-bold">★★★</span> <strong>Le duel.</strong> Faites concevoir une cible par un autre binôme, échangez les fichiers JSON, et qualifiez le design de l'autre. Défendez ou réfutez sa conclusion.</div>
+                    </div>
+                </div>
+
+                <p class="text-xs text-slate-600 bg-slate-50 border-l-4 border-slate-300 p-2 rounded-r">
+                    <strong>Conservez votre travail :</strong> les boutons <code>↓</code> et <code>↑</code> de l'éditeur exportent et réimportent votre cible au format JSON. Un cahier des charges enregistré peut être repris, transmis à un camarade, ou versé à un compte rendu comme pièce justificative.
+                </p>
+            </div>
+        </section>
+
+        <!-- BIBLIOGRAPHIE & RESSOURCES -->
+        <section class="bg-slate-800 text-white rounded-3xl shadow-lg border border-slate-700 overflow-hidden mt-8">
+            <div class="bg-slate-900 border-b border-slate-700 px-8 py-4">
+                <h2 class="text-xl font-bold flex items-center gap-2">
+                    📚 Bibliographie & Ressources à consulter
+                </h2>
+            </div>
+            <div class="p-6 space-y-4 text-sm text-slate-300">
+                <ul class="list-disc list-inside space-y-3">
+                    <li><strong>Document de cours du BUT :</strong> <a href="theorie en francais.html" target="_blank" class="text-indigo-400 hover:text-indigo-300 hover:underline font-bold">Théorie des couches minces optiques</a>.</li>
+                    <li><strong>La Bible de l'ingénierie optique :</strong> H.A. Macleod, <i>"Thin-Film Optical Filters"</i> (CRC Press).</li>
+                    <li><strong>Base de données de dispersion :</strong> <a href="https://refractiveindex.info" target="_blank" class="text-indigo-400 hover:text-indigo-300 hover:underline">refractiveindex.info</a>.</li>
+                    <li><strong>Fondements théoriques :</strong> Max Born & Emil Wolf, <i>"Principles of Optics"</i>.</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 px-6 text-center text-xs border-t border-slate-800">
+        <p class="font-bold text-white mb-1">BUT 3 FI Parcours MCPC — étudiants L2 · L3 · M1 · M2 — Institut Fresnel 2026</p>
+        <p class="text-slate-500">Parcours modulaire de simulation des couches minces optiques</p>
+    </footer>
+
+    <script>
+    // Surlignage de la section courante dans la barre de navigation.
+    (function () {
+        const links = [...document.querySelectorAll('.navlink')];
+        const targets = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+        if (!targets.length) return;
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (!e.isIntersecting) return;
+                links.forEach(l => l.classList.remove('active'));
+                const link = links.find(l => l.getAttribute('href') === '#' + e.target.id);
+                if (link) link.classList.add('active');
+            });
+        }, { rootMargin: '-20% 0px -70% 0px' });
+        targets.forEach(t => obs.observe(t));
+    })();
+    </script>
+
+</body>
+</html>
