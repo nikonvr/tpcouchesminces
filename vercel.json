@@ -2,13 +2,6 @@
   "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
-  "redirects": [
-    {
-      "source": "/(.*)\\.md",
-      "destination": "/",
-      "permanent": false
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",

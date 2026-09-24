@@ -20,3 +20,15 @@ npm-debug.log*
 Thumbs.db
 .vscode/
 .idea/
+
+# Documents enseignants : ils contiennent les réponses et ne doivent JAMAIS
+# être publiés (le dépôt GitHub est public). Ils restent sur le poste local.
+CORRIGE*.md
+REPONSES*.md
+*_results.md
+COMPARAISON*.md
+A_LIRE*.md
+enseignant/
+
+# Outils locaux
+.claude/

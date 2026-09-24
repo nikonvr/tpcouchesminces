@@ -1,28 +1,55 @@
-# TP Couches Minces Optiques (12h Simulation + Salle Blanche)
+# TP Couches Minces Optiques — simulation et salle blanche
 
-Dispositif complet de Travaux Pratiques de Simulation de Couches Minces Optiques adossé au dépôt sous vide à l'Institut Fresnel (Formation BUT 3 Parcours MCPC / Master Photonique).
+Dispositif de travaux pratiques de simulation de couches minces optiques,
+adossé au dépôt sous vide à l'Institut Fresnel.
+Public : BUT 3 FI Parcours MCPC — étudiants L2 · L3 · M1 · M2.
 
-## 🚀 Contenu du Dépôt
+Portail en ligne : <https://tpcouchesminces.vercel.app>
 
-1. **Simulateur Web Interactif** :
-   - simulateur_couches_minces.html : Banc de mesure virtuel autonome fondé sur la méthode matricielle d'Abelès (TMM). Intègre 5 algorithmes d'optimisation (Descente Locale, Monte-Carlo, Recuit Simulé, Méthode de l'Aiguille / Needle interactive, Quasi-Newton BFGS), analyse de polarisation S/P, tolérancement de fabrication et mesure $.
+## Contenu
 
-2. **Énoncés Bilingues (12h en 4 séances de 3h — 32 questions)** :
-   - 	p_couches_minces_fr.html : Version française intégrale avec guidage pas-à-pas, analyses d'admittance et rétro-ingénierie salle blanche.
-   - 	p_couches_minces_en.html : Version anglaise complète rigoureusement alignée en miroir 1-to-1.
-   - 	heorie en francais.html : Document de cours et rappels théoriques exhaustifs sur les interférences en couches minces.
+| Fichier | Rôle |
+|---|---|
+| `index.html` | Portail étudiant |
+| `simulateur_couches_minces.html` | Simulateur autonome : méthode matricielle d'Abelès (TMM), polarisations S/P, optimisation quasi-Newton BFGS, méthode de l'aiguille, analyseur de bandes, qualification Monte-Carlo |
+| `tp_couches_minces_fr.html` | Énoncé français — 10 exercices, 32 questions, durées indicatives |
+| `tp_couches_minces_en.html` | Énoncé anglais, homologue strict du français |
+| `theorie en francais.html` | Cours et rappels théoriques |
+| `outputs/tp_couches_minces/squelette_excel_couches_minces.xlsx` | Classeur étudiant pour Q12 (matrice d'une couche) et Q14 (cartographie 2D) |
+| `outputs/tp_couches_minces_hors_ligne/` | Paquet autonome pour les salles sans réseau, avec manifeste SHA-256 |
+| `GUIDE_MIGRATION_ET_ACTIONS_TP.md` | Référentiel enseignant : invariants, conventions, recette |
+| `tests/` | Recette automatisée (voir `tests/README.md`) |
 
-3. **Manuels & Références Pédagogiques** :
-   - GUIDE_MIGRATION_ET_ACTIONS_TP.md : Manuel de référence pédagogique, architecture modulaire et guide enseignant.
-   - gemini_flash_results.md : Corrigé chiffré exact obtenu par exécution directe du moteur de simulation.
-   - CORRIGE_REPONSES.md : Guide de correction détaillé.
-   - COMPARAISON_IA.md : Analyse croisée de validation et métrologie.
+Le simulateur ne contient qu'**un seul** algorithme d'optimisation, BFGS.
+La méthode de l'aiguille n'optimise pas : elle crée une couche, que BFGS
+raffine ensuite.
 
-4. **Kits & Outils Hors-Ligne** :
-   - outputs/tp_couches_minces/squelette_excel_couches_minces.xlsx : Squelette Excel pour la programmation matricielle $, la cartographie 2D et la fonction de mérite RMSE.
-   - outputs/tp_couches_minces_hors_ligne/ : Version 100% autonome sans connexion internet (fonts, Tailwind, MathJax, Chart.js et Lucide embarqués localement).
-   - 	ests/ : Suite de tests automatisés (physique, algorithmes, garde-fous).
+## Utilisation
 
-## 💻 Utilisation
+Ouvrir `simulateur_couches_minces.html` ou `tp_couches_minces_fr.html` dans un
+navigateur récent. Aucune installation. Hors ligne : ouvrir
+`outputs/tp_couches_minces_hors_ligne/index.html`.
 
-Ouvrez simplement simulateur_couches_minces.html ou 	p_couches_minces_fr.html dans n'importe quel navigateur moderne (Edge, Chrome, Firefox, Safari). Aucune installation ni serveur requis.
+Le simulateur s'ouvre en **mode libre**. Pour les exercices, cliquer sur
+**🎓 Étudiant** puis choisir l'exercice : c'est ce qui rend disponibles les
+mérites « R moyen » et « Maximiser Qr ».
+
+## Maintenance
+
+```bash
+python tests/lancer.py           # recette complète, code de retour 0/1
+python .sync_offline.py          # régénère le paquet hors ligne et son manifeste
+```
+
+Après toute modification d'un énoncé, du cours ou du simulateur : relancer
+`.sync_offline.py`, puis la recette.
+
+## Publication
+
+Le dépôt est **public**. Les documents enseignants qui contiennent des réponses
+(corrigé, comparaisons, copies d'IA) sont exclus par `.gitignore` et restent
+sur le poste de l'enseignant.
+
+Le site Vercel ne reçoit que la liste blanche de `.vercelignore` : portail,
+simulateur, énoncés, cours et dossier `outputs/`. Tout autre fichier du dépôt
+n'est jamais publié, quelle que soit l'URL demandée.

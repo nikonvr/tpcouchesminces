@@ -1,0 +1,15 @@
+# Site étudiant : on n'envoie à Vercel QUE ce qui est destiné aux étudiants.
+#
+# Liste blanche. Tout ce qui n'est pas explicitement autorisé ci-dessous —
+# corrigés, rapports, tests, scripts, guide enseignant, futurs documents —
+# n'est jamais téléversé, donc inaccessible quelle que soit l'URL tentée.
+# Une redirection, elle, ne filtre qu'une écriture de l'URL : « %2E » à la
+# place du point suffisait à la contourner.
+/*
+!/index.html
+!/simulateur_couches_minces.html
+!/tp_couches_minces_fr.html
+!/tp_couches_minces_en.html
+!/theorie en francais.html
+!/outputs
+!/vercel.json
