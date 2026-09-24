@@ -440,7 +440,7 @@ La prescription à 18 couches est désormais un invariant commun au simulateur, 
 
 ### 14.7 Avis global
 
-La recette du §13 est automatisée (`tests/`) et a été exécutée avec succès le 24 septembre 2026, y compris la vérification en ligne du §13.5. Le dispositif est de niveau professionnel et adapté à un public BUT 3 avancé, Master ou école d’ingénieurs. Sa valeur tient moins au nombre de fonctionnalités qu’à la cohérence entre mesure, optimisation locale, fabricabilité, statistiques et dépôt réel.
+La recette du §13 est automatisée (`tests/`) ; sa partie hors ligne a été exécutée avec succès le 24 septembre 2026, et la vérification en ligne du §13.5 confirme que le site n’expose plus aucun fichier non publié. Un seul point de cette vérification dépend de la visibilité du dépôt : tant que celui-ci reste public, son historique git conserve le corrigé et le contrôle correspondant échoue ; il passe dès que le dépôt n’est plus public. Le dispositif est de niveau professionnel et adapté à un public BUT 3 avancé, Master ou école d’ingénieurs. Sa valeur tient moins au nombre de fonctionnalités qu’à la cohérence entre mesure, optimisation locale, fabricabilité, statistiques et dépôt réel.
 
 ---
 
