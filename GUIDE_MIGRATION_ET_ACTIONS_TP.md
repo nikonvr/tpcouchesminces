@@ -3,8 +3,8 @@
 **Statut :** version consolidée, seule documentation Markdown de référence  
 **Niveau :** BUT 3, Master, école d’ingénieurs  
 **Langues :** français et anglais  
-**Dernière remise à niveau :** 30 août 2026  
-**Recette du corpus :** validée le 30 août 2026  
+**Dernière remise à niveau :** 24 septembre 2026  
+**Recette du corpus :** automatisée — `python tests/lancer.py` (voir §13)  
 
 ---
 
@@ -20,9 +20,12 @@ Le corpus actif comprend :
 - `outputs/tp_couches_minces/squelette_excel_couches_minces.xlsx` : classeur limité aux activités qui exigent réellement Excel ;
 - `audit_verification_numerique.py` : recette numérique indépendante ;
 - `.sync_offline.py` : génération reproductible du paquet autonome et de son manifeste SHA-256 ;
-- `outputs/tp_couches_minces_hors_ligne/` : paquet autonome destiné aux salles sans accès réseau.
+- `outputs/tp_couches_minces_hors_ligne/` : paquet autonome destiné aux salles sans accès réseau ;
+- `index.html` : portail étudiant publié sur <https://tpcouchesminces.vercel.app> ;
+- `tests/` : recette automatisée (`python tests/lancer.py`) ;
+- `.vercelignore` et `vercel.json` : liste blanche de publication et en-têtes du site.
 
-Aucune variante historique, archive de travail ou rapport intermédiaire n’est conservé dans le corpus actif. En cas de contradiction, les invariants du §2 prévalent.
+Aucune variante historique, archive de travail ou rapport intermédiaire n’est conservé dans le corpus actif. **Le dépôt GitHub est public** : le corrigé, les comparaisons et les copies d’IA restent sur le poste de l’enseignant, exclus par `.gitignore`. Ils ne doivent jamais être ajoutés au dépôt, même temporairement : l’historique git les conserverait. En cas de contradiction, les invariants du §2 prévalent.
 
 ---
 
@@ -364,7 +367,9 @@ La recette anglaise recherche notamment les mots français résiduels fréquents
 ### 13.2 Tests numériques
 
 - dioptre air/BK7 à 550 nm : $R\simeq4,24\,\%$ ;
-- conservation en valeurs normalisées : $|R+T+A-1|<10^{-12}$ point par point ;
+- conservation de l’énergie, **sans passer par $A$** : $R+T\le 1$ partout, et $R+T=1$ à $10^{-12}$ près en domaine transparent. Le simulateur définit $A=1-R-T$ : tester $|R+T+A-1|$ serait vrai par construction et n’aurait détecté aucun défaut — c’est ainsi qu’un mélange de conventions d’indice a longtemps survécu ;
+- égalité $R_s=R_p$ à incidence normale, sur couches transparentes, absorbantes et métalliques ;
+- couche métallique épaisse : réflectivité égale à celle du métal semi-infini (formule de Fresnel) ;
 - miroir `(HL)^6H` à 550 nm : valeur indépendante cohérente ;
 - filtre Fresnel : exactement 18 couches et spectres finis sur 430–700 nm ;
 - égalité du calcul $Q_r$ par mesure de bandes et par mérite interne ;
@@ -395,6 +400,12 @@ La recette anglaise recherche notamment les mots français résiduels fréquents
 - manifeste SHA-256 recalculé ;
 - vérification de toutes les empreintes ;
 - ouverture directe ou via serveur local testée.
+
+### 13.5 Publication
+
+- aucun fichier contenant des réponses n’est suivi par git ;
+- `.vercelignore` est une liste blanche : seuls le portail, le simulateur, les énoncés, le cours et `outputs/` sont téléversés. Une redirection ne suffit pas : elle ne filtre qu’une écriture de l’URL (l’écriture `%2E` du point contournait l’ancienne règle) ;
+- vérification en ligne après chaque déploiement : `python tests/lancer.py --en-ligne`.
 
 ---
 
@@ -429,7 +440,7 @@ La prescription à 18 couches est désormais un invariant commun au simulateur, 
 
 ### 14.7 Avis global
 
-La recette du §13 a été exécutée avec succès le 30 août 2026. Le dispositif est de niveau professionnel et adapté à un public BUT 3 avancé, Master ou école d’ingénieurs. Sa valeur tient moins au nombre de fonctionnalités qu’à la cohérence entre mesure, optimisation locale, fabricabilité, statistiques et dépôt réel.
+La recette du §13 est automatisée (`tests/`) et a été exécutée avec succès le 24 septembre 2026, y compris la vérification en ligne du §13.5. Le dispositif est de niveau professionnel et adapté à un public BUT 3 avancé, Master ou école d’ingénieurs. Sa valeur tient moins au nombre de fonctionnalités qu’à la cohérence entre mesure, optimisation locale, fabricabilité, statistiques et dépôt réel.
 
 ---
 
@@ -441,8 +452,8 @@ Toute modification future doit être appliquée dans cet ordre :
 2. modifier le simulateur ;
 3. aligner simultanément les deux énoncés ;
 4. mettre à jour le cours et le classeur si leur périmètre est touché ;
-5. synchroniser le paquet hors ligne ;
-6. exécuter la recette complète ;
+5. synchroniser le paquet hors ligne (`python .sync_offline.py`) ;
+6. exécuter la recette complète (`python tests/lancer.py`) ;
 7. ne diffuser qu’après validation bilingue et numérique.
 
 Une fonctionnalité qui n’est ni enseignée, ni testée, ni documentée ne doit pas rester visible dans l’interface étudiante.

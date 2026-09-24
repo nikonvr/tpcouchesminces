@@ -4,6 +4,8 @@
     python tests/lancer.py              tous les tests
     python tests/lancer.py --court      bilan seul, sans le détail
     python tests/lancer.py physique     un seul module
+    python tests/lancer.py --en-ligne   ajoute la vérification du site et du dépôt
+                                        publics (réseau requis)
 
 Code de retour : 0 si tout passe, 1 sinon — utilisable en vérification de
 routine ou en intégration continue.
@@ -36,6 +38,10 @@ MODULES = [
      "énoncés FR/EN, balisage, homologie, paquet hors ligne"),
 ]
 
+# Hors de la routine : exige le réseau et interroge le site et GitHub.
+MODULE_EN_LIGNE = ("deploiement", "python", "test_deploiement.py",
+                   "site en ligne et dépôt public : rien d'exposé")
+
 
 def interpreteur(nom):
     return sys.executable if nom == "python" else "node"
@@ -65,10 +71,12 @@ def lance(module):
 def principal():
     args = [a for a in sys.argv[1:]]
     court = "--court" in args
+    en_ligne = "--en-ligne" in args
     voulus = [a for a in args if not a.startswith("-")]
-    modules = [m for m in MODULES if not voulus or m[0] in voulus]
+    catalogue = MODULES + ([MODULE_EN_LIGNE] if en_ligne or "deploiement" in voulus else [])
+    modules = [m for m in catalogue if not voulus or m[0] in voulus]
     if not modules:
-        print(f"Module inconnu. Choix : {', '.join(m[0] for m in MODULES)}")
+        print(f"Module inconnu. Choix : {', '.join(m[0] for m in MODULES + [MODULE_EN_LIGNE])}")
         return 2
 
     cible = os.environ.get("TP_SIMULATEUR")

@@ -15,6 +15,7 @@ python tests/lancer.py
 | `python tests/lancer.py` | tout, avec le détail contrôle par contrôle |
 | `python tests/lancer.py --court` | bilan seul |
 | `python tests/lancer.py physique` | un seul module (`physique`, `algorithmes`, `gardefous`, `documents`) |
+| `python tests/lancer.py --en-ligne` | ajoute `deploiement` : interroge le site et GitHub (réseau requis) |
 | `node tests/test_physique.js` | module physique isolé |
 | `python tests/test_documents.py` | module documents isolé |
 
@@ -92,7 +93,7 @@ conventions d'indice, écriture hors périmètre, remontée du coût, mérite an
 faux, intervalle incohérent. Il mesure aussi leur surcoût, qui doit rester
 sous 15 % sur le chemin critique.
 
-### `test_documents.py` — 98 contrôles
+### `test_documents.py` — contrôles hors ligne
 
 Présence et encodage des quatre documents, prescription à 18 couches identique
 partout, bandes spectrales, hypothèses du modèle ($\sigma$, graine, couches
@@ -105,6 +106,24 @@ absence de français dans l'anglais et réciproquement, absence de résultat
 pré-mâché, intégrité du paquet hors ligne (aucune ressource distante,
 bibliothèques embarquées, **copies à jour vis-à-vis des sources**, manifeste
 SHA-256 recalculé fichier par fichier).
+
+**Publication** : aucun document de réponses suivi par git (le dépôt est
+public), aucune valeur propre au corrigé dans un fichier suivi, aucun caractère
+de contrôle parasite, liste blanche `.vercelignore` rejouée sur des chemins
+réels, pas de redirection des `.md` servant de protection.
+
+**Cohérence énoncé ↔ outils** : consigne « mode Étudiant » placée avant Q15,
+axes du classeur Q14 identiques à l'énoncé, portail et README sans algorithme
+inexistant ni lien vers le dépôt source.
+
+### `test_deploiement.py` — en ligne, hors routine
+
+Interroge le site déployé et GitHub **sans authentification**, comme le ferait
+un étudiant. Vérifie que le site sert le matériel étudiant identique au commit
+`HEAD` ; qu'aucun fichier non publié n'est atteint sous une centaine
+d'écritures d'URL (dont `%2E` à la place du point, qui contournait l'ancienne
+redirection) ; et que le dépôt public n'expose aucun corrigé, **historique
+compris**. À lancer après chaque déploiement.
 
 ## Ajouter un test
 

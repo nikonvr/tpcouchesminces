@@ -13,6 +13,7 @@ import html as htmllib
 import io
 import os
 import re
+import subprocess
 import sys
 import unicodedata
 
@@ -79,7 +80,7 @@ DOCS = {}
 titre("TESTS DES DOCUMENTS — énoncés, simulateur, cours, paquet hors ligne")
 
 groupe("1. Présence et lisibilité des fichiers du corpus")
-for nom in (SIMULATEUR, ENONCE_FR, ENONCE_EN, COURS):
+for nom in (SIMULATEUR, ENONCE_FR, ENONCE_EN, COURS, "index.html"):
     chemin = os.path.join(RACINE, nom)
     existe = os.path.isfile(chemin)
     verifie(f"« {nom} » est présent", existe)
@@ -229,6 +230,16 @@ for nom, src in DOCS.items():
     n = len(re.findall(r"(?<!\\)\$", sans_bloc))
     verifie(f"« {nom} » : les délimiteurs mathématiques vont par paires",
             n % 2 == 0, f"{n} délimiteurs « $ » isolés ou impairs")
+
+# Une page qui écrit des formules sans charger MathJax les affiche en clair :
+# le portail montrait ainsi « $Q_r$ » aux étudiants.
+for nom, src in DOCS.items():
+    formules = segments_math(sans_code(src))
+    charge = re.search(r"<script[^>]*src=\"[^\"]*mathjax", src, re.I) is not None
+    verifie(f"« {nom} » : ses formules sont rendues (MathJax chargé, ou aucune formule)",
+            charge or not formules,
+            f"{len(formules)} formule(s) affichée(s) en clair, ex. ${formules[0].strip()[:30]}$"
+            if formules else "")
 
 # Les commandes LaTeX employées doivent exister dans la configuration MathJax
 # livrée : une macro inconnue s'affiche en rouge dans la page de l'étudiant.
@@ -452,6 +463,187 @@ else:
                 not fantomes, f"{len(fantomes)} : {fantomes[:3]}")
         verifie("toutes les empreintes correspondent au contenu réel",
                 not differents, f"{len(differents)} : {differents[:3]}")
+
+        # Le manifeste doit rester juste APRÈS passage par git. Deux conditions :
+        # des fichiers texte en LF, et des octets que git ne convertit pas.
+        # Sans elles, le manifeste publié ne correspondait pas aux fichiers
+        # publiés : 4 échecs sur 42 pour quiconque téléchargeait le paquet.
+        crlf = []
+        for rel in reels:
+            if rel.endswith((".html", ".css", ".js", ".md", ".txt", ".svg")):
+                with io.open(os.path.join(dossier, rel), "rb") as fh:
+                    if b"\r\n" in fh.read():
+                        crlf.append(rel)
+        verifie("les fichiers texte du paquet hors ligne sont en fins de ligne LF",
+                not crlf, f"{len(crlf)} en CRLF : {crlf[:3]} — relancer .sync_offline.py")
+        chemin_ga = os.path.join(RACINE, ".gitattributes")
+        attributs = io.open(chemin_ga, encoding="utf-8").read() if os.path.isfile(chemin_ga) else ""
+        verifie("git ne convertit pas les octets du paquet hors ligne (.gitattributes -text)",
+                re.search(r"^outputs/tp_couches_minces_hors_ligne/\*\*\s+-text\s*$", attributs, re.M)
+                is not None, "sans cela, core.autocrlf rend le manifeste publié faux")
+
+
+# ---------------------------------------------------------------------------
+groupe("10. Publication : rien de ce qui contient des réponses n'est diffusé")
+
+# Le dépôt GitHub est public : tout fichier suivi est lisible par tous, et
+# l'historique le conserve. Aucun document de réponses ne doit être suivi.
+MOTIFS_ENSEIGNANT = [r"(^|/)CORRIGE[^/]*\.md$", r"(^|/)REPONSES[^/]*\.md$", r"_results\.md$",
+                     r"(^|/)COMPARAISON[^/]*\.md$", r"(^|/)A_LIRE[^/]*\.md$"]
+try:
+    suivis = subprocess.run(["git", "ls-files"], cwd=RACINE, capture_output=True,
+                            text=True, encoding="utf-8", check=True).stdout.split("\n")
+    suivis = [f for f in suivis if f]
+except (OSError, subprocess.CalledProcessError):
+    suivis = None
+
+if suivis is None:
+    print("    (git indisponible : contrôles de suivi ignorés)")
+else:
+    fautifs = [f for f in suivis if any(re.search(m, f) for m in MOTIFS_ENSEIGNANT)]
+    verifie("aucun document de réponses n'est suivi par git (dépôt public)",
+            not fautifs, ", ".join(fautifs))
+
+    # Filet de sécurité par le contenu : des valeurs que seul un corrigé contient.
+    SIGNATURES = [r"211[,.]89", r"0[,.]00056", r"823/1000", r"826/1000", r"\+1[,.]59\s?%"]
+    porteurs = []
+    for f in suivis:
+        if "/vendor/" in f or not f.endswith((".md", ".html", ".txt", ".py", ".js")):
+            continue
+        if f.startswith("tests/"):
+            continue                      # la recette calcule, elle ne publie pas
+        try:
+            with io.open(os.path.join(RACINE, f), encoding="utf-8") as fh:
+                contenu = fh.read()
+        except (OSError, UnicodeDecodeError):
+            continue
+        if any(re.search(sig, contenu) for sig in SIGNATURES):
+            porteurs.append(f)
+    verifie("aucun fichier suivi ne contient de valeur propre au corrigé",
+            not porteurs, ", ".join(porteurs))
+
+    # Caractères de contrôle : signature d'un fichier passé par un échappement
+    # mal maîtrisé (« \t » devenu tabulation, « \a » devenu BEL). Le README
+    # public avait ainsi perdu la première lettre de ses noms de fichiers.
+    corrompus = []
+    for f in suivis:
+        if "/vendor/" in f or not f.endswith((".md", ".html", ".py", ".js", ".json", ".txt")):
+            continue
+        try:
+            with io.open(os.path.join(RACINE, f), encoding="utf-8") as fh:
+                contenu = fh.read()
+        except (OSError, UnicodeDecodeError):
+            continue
+        n_ctl = sum(contenu.count(c) for c in "\x07\x08\x0b\x0c")
+        n_tab = contenu.count("\t") if f.endswith(".md") else 0
+        if n_ctl or n_tab:
+            corrompus.append(f"{f} (contrôle {n_ctl}, tabulations {n_tab})")
+    verifie("aucun fichier texte suivi ne contient de caractère de contrôle parasite",
+            not corrompus, ", ".join(corrompus))
+
+# Liste blanche de publication : on rejoue la règle de .vercelignore sur des
+# chemins réels. Seuls des motifs de premier niveau sont admis, pour que ce
+# contrôle reste exact.
+chemin_vi = os.path.join(RACINE, ".vercelignore")
+if not os.path.isfile(chemin_vi):
+    verifie(".vercelignore existe", False)
+else:
+    regles = []
+    for ligne in io.open(chemin_vi, encoding="utf-8").read().splitlines():
+        ligne = ligne.strip()
+        if not ligne or ligne.startswith("#"):
+            continue
+        neg = ligne.startswith("!")
+        motif = ligne[1:] if neg else ligne
+        regles.append((neg, motif))
+    supportees = all(m.startswith("/") and "/" not in m[1:] for _, m in regles)
+    verifie(".vercelignore n'utilise que des motifs de premier niveau", supportees,
+            "motif imbriqué : ce contrôle ne saurait plus le vérifier")
+
+    import fnmatch
+
+    def publie(chemin):
+        tete = chemin.split("/")[0]
+        garde = True
+        for neg, motif in regles:
+            if fnmatch.fnmatchcase(tete, motif[1:]):
+                garde = neg
+        return garde
+
+    doivent_partir = [SIMULATEUR, ENONCE_FR, ENONCE_EN, COURS, "index.html",
+                      "outputs/tp_couches_minces/squelette_excel_couches_minces.xlsx",
+                      "outputs/tp_couches_minces_hors_ligne/index.html"]
+    ne_doivent_pas = ["CORRIGE_REPONSES.md", "COMPARAISON_IA.md", "A_LIRE_INDEX_ET_LIENS.md",
+                      "gemini_flash_results.md", "GUIDE_MIGRATION_ET_ACTIONS_TP.md", "README.md",
+                      "tests/lancer.py", "tests/test_physique.js", "audit_verification_numerique.py",
+                      ".sync_offline.py", ".gitignore", "header_fr.txt", "un_futur_corrige.md"]
+    manquants = [c for c in doivent_partir if not publie(c)]
+    fuites = [c for c in ne_doivent_pas if publie(c)]
+    verifie("la liste blanche publie tout le matériel étudiant", not manquants, ", ".join(manquants))
+    verifie("la liste blanche ne publie ni corrigé, ni guide, ni tests, ni scripts",
+            not fuites, ", ".join(fuites))
+
+# La redirection des .md était contournable par « %2E » : elle ne doit pas
+# revenir comme protection.
+try:
+    import json
+    cfg = json.load(io.open(os.path.join(RACINE, "vercel.json"), encoding="utf-8"))
+    redir_md = [r for r in cfg.get("redirects", []) if ".md" in r.get("source", "")]
+    verifie("vercel.json ne s'appuie pas sur une redirection des .md", not redir_md,
+            "une redirection ne filtre qu'une écriture de l'URL ; utiliser .vercelignore")
+except (OSError, ValueError) as e:
+    verifie("vercel.json est lisible", False, str(e))
+
+
+# ---------------------------------------------------------------------------
+groupe("11. Cohérence énoncé ↔ outils étudiants")
+
+# Le simulateur s'ouvre en mode libre, où les mérites d'exercice sont masqués.
+# L'énoncé doit le dire AVANT la première question qui en a besoin (Q15).
+for nom, marqueur_mode, marqueur_q15 in (
+        (ENONCE_FR, "Mode Étudiant — à activer avant chaque exercice", ">Q15<"),
+        (ENONCE_EN, "Student mode — switch it on before each exercise", ">Q15<")):
+    src = DOCS.get(nom, "")
+    i_mode, i_q15 = src.find(marqueur_mode), src.find(marqueur_q15)
+    verifie(f"« {nom} » explique le passage en mode Étudiant avant Q15",
+            i_mode != -1 and (i_q15 == -1 or i_mode < i_q15),
+            "consigne absente" if i_mode == -1 else "consigne placée après Q15")
+
+# Grille de Q14 : l'énoncé fixe bornes et pas ; le classeur fourni doit suivre.
+import zipfile
+m = re.search(r"\$d_\{ZnS\}\$ de <strong>(\d+) à (\d+) nm</strong> et \$d_\{YF3\}\$ de "
+              r"<strong>(\d+) à (\d+) nm</strong>, par pas de <strong>(\d+) nm</strong>",
+              DOCS.get(ENONCE_FR, ""))
+xlsx = os.path.join(RACINE, "outputs", "tp_couches_minces", "squelette_excel_couches_minces.xlsx")
+if not m or not os.path.isfile(xlsx):
+    verifie("grille de Q14 lisible dans l'énoncé et le classeur", False,
+            "énoncé" if not m else "classeur absent")
+else:
+    z0, z1, y0, y1, pas = map(int, m.groups())
+    attendu_znS = list(range(z0, z1 + 1, pas))
+    attendu_yf3 = list(range(y0, y1 + 1, pas))
+    with zipfile.ZipFile(xlsx) as z:
+        feuille = z.read("xl/worksheets/sheet3.xml").decode("utf-8")
+    lit = lambda ref: re.search(r'<x:c r="%s"[^>]*>.*?<x:v>([^<]*)</x:v>' % ref, feuille, re.S)
+    axe_yf3 = [int(float(lit(r).group(1))) if lit(r) else None for r in ("B5", "C5", "D5", "E5", "F5")]
+    axe_zns = [int(float(lit(r).group(1))) if lit(r) else None for r in ("A6", "A7", "A8", "A9", "A10")]
+    verifie(f"classeur Q14 : axe d_ZnS conforme à l'énoncé ({attendu_znS})",
+            axe_zns == attendu_znS, f"classeur : {axe_zns}")
+    verifie(f"classeur Q14 : axe d_YF3 conforme à l'énoncé ({attendu_yf3})",
+            axe_yf3 == attendu_yf3, f"classeur : {axe_yf3}")
+
+# Portail et README : n'annoncer que ce que le simulateur contient.
+for nom in ("index.html", "README.md"):
+    chemin = os.path.join(RACINE, nom)
+    if not os.path.isfile(chemin):
+        continue
+    with io.open(chemin, encoding="utf-8") as fh:
+        texte = fh.read()
+    absents = re.findall(r"(?i)\b(recuit|annealing|random search|descente locale|\d+ algorithmes)\b", texte)
+    verifie(f"« {nom} » n'annonce aucun algorithme absent du simulateur",
+            not absents, ", ".join(sorted(set(absents))))
+    verifie(f"« {nom} » ne renvoie pas les étudiants vers le dépôt source",
+            nom != "index.html" or "github.com" not in texte, "lien GitHub présent")
 
 
 # ---------------------------------------------------------------------------
