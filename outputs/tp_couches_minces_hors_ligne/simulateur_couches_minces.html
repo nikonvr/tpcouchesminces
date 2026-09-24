@@ -5328,6 +5328,10 @@
     ];
 
     const UI_ATTRIBUTE_PAIRS = [
+        ["Ajouter une fenêtre spectrale à évaluer. Le mérite est la moyenne de R sur l'ensemble des fenêtres déclarées ; ce qui n'est couvert par aucune d'elles est indifférent.",
+         "Add a spectral window to evaluate. The merit is the mean of R over all declared windows; anything outside them does not count."],
+        ["Comparer deux designs qualifiés sur des hypothèses strictement identiques",
+         "Compare two qualified designs under strictly identical assumptions"],
         ["Outil de conception complet, sans échafaudage pédagogique",
          "Full design tool, no pedagogical scaffolding"],
         ["Interface simplifiée, adaptée exercice par exercice",
@@ -5482,9 +5486,12 @@
             const el = document.getElementById(id);
             if (el) el.textContent = fr ? frText : enText;
         };
+        // setAttribute, et non el.title : les icônes Lucide sont des <svg>, sur
+        // lesquels « el.title = … » ne crée qu'une propriété JavaScript et laisse
+        // la bulle d'aide dans l'ancienne langue.
         const setTitle = (id, frText, enText) => {
             const el = document.getElementById(id);
-            if (el) el.title = fr ? frText : enText;
+            if (el) el.setAttribute('title', fr ? frText : enText);
         };
         setText('txtAudienceBadge',
             'BUT 3 FI Parcours MCPC — étudiants L2 · L3 · M1 · M2',
@@ -5501,9 +5508,9 @@
             'Fixed 0.1° step: sufficient to locate Brewster and critical angles with the cursor.');
 
         const optiHelp = document.getElementById('icoOptiHelp');
-        if (optiHelp) optiHelp.title = fr
+        if (optiHelp) optiHelp.setAttribute('title', fr
             ? "OPTIMISATION : BFGS ajuste les épaisseurs à nombre de couches constant. Il est déterministe et converge vers un minimum local dépendant du point de départ. La méthode de l'aiguille modifie ensuite la structure en créant une couche."
-            : 'OPTIMIZATION: BFGS adjusts thicknesses at a fixed layer count. It is deterministic and converges to a local minimum that depends on the starting point. The needle method then changes the structure by creating a layer.';
+            : 'OPTIMIZATION: BFGS adjusts thicknesses at a fixed layer count. It is deterministic and converges to a local minimum that depends on the starting point. The needle method then changes the structure by creating a layer.');
         const optiBadge = optiHelp?.closest('.font-bold')?.querySelector('span[title]');
         if (optiBadge) optiBadge.title = fr
             ? 'BFGS déterministe, à nombre de couches constant'

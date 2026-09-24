@@ -287,7 +287,7 @@
     <div class="doc-header">
         <h1>Théorie des Couches Minces Optiques</h1>
         <p class="subtitle">Formalisme matriciel de Macleod et modélisation numérique</p>
-        <span class="tag">Niveau Master (M2)</span>
+        <span class="tag">Du L2 au M2 — trois niveaux de lecture</span>
     </div>
     
     <p>Ce document détaille la physique et les équations permettant de calculer les propriétés optiques d'un empilement de couches minces. Conçu pour les étudiants en physique numérique et optique, il tisse le lien entre l'intuition physique (interférences), les équations de Maxwell, et l'implémentation numérique via la méthode des matrices de transfert (TMM).</p>
@@ -405,7 +405,7 @@
     <h3>2.2 Milieux, matériaux et empilement de couches</h3>
     <table>
         <tr><th>Symbole</th><th>Nom</th><th>Unité</th><th>Définition &amp; Signification physique</th></tr>
-        <tr><td>$n$</td><td>Indice de réfraction (réel)</td><td>sans dim.</td><td>Ralentissement de la vitesse de phase ($v_\phi = c/n$) dans le matériau ($n \ge 1$).</td></tr>
+        <tr><td>$n$</td><td>Indice de réfraction (réel)</td><td>sans dim.</td><td>Ralentissement de la vitesse de phase ($v_\phi = c/n$) dans le matériau. Pour un diélectrique transparent, $n \ge 1$ ; un métal peut avoir $n < 1$ (argent du § 9 : $n = 0.12$).</td></tr>
         <tr><td>$\kappa$</td><td>Coefficient d'extinction</td><td>sans dim.</td><td>Atténuation de l'onde par absorption diélectrique/ohmique ($\kappa \ge 0$).</td></tr>
         <tr><td>$\hat{n}$</td><td>Indice de réfraction complexe</td><td>sans dim.</td><td>$\hat{n} = n - i\kappa$ (convention Macleod $e^{+i\omega t}$ imposant $\mathrm{Im}(\hat{n}) \le 0$).</td></tr>
         <tr><td>$n_0, \eta_0$</td><td>Indice &amp; Admittance de l'air</td><td>sans dim. / $\mathcal{Y}_0$</td><td>Milieu incident semi-infini au sommet ($z \ge z_N$, avec $n_0 = 1.0$).</td></tr>
@@ -716,8 +716,9 @@
     <h3 id="maxwell_matrix">3.5 Dérivation analytique de la matrice caractéristique 2×2</h3>
     <p>Pour relier le champ magnétique tangentiel $H_\parallel$ au champ électrique tangentiel $E_\parallel$, on utilise l'équation de Maxwell-Faraday $\nabla \times \vec{E} = -i\omega\mu_0 \vec{H}$ :</p>
     <ul>
-        <li><strong>Polarisation TE (s) :</strong> $\vec{E} = (0, E_y, 0)$. Alors $H_x = -\frac{1}{i\omega\mu_0} \frac{\partial E_y}{\partial z} = \eta_s (E^- e^{+ik_z z} - E^+ e^{-ik_z z})$ avec l'admittance $\eta_s = \hat{n}\cos\theta$.</li>
-        <li><strong>Polarisation TM (p) :</strong> $\vec{H} = (0, H_y, 0)$. Alors $E_x = \frac{1}{i\omega\varepsilon_0\hat{n}^2} \frac{\partial H_y}{\partial z}$ avec l'admittance $\eta_p = \frac{\hat{n}}{\cos\theta}$.</li>
+        <li><strong>Polarisation TE (s) :</strong> $\vec{E} = (0, E_y, 0)$. La composante $x$ de Maxwell-Faraday donne $-\partial_z E_y = -i\omega\mu_0 H_x$, donc $H_x = \frac{1}{i\omega\mu_0} \frac{\partial E_y}{\partial z} = \eta_s (E^- e^{+ik_z z} - E^+ e^{-ik_z z})$ avec l'admittance $\eta_s = \hat{n}\cos\theta$.</li>
+        <li><strong>Polarisation TM (p) :</strong> $\vec{H} = (0, H_y, 0)$. La composante $x$ de Maxwell-Ampère donne $-\partial_z H_y = i\omega\varepsilon_0\hat{n}^2 E_x$, donc $E_x = -\frac{1}{i\omega\varepsilon_0\hat{n}^2} \frac{\partial H_y}{\partial z}$ avec l'admittance $\eta_p = \frac{\hat{n}}{\cos\theta}$.</li>
+        <li><em>Attention aux manuels :</em> ces signes sont ceux de la convention $e^{+i\omega t}$ du § 3.1. Avec $e^{-i\omega t}$ (Born &amp; Wolf, Jackson), les deux signes s'inversent ; le résultat final, lui, est le même.</li>
     </ul>
 
     <p>Considérons une couche $j$ d'épaisseur $d$ comprise entre son <strong>interface supérieure d'entrée</strong> $a$ ($z = z_j$) et son <strong>interface inférieure de sortie</strong> $b$ ($z = z_{j-1} = z_j - d$) :</p>
@@ -770,7 +771,7 @@
         </svg>
     </div>
 
-    <p>1. <strong>À l'interface supérieure d'entrée ($z = z_j$) :</strong></p>
+    <p>1. <strong>À l'interface supérieure d'entrée ($z = z_j$)</strong>, en rapportant cette fois les deux amplitudes $E^\pm$ à cette interface (au § 3.4, $E_j^+$ était rapportée à la base de la couche : simple choix d'origine des phases, sans effet sur la matrice) :</p>
     $$E_a = E^- + E^+ \qquad \text{et} \qquad H_a = \eta (E^- - E^+)$$
     <p>Ce qui permet d'exprimer les amplitudes d'ondes en fonction des champs totaux d'entrée :</p>
     $$E^- = \frac{1}{2}\left(E_a + \frac{H_a}{\eta}\right) \qquad \text{et} \qquad E^+ = \frac{1}{2}\left(E_a - \frac{H_a}{\eta}\right)$$
@@ -860,7 +861,7 @@
             </div>
             
             <h4>Le cas critique : La Réflexion Totale Interne (TIR)</h4>
-            <p>Contrairement à une croyance répandue, les métaux ne posent pas de problème avec la convention de Macleod : $\hat{n}_{Ag} = 0.12 - 3.45i$ donne $z \approx -12.4 - 0.8i$ (demi-plan inférieur). <code>np.sqrt(z)</code> renvoie $0.11 - 3.52i$, ce qui satisfait bien $\text{Im} \le 0$.</p>
+            <p>Contrairement à une croyance répandue, les métaux ne posent pas de problème avec la convention de Macleod : $\hat{n}_{Ag} = 0.12 - 3.45i$ donne, sous $45^\circ$ d'incidence depuis l'air ($S_0^2 = 0.5$), $z = \hat{n}^2 - S_0^2 \approx -12.4 - 0.8i$ (demi-plan inférieur). <code>np.sqrt(z)</code> renvoie $0.12 - 3.52i$, ce qui satisfait bien $\text{Im} \le 0$.</p>
             
             <p>Le véritable problème survient lors d'une <strong>Réflexion Totale Interne</strong> dans un diélectrique (ex: lumière passant du verre $n=1.5$ à l'air $n=1.0$ à $45^\circ$). On a alors $S_0 = 1.06$ et $z = n^2 - S_0^2 = -0.125$ (pur réel négatif). Dans ce cas précis, <code>np.sqrt(-0.125 + 0j)</code> renvoie <code>+0.353j</code>. <strong>La partie imaginaire est positive !</strong> L'onde simulée va croître exponentiellement au lieu de s'évanouir.</p>
 
@@ -984,11 +985,11 @@
     
     <p>Calculer le profil d'intensité à l'intérieur de l'empilement est fondamental, notamment pour évaluer les seuils de dommage laser (LIDT) ou optimiser l'absorption dans des cellules solaires.</p>
     
-    <p><strong>Méthode :</strong> On connaît le champ transmis dans le substrat à $z=0$ (qui vaut l'amplitude transmise $t$). On peut remonter mathématiquement le long de l'axe $z$ (dans le sens de croissance des couches, de $z=0$ jusqu'au sommet $z=z_N$) en multipliant par les matrices partielles locales calculées à l'altitude $z$ :</p>
+    <p><strong>Méthode :</strong> On connaît le champ transmis dans le substrat à $z=0$ (qui vaut l'amplitude transmise $t$). On peut remonter mathématiquement le long de l'axe $z$ (dans le sens de croissance des couches, de $z=0$ jusqu'au sommet $z=z_N$) couche après couche. Dans la couche $j$ ($z_{j-1} \le z \le z_j$), on part des champs à sa base, obtenus en appliquant successivement $M_1, \dots, M_{j-1}$ au vecteur de départ $t\,(1, \eta_{sub})^T$ :</p>
     <div class="formula-box">
-        $$\begin{pmatrix} E(z) \\ H(z) \end{pmatrix} = \begin{pmatrix} \cos \delta(z) & \frac{i}{\eta_j} \sin \delta(z) \\ i \eta_j \sin \delta(z) & \cos \delta(z) \end{pmatrix} \begin{pmatrix} E(0) \\ H(0) \end{pmatrix}$$
+        $$\begin{pmatrix} E(z) \\ H(z) \end{pmatrix} = \begin{pmatrix} \cos \delta_j(z) & \frac{i}{\eta_j} \sin \delta_j(z) \\ i \eta_j \sin \delta_j(z) & \cos \delta_j(z) \end{pmatrix} \begin{pmatrix} E(z_{j-1}) \\ H(z_{j-1}) \end{pmatrix}$$
     </div>
-    <p>Où $\delta(z) = \frac{2\pi}{\lambda} \hat{n}_j z \cos \theta_j$ est le déphasage accumulé depuis l'interface du substrat.</p>
+    <p>Où $\delta_j(z) = \frac{2\pi}{\lambda} \hat{n}_j (z - z_{j-1}) \cos \theta_j$ est le déphasage accumulé depuis la base de la couche $j$. Pour une couche unique ($j = 1$, $z_0 = 0$), le départ est directement le champ au substrat, $E(0) = t$.</p>
 
     <div class="diagram-container">
         <svg width="660" height="300" viewBox="0 0 660 300" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
@@ -1200,8 +1201,9 @@ def compute_tmm(n_inc, n_exit, n_layers, d_layers, wl, theta0=0.0, pol='s'):
     
     Arguments :
       n_inc, n_exit : Indices complexes du milieu incident (air) et du substrat.
-      n_layers      : Liste des indices complexes des couches (n - i*k).
-      d_layers      : Liste des épaisseurs physiques des couches (en nm).
+      n_layers      : Liste des indices complexes des couches (n - i*k), de la
+                      couche 1 (contre le substrat) à la couche N (contre l'air).
+      d_layers      : Liste des épaisseurs physiques des couches (en nm), même ordre.
       wl            : Longueur d'onde de travail (en nm).
       theta0        : Angle d'incidence dans le milieu incident (en radians).
       pol           : Polarisation ('s' pour TE, 'p' pour TM).
@@ -1328,7 +1330,7 @@ def compute_tmm(n_inc, n_exit, n_layers, d_layers, wl, theta0=0.0, pol='s'):
 
     <hr>
     <footer>
-        <p><em>Document pédagogique (Niveau Master 2) — Basé sur H.A. Macleod, <i>Thin-Film Optical Filters</i>.</em></p>
+        <p><em>Document pédagogique (du L2 au M2) — Basé sur H.A. Macleod, <i>Thin-Film Optical Filters</i>.</em></p>
     </footer>
 </body>
 </html>
