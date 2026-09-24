@@ -34,11 +34,11 @@
                         <a href="tp_couches_minces_fr.html" class="text-indigo-300 hover:text-white font-medium px-3 py-1 rounded-lg text-xs transition">🇫🇷 FR</a>
                         <span class="bg-indigo-600 text-white font-bold px-3 py-1 rounded-lg text-xs shadow">🇬🇧 EN</span>
                     </div>
-                    <a href="https://tpcouchesminces.vercel.app" target="_blank" class="bg-indigo-800/80 hover:bg-indigo-700 text-indigo-100 font-semibold px-3 py-2 rounded-xl border border-indigo-600 shadow transition flex items-center gap-1.5 text-xs">
+                    <a href="https://tpcouchesminces.vercel.app" target="_blank" rel="noopener" class="bg-indigo-800/80 hover:bg-indigo-700 text-indigo-100 font-semibold px-3 py-2 rounded-xl border border-indigo-600 shadow transition flex items-center gap-1.5 text-xs">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 1155 1000" fill="currentColor"><path d="m577.3 0 577.4 1000H0z"/></svg>
-                        <span>Vercel Portal</span>
+                        <span>Course portal</span>
                     </a>
-                    <a href="simulateur_couches_minces.html" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2.5 rounded-xl shadow-lg transition flex items-center gap-2 text-sm">
+                    <a href="simulateur_couches_minces.html" target="_blank" rel="noopener" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2.5 rounded-xl shadow-lg transition flex items-center gap-2 text-sm">
                         <span>🚀 Launch Web Simulator</span>
                     </a>
                 </div>
@@ -131,13 +131,14 @@
                 <h3 class="text-lg font-bold text-indigo-900 mb-3 border-l-4 border-indigo-500 pl-3">🚀 Web Simulator Quickstart</h3>
                 <div class="text-slate-700 text-sm leading-relaxed space-y-2">
                     <ul class="list-disc list-inside space-y-1 text-xs">
-                        <li><strong>Direct access:</strong> Open <a href="simulateur_couches_minces.html" class="text-indigo-600 font-bold underline" target="_blank">simulateur_couches_minces.html</a> in a browser. Network access is required to load the graphical libraries (an offline distribution exists: ask your instructor).</li>
+                        <li><strong>Direct access:</strong> Open <a href="simulateur_couches_minces.html" class="text-indigo-600 font-bold underline" target="_blank" rel="noopener">simulateur_couches_minces.html</a> in a browser. Network access is required to load the graphical libraries (an offline distribution exists: ask your instructor).</li>
                         <li><strong>Virtual Spectrophotometer:</strong> Build your stacks manually, take pointer measurements, and analyze data in Excel.</li>
                         <li><strong>Symbolic formulas:</strong> Fast formula entry such as <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-indigo-700">(HL)^3 2H (LH)^3</code>.</li>
                         <li><strong>Exports:</strong> Use <strong>CSV</strong> (for spreadsheet processing) and <strong>Image</strong> for your lab report.</li>
                         <li><strong>Published grids:</strong> below the merit selector, the simulator displays <strong>the exact grid</strong> it uses. Reproduce it in Excel: you must recover the same number.</li>
                         <li><strong>Universal CSV export:</strong> <strong>right-click any chart</strong> (or long-press on mobile) to export all its visible curves on the grid actually plotted — including Monte-Carlo envelopes and saved curves.</li>
                         <li><strong>Keyboard shortcuts:</strong> press <code class="bg-slate-100 px-1 rounded font-mono">?</code> for the full list. Most useful: <code class="bg-slate-100 px-1 rounded font-mono">O</code> optimize, <code class="bg-slate-100 px-1 rounded font-mono">N</code> needle, and <code class="bg-slate-100 px-1 rounded font-mono">M</code> memorize.</li>
+                        <li><strong>Student mode — switch it on before each exercise:</strong> the simulator opens in <em>free mode</em>, where only your own target is offered as a merit. Click <strong>🎓 Student</strong> in the header, then pick the current exercise: the relevant panels appear and the exercise merit (<code>Mean R</code> in IV and V, <code>Maximize Qr</code> in VIII and X) becomes available. Skip this step and those merits stay hidden.</li>
                         <li><strong>Free design:</strong> press <code class="bg-slate-100 px-1 rounded font-mono">D</code> or click <strong>🎯 Free design</strong> — you write <em>your own</em> specification. See the open workshop at the end of this document.</li>
                         <li><strong>Active workbook:</strong> use the <a href="outputs/tp_couches_minces/squelette_excel_couches_minces.xlsx" class="text-indigo-600 font-bold underline">Q12/Q14 scaffold</a>; calculation cells are intentionally left for you to program.</li>
                     </ul>
@@ -552,7 +553,7 @@
                             <div class="space-y-2">
                                 <p><strong>First robust qualification — but over which window?</strong></p>
                                 <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
-                                    🧠 <strong>Specification trap, to be dealt with first.</strong> The <code>Mean R</code> merit is offered by default over $400-750\,\text{nm}$. But you have just designed an antireflection coating <em>at 550 nm</em>. Read the merit value over that wide window: it is catastrophic. <strong>Is your design bad, or is your specification off-topic?</strong> Justify, then correct the window.
+                                    🧠 <strong>Specification trap, to be dealt with first.</strong> In <strong>🎓 Student</strong> mode, exercise IV, the <code>Mean R</code> merit is offered by default over $400-750\,\text{nm}$. But you have just designed an antireflection coating <em>at 550 nm</em>. Read the merit value over that wide window: it is catastrophic. <strong>Is your design bad, or is your specification off-topic?</strong> Justify, then correct the window.
                                 </div>
                                 <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
                                     <li>Set the <strong>AR window to 520–580 nm</strong> and the <strong>threshold to 0.8%</strong> (fields below the merit selector). Check that the nominal design now meets the criterion, and with what margin.</li>
@@ -633,7 +634,7 @@
                     <div class="flex items-start gap-3">
                         <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q16</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
                         <div class="text-sm text-slate-800 space-y-2">
-                            <p><strong>BFGS local-convergence study.</strong> Activate the <code>Mean R</code> merit over <strong>400–750 nm</strong> with a <strong>0.5%</strong> threshold. Goal: a <em>broadband</em> antireflection coating on BK7 using ZnS/YF₃.</p>
+                            <p><strong>BFGS local-convergence study.</strong> In <strong>🎓 Student</strong> mode, exercise V, activate the <code>Mean R</code> merit over <strong>400–750 nm</strong> with a <strong>0.5%</strong> threshold. Goal: a <em>broadband</em> antireflection coating on BK7 using ZnS/YF₃.</p>
                             <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
                                 🧠 <strong>Start with the instructive mistake.</strong> First record the merit of <strong>bare glass</strong> (no layer): that is your baseline. Then build the most natural stack — quarter-wave layers <code>H L</code>, then <code>H L H L</code>. <strong>The merit is two to three times WORSE than bare glass.</strong> This is not a handling error. Explain it: from an interference standpoint, what does a quarter-wave <em>high</em>-index layer on glass actually do? Must an antireflection coating be a quarter-wave stack?
                             </div>
@@ -857,7 +858,7 @@
                             <p><strong>Is there really anything to optimize?</strong></p>
                             <p class="text-xs text-slate-600 mb-1.5">The question is not rhetorical. Start by measuring $Q_r$ and $\overline{T}_{pass}$ <em>before</em> any optimization and compare them with the two requirements of the specification. <strong>If the deposited prescription already meets them, and by a wide margin, say so: that is a result, not a failure on your part.</strong> You then have to answer a more interesting question: what is the point of optimizing a component that already passes? Look at the margin — by how much does the nominal exceed the threshold, and does that margin survive the deposition errors of Q25? That, rather than the nominal value, is where the three free layers earn their keep.</p>
                             <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
-                                <li>Activate the <code>Maximize Qr</code> merit. Its formula already uses exactly the 460–500, 535–565, and 620–680 nm bands; the band analyzer remains an independent measurement instrument.</li>
+                                <li>Switch to <strong>🎓 Student</strong> mode, exercise VIII: the <code>Maximize Qr</code> merit is selected automatically there. Its formula already uses exactly the 460–500, 535–565, and 620–680 nm bands; the band analyzer remains an independent measurement instrument.</li>
                                 <li>Set the cleanup threshold to <strong>2 nm</strong>: it is also BFGS's lower bound. Record this constraint in the design dossier; a numerical optimum below it is not admissible.</li>
                                 <li>Choose <code>Specific layers</code>, then allow <strong>layers 16, 17, and 18 only</strong>. Check in the table that layers 1 to 15 are fixed. This constraint belongs to the component that will be deposited and must never be relaxed.</li>
                                 <li>Run BFGS and record $Q_r$, $\overline{T}_{pass}$, and the three thicknesses before/after. Verify that the layer count, ordering, and first fifteen thicknesses are strictly unchanged.</li>
@@ -1181,9 +1182,9 @@
             </div>
             <div class="p-6 space-y-4 text-sm text-slate-300">
                 <ul class="list-disc list-inside space-y-3">
-                    <li><strong>Course Document:</strong> <a href="theorie en francais.html" target="_blank" class="text-indigo-400 hover:text-indigo-300 hover:underline font-bold">Theory of Optical Thin Films</a>.</li>
+                    <li><strong>Course Document:</strong> <a href="theorie en francais.html" target="_blank" rel="noopener" class="text-indigo-400 hover:text-indigo-300 hover:underline font-bold">Theory of Optical Thin Films</a>.</li>
                     <li><strong>The Optical Coating Bible:</strong> H.A. Macleod, <i>"Thin-Film Optical Filters"</i> (CRC Press).</li>
-                    <li><strong>Global Dispersion Database:</strong> <a href="https://refractiveindex.info" target="_blank" class="text-indigo-400 hover:text-indigo-300 hover:underline">refractiveindex.info</a>.</li>
+                    <li><strong>Global Dispersion Database:</strong> <a href="https://refractiveindex.info" target="_blank" rel="noopener" class="text-indigo-400 hover:text-indigo-300 hover:underline">refractiveindex.info</a>.</li>
                     <li><strong>Theoretical Foundations:</strong> Max Born & Emil Wolf, <i>"Principles of Optics"</i>.</li>
                 </ul>
             </div>

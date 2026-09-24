@@ -24,6 +24,9 @@ SUBS = [
     (re.compile(r'<script defer src="https://cdn\.jsdelivr\.net/npm/mathjax@3/es5/tex-chtml\.js"></script>'),
      '<script defer src="vendor/mathjax/tex-mml-chtml.js"></script>'),
     (re.compile(r"\s*@import url\('https://fonts\.googleapis\.com/css2[^']*'\);"), ''),
+    # Le lien « Portail du TP » des enonces vise le site en ligne ; hors ligne,
+    # il doit ramener a l'accueil local du paquet.
+    (re.compile(r'<a href="https://tpcouchesminces\.vercel\.app"'), '<a href="index.html"'),
     # Le texte narratif doit lui aussi refleter le paquet autonome : sans cela
     # l'enonce affirme qu'une connexion est requise, en contradiction avec
     # index.html et README_HORS_LIGNE.md du meme dossier.
@@ -41,7 +44,11 @@ for f in FILES:
     s = io.open(os.path.join(SRC, f), encoding='utf-8').read()
     for rx, rep in SUBS:
         s = rx.sub(rep, s)
-    io.open(os.path.join(DST, f), 'w', encoding='utf-8').write(s)
+    # Fins de ligne LF explicites. Sans newline='\n', Windows ecrivait des CRLF,
+    # le manifeste hachait ces CRLF, puis git enregistrait des LF : le manifeste
+    # publie ne correspondait plus aux fichiers publies (4 echecs sur 42 pour
+    # quiconque telechargeait le paquet). .gitattributes fige ensuite ces octets.
+    io.open(os.path.join(DST, f), 'w', encoding='utf-8', newline='\n').write(s)
     left = re.findall(r'https://(?:cdn|unpkg|fonts)\.[^"\')\s]+', s)
     print('%-34s synchronise | CDN residuels : %d %s' % (f, len(left), left[:2] if left else ''))
 

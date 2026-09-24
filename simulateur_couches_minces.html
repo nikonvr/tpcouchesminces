@@ -1047,6 +1047,10 @@
         },
     };
 
+    /* Jeton du Monte-Carlo en cours (voir runMonteCarloTolerance). Déclaré ici,
+       en tête de script, pour exister avant tout appel possible. */
+    let mcEnCours = null;
+
     /* =========================================================================
        2. BASE DE DONNÉES MATÉRIAUX & DISPERSION (RefractiveIndex.INFO)
        ========================================================================= */
@@ -1511,6 +1515,7 @@
 
     function runFullSimulation() {
         // Toute modification du design ou du domaine d'analyse invalide une qualification précédente.
+        interrompreMonteCarlo();
         appState.monteCarloRuns = [];
         appState.monteCarloSamples = [];
         appState.lastQualification = null;
@@ -2504,7 +2509,21 @@
         let accepted = 0;
         let feasibleCount = 0;
 
-        for (let r = 0; r < numRuns; r++) {
+        /* Exécution par tranches. Un calcul synchrone de N = 1000 tirages gelait
+           la page plusieurs secondes sans aucun signe de vie. On exécute donc les
+           tirages par tranches d'environ 40 ms et l'on rend la main au navigateur
+           entre deux tranches. L'ORDRE des tirages est inchangé — même graine,
+           même suite d'appels au générateur — donc les résultats sont identiques
+           au tirage près à ceux d'une exécution d'un seul bloc.
+           Toute modification du design pendant le calcul l'interrompt (jeton
+           invalidé par runFullSimulation) : on ne mélange jamais deux designs. */
+        const jeton = {};
+        mcEnCours = jeton;
+        const bouton = document.getElementById('btnRunMonteCarlo');
+        if (bouton) bouton.disabled = true;
+        const zoneResultat = document.getElementById('txtMonteCarloResult');
+
+        const unTirage = (r) => {
             // Le verrouillage appartient exclusivement à l'optimisation BFGS.
             // En fabrication, les 18 dépôts existent physiquement : chacun reçoit
             // donc son erreur. Le modèle reste volontairement simple et unique :
@@ -2524,7 +2543,7 @@
             const feasible = noisyThicknesses.every(d => Number.isFinite(d) && d >= minimumThicknessNm);
             if (!feasible) {
                 complianceFlags.push(false);
-                continue;
+                return;
             }
             feasibleCount++;
             const merit = evaluateObjective(noisyThicknesses, objective);
@@ -2549,7 +2568,29 @@
                     }))
                 });
             }
-        }
+        };
+
+        let r = 0;
+        const TRANCHE_MS = 40;
+        const etape = () => {
+            if (mcEnCours !== jeton) return;            // interrompu : le design a changé
+            const debut = performance.now();
+            while (r < numRuns && performance.now() - debut < TRANCHE_MS) {
+                unTirage(r);
+                r++;
+            }
+            if (r < numRuns) {
+                if (zoneResultat) zoneResultat.textContent = currentLang === 'fr'
+                    ? `Qualification en cours : ${r} / ${numRuns} tirages…`
+                    : `Qualification running: ${r} / ${numRuns} draws…`;
+                setTimeout(etape, 0);
+                return;
+            }
+            mcEnCours = null;
+            if (bouton) bouton.disabled = false;
+            terminer();
+        };
+        const terminer = () => {
 
         // Fenêtre suivante au prochain lancement, en boucle sur l'échantillon.
         appState.mcSampleOffset = feasibleCount > 0
@@ -2632,6 +2673,20 @@
         renderDesignReview();
         applyUiMode();          // une qualification existe : le comparateur devient pertinent
         updateCharts();
+        };
+
+        etape();
+    }
+
+    function interrompreMonteCarlo() {
+        if (!mcEnCours) return;
+        mcEnCours = null;
+        const bouton = document.getElementById('btnRunMonteCarlo');
+        if (bouton) bouton.disabled = false;
+        const zone = document.getElementById('txtMonteCarloResult');
+        if (zone) zone.textContent = currentLang === 'fr'
+            ? 'Qualification interrompue : le design a changé pendant le calcul. Relancez-la.'
+            : 'Qualification interrupted: the design changed during the run. Start it again.';
     }
 
     /* Calcul auxiliaire cohérent avec l'ordre de dépôt du moteur principal. */

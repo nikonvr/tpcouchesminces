@@ -1,0 +1,5 @@
+# Paquet hors ligne : octets figés.
+# Son manifeste SHA-256 est calculé sur ces fichiers exacts. Une conversion de
+# fins de ligne par git (core.autocrlf) le rendrait faux pour quiconque
+# télécharge le paquet depuis GitHub ou depuis le site.
+outputs/tp_couches_minces_hors_ligne/** -text

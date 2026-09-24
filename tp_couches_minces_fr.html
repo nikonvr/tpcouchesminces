@@ -34,11 +34,11 @@
                         <span class="bg-indigo-600 text-white font-bold px-3 py-1 rounded-lg text-xs shadow">🇫🇷 FR</span>
                         <a href="tp_couches_minces_en.html" class="text-indigo-300 hover:text-white font-medium px-3 py-1 rounded-lg text-xs transition">🇬🇧 EN</a>
                     </div>
-                    <a href="https://tpcouchesminces.vercel.app" target="_blank" class="bg-indigo-800/80 hover:bg-indigo-700 text-indigo-100 font-semibold px-3 py-2 rounded-xl border border-indigo-600 shadow transition flex items-center gap-1.5 text-xs">
+                    <a href="https://tpcouchesminces.vercel.app" target="_blank" rel="noopener" class="bg-indigo-800/80 hover:bg-indigo-700 text-indigo-100 font-semibold px-3 py-2 rounded-xl border border-indigo-600 shadow transition flex items-center gap-1.5 text-xs">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 1155 1000" fill="currentColor"><path d="m577.3 0 577.4 1000H0z"/></svg>
-                        <span>Portail Vercel</span>
+                        <span>Portail du TP</span>
                     </a>
-                    <a href="simulateur_couches_minces.html" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2.5 rounded-xl shadow-lg transition flex items-center gap-2 text-sm">
+                    <a href="simulateur_couches_minces.html" target="_blank" rel="noopener" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2.5 rounded-xl shadow-lg transition flex items-center gap-2 text-sm">
                         <span>🚀 Ouvrir le Simulateur Web</span>
                     </a>
                 </div>
@@ -131,13 +131,14 @@
                 <h3 class="text-lg font-bold text-indigo-900 mb-3 border-l-4 border-indigo-500 pl-3">🚀 Guide du Simulateur Web</h3>
                 <div class="text-slate-700 text-sm leading-relaxed space-y-2">
                     <ul class="list-disc list-inside space-y-1 text-xs">
-                        <li><strong>Accès direct :</strong> Ouvrez <a href="simulateur_couches_minces.html" class="text-indigo-600 font-bold underline" target="_blank">simulateur_couches_minces.html</a> dans votre navigateur. Une connexion réseau est requise pour charger les bibliothèques graphiques (une distribution hors ligne existe : voir votre enseignant).</li>
+                        <li><strong>Accès direct :</strong> Ouvrez <a href="simulateur_couches_minces.html" class="text-indigo-600 font-bold underline" target="_blank" rel="noopener">simulateur_couches_minces.html</a> dans votre navigateur. Une connexion réseau est requise pour charger les bibliothèques graphiques (une distribution hors ligne existe : voir votre enseignant).</li>
                         <li><strong>Banc de mesure virtuel :</strong> Le simulateur ne donne pas de résultats pré-mâchés. Vous devez saisir vos couches, pointer vos mesures au curseur et traiter vos données sous Excel.</li>
                         <li><strong>Formules symboliques :</strong> Saisie rapide d'empilements comme <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-indigo-700">(HL)^3 2H (LH)^3</code>.</li>
                         <li><strong>Exports :</strong> Boutons <strong>CSV</strong> (données pour Excel/Python) et <strong>Image</strong> pour vos comptes-rendus.</li>
                         <li><strong>Grilles publiées :</strong> sous le sélecteur de mérite, le simulateur affiche <strong>la grille exacte</strong> de son calcul. Reprenez-la à l'identique sous Excel : vous devez retrouver le même nombre.</li>
                         <li><strong>Export CSV universel :</strong> <strong>clic droit sur n'importe quel graphique</strong> (ou appui long sur mobile) exporte toutes ses courbes visibles, sur la grille réellement tracée — y compris les enveloppes Monte-Carlo et les courbes mémorisées.</li>
                         <li><strong>Raccourcis clavier :</strong> touche <code class="bg-slate-100 px-1 rounded font-mono">?</code> pour la liste complète. Les plus utiles : <code class="bg-slate-100 px-1 rounded font-mono">O</code> optimiser, <code class="bg-slate-100 px-1 rounded font-mono">N</code> aiguille et <code class="bg-slate-100 px-1 rounded font-mono">M</code> mémoriser.</li>
+                        <li><strong>Mode Étudiant — à activer avant chaque exercice :</strong> le simulateur s'ouvre en <em>mode libre</em>, où seule votre cible personnelle est proposée comme mérite. Cliquez sur <strong>🎓 Étudiant</strong> dans l'en-tête, puis choisissez l'exercice en cours : les panneaux utiles s'affichent et le mérite de l'exercice (<code>R moyen</code> en IV et V, <code>Maximiser Qr</code> en VIII et X) devient disponible. Sans cette étape, ces mérites restent invisibles.</li>
                         <li><strong>Design libre :</strong> touche <code class="bg-slate-100 px-1 rounded font-mono">D</code> ou bouton <strong>🎯 Design libre</strong> — vous définissez <em>votre</em> cahier des charges. Voir l'atelier libre en fin de document.</li>
                         <li><strong>Classeur actif :</strong> utilisez <a href="outputs/tp_couches_minces/squelette_excel_couches_minces.xlsx" class="text-indigo-600 font-bold underline">le squelette Q12/Q14</a> ; les cellules de calcul restent à programmer.</li>
                     </ul>
@@ -551,7 +552,7 @@
                             <div class="space-y-2">
                                 <p><strong>Première qualification robuste — mais sur quelle fenêtre ?</strong></p>
                                 <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
-                                    🧠 <strong>Piège de spécification, à traiter d'abord.</strong> Le mérite <code>R moyen</code> est proposé par défaut sur $400-750\,\text{nm}$. Or vous venez de concevoir un antireflet <em>à 550 nm</em>. Relevez la valeur du mérite sur cette fenêtre large : elle est catastrophique. <strong>Est-ce votre design qui est mauvais, ou votre spécification qui est hors sujet ?</strong> Justifiez, puis corrigez la fenêtre.
+                                    🧠 <strong>Piège de spécification, à traiter d'abord.</strong> En mode <strong>🎓 Étudiant</strong>, exercice IV, le mérite <code>R moyen</code> est proposé par défaut sur $400-750\,\text{nm}$. Or vous venez de concevoir un antireflet <em>à 550 nm</em>. Relevez la valeur du mérite sur cette fenêtre large : elle est catastrophique. <strong>Est-ce votre design qui est mauvais, ou votre spécification qui est hors sujet ?</strong> Justifiez, puis corrigez la fenêtre.
                                 </div>
                                 <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
                                     <li>Réglez la <strong>fenêtre AR à 520–580 nm</strong> et le <strong>seuil à 0,8 %</strong> (champs situés sous le sélecteur de mérite). Vérifiez que le nominal passe désormais le critère, et avec quelle marge.</li>
@@ -632,7 +633,7 @@
                     <div class="flex items-start gap-3">
                         <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q16</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div>
                         <div class="text-sm text-slate-800 space-y-2">
-                            <p><strong>Étude de convergence locale de BFGS.</strong> Activez le mérite <code>R moyen</code> sur <strong>400–750 nm</strong> avec un seuil de <strong>0,5 %</strong>. Objectif : un antireflet <em>large bande</em> sur BK7 en ZnS/YF₃.</p>
+                            <p><strong>Étude de convergence locale de BFGS.</strong> En mode <strong>🎓 Étudiant</strong>, exercice V, activez le mérite <code>R moyen</code> sur <strong>400–750 nm</strong> avec un seuil de <strong>0,5 %</strong>. Objectif : un antireflet <em>large bande</em> sur BK7 en ZnS/YF₃.</p>
                             <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
                                 🧠 <strong>Commencez par l'erreur instructive.</strong> Relevez d'abord le mérite du <strong>verre nu</strong> (aucune couche) : c'est votre point de comparaison. Construisez ensuite l'empilement le plus naturel — des couches quart d'onde <code>H L</code>, puis <code>H L H L</code>. <strong>Le mérite est deux à trois fois PIRE que le verre nu.</strong> Ce n'est pas une erreur de manipulation. Expliquez-le : que fait une couche quart d'onde de <em>haut</em> indice posée sur du verre, du point de vue de l'interférence ? Un antireflet est-il forcément un empilement quart d'onde ?
                             </div>
@@ -856,7 +857,7 @@
                             <p><strong>Y a-t-il vraiment quelque chose à optimiser ?</strong></p>
                             <p class="text-xs text-slate-600 mb-1.5">La question n'est pas rhétorique. Commencez par mesurer $Q_r$ et $\overline{T}_{pass}$ <em>avant</em> toute optimisation et comparez-les aux deux exigences du cahier des charges. <strong>Si la prescription déposée les satisfait déjà, et largement, dites-le : c'est un résultat, pas un échec de votre part.</strong> Vous devrez alors répondre à une autre question, plus intéressante : à quoi sert d'optimiser un composant qui passe déjà ? Regardez du côté de la marge — de combien le nominal dépasse-t-il le seuil, et cette marge survit-elle aux erreurs de dépôt de Q25 ? C'est là, et non sur le nominal, que se joue l'intérêt des trois couches libres.</p>
                             <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
-                                <li>Activez le mérite <code>Maximiser Qr</code>. Sa formule reprend strictement les bandes 460–500, 535–565 et 620–680 nm ; l'analyseur de bandes reste un instrument de mesure indépendant.</li>
+                                <li>Passez en mode <strong>🎓 Étudiant</strong>, exercice VIII : le mérite <code>Maximiser Qr</code> y est sélectionné d'office. Sa formule reprend strictement les bandes 460–500, 535–565 et 620–680 nm ; l'analyseur de bandes reste un instrument de mesure indépendant.</li>
                                 <li>Fixez à <strong>2 nm</strong> le seuil de nettoyage : il devient aussi la borne basse de BFGS. Notez cette contrainte dans le dossier de conception ; un optimum numérique sous ce seuil n'est pas admissible.</li>
                                 <li>Choisissez <code>Couches spécifiques</code>, puis autorisez <strong>uniquement les couches 16, 17 et 18</strong>. Contrôlez dans le tableau que les couches 1 à 15 sont figées. Cette contrainte correspond au composant qui sera déposé et ne doit jamais être relâchée.</li>
                                 <li>Lancez BFGS et consignez $Q_r$, $\overline{T}_{pass}$ et les trois épaisseurs avant/après. Notez le compromis physique : BFGS maximise $Q_r$ (qui dépasse 200) en écrasant la réjection hors bande, mais au détriment de la transmission passante $\overline{T}_{pass}$ qui fléchit (de $\approx 97{,}9\,\%$ à $\approx 93{,}7\,\%$) tandis que la couche 18 s'amenuise. Vérifiez que le nombre de couches, leur ordre et les quinze premières épaisseurs sont rigoureusement inchangés.</li>
@@ -1179,9 +1180,9 @@
             </div>
             <div class="p-6 space-y-4 text-sm text-slate-300">
                 <ul class="list-disc list-inside space-y-3">
-                    <li><strong>Document de cours du BUT :</strong> <a href="theorie en francais.html" target="_blank" class="text-indigo-400 hover:text-indigo-300 hover:underline font-bold">Théorie des couches minces optiques</a>.</li>
+                    <li><strong>Document de cours du BUT :</strong> <a href="theorie en francais.html" target="_blank" rel="noopener" class="text-indigo-400 hover:text-indigo-300 hover:underline font-bold">Théorie des couches minces optiques</a>.</li>
                     <li><strong>La Bible de l'ingénierie optique :</strong> H.A. Macleod, <i>"Thin-Film Optical Filters"</i> (CRC Press).</li>
-                    <li><strong>Base de données de dispersion :</strong> <a href="https://refractiveindex.info" target="_blank" class="text-indigo-400 hover:text-indigo-300 hover:underline">refractiveindex.info</a>.</li>
+                    <li><strong>Base de données de dispersion :</strong> <a href="https://refractiveindex.info" target="_blank" rel="noopener" class="text-indigo-400 hover:text-indigo-300 hover:underline">refractiveindex.info</a>.</li>
                     <li><strong>Fondements théoriques :</strong> Max Born & Emil Wolf, <i>"Principles of Optics"</i>.</li>
                 </ul>
             </div>
