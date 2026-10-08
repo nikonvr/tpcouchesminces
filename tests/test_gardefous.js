@@ -98,7 +98,21 @@ V.verifie('les garde-fous sont actifs par défaut', M.Garde.actif === true);
     M.bfgsDescent([100, 100], [0, 1], (d) => -(d[0] + d[1]));       // pousse vers la borne haute
     V.verifie('aucun garde-fou ne se déclenche sur une optimisation normale',
         M.Garde.intact,
-        M.Garde.violations.map(v => `${v.code} ${v.detail}`).join(' | '));
+        M.Garde.violations.map(v => `${v.code} ${M.Garde.texteDetail(v.detail, 'fr')}`).join(' | '));
+}
+
+{
+    /* Aiguille fraîchement insérée (0,1 nm, sous la borne basse). Avant
+       correction, si aucun pas n'était accepté, BFGS rendait ce point de départ
+       hors bornes et « bfgs_borne_violee » se déclenchait sur un défaut qui
+       n'était pas celui de l'optimiseur. Le départ est désormais projeté. */
+    M.Garde.reinitialiser();
+    M.bfgsDescent([0.1, 80], [0, 1], (d) => d[0]);                  // l'aiguille ne gagne rien à grossir
+    M.bfgsDescent([0.1, 0.3, 80], [0, 1, 2], (d) => d[0] + d[1]);   // aiguille et fragment sous la borne
+    M.bfgsDescent([50, 1500], [0, 1], (d) => (d[0] - 40) ** 2);     // couche au-delà de 1200 nm
+    V.verifie('un départ hors bornes (aiguille de 0,1 nm) ne déclenche aucun garde-fou',
+        M.Garde.intact,
+        M.Garde.violations.map(v => `${v.code} ${M.Garde.texteDetail(v.detail, 'fr')}`).join(' | '));
 }
 
 {
@@ -226,6 +240,15 @@ V.groupe('C. Comportement du journal');
         M.Garde.journal.get('essai').nb === 2);
     V.verifie('le premier détail est conservé, pas écrasé',
         M.Garde.journal.get('essai').detail === 'premier');
+
+    // Détail bilingue : affiché à l'utilisateur dans la langue de l'interface.
+    M.Garde.faute('bilingue', { fr: 'couche 3 hors bornes', en: 'layer 3 out of bounds' });
+    const det = M.Garde.journal.get('bilingue').detail;
+    V.verifie('un détail bilingue est rendu dans la langue demandée',
+        M.Garde.texteDetail(det, 'fr') === 'couche 3 hors bornes'
+        && M.Garde.texteDetail(det, 'en') === 'layer 3 out of bounds');
+    V.verifie('un détail neutre (chaîne) est rendu tel quel dans les deux langues',
+        M.Garde.texteDetail('R = 1.2', 'en') === 'R = 1.2' && M.Garde.texteDetail('R = 1.2', 'fr') === 'R = 1.2');
 
     M.Garde.actif = false;
     M.Garde.reinitialiser();

@@ -16,6 +16,7 @@ import re
 import subprocess
 import sys
 import unicodedata
+from collections import Counter
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -69,7 +70,9 @@ def sans_code(html):
 def texte_visible(html):
     """Prose réellement lue par l'étudiant, attributs et balises retirés."""
     corps = sans_code(html)
-    corps = re.sub(r"<[^>]+>", " ", corps)
+    # Une vraie balise commence par une lettre, « / » ou « ! » : « $< 150$ »
+    # est du texte, et le prendre pour une balise avalerait la prose qui suit.
+    corps = re.sub(r"<(?=[A-Za-z/!])[^>]*>", " ", corps)
     return re.sub(r"\s+", " ", htmllib.unescape(corps))
 
 
@@ -302,6 +305,30 @@ for motif_fr, motif_en, libelle in (
     n_en = len(re.findall(motif_en, en))
     verifie(f"même nombre de {libelle} dans les deux langues ({n_fr})",
             n_fr == n_en and n_fr > 0, f"FR {n_fr} / EN {n_en}")
+
+# La structure ne suffit pas : une valeur donnée dans une seule langue (un
+# résultat glissé dans l'énoncé français, un seuil oublié dans l'anglais) passe
+# tous les contrôles ci-dessus. On compare donc, question par question, le
+# multiensemble des nombres affichés, virgule décimale française normalisée.
+def nombres_par_question(html):
+    t = texte_visible(html).replace("{,}", ".")
+    t = re.sub(r"(\d),(\d)", r"\1.\2", t)
+    morceaux = re.split(r"\bQ(\d{1,2})\s*[★☆]{3}", t)
+    out = {}
+    for i in range(1, len(morceaux) - 1, 2):
+        out[int(morceaux[i])] = Counter(re.findall(r"\d+(?:\.\d+)?", morceaux[i + 1]))
+    return out
+
+
+nq_fr, nq_en = nombres_par_question(fr), nombres_par_question(en)
+ecarts = []
+for q in sorted(set(nq_fr) | set(nq_en)):
+    a, b = nq_fr.get(q, Counter()), nq_en.get(q, Counter())
+    if a != b:
+        ecarts.append(f"Q{q} : FR seul {dict(a - b)} / EN seul {dict(b - a)}")
+verifie("chaque question donne les mêmes valeurs numériques en FR et en EN",
+        len(nq_fr) == 32 and not ecarts,
+        f"{len(nq_fr)} questions repérées ; " + " ; ".join(ecarts[:3]))
 
 
 # ---------------------------------------------------------------------------

@@ -348,4 +348,102 @@ V.groupe('E. Prescription de fabrication Institut Fresnel');
     V.verifie('bande 620–680 nm échantillonnée à 0,5 nm → 121 points', points(620, 680, 0.5) === 121);
 }
 
+/* ------------------------------- F. milieux semi-infinis absorbants ou évanescents */
+V.groupe('F. Substrat absorbant et milieu de sortie évanescent (convention N = n − iκ)');
+{
+    /* Le substrat et le superstrat doivent suivre EXACTEMENT la convention des
+       couches. Un substrat absorbant laissé dans la convention opposée ne se
+       voit pas sur le dioptre nu (|r| y est insensible), mais fausse R dès la
+       première couche déposée. Référence : récursion d'Airy en convention
+       N = n + iκ, indépendante du code testé. */
+    const zns = [{ matId: 'ZnS_fresnel', val: 1, unit: 'QWOT', locked: false }];
+    const dZns = epaisseurs(zns);
+
+    // Contre-exemple historique : ZnS 1 QWOT (550 nm) sur Si, incidence normale.
+    for (const [lambda, attendu] of [[400, 32.29], [350, 41.86]]) {
+        const p = M.computeTMMPoint(lambda, 0, etat({ substrat: 'Si', layers: zns }));
+        const ref = R.rouard(lambda, 0, pourReference(zns, dZns, lambda), { n: 1, k: 0 },
+            indiceSim('Si', lambda), 's');
+        V.proche(`ZnS 1 QWOT sur Si à ${lambda} nm : R conforme à Airy`, p.R_avg, ref.R, 1e-12);
+        V.proche(`ZnS 1 QWOT sur Si à ${lambda} nm : R = ${attendu} % (valeur de référence)`,
+            100 * p.R_avg, attendu, 0.01, ' %');
+    }
+
+    // Balayage : deux substrats absorbants, trois empilements, S et P séparément.
+    const substrats = [
+        ['Si', etat({ substrat: 'Si' }), (l) => indiceSim('Si', l)],
+        ['indice personnalisé 2,0 + 0,8i', etat({ substrat: 'Custom', customSubN: 2.0, customSubK: 0.8 }),
+            () => ({ n: 2.0, k: 0.8 })],
+        ['indice personnalisé 1,5 + 3i (métallique)', etat({ substrat: 'Custom', customSubN: 1.5, customSubK: 3.0 }),
+            () => ({ n: 1.5, k: 3.0 })],
+    ];
+    const empilements = [
+        ['ZnS 1 QWOT', zns],
+        ['H L H', empilement('H L H')],
+        ['Au 15 nm + L', [{ matId: 'Au', val: 15, unit: 'nm', locked: false }, ...empilement('L')]],
+    ];
+    for (const [nomSub, base, indiceSub] of substrats) {
+        const ecarts = [];
+        let energie = 0, reste = 0;
+        for (const [, couches] of empilements) {
+            const ds = epaisseurs(couches);
+            for (const lambda of [350, 380, 400, 450, 500, 550, 633, 700, 800]) {
+                for (const theta of [0, 30, 60, 75]) {
+                    const p = M.computeTMMPoint(lambda, theta, { ...base, layers: couches });
+                    const ref = pourReference(couches, ds, lambda);
+                    const sub = indiceSub(lambda);
+                    const s = R.rouard(lambda, theta, ref, { n: 1, k: 0 }, sub, 's');
+                    const pp = R.rouard(lambda, theta, ref, { n: 1, k: 0 }, sub, 'p');
+                    const ctx = `λ=${lambda} θ=${theta}`;
+                    ecarts.push([Math.abs(p.Rs - s.R), `Rs ${ctx}`]);
+                    ecarts.push([Math.abs(p.Rp - pp.R), `Rp ${ctx}`]);
+                    ecarts.push([Math.abs(p.Ts - s.T), `Ts ${ctx}`]);
+                    ecarts.push([Math.abs(p.Tp - pp.T), `Tp ${ctx}`]);
+                    // Bilan d'énergie, polarisation par polarisation, sans passer par A.
+                    if (p.Rs + p.Ts > 1 + 1e-12 || p.Rp + p.Tp > 1 + 1e-12) energie++;
+                    // A est bien le complément exact : R + T + A = 1.
+                    if (Math.abs(p.R_avg + p.T_avg + p.A_avg - 1) > 1e-12) reste++;
+                }
+            }
+        }
+        V.serieProche(`substrat ${nomSub} : Abelès et Airy concordent en S et en P (R et T)`, ecarts, 1e-11);
+        V.verifie(`substrat ${nomSub} : R + T ≤ 1 dans chaque polarisation`, energie === 0,
+            `${energie} violation(s)`);
+        V.verifie(`substrat ${nomSub} : R + T + A = 1 à la précision machine`, reste === 0,
+            `${reste} écart(s)`);
+    }
+
+    // Milieu de sortie évanescent recouvert d'une couche absorbante (configuration
+    // de Kretschmann) : la branche décroissante doit être celle des couches.
+    {
+        const au = [{ matId: 'Au', val: 50, unit: 'nm', locked: false }];
+        const ecarts = [];
+        for (const lambda of [550, 633, 700]) {
+            const nb = indiceSim('BK7', lambda);
+            for (const theta of [30, 42, 45, 50, 60, 70]) {
+                const p = M.computeTMMPoint(lambda, theta, etat({ superstrat: 'BK7', substrat: 'Air', layers: au }));
+                const ref = pourReference(au, [50], lambda);
+                const s = R.rouard(lambda, theta, ref, { n: nb.n, k: 0 }, { n: 1, k: 0 }, 's');
+                const pp = R.rouard(lambda, theta, ref, { n: nb.n, k: 0 }, { n: 1, k: 0 }, 'p');
+                ecarts.push([Math.abs(p.Rs - s.R), `Rs λ=${lambda} θ=${theta}`]);
+                ecarts.push([Math.abs(p.Rp - pp.R), `Rp λ=${lambda} θ=${theta}`]);
+            }
+        }
+        V.serieProche('BK7 / Au 50 nm / air (sortie évanescente) : Abelès et Airy concordent', ecarts, 1e-11);
+    }
+
+    // Réflexion totale avec une couche transparente : R reste exactement 1 (Q9).
+    {
+        const yf3 = empilement('L');
+        const nBk7 = indiceSim('BK7', 633).n;
+        const critique = Math.asin(1 / nBk7) * 180 / Math.PI;
+        let ecartMax = 0;
+        for (const theta of [critique + 1, 50, 65, 80]) {
+            const p = M.computeTMMPoint(633, theta, etat({ superstrat: 'BK7', substrat: 'Air', layers: yf3 }));
+            ecartMax = Math.max(ecartMax, Math.abs(p.Rs - 1), Math.abs(p.Rp - 1));
+        }
+        V.proche('réflexion totale à travers une couche transparente : Rs = Rp = 1', ecartMax, 0, 1e-12);
+    }
+}
+
 process.exit(V.bilan() === 0 ? 0 : 1);

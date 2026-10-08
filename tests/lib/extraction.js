@@ -40,7 +40,14 @@ const BLOCS = [
     ['function', 'standardNormalFrom'],
     ['function', 'quantile'],
     ['function', 'wilsonInterval'],
+    ['function', 'qualificationVerdict'],
+    ['function', 'reviewAssumptionSignature'],
+    ['function', 'pairedYieldDifference'],
+    ['function', 'unpairedYieldDifference'],
+    ['function', 'reviewPairingStatus'],
     ['function', 'cleanThresholdNm'],
+    ['function', 'bfgsBoundsNm'],
+    ['function', 'compactLayerList'],
     ['function', 'bfgsDescent'],
     ['function', 'parseLayerSelection'],
 ];
@@ -125,7 +132,9 @@ function extraitBloc(src, type, nom) {
 }
 
 /* Bouchons : juste assez de DOM pour que les seuils lus dans l'interface
-   retombent sur leur valeur par défaut documentée. */
+   retombent sur leur valeur par défaut documentée. Les champs sont exposés
+   (`__champs`) : un test peut y écrire, par exemple, un seuil de nettoyage
+   (`M.__champs.inpCleanThreshold = '0.2'`) pour éprouver une autre valeur. */
 const BOUCHONS = `
     const __champs = {};
     const document = {
@@ -147,7 +156,7 @@ function chargeMoteur() {
     const blocs = BLOCS.map(([type, nom]) => extraitBloc(src, type, nom));
     const noms = BLOCS.map(([, nom]) => nom);
 
-    const code = `${BOUCHONS}\n${blocs.join('\n\n')}\n;({ ${noms.join(', ')} });`;
+    const code = `${BOUCHONS}\n${blocs.join('\n\n')}\n;({ ${noms.join(', ')}, __champs });`;
 
     const contexte = vm.createContext({ Math, Number, Array, JSON, String, Object, isNaN, parseFloat, parseInt });
     let api;

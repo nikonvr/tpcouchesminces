@@ -32,3 +32,6 @@ enseignant/
 
 # Outils locaux
 .claude/
+
+# Archives de travail hors corpus (cf. GUIDE §1)
+archives_hors_corpus/

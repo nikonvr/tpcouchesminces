@@ -508,6 +508,8 @@
                                         <input id="inpOptimizeLayers" type="text" inputmode="numeric" value="" placeholder="1,3,5-7" class="w-full mt-0.5 bg-white border border-indigo-300 rounded px-1 py-0.5 text-[9px] font-mono text-indigo-950">
                                         <p id="txtOptimizeLayerList" class="mt-0.5 text-[8.5px] text-indigo-700 leading-tight">Sélectionnez au moins une couche existante.</p>
                                     </div>
+                                    <p id="txtFresnelScopeWarning" class="hidden mb-1 text-[8.5px] font-bold text-orange-900 bg-orange-100 border border-orange-400 rounded px-1.5 py-1 leading-tight"></p>
+                                    <p id="txtBfgsBounds" class="mb-1 text-[8.5px] text-indigo-800 leading-tight"></p>
                                     <button id="btnRunOptimizer" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1 px-1.5 rounded transition shadow-sm flex items-center justify-center gap-1 text-[10px]" title="BFGS ajuste les épaisseurs des couches libres, puis l'empilement est nettoyé (couches trop fines retirées, voisines identiques fusionnées) et réoptimisé.">
                                         <i data-lucide="sparkles" class="w-3 h-3"></i> Optimiser les épaisseurs
                                     </button>
@@ -541,6 +543,7 @@
                                     <button id="btnAnalyzeNeedle" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-1 px-1.5 rounded transition shadow-sm flex items-center justify-center gap-1 text-[10px]" title="Calculer où l'insertion d'une couche ultra-fine ferait le plus baisser le mérite (analyse de perturbation π(z))">
                                         <i data-lucide="map-pin" class="w-3 h-3"></i> Analyser l'aiguille
                                     </button>
+                                    <button id="btnUndoNeedle" disabled class="w-full mt-1 bg-white hover:bg-amber-100 border border-amber-400 text-amber-900 font-bold py-0.5 px-1.5 rounded transition text-[9px] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white" title="Restaurer l'empilement d'avant la dernière insertion d'aiguille (couches, verrous et portée BFGS)">↶ Annuler l'aiguille</button>
                                 </div>
                             </div>
                         </div>
@@ -984,16 +987,28 @@
         journal: new Map(),
 
         /* Enregistre une violation. Regroupée par code : un balayage spectral
-           fautif produit des milliers de points, mais une seule entrée. */
+           fautif produit des milliers de points, mais une seule entrée.
+           Le détail est soit une chaîne neutre (nombres, symboles), soit un
+           couple { fr, en } : il est affiché à l'utilisateur dans sa langue. */
         faute(code, detail) {
             if (!this.actif) return;
             const vue = this.journal.get(code);
             if (vue) { vue.nb++; return; }
-            this.journal.set(code, { nb: 1, detail: String(detail), premier: true });
+            const bilingue = detail && typeof detail === 'object' && 'fr' in detail && 'en' in detail;
+            this.journal.set(code, {
+                nb: 1, detail: bilingue ? { fr: String(detail.fr), en: String(detail.en) } : String(detail),
+                premier: true
+            });
             try {
-                console.error(`[GARDE-FOU] ${code} — ${detail}`);
+                console.error(`[GARDE-FOU] ${code} — ${this.texteDetail(this.journal.get(code).detail, 'fr')}`);
             } catch (_e) { /* console indisponible : le journal suffit */ }
             if (typeof rafraichirBadgeGarde === 'function') rafraichirBadgeGarde();
+        },
+
+        /** Détail d'une violation dans la langue demandée. */
+        texteDetail(detail, lang) {
+            if (detail && typeof detail === 'object') return lang === 'en' ? detail.en : detail.fr;
+            return String(detail ?? '');
         },
 
         get violations() {
@@ -1018,8 +1033,10 @@
             if (R < -t || R > 1 + t) this.faute('R_hors_bornes', `${ou} : R = ${R}`);
             if (T < -t || T > 1 + t) this.faute('T_hors_bornes', `${ou} : T = ${T}`);
             if (R + T > 1 + t) {
-                this.faute('energie_creee',
-                    `${ou} : R + T = ${R + T} > 1 — un empilement passif ne peut pas amplifier`);
+                this.faute('energie_creee', {
+                    fr: `${ou} : R + T = ${R + T} > 1 — un empilement passif ne peut pas amplifier`,
+                    en: `${ou}: R + T = ${R + T} > 1 — a passive stack cannot amplify`
+                });
             }
         },
 
@@ -1028,20 +1045,26 @@
             if (!this.actif) return;
             const t = this.tolerance;
             if (A < -t) {
-                this.faute('absorption_negative',
-                    `${ou} : 1 − R − T = ${A} — une couche passive ne peut pas émettre`);
+                this.faute('absorption_negative', {
+                    fr: `${ou} : 1 − R − T = ${A} — une couche passive ne peut pas émettre`,
+                    en: `${ou}: 1 − R − T = ${A} — a passive layer cannot emit`
+                });
             }
             // À incidence normale il n'existe pas de plan d'incidence : les deux
             // polarisations décrivent la même onde. Aucun matériau, aucun angle
             // de conception, aucune dispersion ne peut les séparer.
             if (Math.abs(thetaDeg) < 1e-12) {
                 if (Math.abs(Rs - Rp) > t) {
-                    this.faute('SP_incidence_normale',
-                        `${ou} : |Rs − Rp| = ${Math.abs(Rs - Rp)} alors que θ = 0`);
+                    this.faute('SP_incidence_normale', {
+                        fr: `${ou} : |Rs − Rp| = ${Math.abs(Rs - Rp)} alors que θ = 0`,
+                        en: `${ou}: |Rs − Rp| = ${Math.abs(Rs - Rp)} although θ = 0`
+                    });
                 }
                 if (Math.abs(Ts - Tp) > t) {
-                    this.faute('SP_incidence_normale_T',
-                        `${ou} : |Ts − Tp| = ${Math.abs(Ts - Tp)} alors que θ = 0`);
+                    this.faute('SP_incidence_normale_T', {
+                        fr: `${ou} : |Ts − Tp| = ${Math.abs(Ts - Tp)} alors que θ = 0`,
+                        en: `${ou}: |Ts − Tp| = ${Math.abs(Ts - Tp)} although θ = 0`
+                    });
                 }
             }
         },
@@ -1050,6 +1073,39 @@
     /* Jeton du Monte-Carlo en cours (voir runMonteCarloTolerance). Déclaré ici,
        en tête de script, pour exister avant tout appel possible. */
     let mcEnCours = null;
+
+    /* =========================================================================
+       1 ter. TEXTES DE RÉSULTAT RE-TRADUISIBLES
+       Un résultat de calcul (BFGS, Monte-Carlo, nettoyage) n'est pas un libellé
+       fixe : il contient des nombres. On mémorise donc, pour chaque zone, la
+       fonction qui le rédige à partir des valeurs calculées ; le changement de
+       langue la rejoue au lieu d'effacer le résultat.
+       ========================================================================= */
+    const LIVE_TEXT = new Map();
+
+    function paintLiveText(id) {
+        const entry = LIVE_TEXT.get(id);
+        const el = document.getElementById(id);
+        if (!entry || !el) return;
+        const text = entry.render();
+        if (entry.html) el.innerHTML = text;
+        else el.textContent = text;
+    }
+
+    /** Écrit un texte rédigé par `render()` et le rend re-traduisible. */
+    function liveText(id, render, html = false) {
+        LIVE_TEXT.set(id, { render, html });
+        paintLiveText(id);
+    }
+
+    /** Variante pour un couple de chaînes déjà rédigées. */
+    function liveBi(id, frText, enText, html = false) {
+        liveText(id, () => (currentLang === 'fr' ? frText : enText), html);
+    }
+
+    function refreshLiveTexts() {
+        LIVE_TEXT.forEach((_entry, id) => paintLiveText(id));
+    }
 
     /* =========================================================================
        2. BASE DE DONNÉES MATÉRIAUX & DISPERSION (RefractiveIndex.INFO)
@@ -1439,14 +1495,33 @@
             M_p = multiply2x2(ML_p_00, ML_p_01, ML_p_10, ML_p_11, M_p);
         }
 
-        const gamma_super = Complex.sqrt(Complex.sub(Complex.sqr(N_super), Complex.new(alpha * alpha, 0)));
-        const gamma_sub = Complex.sqrt(Complex.sub(Complex.sqr(N_sub), Complex.new(alpha * alpha, 0)));
+        // Milieux semi-infinis : EXACTEMENT la même convention que les couches.
+        // La table donne N = n + iκ ; le moteur travaille en N = n − iκ : γ et N²
+        // sont donc conjugués ensemble, et la branche retenue est celle qui
+        // décroît dans le milieu (Im γ ≤ 0), y compris pour un milieu de sortie
+        // évanescent (réflexion totale). Sans cette conjugaison, un substrat
+        // absorbant (Si, indice personnalisé avec k > 0) restait dans la
+        // convention opposée à celle des couches qui le recouvrent : R faux dès
+        // la première couche (ZnS 1 QWOT sur Si à 400 nm : 28,8 % au lieu de 32,3 %).
+        const milieuSemiInfini = (N) => {
+            const eps_m = Complex.sqr(N);
+            let g = Complex.sqrt(Complex.sub(eps_m, Complex.new(alpha * alpha, 0)));
+            let e = eps_m;
+            if (g.i > 0) {
+                g = Complex.new(g.r, -g.i);
+                e = Complex.new(eps_m.r, -eps_m.i);
+            }
+            if (Complex.abs(g) < 1e-12) g = Complex.new(1e-12, 0);
+            return { s: g, p: Complex.div(e, g) };
+        };
+        const milieuSuper = milieuSemiInfini(N_super);
+        const milieuSub = milieuSemiInfini(N_sub);
 
-        const eta0_s = gamma_super;
-        const eta0_p = Complex.div(Complex.sqr(N_super), gamma_super);
+        const eta0_s = milieuSuper.s;
+        const eta0_p = milieuSuper.p;
 
-        const etaSub_s = gamma_sub;
-        const etaSub_p = Complex.div(Complex.sqr(N_sub), gamma_sub);
+        const etaSub_s = milieuSub.s;
+        const etaSub_p = milieuSub.p;
 
         // Le modèle incohérent de face arrière est volontairement limité à l'interface nue (Q6).
         const includeBareBackside = state.considerBackside && state.layers.length === 0;
@@ -1458,7 +1533,7 @@
         const A_brut = 1.0 - R_avg - T_avg;
 
         Garde.verifiePoint(Rs, Rp, Ts, Tp, A_brut, thetaIncDeg,
-            `λ=${lambda_nm} nm, θ=${thetaIncDeg}°, ${state.layers.length} couche(s)`);
+            `λ=${lambda_nm} nm, θ=${thetaIncDeg}°, N=${state.layers.length}`);
 
         return {
             Rs, Rp, R_avg,
@@ -1791,8 +1866,8 @@
        l'optimiseur et « NON QUALIFIÉ, rendement 0,0 % » au Monte-Carlo :
        deux résultats parfaitement assurés et parfaitement vides de sens.
        On refuse de calculer et on dit pourquoi. */
-    function meritUndefinedReason() {
-        const fr = currentLang === 'fr';
+    function meritUndefinedReason(lang = currentLang) {
+        const fr = lang === 'fr';
         const o = getObjectiveMode();
         if (o === 'custom') {
             const useful = getCustomTarget().segments.filter(s => (Number(s.weight) || 0) > 0);
@@ -1816,11 +1891,30 @@
         return null;
     }
 
+    /* Affiche dans `id` la raison pour laquelle le mérite est indéfini, dans la
+       langue courante et de façon re-traduisible. Renvoie vrai si un message a
+       été affiché (calcul refusé). */
+    function showMeritUndefinedReason(id) {
+        const frText = meritUndefinedReason('fr');
+        if (!frText) return false;
+        liveBi(id, frText, meritUndefinedReason('en'));
+        return true;
+    }
+
+    /* Libellé du mérite, résolu au moment de l'affichage (et non du calcul) :
+       un compte rendu doit changer de langue avec l'interface. */
+    function meritLabelFor(objective, lang = currentLang) {
+        const fr = lang === 'fr';
+        if (objective === 'qr') return 'Qr';
+        if (objective === 'custom') return fr ? 'RMSE cible (%)' : 'Target RMSE (%)';
+        return fr ? 'R moyen (%)' : 'Mean R (%)';
+    }
+
     function evaluateObjective(thicknesses, objective = getObjectiveMode()) {
         if (objective === 'custom') {
             const r = evaluateCustomTarget(thicknesses);
             const v = Number.isFinite(r.rmse) ? r.rmse : 1e6;
-            return { cost: v, value: v, label: 'RMSE cible (%)' };
+            return { cost: v, value: v, label: meritLabelFor('custom') };
         }
         if (objective === 'qr') {
             const q = computeQrMetrics(thicknesses);
@@ -1840,7 +1934,7 @@
             }
         }
         const meanR = count ? sumR / count : NaN;
-        return { cost: meanR, value: meanR, label: currentLang === 'fr' ? 'R moyen (%)' : 'Mean R (%)' };
+        return { cost: meanR, value: meanR, label: meritLabelFor('ar') };
     }
 
     /* ==================================================================
@@ -1900,10 +1994,12 @@
 
     // Nom de fichier proposé pour chaque graphique, résolu au moment du clic.
     const CHART_CSV_TARGETS = {
-        mainChartCanvas:     () => (appState.mode === 'spectral' ? 'spectre_R_T_A' : 'reponse_angulaire'),
-        matChartCanvas:      () => 'dispersion_materiau',
-        matKChartCanvas:     () => 'extinction_materiau',
-        needlePiChartCanvas: () => 'needle_pi_de_z'
+        mainChartCanvas:     () => (appState.mode === 'spectral'
+            ? (currentLang === 'fr' ? 'spectre_R_T_A' : 'spectrum_R_T_A')
+            : (currentLang === 'fr' ? 'reponse_angulaire' : 'angular_response')),
+        matChartCanvas:      () => (currentLang === 'fr' ? 'dispersion_materiau' : 'material_dispersion'),
+        matKChartCanvas:     () => (currentLang === 'fr' ? 'extinction_materiau' : 'material_extinction'),
+        needlePiChartCanvas: () => (currentLang === 'fr' ? 'aiguille_pi_de_z' : 'needle_pi_of_z')
     };
 
     function exportChartFromCanvas(canvas, nameFn) {
@@ -2075,9 +2171,13 @@
         ['inpArThreshold'].forEach(id =>
             document.getElementById(id)?.addEventListener('input', () => {
                 updateMeritGridNote();
-                document.getElementById('txtMonteCarloResult').textContent = currentLang === 'fr'
-                    ? 'Fenêtre ou seuil modifiés : relancez la qualification statistique.'
-                    : 'Window or threshold changed: rerun the statistical qualification.';
+                // Le seuil fait partie des hypothèses de la qualification : la
+                // précédente ne vaut plus pour le nouveau critère.
+                appState.lastQualification = null;
+                renderDesignReview();
+                liveBi('txtMonteCarloResult',
+                    'Fenêtre ou seuil modifiés : relancez la qualification statistique.',
+                    'Window or threshold changed: rerun the statistical qualification.');
             }));
         ['inpTargetStep', 'inpTargetThreshold'].forEach(id =>
             document.getElementById(id)?.addEventListener('input', () => { renderCustomTargetEditor(); updateMeritGridNote(); }));
@@ -2089,7 +2189,9 @@
             const t = getCustomTarget();
             const blob = new Blob([JSON.stringify({ segments: t.segments, step: t.step, threshold: t.threshold }, null, 2)], { type: 'application/json' });
             const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob); a.download = 'cible_personnalisee.json'; a.click();
+            a.href = URL.createObjectURL(blob);
+            a.download = currentLang === 'fr' ? 'cible_personnalisee.json' : 'custom_target.json';
+            a.click();
             URL.revokeObjectURL(a.href);
         });
         document.getElementById('btnTargetImport')?.addEventListener('click', () => {
@@ -2262,10 +2364,30 @@
         // Un intervalle de confiance encadre toujours la proportion observée et
         // reste dans [0, 1] : sans cela, le verdict de qualification est faux.
         if (bas > haut + 1e-12 || p < bas - 1e-9 || p > haut + 1e-9) {
-            Garde.faute('wilson_incoherent',
-                `p̂ = ${p} hors de [${bas} ; ${haut}] pour ${successes}/${trials}`);
+            Garde.faute('wilson_incoherent', {
+                fr: `p̂ = ${p} hors de [${bas} ; ${haut}] pour ${successes}/${trials}`,
+                en: `p̂ = ${p} outside [${bas}; ${haut}] for ${successes}/${trials}`
+            });
         }
         return [bas, haut];
+    }
+
+    /* Règle de décision du référentiel (§9.2), isolée pour être testée :
+         - QUALIFIÉ     si la borne basse de l'IC95 % de Wilson DÉPASSE l'exigence ;
+         - NON QUALIFIÉ si la borne haute reste SOUS l'exigence ;
+         - INCONCLUSIF  dans la zone de recouvrement — y compris lorsque p̂ est
+           sous l'exigence mais que la borne haute l'atteint encore, et pour
+           1000/1000 face à une exigence de 100 % (la borne basse vaut 99,6 %).
+       Les comparaisons sont strictes, avec une tolérance de 1e-9 (en points de
+       pourcentage) contre les erreurs d'arrondi : une égalité reste inconclusive. */
+    function qualificationVerdict(accepted, numRuns, requiredYieldPct) {
+        const [bas, haut] = wilsonInterval(accepted, numRuns);
+        const exigence = Number(requiredYieldPct);
+        const TOL = 1e-9;
+        if (!Number.isFinite(exigence) || !(numRuns > 0)) return 'inconclusive';
+        if (100 * bas > exigence + TOL) return 'qualified';
+        if (100 * haut < exigence - TOL) return 'rejected';
+        return 'inconclusive';
     }
 
     function formatStat(value, digits = 2) {
@@ -2330,13 +2452,22 @@
         })[char]);
     }
 
+    /* Hypothèses qui doivent être STRICTEMENT identiques pour que deux
+       qualifications soient comparables (guide §9.3) : mérite, bandes et grille,
+       incidence, polarisation, seuils optiques effectifs, Δd, N, graine, dmin et
+       rendement exigé. Le nombre de couches n'est pas une hypothèse : il est
+       traité à part, car il conditionne seulement l'appariement des tirages. */
     function reviewAssumptionSignature(record) {
         return JSON.stringify({
             objective: record.objective,
             merit: record.meritConfigSignature,
+            grid: record.gridSignature ?? null,
+            acceptance: record.acceptanceSignature ?? null,
+            polarisation: record.polarisationSignature ?? null,
             incidence: record.incidenceDeg,
             tolerance: record.toleranceNm,
             runs: record.numRuns,
+            seed: record.seed ?? null,
             minimumThickness: record.minimumThicknessNm,
             requiredYield: record.requiredYieldPct
         });
@@ -2366,6 +2497,72 @@
         };
     }
 
+    /* Différence B−A lorsque les tirages ne sont PAS appariés (nombres de
+       couches différents : la graine ne rejoue plus les mêmes erreurs couche par
+       couche). Approximation normale de deux proportions indépendantes. */
+    function unpairedYieldDifference(recordA, recordB) {
+        const nA = Number(recordA?.numRuns), nB = Number(recordB?.numRuns);
+        if (!(nA > 0) || !(nB > 0)) return null;
+        const pA = recordA.accepted / nA, pB = recordB.accepted / nB;
+        const diff = pB - pA;
+        const se = Math.sqrt(pA * (1 - pA) / nA + pB * (1 - pB) / nB);
+        return {
+            diffPct: 100 * diff,
+            lowPct: 100 * Math.max(-1, diff - 1.96 * se),
+            highPct: 100 * Math.min(1, diff + 1.96 * se)
+        };
+    }
+
+    /* Statut d'une comparaison A/B :
+         'single'     — un seul instantané ;
+         'invalid'    — au moins une hypothèse diffère ;
+         'unpaired'   — hypothèses identiques mais nombres de couches différents ;
+         'paired'     — hypothèses identiques, mêmes réalisations tirage par tirage. */
+    function reviewPairingStatus(recordA, recordB) {
+        if (!recordA || !recordB) return 'single';
+        if (reviewAssumptionSignature(recordA) !== reviewAssumptionSignature(recordB)) return 'invalid';
+        const flagsA = recordA.complianceFlags, flagsB = recordB.complianceFlags;
+        if (recordA.layerCount !== recordB.layerCount
+            || !Array.isArray(flagsA) || !Array.isArray(flagsB) || flagsA.length !== flagsB.length) {
+            return 'unpaired';
+        }
+        return 'paired';
+    }
+
+    /* Statistique défavorable, rédigée à l'affichage (langue et format locaux). */
+    function adverseStatisticText(rec) {
+        if (!rec) return '—';
+        let txt = (rec.objective === 'ar' || rec.objective === 'custom')
+            ? `P95 = ${formatStat(rec.p95)}`
+            : `P05 = ${formatStat(rec.p05)}`;
+        if (rec.objective === 'qr' && Number.isFinite(rec.p05Tpass)) {
+            txt += ` ; P05(Tpass) = ${formatStat(rec.p05Tpass)} %`;
+        }
+        return txt;
+    }
+
+    function assumptionTextFor(rec) {
+        const fr = currentLang === 'fr';
+        const model = fr ? 'gaussienne indépendante, σ = Δd/2' : 'independent Gaussian, σ = Δd/2';
+        return fr
+            ? `${model} ; Δd = ${formatStat(rec.toleranceNm, 1)} nm ; N = ${rec.numRuns} ; graine ${rec.seed} ; dmin = ${formatStat(rec.minimumThicknessNm, 1)} nm ; rendement exigé = ${formatStat(rec.requiredYieldPct, 1)} % ; critère ${criteriaTextFor(rec)}`
+            : `${model}; Δd = ${formatStat(rec.toleranceNm, 1)} nm; N = ${rec.numRuns}; seed ${rec.seed}; dmin = ${formatStat(rec.minimumThicknessNm, 1)} nm; required yield = ${formatStat(rec.requiredYieldPct, 1)}%; criterion ${criteriaTextFor(rec)}`;
+    }
+
+    /* Critère de conformité optique, rédigé à partir des seuils mémorisés. */
+    function criteriaTextFor(rec) {
+        const fr = currentLang === 'fr';
+        const a = rec?.acceptance || {};
+        if (rec?.objective === 'custom') return `RMSE ≤ ${formatStat(a.rmseMax, 1)} %`;
+        if (rec?.objective === 'qr') {
+            return fr ? `Qr ≥ ${formatStat(a.qrMin, 1)} et Tpass ≥ ${formatStat(a.tpassMin, 1)} %`
+                      : `Qr ≥ ${formatStat(a.qrMin, 1)} and Tpass ≥ ${formatStat(a.tpassMin, 1)}%`;
+        }
+        const w = (rec?.arWindows || []).map(x => `${x.min}–${x.max}`).join(' + ');
+        return fr ? `R moyen ${w} nm ≤ ${formatStat(a.meanRMax, 2)} %`
+                  : `Mean R ${w} nm ≤ ${formatStat(a.meanRMax, 2)}%`;
+    }
+
     function renderDesignReview() {
         const tbody = document.getElementById('tbodyReview');
         const note = document.getElementById('txtReviewPairing');
@@ -2383,44 +2580,90 @@
             note.textContent = fr
                 ? 'Exécutez une qualification, puis capturez-la dans A ou B.'
                 : 'Run a qualification, then capture it in A or B.';
+            renderReviewProfiles(records);
             return;
         }
         const statusLabel = key => fr
             ? ({ qualified: 'QUALIFIÉ', inconclusive: 'INCONCLUSIF', rejected: 'NON QUALIFIÉ' })[key]
             : ({ qualified: 'QUALIFIED', inconclusive: 'INCONCLUSIVE', rejected: 'NOT QUALIFIED' })[key];
         const cell = (record, formatter, extraClass = '') => record
-            ? `<td class="px-1 py-1 text-right ${extraClass}" title="${escapeReviewText(record.assumptionText)}">${formatter(record)}</td>`
+            ? `<td class="px-1 py-1 text-right ${extraClass}" title="${escapeReviewText(assumptionTextFor(record))}">${formatter(record)}</td>`
             : `<td class="px-1 py-1 text-right text-slate-300">—</td>`;
         const metricRow = (label, formatter, extraClass = '') => `<tr class="border-b border-emerald-100 align-top">
             <th class="px-1 py-1 text-left font-semibold text-slate-600">${label}</th>
             ${cell(records[0], formatter, extraClass)}${cell(records[1], formatter, extraClass)}</tr>`;
+        const spanRow = (label, content, extraClass = 'font-mono') => `<tr class="border-b border-emerald-100 align-top">
+            <th class="px-1 py-1 text-left font-semibold text-slate-600">${label}</th>
+            <td colspan="2" class="px-1 py-1 text-right ${extraClass}">${content}</td></tr>`;
         const decisionCell = record => {
             const statusClass = record.decisionKey === 'qualified' ? 'text-emerald-700' : record.decisionKey === 'inconclusive' ? 'text-amber-700' : 'text-red-700';
             return `<span class="font-bold ${statusClass}">${statusLabel(record.decisionKey)}</span>`;
         };
-        const paired = Boolean(records[0] && records[1]) && reviewAssumptionSignature(records[0]) === reviewAssumptionSignature(records[1]);
-        const pairedStats = paired ? pairedYieldDifference(records[0], records[1]) : null;
-        tbody.innerHTML = [
+        const status = reviewPairingStatus(records[0], records[1]);
+        const comparable = status === 'paired' || status === 'unpaired';
+        const [A, B] = records;
+        const signed = (v, digits) => Number.isFinite(v) ? `${v > 0 ? '+' : ''}${formatStat(v, digits)}` : '—';
+
+        const rows = [
             metricRow(fr ? 'Instantané' : 'Snapshot', r => `<strong>${escapeReviewText(r.name)}</strong>`),
-            metricRow(fr ? 'Mérite nominal' : 'Nominal merit', r => `${escapeReviewText(r.meritLabel)} = ${formatStat(r.nominalMerit, 2)}`, 'font-mono'),
+            metricRow(fr ? 'Mérite nominal' : 'Nominal merit', r => `${escapeReviewText(meritLabelFor(r.objective))} = ${formatStat(r.nominalMerit, 2)}`, 'font-mono'),
+            metricRow(fr ? 'Mérite min / max (réal. fabricables)' : 'Merit min / max (feasible draws)',
+                r => `${formatStat(r.meritMin, 2)} / ${formatStat(r.meritMax, 2)}`, 'font-mono'),
             metricRow(fr ? 'Architecture' : 'Architecture', r => `${r.layerCount} ${fr ? 'c.' : 'l.'} / ${r.materialCount} mat.`),
-            metricRow('dmin / Σd', r => `${formatStat(r.nominalMinimum, 1)} / ${formatStat(r.nominalTotal, 1)} nm`, 'font-mono'),
+            metricRow('dmin / dmax / Σd', r => `${formatStat(r.nominalMinimum, 1)} / ${formatStat(r.nominalMaximum, 1)} / ${formatStat(r.nominalTotal, 1)} nm`, 'font-mono'),
             metricRow(fr ? 'Rendement [IC95 %]' : 'Yield [95% CI]', r => `${formatStat(r.yieldPct, 1)} % [${formatStat(r.yieldLowPct, 1)} ; ${formatStat(r.yieldHighPct, 1)}]`, 'font-mono'),
-            pairedStats ? `<tr class="border-b border-emerald-100"><th class="px-1 py-1 text-left font-semibold text-slate-600">${fr ? 'Δ rendement B−A [IC95 % apparié]' : 'Yield Δ B−A [paired 95% CI]'}</th><td colspan="2" class="px-1 py-1 text-right font-mono">${formatStat(pairedStats.diffPct, 1)} % [${formatStat(pairedStats.lowPct, 1)} ; ${formatStat(pairedStats.highPct, 1)}]</td></tr>` : '',
-            metricRow(fr ? 'Centile défavorable' : 'Adverse percentile', r => escapeReviewText(r.adverseStatistic), 'font-mono'),
+            metricRow(fr ? 'Centile défavorable' : 'Adverse percentile', r => escapeReviewText(adverseStatisticText(r)), 'font-mono'),
             metricRow(fr ? 'Fabricabilité' : 'Manufacturability', r => `${formatStat(r.feasibilityPct, 1)} %`, 'font-mono'),
             metricRow(fr ? 'Décision' : 'Decision', decisionCell)
-        ].join('');
-        note.className = paired
-            ? 'mt-1 text-[9px] text-emerald-950 bg-emerald-100 border border-emerald-300 rounded px-1.5 py-1 font-semibold'
-            : filled.length > 1
-                ? 'mt-1 text-[9px] text-red-900 bg-red-50 border border-red-300 rounded px-1.5 py-1 font-semibold'
-                : 'mt-1 text-[9px] text-emerald-950 bg-white/80 border border-emerald-200 rounded px-1.5 py-1';
-        note.textContent = paired
-            ? (fr ? '✓ Comparaison appariée valide : même mérite et mêmes hypothèses.' : '✓ Valid paired comparison: same merit and assumptions.')
-            : filled.length > 1
-                ? (fr ? '⚠ Comparaison invalide : au moins une hypothèse diffère. Harmonisez mérite, incidence, tolérance, N, dmin et rendement exigé.' : '⚠ Invalid comparison: at least one assumption differs. Match merit, incidence, tolerance, N, dmin and required yield.')
-                : (fr ? 'Un instantané capturé : qualifiez le second avec exactement les mêmes hypothèses.' : 'One snapshot captured: qualify the second with exactly the same assumptions.');
+        ];
+
+        if (comparable) {
+            // Différences nominales B−A : mérite, épaisseurs extrêmes, total, couches.
+            rows.push(spanRow(fr ? 'Δ nominal B−A' : 'Nominal Δ B−A',
+                `${escapeReviewText(meritLabelFor(A.objective))} ${signed(B.nominalMerit - A.nominalMerit, 2)} ; `
+                + `dmin ${signed(B.nominalMinimum - A.nominalMinimum, 1)} nm ; `
+                + `dmax ${signed(B.nominalMaximum - A.nominalMaximum, 1)} nm ; `
+                + `Σd ${signed(B.nominalTotal - A.nominalTotal, 1)} nm ; `
+                + `${fr ? 'couches' : 'layers'} ${signed(B.layerCount - A.layerCount, 0)}`));
+            const seqA = (A.stack || []).map(l => l.matId).join('|');
+            const seqB = (B.stack || []).map(l => l.matId).join('|');
+            const sameArchitecture = seqA.length > 0 && seqA === seqB;
+            rows.push(spanRow(fr ? 'Architecture conservée' : 'Architecture preserved',
+                sameArchitecture
+                    ? `<span class="font-bold text-emerald-700">${fr ? 'oui' : 'yes'}</span> — ${fr ? `même séquence de ${A.layerCount} matériaux` : `same sequence of ${A.layerCount} materials`}`
+                    : `<span class="font-bold text-red-700">${fr ? 'non' : 'no'}</span> — ${fr ? 'séquences de matériaux différentes' : 'different material sequences'}`,
+                ''));
+        }
+        if (status === 'paired') {
+            const pairedStats = pairedYieldDifference(A, B);
+            if (pairedStats) rows.push(spanRow(fr ? 'Δ rendement B−A [IC95 % apparié]' : 'Yield Δ B−A [paired 95% CI]',
+                `${formatStat(pairedStats.diffPct, 1)} % [${formatStat(pairedStats.lowPct, 1)} ; ${formatStat(pairedStats.highPct, 1)}]`));
+        } else if (status === 'unpaired') {
+            const u = unpairedYieldDifference(A, B);
+            if (u) rows.push(spanRow(fr ? 'Δ rendement B−A [IC95 % NON apparié]' : 'Yield Δ B−A [UNPAIRED 95% CI]',
+                `${formatStat(u.diffPct, 1)} % [${formatStat(u.lowPct, 1)} ; ${formatStat(u.highPct, 1)}]`));
+        }
+        tbody.innerHTML = rows.join('');
+
+        const classes = {
+            paired: 'mt-1 text-[9px] text-emerald-950 bg-emerald-100 border border-emerald-300 rounded px-1.5 py-1 font-semibold',
+            unpaired: 'mt-1 text-[9px] text-orange-950 bg-orange-100 border border-orange-400 rounded px-1.5 py-1 font-semibold',
+            invalid: 'mt-1 text-[9px] text-red-900 bg-red-50 border border-red-300 rounded px-1.5 py-1 font-semibold',
+            single: 'mt-1 text-[9px] text-emerald-950 bg-white/80 border border-emerald-200 rounded px-1.5 py-1'
+        };
+        note.className = classes[status];
+        const nA = A?.layerCount, nB = B?.layerCount;
+        const messages = {
+            paired: fr ? '✓ Comparaison appariée valide : mêmes hypothèses et mêmes réalisations, tirage par tirage.'
+                       : '✓ Valid paired comparison: same assumptions and the same realizations, draw by draw.',
+            unpaired: fr ? `⚠ Non apparié : hypothèses identiques, mais A et B n'ont pas le même nombre de couches (${nA} / ${nB}). La graine ne rejoue plus les mêmes erreurs couche par couche ; la différence B−A est donnée comme celle de deux échantillons indépendants.`
+                         : `⚠ Unpaired: identical assumptions, but A and B do not have the same number of layers (${nA} / ${nB}). The seed no longer replays the same layer-by-layer errors; the B−A difference is given as that of two independent samples.`,
+            invalid: fr ? '⚠ Comparaison invalide : au moins une hypothèse diffère. Harmonisez mérite, bandes et grille, incidence, polarisation, seuils optiques, Δd, N, graine, dmin et rendement exigé.'
+                        : '⚠ Invalid comparison: at least one assumption differs. Match merit, bands and grid, incidence, polarization, optical thresholds, Δd, N, seed, dmin and required yield.',
+            single: fr ? 'Un instantané capturé : qualifiez le second avec exactement les mêmes hypothèses.'
+                       : 'One snapshot captured: qualify the second with exactly the same assumptions.'
+        };
+        note.textContent = messages[status];
         renderReviewProfiles(records);
     }
 
@@ -2471,11 +2714,7 @@
 
     function runMonteCarloTolerance(toleranceNm, numRuns = 500, options = {}) {
         if (appState.layers.length === 0 || appState.mode !== "spectral") return;
-        const meritIssue = meritUndefinedReason();
-        if (meritIssue) {
-            document.getElementById('txtMonteCarloResult').textContent = meritIssue;
-            return;
-        }
+        if (showMeritUndefinedReason('txtMonteCarloResult')) return;
         const N_super_design = getMediumIndex(appState.superstrat, appState.designL0, appState.customSuperN).r;
         const baseThicknesses = appState.layers.map(lay =>
             getPhysicalThicknessNm(lay, appState.designL0, appState.designIncDeg, N_super_design)
@@ -2488,6 +2727,13 @@
         const seed = 42;
         const requiredYieldPct = Math.min(100, Math.max(0, Number(options.requiredYieldPct) || 0));
         const minimumThicknessNm = Math.max(0, Number(options.minimumThicknessNm) || 1);
+        // Seuils optiques EFFECTIFS, figés pour toute la qualification : ils font
+        // partie des hypothèses comparées par le comparateur A/B.
+        const acceptance = objective === 'qr'
+            ? { qrMin: ACCEPTANCE.qr.qr, tpassMin: ACCEPTANCE.qr.tpass }
+            : objective === 'custom'
+                ? { rmseMax: getCustomTarget().threshold }
+                : { meanRMax: getArConfig().threshold };
         const rng = createSeededRandom(seed);
         // L'enveloppe suit le pas d'affichage (plafonnée en nombre de points pour
         // rester fluide) : un filtre étroit ne doit pas être lissé par la grille.
@@ -2536,9 +2782,10 @@
             // seule couche déposée échappait au tirage, le rendement serait
             // surestimé sans que rien ne le signale.
             if (r === 0 && noisyThicknesses.length !== appState.layers.length) {
-                Garde.faute('mc_couches_non_perturbees',
-                    `${noisyThicknesses.length} couche(s) tirée(s) pour ` +
-                    `${appState.layers.length} couche(s) déposée(s)`);
+                Garde.faute('mc_couches_non_perturbees', {
+                    fr: `${noisyThicknesses.length} couche(s) tirée(s) pour ${appState.layers.length} couche(s) déposée(s)`,
+                    en: `${noisyThicknesses.length} layer(s) drawn for ${appState.layers.length} deposited layer(s)`
+                });
             }
             const feasible = noisyThicknesses.every(d => Number.isFinite(d) && d >= minimumThicknessNm);
             if (!feasible) {
@@ -2550,10 +2797,10 @@
             meritValues.push(merit.value);
             if (objective === 'qr') secondaryValues.push(merit.passTransmission);
             const ok = objective === 'qr'
-                ? merit.value >= ACCEPTANCE.qr.qr && merit.passTransmission >= ACCEPTANCE.qr.tpass
+                ? merit.value >= acceptance.qrMin && merit.passTransmission >= acceptance.tpassMin
                 : objective === 'custom'
-                    ? merit.value <= getCustomTarget().threshold
-                    : merit.value <= getArConfig().threshold;
+                    ? merit.value <= acceptance.rmseMax
+                    : merit.value <= acceptance.meanRMax;
             complianceFlags.push(ok);
             if (ok) accepted++;
 
@@ -2605,71 +2852,55 @@
             ? Math.sqrt(meritValues.reduce((sum, value) => sum + (value - meanMerit) ** 2, 0) / (meritValues.length - 1))
             : NaN;
         const sortedMerits = meritValues.slice().sort((a, b) => a - b);
+        const meritMin = sortedMerits.length ? sortedMerits[0] : NaN;
+        const meritMax = sortedMerits.length ? sortedMerits[sortedMerits.length - 1] : NaN;
         const p05 = quantile(sortedMerits, 0.05);
         const p50 = quantile(sortedMerits, 0.50);
         const p95 = quantile(sortedMerits, 0.95);
+        const sortedSecondary = secondaryValues.slice().sort((a, b) => a - b);
+        const p05Tpass = (objective === 'qr' && sortedSecondary.length) ? quantile(sortedSecondary, 0.05) : NaN;
         const [yieldLow, yieldHigh] = wilsonInterval(accepted, numRuns);
-        const decisionKey = 100 * yieldLow >= requiredYieldPct
-            ? 'qualified'
-            : yieldPct >= requiredYieldPct ? 'inconclusive' : 'rejected';
-        const decisionLabel = currentLang === 'fr'
-            ? ({ qualified: 'QUALIFIÉ', inconclusive: 'INCONCLUSIF', rejected: 'NON QUALIFIÉ' })[decisionKey]
-            : ({ qualified: 'QUALIFIED', inconclusive: 'INCONCLUSIVE', rejected: 'NOT QUALIFIED' })[decisionKey];
-        const meritLabel = objective === 'ar'
-            ? (currentLang === 'fr' ? 'R moyen' : 'Mean R')
-            : objective === 'custom' ? (currentLang === 'fr' ? 'RMSE cible' : 'Target RMSE') : 'Qr';
-        const criteria = objective === 'custom'
-            ? `RMSE ≤ ${formatStat(getCustomTarget().threshold, 1)} %`
-            : objective === 'qr'
-            ? (currentLang === 'fr' ? `Qr ≥ ${ACCEPTANCE.qr.qr} et Tpass ≥ ${ACCEPTANCE.qr.tpass} %` : `Qr ≥ ${ACCEPTANCE.qr.qr} and Tpass ≥ ${ACCEPTANCE.qr.tpass}%`)
-            : (() => {
-                    const g = getArConfig();
-                    const w = g.windows.map(x => `${x.min}–${x.max}`).join(' + ');
-                    return currentLang === 'fr'
-                        ? `R moyen ${w} nm ≤ ${formatStat(g.threshold, 2)} %`
-                        : `Mean R ${w} nm ≤ ${g.threshold}%`;
-                  })();
-        const modelLabel = currentLang === 'fr'
-            ? 'gaussienne indépendante, σ = Δd/2'
-            : 'independent Gaussian, σ = Δd/2';
-        // Coût à minimiser → centile défavorable = P95 ; performance à maximiser → P05.
-        let adverseStatistic = (objective === 'ar' || objective === 'custom')
-            ? `P95 = ${formatStat(p95)}`
-            : `P05 = ${formatStat(p05)}`;
-        if (objective === 'qr' && secondaryValues.length) {
-            const sortedSecondary = secondaryValues.slice().sort((a, b) => a - b);
-            adverseStatistic += ` ; P05(Tpass) = ${formatStat(quantile(sortedSecondary, 0.05))} %`;
-        }
-        // Les centiles ne portent que sur les réalisations FABRICABLES : ils sont
-        // conditionnels. Le rendement, lui, est rapporté sur numRuns. Mélanger les
-        // deux sans le dire rendrait le centile défavorable trop optimiste.
-        const conditionalNote = feasibleCount < numRuns
-            ? (currentLang === 'fr'
-                ? ` ⚠ centiles conditionnels aux ${feasibleCount} réalisations fabricables`
-                : ` ⚠ percentiles conditional on the ${feasibleCount} feasible realizations`)
-            : '';
-        const resultText = currentLang === 'fr'
-            ? `Décision : ${decisionLabel} — borne basse IC95 % ${formatStat(100 * yieldLow, 1)} % pour une exigence de ${formatStat(requiredYieldPct, 1)} %. ${accepted}/${numRuns} conformes, rendement = ${formatStat(yieldPct, 1)} % ; IC95 % de Wilson [${formatStat(100 * yieldLow, 1)} ; ${formatStat(100 * yieldHigh, 1)}] %.\nFabricabilité : ${feasibleCount}/${numRuns} (${formatStat(feasibilityPct, 1)} %) — dmin ≥ ${formatStat(minimumThicknessNm, 1)} nm.\nOptique (réalisations fabricables) : ${meritLabel} = ${formatStat(meanMerit)} ± ${formatStat(stdMerit)} ; P05/P50/P95 = ${formatStat(p05)} / ${formatStat(p50)} / ${formatStat(p95)} ; défavorable : ${adverseStatistic}.${conditionalNote}\nHypothèses : ${modelLabel}, Δd = ${formatStat(toleranceNm, 1)} nm, ${appState.layers.length} couche(s) perturbée(s) — critère ${criteria}.`
-            : `Decision: ${decisionLabel} — 95% CI lower bound ${formatStat(100 * yieldLow, 1)}% for a ${formatStat(requiredYieldPct, 1)}% requirement. ${accepted}/${numRuns} compliant, yield = ${formatStat(yieldPct, 1)}%; 95% Wilson CI [${formatStat(100 * yieldLow, 1)}, ${formatStat(100 * yieldHigh, 1)}]%.\nManufacturability: ${feasibleCount}/${numRuns} (${formatStat(feasibilityPct, 1)}%) — dmin ≥ ${formatStat(minimumThicknessNm, 1)} nm.\nOptics (feasible realizations): ${meritLabel} = ${formatStat(meanMerit)} ± ${formatStat(stdMerit)}; P05/P50/P95 = ${formatStat(p05)} / ${formatStat(p50)} / ${formatStat(p95)}; adverse: ${adverseStatistic}.${conditionalNote}\nAssumptions: ${modelLabel}, Δd = ${formatStat(toleranceNm, 1)} nm, ${appState.layers.length} perturbed layer(s) — criterion ${criteria}.`;
-        document.getElementById('txtMonteCarloResult').textContent = resultText;
+        const decisionKey = qualificationVerdict(accepted, numRuns, requiredYieldPct);
         const nominalMinimum = Math.min(...baseThicknesses);
+        const nominalMaximum = Math.max(...baseThicknesses);
         const nominalTotal = baseThicknesses.reduce((sum, value) => sum + value, 0);
+
+        // Hypothèses de la qualification, sérialisées pour le comparateur A/B.
+        const arConfig = getArConfig();
+        const customTarget = getCustomTarget();
         const meritConfigSignature = objective === 'ar'
-            ? JSON.stringify(getArConfig())
-            : objective === 'custom' ? JSON.stringify(getCustomTarget())
-            : 'qr-fixed-460-500_535-565_620-680-step0.5';
-        appState.lastQualification = {
-            objective, meritLabel, criteria, decisionKey, requiredYieldPct,
+            ? JSON.stringify(arConfig)
+            : objective === 'custom' ? JSON.stringify(customTarget)
+            : JSON.stringify(QR_SPEC);
+        const gridSignature = objective === 'qr'
+            ? JSON.stringify({ step: MERIT_GRIDS.qr.step, bands: [...QR_SPEC.reject, ...QR_SPEC.pass].map(b => [b.lmin, b.lmax, b.step]) })
+            : objective === 'custom'
+                ? JSON.stringify({ step: customTarget.step, segments: customTarget.segments.map(s => [s.lmin, s.lmax, Number(s.angle) || 0]) })
+                : JSON.stringify(arConfig.windows.map(w => [w.min, w.max, w.step]));
+        // Qr et R̄ portent sur la lumière naturelle (moyenne S/P) ; la cible libre
+        // déclare une polarisation par segment.
+        const polarisationSignature = objective === 'custom'
+            ? JSON.stringify(customTarget.segments.map(s => s.pol || 'moy'))
+            : 'moy';
+
+        const record = {
+            objective, decisionKey, requiredYieldPct, acceptance,
+            arWindows: objective === 'ar' ? arConfig.windows : [],
             layerCount: appState.layers.length,
             materialCount: new Set(appState.layers.map(layer => layer.matId)).size,
             nominalMerit: evaluateObjective(null, objective).value,
-            nominalMinimum, nominalTotal, accepted, numRuns, yieldPct,
+            nominalMinimum, nominalMaximum, nominalTotal, accepted, numRuns, yieldPct,
             yieldLowPct: 100 * yieldLow, yieldHighPct: 100 * yieldHigh,
-            feasibilityPct, adverseStatistic, meritConfigSignature, toleranceNm, seed,
-            minimumThicknessNm, perturbedCount: appState.layers.length, complianceFlags,
+            feasibleCount, feasibilityPct, meanMerit, stdMerit, meritMin, meritMax, p05, p50, p95, p05Tpass,
+            meritConfigSignature, gridSignature, polarisationSignature,
+            acceptanceSignature: JSON.stringify(acceptance),
+            toleranceNm, seed, minimumThicknessNm, perturbedCount: appState.layers.length, complianceFlags,
             incidenceDeg: appState.incSpecDeg,
-            assumptionText: `${modelLabel}; Δd=${formatStat(toleranceNm, 1)} nm; N=${numRuns}; dmin=${formatStat(minimumThicknessNm, 1)} nm; required yield=${formatStat(requiredYieldPct, 1)} %`
+            // Empilement qualifié, figé en nm : c'est lui que capture le comparateur.
+            stack: appState.layers.map((l, i) => ({ matId: l.matId, locked: l.locked, unit: 'nm', val: baseThicknesses[i] }))
         };
+        appState.lastQualification = record;
+        liveText('txtMonteCarloResult', () => monteCarloResultText(record));
         renderDesignReview();
         applyUiMode();          // une qualification existe : le comparateur devient pertinent
         updateCharts();
@@ -2687,6 +2918,32 @@
         if (zone) zone.textContent = currentLang === 'fr'
             ? 'Qualification interrompue : le design a changé pendant le calcul. Relancez-la.'
             : 'Qualification interrupted: the design changed during the run. Start it again.';
+    }
+
+    /* Compte rendu de qualification, rédigé dans la langue COURANTE à partir des
+       valeurs mémorisées : le changement de langue le retraduit sans le perdre. */
+    function monteCarloResultText(q) {
+        const fr = currentLang === 'fr';
+        const decisionLabel = fr
+            ? ({ qualified: 'QUALIFIÉ', inconclusive: 'INCONCLUSIF', rejected: 'NON QUALIFIÉ' })[q.decisionKey]
+            : ({ qualified: 'QUALIFIED', inconclusive: 'INCONCLUSIVE', rejected: 'NOT QUALIFIED' })[q.decisionKey];
+        const meritLabel = q.objective === 'ar'
+            ? (fr ? 'R moyen' : 'Mean R')
+            : q.objective === 'custom' ? (fr ? 'RMSE cible' : 'Target RMSE') : 'Qr';
+        const modelLabel = fr ? 'gaussienne indépendante, σ = Δd/2' : 'independent Gaussian, σ = Δd/2';
+        // Les centiles ne portent que sur les réalisations FABRICABLES : ils sont
+        // conditionnels. Le rendement, lui, est rapporté sur numRuns. Mélanger les
+        // deux sans le dire rendrait le centile défavorable trop optimiste.
+        const conditionalNote = q.feasibleCount < q.numRuns
+            ? (fr ? ` ⚠ statistiques conditionnelles aux ${q.feasibleCount} réalisations fabricables`
+                  : ` ⚠ statistics conditional on the ${q.feasibleCount} feasible realizations`)
+            : '';
+        const criteria = criteriaTextFor(q);
+        const adverse = adverseStatisticText(q);
+        const lo = formatStat(q.yieldLowPct, 1), hi = formatStat(q.yieldHighPct, 1);
+        return fr
+            ? `Décision : ${decisionLabel} — IC95 % de Wilson [${lo} ; ${hi}] % pour une exigence de ${formatStat(q.requiredYieldPct, 1)} % (qualifié si la borne basse la dépasse, non qualifié si la borne haute reste dessous, inconclusif sinon). ${q.accepted}/${q.numRuns} conformes, rendement = ${formatStat(q.yieldPct, 1)} %.\nFabricabilité : ${q.feasibleCount}/${q.numRuns} (${formatStat(q.feasibilityPct, 1)} %) — dmin ≥ ${formatStat(q.minimumThicknessNm, 1)} nm.\nOptique (réalisations fabricables) : ${meritLabel} = ${formatStat(q.meanMerit)} ± ${formatStat(q.stdMerit)} ; min/max = ${formatStat(q.meritMin)} / ${formatStat(q.meritMax)} ; P05/P50/P95 = ${formatStat(q.p05)} / ${formatStat(q.p50)} / ${formatStat(q.p95)} ; défavorable : ${adverse}.${conditionalNote}\nHypothèses : ${modelLabel}, Δd = ${formatStat(q.toleranceNm, 1)} nm, graine ${q.seed}, ${q.perturbedCount} couche(s) perturbée(s) — critère ${criteria}.`
+            : `Decision: ${decisionLabel} — 95% Wilson CI [${lo}, ${hi}]% for a ${formatStat(q.requiredYieldPct, 1)}% requirement (qualified if the lower bound exceeds it, not qualified if the upper bound stays below it, inconclusive otherwise). ${q.accepted}/${q.numRuns} compliant, yield = ${formatStat(q.yieldPct, 1)}%.\nManufacturability: ${q.feasibleCount}/${q.numRuns} (${formatStat(q.feasibilityPct, 1)}%) — dmin ≥ ${formatStat(q.minimumThicknessNm, 1)} nm.\nOptics (feasible realizations): ${meritLabel} = ${formatStat(q.meanMerit)} ± ${formatStat(q.stdMerit)}; min/max = ${formatStat(q.meritMin)} / ${formatStat(q.meritMax)}; P05/P50/P95 = ${formatStat(q.p05)} / ${formatStat(q.p50)} / ${formatStat(q.p95)}; adverse: ${adverse}.${conditionalNote}\nAssumptions: ${modelLabel}, Δd = ${formatStat(q.toleranceNm, 1)} nm, seed ${q.seed}, ${q.perturbedCount} perturbed layer(s) — criterion ${criteria}.`;
     }
 
     /* Calcul auxiliaire cohérent avec l'ordre de dépôt du moteur principal. */
@@ -2876,6 +3133,24 @@
         return PARTNER[parentMatId] || (nParent > 1.8 ? 'YF3_fresnel' : 'ZnS_fresnel');
     }
 
+    /* Dernier diagnostic π(z), conservé pour être re-rédigé (changement de
+       langue) sans être recalculé ; état sauvegardé avant la dernière insertion,
+       pour l'annulation. */
+    let needleBestInfo = null;
+    let needleUndoState = null;
+
+    /* Prescription Fresnel ACTIVE : chargée par le préréglage et toujours
+       structurellement intacte (18 couches, séquence H/L d'origine). Tant que
+       c'est le cas, l'architecture est un invariant : nombre, matériaux et ordre
+       des couches ne bougent pas (guide §2.3). */
+    const FRESNEL18_FORMULA = 'H L 2H L H L H L 2H L H L H L 2H L H L';
+    function fresnelPresetActive() {
+        if (!appState.fresnelPreset) return false;
+        const ref = parseStackFormula(FRESNEL18_FORMULA);
+        return appState.layers.length === ref.length
+            && appState.layers.every((l, i) => l.matId === ref[i].matId);
+    }
+
     function analyzeNeedlePosition() {
         if (appState.layers.length === 0) {
             alert(currentLang === 'fr' ? "Déposez au moins une couche avant d'analyser l'insertion d'une aiguille." : "Deposit at least one layer before analyzing needle insertion.");
@@ -2884,7 +3159,7 @@
         if (!applyOptimizationScope({ render: true, alertOnError: true })) return;
 
         const N_super_design = getMediumIndex(appState.superstrat, appState.designL0, appState.customSuperN).r;
-        const currentThicknesses = appState.layers.map(lay => 
+        const currentThicknesses = appState.layers.map(lay =>
             getPhysicalThicknessNm(lay, appState.designL0, appState.designIncDeg, N_super_design)
         );
 
@@ -2932,7 +3207,7 @@
                         bestCost = cost;
                         bestInfo = {
                             layerIdx: i + 1,
-                            parentMatName: needleMaterialLabel(parentMat),
+                            parentMatId: parentMat,
                             needleMatId: needleMat,
                             depthNm,
                             before,
@@ -2950,38 +3225,108 @@
             cumulativeDepth += pThick;
         }
 
+        needleBestInfo = bestInfo;
+        document.getElementById('divNeedleAdvice')?.classList.remove('hidden');
+        renderNeedleAdvice();
+    }
+
+    /* Rédige le diagnostic π(z) dans la langue courante. Ne recalcule rien et ne
+       touche ni aux verrous ni à la portée BFGS : il peut donc être rejoué au
+       changement de langue sans effet de bord. */
+    function renderNeedleAdvice() {
         const divAdvice = document.getElementById('divNeedleAdvice');
         const txtAdvice = document.getElementById('txtNeedleAdvice');
         const applyButton = document.getElementById('btnApplyNeedleSplit');
         if (!divAdvice || !txtAdvice) return;
-
-        divAdvice.classList.remove('hidden');
+        const bestInfo = needleBestInfo;
+        const fr = currentLang === 'fr';
 
         renderNeedlePiChart(bestInfo);
 
         if (bestInfo) {
+            // Préréglage Fresnel : le diagnostic reste consultable, mais
+            // l'insertion casserait l'invariant des 18 couches.
+            const fresnel = fresnelPresetActive();
             applyButton?.classList.remove('hidden');
+            if (applyButton) {
+                applyButton.disabled = fresnel;
+                applyButton.classList.toggle('opacity-50', fresnel);
+                applyButton.classList.toggle('cursor-not-allowed', fresnel);
+            }
             const needleName = needleMaterialLabel(bestInfo.needleMatId);
+            const parentName = needleMaterialLabel(bestInfo.parentMatId);
             const deltaValue = Math.abs(bestInfo.candidateValue - bestInfo.initialValue);
-            if (currentLang === 'fr') {
-                txtAdvice.innerHTML = `Fonction π(z) calculée par différences finies, pas spatial 5 nm et δ = 0,1 nm. Maximum favorable : aiguille de <strong>${needleName}</strong> dans la couche <strong>#${bestInfo.layerIdx} (${bestInfo.parentMatName})</strong>, à z ≈ <strong>${bestInfo.depthNm.toFixed(1)} nm</strong> depuis le substrat.<br>Découpage : <strong>${bestInfo.before.toFixed(2)} / 0,10 / ${bestInfo.after.toFixed(2)} nm</strong> ; π = <strong>${bestInfo.piValue.toFixed(4)} ${bestInfo.piUnit}</strong> ; variation prédite du mérite = <strong>${deltaValue.toFixed(4)}</strong>. Le bouton insère puis lance BFGS automatiquement.`;
+            const fresnelNote = fresnel
+                ? (fr ? '<br><strong>Prescription Fresnel active :</strong> l’insertion est refusée, car elle porterait l’empilement à 20 couches et casserait l’invariant des 18 couches. Ce diagnostic reste consultable.'
+                      : '<br><strong>Fresnel prescription active:</strong> insertion is refused because it would bring the stack to 20 layers and break the 18-layer invariant. This diagnosis remains available.')
+                : '';
+            if (fr) {
+                txtAdvice.innerHTML = `Fonction π(z) calculée par différences finies, pas spatial 5 nm et δ = 0,1 nm. Maximum favorable : aiguille de <strong>${needleName}</strong> dans la couche <strong>#${bestInfo.layerIdx} (${parentName})</strong>, à z ≈ <strong>${formatStat(bestInfo.depthNm, 1)} nm</strong> depuis le substrat.<br>Découpage : <strong>${formatStat(bestInfo.before, 2)} / 0,10 / ${formatStat(bestInfo.after, 2)} nm</strong> ; π = <strong>${formatStat(bestInfo.piValue, 4)} ${bestInfo.piUnit}</strong> ; variation prédite du mérite = <strong>${formatStat(deltaValue, 4)}</strong>. Le bouton insère puis lance BFGS automatiquement.${fresnelNote}`;
             } else {
-                txtAdvice.innerHTML = `π(z) computed by finite differences with a 5 nm spatial step and δ = 0.1 nm. Best positive peak: insert <strong>${needleName}</strong> in layer <strong>#${bestInfo.layerIdx} (${bestInfo.parentMatName})</strong> at z ≈ <strong>${bestInfo.depthNm.toFixed(1)} nm</strong> from the substrate.<br>Split: <strong>${bestInfo.before.toFixed(2)} / 0.10 / ${bestInfo.after.toFixed(2)} nm</strong>; π = <strong>${bestInfo.piValue.toFixed(4)} ${bestInfo.piUnit}</strong>; predicted merit change = <strong>${deltaValue.toFixed(4)}</strong>. The button inserts it and runs BFGS automatically.`;
+                txtAdvice.innerHTML = `π(z) computed by finite differences with a 5 nm spatial step and δ = 0.1 nm. Best positive peak: insert <strong>${needleName}</strong> in layer <strong>#${bestInfo.layerIdx} (${parentName})</strong> at z ≈ <strong>${formatStat(bestInfo.depthNm, 1)} nm</strong> from the substrate.<br>Split: <strong>${formatStat(bestInfo.before, 2)} / 0.10 / ${formatStat(bestInfo.after, 2)} nm</strong>; π = <strong>${formatStat(bestInfo.piValue, 4)} ${bestInfo.piUnit}</strong>; predicted merit change = <strong>${formatStat(deltaValue, 4)}</strong>. The button inserts it and runs BFGS automatically.${fresnelNote}`;
             }
         } else {
             applyButton?.classList.add('hidden');
-            if (currentLang === 'fr') {
-                txtAdvice.textContent = "La fonction π(z) ne présente aucun maximum positif significatif dans les couches libres. Déverrouillez une couche ou optimisez directement les épaisseurs existantes.";
-            } else {
-                txtAdvice.textContent = "The π(z) function has no significant positive peak in the unlocked layers. Unlock a layer or directly optimize the existing thicknesses.";
-            }
+            txtAdvice.textContent = fr
+                ? "La fonction π(z) ne présente aucun maximum positif significatif dans les couches libres. Déverrouillez une couche ou optimisez directement les épaisseurs existantes."
+                : "The π(z) function has no significant positive peak in the unlocked layers. Unlock a layer or directly optimize the existing thicknesses.";
         }
         if (window.lucide) lucide.createIcons();
     }
 
+    /* Ramène les couches LIBRES dans les bornes de BFGS [seuil ; 1200] nm. Une
+       aiguille fraîchement insérée (0,1 nm) est sous la borne basse : on la porte
+       explicitement à la borne avant l'optimisation, et le mérite de départ J0
+       est recalculé sur cet empilement admissible. */
+    function projectFreeLayersIntoBounds() {
+        const { min, max } = bfgsBoundsNm();
+        const nSup = getMediumIndex(appState.superstrat, appState.designL0, appState.customSuperN).r;
+        const moved = [];
+        appState.layers.forEach((lay, idx) => {
+            if (lay.locked) return;
+            const d = getPhysicalThicknessNm(lay, appState.designL0, appState.designIncDeg, nSup);
+            const c = Math.min(max, Math.max(min, d));
+            if (Math.abs(c - d) > 1e-12) {
+                lay.unit = 'nm';
+                lay.val = c;
+                moved.push({ layer: idx + 1, from: d, to: c });
+            }
+        });
+        return moved;
+    }
+
+    function updateNeedleUndoButton() {
+        const btn = document.getElementById('btnUndoNeedle');
+        if (!btn) return;
+        btn.disabled = !needleUndoState;
+    }
+
     function applyRecommendedNeedle() {
         if (!recommendedNeedleStack) return;
-        appState.layers = recommendedNeedleStack;
+        if (fresnelPresetActive()) {
+            alert(currentLang === 'fr'
+                ? "Prescription Fresnel active : l'insertion d'une aiguille est refusée. Elle porterait l'empilement à 20 couches et casserait l'invariant des 18 couches (seules les épaisseurs 16–18 sont variables). L'analyse π(z) reste disponible."
+                : 'Fresnel prescription active: needle insertion is refused. It would bring the stack to 20 layers and break the 18-layer invariant (only thicknesses 16–18 are variable). The π(z) analysis remains available.');
+            return;
+        }
+        // Sauvegarde intégrale de l'état précédent : couches (épaisseurs, unités,
+        // verrous) et portée BFGS telle qu'affichée.
+        needleUndoState = {
+            layers: appState.layers.map(l => ({ ...l })),
+            scope: document.getElementById('selOptimizeScope')?.value || 'all',
+            list: document.getElementById('inpOptimizeLayers')?.value || ''
+        };
+        appState.layers = recommendedNeedleStack.map(l => ({ ...l }));
+        recommendedNeedleStack = null;
+        needleBestInfo = null;
+        // Le découpage renumérote les couches : la portée affichée est reconstruite
+        // depuis les verrous effectifs, jamais réappliquée depuis l'ancienne liste.
+        syncOptimizationScopeFromLocks();
+        // L'aiguille de 0,1 nm est réellement créée, puis portée à la borne basse
+        // de BFGS (seuil de nettoyage actif) : sans cela, BFGS partirait d'un point
+        // hors de son domaine admissible.
+        const projected = projectFreeLayersIntoBounds();
+        const { min } = bfgsBoundsNm();
         renderLayersTable();
         runFullSimulation();
         document.getElementById('divNeedleAdvice').classList.add('hidden');
@@ -2990,11 +3335,55 @@
         // immédiatement la nouvelle dimension. On conserve ici les verrous issus
         // du diagnostic, car une renumérotation a eu lieu lors du découpage.
         runNumericalOptimizer(false, true);
-        const status = document.getElementById('txtOptiResult');
-        if (status) status.textContent = (currentLang === 'fr'
-            ? 'Aiguille 0,1 nm insérée, puis BFGS exécuté automatiquement. '
-            : '0.1 nm needle inserted, then BFGS ran automatically. ') + status.textContent;
+        const reportAfter = LIVE_TEXT.get('txtOptiResult')?.render;
+        const movedList = projected.map(m => m.layer).join(', ');
+        liveText('txtOptiResult', () => {
+            const fr = currentLang === 'fr';
+            const head = fr
+                ? 'Aiguille 0,1 nm insérée'
+                  + (projected.length ? `, portée à la borne basse BFGS (${formatStat(min, 1)} nm ; couche(s) ${movedList})` : '')
+                  + ', puis BFGS exécuté automatiquement. '
+                : '0.1 nm needle inserted'
+                  + (projected.length ? `, raised to the BFGS lower bound (${formatStat(min, 1)} nm; layer(s) ${movedList})` : '')
+                  + ', then BFGS ran automatically. ';
+            return head + (reportAfter ? reportAfter() : '');
+        });
         updateSynthesisCycle('needle');
+        updateNeedleUndoButton();
+    }
+
+    /* Annule la dernière insertion : empilement, verrous et portée BFGS
+       reviennent exactement à l'état sauvegardé. */
+    function undoNeedleInsertion() {
+        if (!needleUndoState) return;
+        const saved = needleUndoState;
+        needleUndoState = null;
+        appState.layers = saved.layers.map(l => ({ ...l }));
+        const select = document.getElementById('selOptimizeScope');
+        const input = document.getElementById('inpOptimizeLayers');
+        if (select) select.value = saved.scope;
+        if (input) input.value = saved.list;
+        // La liste sauvegardée décrit la numérotation restaurée ; on vérifie
+        // qu'elle correspond bien aux verrous restaurés avant de l'appliquer.
+        const free = appState.layers.map((l, i) => (l.locked ? null : i)).filter(i => i !== null);
+        const parsed = saved.scope === 'specific'
+            ? parseLayerSelection(saved.list)
+            : { ok: true, indices: appState.layers.map((_l, i) => i) };
+        const coherent = parsed.ok && parsed.indices.length === free.length
+            && parsed.indices.every((v, k) => v === free[k]);
+        if (coherent) applyOptimizationScope({ render: false, alertOnError: false });
+        else syncOptimizationScopeFromLocks();
+        recommendedNeedleStack = null;
+        needleBestInfo = null;
+        document.getElementById('divNeedleAdvice')?.classList.add('hidden');
+        renderLayersTable();
+        runFullSimulation();
+        const n = appState.layers.length;
+        liveText('txtOptiResult', () => (currentLang === 'fr'
+            ? `Aiguille annulée : empilement précédent restauré (${n} couche(s), verrous et portée BFGS compris).`
+            : `Needle undone: previous stack restored (${n} layer(s), including locks and BFGS scope).`));
+        updateSynthesisCycle('needle');
+        updateNeedleUndoButton();
     }
 
     /* Nettoyage de l'empilement : retire les couches plus fines que le seuil, puis
@@ -3050,6 +3439,35 @@
         return Number.isFinite(v) ? Math.max(0, v) : 2;
     }
 
+    /* Domaine admissible de BFGS. La borne basse est EXACTEMENT le seuil de
+       nettoyage actif (plancher à 0) : l'optimiseur ne peut pas créer une couche
+       que l'outil déclarerait aussitôt non déposable (guide §2.1, §6). La borne
+       haute écarte les empilements qui ne sont plus interférentiels. */
+    function bfgsBoundsNm() {
+        return { min: cleanThresholdNm(), max: 1200.0 };
+    }
+
+    /* Publie les bornes dans le panneau BFGS, dans la langue courante. */
+    function updateBfgsBoundsNote() {
+        const el = document.getElementById('txtBfgsBounds');
+        if (!el) return;
+        const { min, max } = bfgsBoundsNm();
+        el.textContent = currentLang === 'fr'
+            ? `Bornes BFGS : [${formatStat(min, 1)} ; ${formatStat(max, 0)}] nm — la borne basse est le seuil de nettoyage actif.`
+            : `BFGS bounds: [${formatStat(min, 1)}; ${formatStat(max, 0)}] nm — the lower bound is the active cleanup threshold.`;
+    }
+
+    /* Liste de numéros 1-based triés, compactée en plages : 1,2,3,5 → « 1-3,5 ». */
+    function compactLayerList(numbers) {
+        const out = [];
+        for (let k = 0; k < numbers.length; k++) {
+            const start = numbers[k];
+            while (k + 1 < numbers.length && numbers[k + 1] === numbers[k] + 1) k++;
+            out.push(numbers[k] === start ? `${start}` : `${start}-${numbers[k]}`);
+        }
+        return out.join(',');
+    }
+
     function parseLayerSelection(raw, layerCount = appState.layers.length) {
         const selected = new Set();
         const text = String(raw || '').trim();
@@ -3085,67 +3503,121 @@
     function applyOptimizationScope({ render = true, alertOnError = false } = {}) {
         const scope = document.getElementById('selOptimizeScope')?.value || 'all';
         const box = document.getElementById('divOptimizeSpecific');
-        const note = document.getElementById('txtOptimizeLayerList');
         box?.classList.toggle('hidden', scope !== 'specific');
 
         if (!appState.layers.length) {
-            if (note) note.textContent = currentLang === 'fr' ? 'Aucune couche à optimiser.' : 'No layer to optimize.';
+            renderOptimizationScopeNote();
             return false;
         }
 
         let indices;
         if (scope === 'all') {
             indices = appState.layers.map((_layer, idx) => idx);
-            if (note) note.textContent = currentLang === 'fr'
-                ? `${indices.length} couche(s) sélectionnée(s) : toutes.`
-                : `${indices.length} layer(s) selected: all.`;
         } else {
             const parsed = parseLayerSelection(document.getElementById('inpOptimizeLayers')?.value);
             if (!parsed.ok) {
-                if (note) {
-                    note.textContent = parsed.reason;
-                    note.classList.add('text-red-700');
-                    note.classList.remove('text-indigo-700');
-                }
+                renderOptimizationScopeNote();
                 if (alertOnError) alert(parsed.reason);
                 return false;
             }
             indices = parsed.indices;
-            if (note) note.textContent = currentLang === 'fr'
-                ? `Couches variables : ${parsed.normalized}. Les autres sont figées.`
-                : `Variable layers: ${parsed.normalized}. All others are fixed.`;
-        }
-        if (note) {
-            note.classList.remove('text-red-700');
-            note.classList.add('text-indigo-700');
         }
         const selected = new Set(indices);
         appState.layers.forEach((layer, idx) => { layer.locked = !selected.has(idx); });
         appState.monteCarloRuns = [];
         appState.monteCarloSamples = [];
+        renderOptimizationScopeNote();
         if (render) renderLayersTable();
         return true;
     }
 
+    /* Annonce la portée BFGS EFFECTIVE — nombre et numéros des couches
+       variables, lus sur les verrous courants — sans rien réappliquer. Appelée
+       aussi au changement de langue : une ancienne liste n'est jamais
+       réappliquée en silence. */
+    function renderOptimizationScopeNote() {
+        const fr = currentLang === 'fr';
+        const scope = document.getElementById('selOptimizeScope')?.value || 'all';
+        document.getElementById('divOptimizeSpecific')?.classList.toggle('hidden', scope !== 'specific');
+        const note = document.getElementById('txtOptimizeLayerList');
+        const setNote = (text, error) => {
+            if (!note) return;
+            note.textContent = text;
+            note.classList.toggle('text-red-700', !!error);
+            note.classList.toggle('text-indigo-700', !error);
+        };
+        if (!appState.layers.length) {
+            setNote(fr ? 'Aucune couche à optimiser.' : 'No layer to optimize.', false);
+        } else if (scope === 'specific'
+                   && !parseLayerSelection(document.getElementById('inpOptimizeLayers')?.value).ok) {
+            setNote(parseLayerSelection(document.getElementById('inpOptimizeLayers')?.value).reason, true);
+        } else {
+            const n = appState.layers.length;
+            const free = appState.layers.map((l, i) => (l.locked ? null : i + 1)).filter(v => v !== null);
+            if (!free.length) {
+                setNote(fr ? 'Aucune couche variable : BFGS refusera de démarrer.'
+                           : 'No variable layer: BFGS will refuse to start.', true);
+            } else if (free.length === n) {
+                setNote(fr ? `${n} couche(s) variable(s) : toutes (1–${n}).`
+                           : `${n} variable layer(s): all (1–${n}).`, false);
+            } else {
+                const list = compactLayerList(free).replace(/,/g, ', ');
+                setNote(fr ? `${free.length} couche(s) variable(s) : ${list}. Les autres sont figées.`
+                           : `${free.length} variable layer(s): ${list}. All others are fixed.`, false);
+            }
+        }
+        updateFresnelScopeWarning();
+    }
+
+    /* Préréglage Fresnel : seules 16–18 sont variables. Libérer une couche 1–15
+       n'est jamais silencieux — un bandeau l'annonce tant que c'est le cas. */
+    function updateFresnelScopeWarning() {
+        const el = document.getElementById('txtFresnelScopeWarning');
+        if (!el) return;
+        const freed = fresnelPresetActive()
+            ? appState.layers.map((l, i) => (!l.locked && i < 15 ? i + 1 : null)).filter(v => v !== null)
+            : [];
+        el.classList.toggle('hidden', !freed.length);
+        if (!freed.length) { el.textContent = ''; return; }
+        const list = compactLayerList(freed).replace(/,/g, ', ');
+        el.textContent = currentLang === 'fr'
+            ? `⚠ Prescription Fresnel : couche(s) ${list} libérée(s) hors du périmètre imposé 16–18. BFGS les modifiera et la prescription optimisée ne suivra plus le protocole de pré-fabrication.`
+            : `⚠ Fresnel prescription: layer(s) ${list} freed outside the mandated 16–18 scope. BFGS will change them and the optimized prescription will no longer follow the pre-fabrication protocol.`;
+    }
+
+    /* Reconstruit la portée affichée depuis les verrous effectifs — après tout
+       geste qui renumérote les couches (aiguille, nettoyage, suppression). */
     function syncOptimizationScopeFromLocks() {
         const free = appState.layers.map((layer, idx) => layer.locked ? null : idx + 1).filter(Boolean);
         const all = free.length === appState.layers.length && free.length > 0;
         const select = document.getElementById('selOptimizeScope');
         const input = document.getElementById('inpOptimizeLayers');
         if (select) select.value = all ? 'all' : 'specific';
-        if (input) input.value = all ? '' : free.join(',');
+        if (input) input.value = all ? '' : compactLayerList(free);
         applyOptimizationScope({ render: false, alertOnError: false });
     }
 
     /* Une descente BFGS déterministe depuis l'empilement courant s'arrête
        au premier minimum local rencontré. */
     function bfgsDescent(startThick, freeIndices, evaluateCost) {
+        // Domaine admissible [seuil de nettoyage actif ; 1200] nm. La borne haute
+        // écarte les empilements qui ne sont plus interférentiels : on y empile de
+        // la matière dont les oscillations spectrales se moyennent. La borne basse
+        // gouverne à la fois l'optimisation et le nettoyage : BFGS ne doit jamais
+        // créer un optimum que l'outil déclarerait aussitôt non déposable.
+        const { min: MIN_LAYER_NM, max: MAX_LAYER_NM } = bfgsBoundsNm();
+        const epaisseursDepart = [...startThick];
         let bestThick = [...startThick];
+        // Le point de départ est d'abord ramené dans le domaine admissible (aiguille
+        // de 0,1 nm, couche saisie sous le seuil) : la descente et ses garde-fous
+        // portent sur ce point admissible, jamais sur un point hors bornes.
+        for (const idx of freeIndices) {
+            bestThick[idx] = Math.min(MAX_LAYER_NM, Math.max(MIN_LAYER_NM, bestThick[idx]));
+        }
         let bestCost = evaluateCost(bestThick);
         // Mémorisé pour les garde-fous de sortie : une descente ne doit jamais
         // remonter le coût, ni toucher une couche que l'utilisateur a verrouillée.
         const coutDepart = bestCost;
-        const epaisseursDepart = [...startThick];
         const libres = new Set(freeIndices);
             // ALGORITHME QUASI-NEWTON (BFGS - Broyden–Fletcher–Goldfarb–Shanno)
             const kDim = freeIndices.length;
@@ -3188,16 +3660,6 @@
             // 25 itérations précédentes coupaient l'optimisation en plein descente.
             const MAX_ITER = 400;
             const REL_TOL = 1e-9;
-            // Borne haute d'épaisseur. Au-delà, on ne conçoit plus un empilement
-            // interférentiel : on empile de la matière dont les oscillations
-            // spectrales se moyennent. Le mérite peut y descendre, le composant
-            // n'a plus de sens et ne serait de toute façon pas déposé.
-            const MAX_LAYER_NM = 1200.0;
-            // La même limite basse gouverne l'optimisation et le nettoyage : BFGS
-            // ne doit jamais créer un optimum que l'outil déclarerait aussitôt non
-            // déposable. L'aiguille est bien insérée à 0,1 nm avant optimisation,
-            // puis elle entre dans l'espace admissible dès la première itération.
-            const MIN_LAYER_NM = Math.max(0.5, cleanThresholdNm());
             let stalled = 0;
             for (let iter = 0; iter < MAX_ITER; iter++) {
                 // Direction de recherche p = - H * g
@@ -3323,14 +3785,17 @@
            l'optimiseur qui est en défaut — pas le design de l'utilisateur. */
         for (let i = 0; i < epaisseursDepart.length; i++) {
             if (!libres.has(i) && bestThick[i] !== epaisseursDepart[i]) {
-                Garde.faute('bfgs_couche_verrouillee',
-                    `couche ${i + 1} hors périmètre déplacée : ` +
-                    `${epaisseursDepart[i]} → ${bestThick[i]} nm`);
+                Garde.faute('bfgs_couche_verrouillee', {
+                    fr: `couche ${i + 1} hors périmètre déplacée : ${epaisseursDepart[i]} → ${bestThick[i]} nm`,
+                    en: `layer ${i + 1} outside the scope was moved: ${epaisseursDepart[i]} → ${bestThick[i]} nm`
+                });
             }
         }
         if (bestCost > coutDepart + Math.abs(coutDepart) * 1e-9 + 1e-12) {
-            Garde.faute('bfgs_cout_remonte',
-                `coût initial ${coutDepart} → final ${bestCost}`);
+            Garde.faute('bfgs_cout_remonte', {
+                fr: `coût initial ${coutDepart} → final ${bestCost}`,
+                en: `initial cost ${coutDepart} → final ${bestCost}`
+            });
         }
         // Le mérite annoncé doit être celui de l'empilement rendu. Un décalage
         // entre les deux — épaisseurs d'une itération, coût d'une autre — ferait
@@ -3338,30 +3803,33 @@
         const coutVerifie = evaluateCost(bestThick);
         if (Number.isFinite(coutVerifie) &&
             Math.abs(coutVerifie - bestCost) > Math.abs(coutVerifie) * 1e-9 + 1e-12) {
-            Garde.faute('bfgs_cout_incoherent',
-                `coût annoncé ${bestCost}, coût réel de l'empilement rendu ${coutVerifie}`);
+            Garde.faute('bfgs_cout_incoherent', {
+                fr: `coût annoncé ${bestCost}, coût réel de l'empilement rendu ${coutVerifie}`,
+                en: `reported cost ${bestCost}, actual cost of the returned stack ${coutVerifie}`
+            });
         }
         for (const i of freeIndices) {
             if (!Number.isFinite(bestThick[i])) {
-                Garde.faute('bfgs_epaisseur_non_finie', `couche ${i + 1} : ${bestThick[i]}`);
+                Garde.faute('bfgs_epaisseur_non_finie', {
+                    fr: `couche ${i + 1} : ${bestThick[i]}`,
+                    en: `layer ${i + 1}: ${bestThick[i]}`
+                });
             } else if (bestThick[i] < MIN_LAYER_NM - 1e-9 || bestThick[i] > MAX_LAYER_NM + 1e-9) {
-                Garde.faute('bfgs_borne_violee',
-                    `couche ${i + 1} : ${bestThick[i]} nm hors [${MIN_LAYER_NM} ; ${MAX_LAYER_NM}]`);
+                Garde.faute('bfgs_borne_violee', {
+                    fr: `couche ${i + 1} : ${bestThick[i]} nm hors [${MIN_LAYER_NM} ; ${MAX_LAYER_NM}]`,
+                    en: `layer ${i + 1}: ${bestThick[i]} nm outside [${MIN_LAYER_NM}; ${MAX_LAYER_NM}]`
+                });
             }
         }
         return { thick: bestThick, cost: bestCost };
     }
 
     function runNumericalOptimizer(isRefinementPass = false, preserveCurrentLocks = false) {
-        if (!isRefinementPass) optiTrace = [];
+        if (!isRefinementPass) { optiTrace = []; optiProjected = []; }
         if (appState.layers.length === 0) return;
         if (!isRefinementPass && !preserveCurrentLocks
             && !applyOptimizationScope({ render: true, alertOnError: true })) return;
-        const meritIssue = meritUndefinedReason();
-        if (meritIssue) {
-            document.getElementById('txtOptiResult').textContent = meritIssue;
-            return;
-        }
+        if (showMeritUndefinedReason('txtOptiResult')) return;
         const N_super_design = getMediumIndex(appState.superstrat, appState.designL0, appState.customSuperN).r;
 
         const freeIndices = [];
@@ -3380,7 +3848,17 @@
         const evaluateCost = (thickArray) => evaluateObjective(thickArray, objective).cost;
         const startedAt = performance.now();
 
-        const currentThicknesses = appState.layers.map(lay => 
+        // Point de départ ramené dans les bornes [seuil ; 1200] nm AVANT de
+        // mesurer J0 : le mérite initial annoncé est celui d'un empilement que
+        // BFGS a le droit de parcourir.
+        const projected = projectFreeLayersIntoBounds();
+        if (projected.length) {
+            optiProjected.push(...projected);
+            renderLayersTable();
+        }
+        const { min: boundMin, max: boundMax } = bfgsBoundsNm();
+
+        const currentThicknesses = appState.layers.map(lay =>
             getPhysicalThicknessNm(lay, appState.designL0, appState.designIncDeg, N_super_design)
         );
 
@@ -3395,11 +3873,12 @@
         bestThick = best.thick;
         bestCost = best.cost;
 
-        // Réinjection des meilleures épaisseurs en nm
+        // Réinjection des meilleures épaisseurs en nm, arrondies au dixième mais
+        // jamais ramenées hors des bornes par l'arrondi.
         appState.layers.forEach((lay, idx) => {
             if (!lay.locked) {
                 lay.unit = "nm";
-                lay.val = Number(bestThick[idx].toFixed(1));
+                lay.val = Math.min(boundMax, Math.max(boundMin, Number(bestThick[idx].toFixed(1))));
             }
         });
 
@@ -3413,11 +3892,13 @@
             && appState.layers.length === 18
             && freeIndices.length === 3
             && freeIndices.every((idx, k) => idx === 15 + k);
-        if (fixedFresnel18) {
+        // Préréglage Fresnel actif : l'architecture est un invariant, quelle que
+        // soit la portée choisie — aucun nettoyage ne supprime ni ne fusionne.
+        if (fixedFresnel18 || fresnelPresetActive()) {
             const meritFinal = evaluateObjective(null, objective).value;
             optiTrace.push({ opt: meritFinal, rep: null });
             if (!isRefinementPass) {
-                reportOptimization(initialMerit, meritFinal, cleanThresholdNm(), performance.now() - startedAt, freeIndices.length);
+                reportOptimization(objective, initialMerit.value, meritFinal, cleanThresholdNm(), performance.now() - startedAt, freeIndices.length);
                 updateSynthesisCycle();
             }
             return;
@@ -3437,6 +3918,9 @@
         const seuil = cleanThresholdNm();
         const rep = cleanStackInPlace(seuil);
         if (rep.removed || rep.merged) {
+            // Le nettoyage renumérote les couches : la portée affichée est
+            // reconstruite depuis les verrous effectifs.
+            syncOptimizationScopeFromLocks();
             renderLayersTable();
             runFullSimulation();
             optiTrace.push({ opt: meritOptimized, rep });
@@ -3447,29 +3931,40 @@
 
         if (isRefinementPass) return;             // seul l'appel racine rend compte
         const elapsedMs = performance.now() - startedAt;
-        reportOptimization(initialMerit, evaluateObjective(null, objective).value, seuil, elapsedMs, freeIndices.length);
+        reportOptimization(objective, initialMerit.value, evaluateObjective(null, objective).value, seuil, elapsedMs, freeIndices.length);
         updateSynthesisCycle();
     }
 
     /* Trace des passes optimisation/nettoyage de l'appel courant, pour rendre
        compte de l'enchaînement complet en une seule phrase. */
     let optiTrace = [];
+    /* Couches ramenées dans les bornes avant la descente (appel courant). */
+    let optiProjected = [];
 
-    function reportOptimization(initialMerit, meritFinal, seuil, elapsedMs, nFree) {
-        const fr = currentLang === 'fr';
-        const el = document.getElementById('txtOptiResult');
-        if (!el) return;
+    /* Compte rendu d'optimisation, rédigé à l'affichage dans la langue courante
+       (libellé du mérite compris) à partir des valeurs figées de l'appel. */
+    function reportOptimization(objective, initialValue, meritFinal, seuil, elapsedMs, nFree) {
         const totalRemoved = optiTrace.reduce((a, t) => a + (t.rep ? t.rep.removed : 0), 0);
         const totalMerged = optiTrace.reduce((a, t) => a + (t.rep ? t.rep.merged : 0), 0);
-        if (!totalRemoved && !totalMerged) {
-            el.textContent = `${initialMerit.label}: ${initialMerit.value.toFixed(3)} → ${meritFinal.toFixed(3)} — ${elapsedMs.toFixed(0)} ms — ${nFree} ${fr ? 'couche(s) libre(s)' : 'free layer(s)'}.`;
-            return;
-        }
-        const first = optiTrace[0];
+        const firstOpt = optiTrace.length ? optiTrace[0].opt : meritFinal;
         const nLayers = appState.layers.length;
-        el.textContent = fr
-            ? `${initialMerit.label} : ${initialMerit.value.toFixed(3)} → ${first.opt.toFixed(3)} (optimisation), nettoyage ${totalRemoved} couche(s) sous ${formatStat(seuil, 1)} nm et ${totalMerged} fusion(s), réoptimisation → ${meritFinal.toFixed(3)}. Empilement final : ${nLayers} couche(s), toutes déposables. ${elapsedMs.toFixed(0)} ms.`
-            : `${initialMerit.label}: ${initialMerit.value.toFixed(3)} → ${first.opt.toFixed(3)} (optimization), cleanup removed ${totalRemoved} layer(s) below ${formatStat(seuil, 1)} nm and merged ${totalMerged}, re-optimization → ${meritFinal.toFixed(3)}. Final stack: ${nLayers} layer(s), all manufacturable. ${elapsedMs.toFixed(0)} ms.`;
+        const projected = optiProjected.slice();
+        const { min: boundMin } = bfgsBoundsNm();
+        const fixed = (v) => formatStat(v, 3);
+        liveText('txtOptiResult', () => {
+            const fr = currentLang === 'fr';
+            const label = meritLabelFor(objective);
+            const projNote = projected.length
+                ? (fr ? ` Départ ramené dans les bornes : couche(s) ${projected.map(m => m.layer).join(', ')} portée(s) à [${formatStat(boundMin, 1)} ; 1200] nm.`
+                      : ` Start brought within bounds: layer(s) ${projected.map(m => m.layer).join(', ')} moved into [${formatStat(boundMin, 1)}; 1200] nm.`)
+                : '';
+            if (!totalRemoved && !totalMerged) {
+                return `${label}${fr ? ' :' : ':'} ${fixed(initialValue)} → ${fixed(meritFinal)} — ${elapsedMs.toFixed(0)} ms — ${nFree} ${fr ? 'couche(s) libre(s)' : 'free layer(s)'}.${projNote}`;
+            }
+            return fr
+                ? `${label} : ${fixed(initialValue)} → ${fixed(firstOpt)} (optimisation), nettoyage ${totalRemoved} couche(s) sous ${formatStat(seuil, 1)} nm et ${totalMerged} fusion(s), réoptimisation → ${fixed(meritFinal)}. Empilement final : ${nLayers} couche(s), toutes déposables. ${elapsedMs.toFixed(0)} ms.${projNote}`
+                : `${label}: ${fixed(initialValue)} → ${fixed(firstOpt)} (optimization), cleanup removed ${totalRemoved} layer(s) below ${formatStat(seuil, 1)} nm and merged ${totalMerged}, re-optimization → ${fixed(meritFinal)}. Final stack: ${nLayers} layer(s), all manufacturable. ${elapsedMs.toFixed(0)} ms.${projNote}`;
+        });
     }
 
     /* =========================================================================
@@ -3588,6 +4083,7 @@
 
         updateFabricationSummary();
         renderVisualStackBar(totalThick);
+        updateFresnelScopeWarning();
         lucide.createIcons();
         attachTableEvents();
     }
@@ -3672,10 +4168,40 @@
         bar.appendChild(medium(shortName(appState.superstrat), 'sup'));
     }
 
+    /* Garde-fou Fresnel : tout geste qui modifierait l'architecture imposée
+       (matériau, suppression) ou libérerait une couche 1–15 est d'abord annoncé
+       et doit être confirmé ; il n'est jamais silencieux. */
+    function confirmFresnelChange(kind, layerNumber) {
+        if (!fresnelPresetActive()) return true;
+        const fr = currentLang === 'fr';
+        const messages = {
+            unlock: fr
+                ? `Prescription Fresnel : la couche ${layerNumber} fait partie des couches 1–15 figées par le protocole (seules 16–18 sont variables pour BFGS). La libérer fera sortir l'optimisation du périmètre imposé.\n\nLibérer quand même la couche ${layerNumber} ?`
+                : `Fresnel prescription: layer ${layerNumber} is one of layers 1–15 fixed by the protocol (only 16–18 are BFGS variables). Freeing it takes the optimization outside the mandated scope.\n\nFree layer ${layerNumber} anyway?`,
+            material: fr
+                ? `Prescription Fresnel : changer le matériau de la couche ${layerNumber} modifie l'architecture imposée (18 couches H/L, invariantes). Continuer ?`
+                : `Fresnel prescription: changing the material of layer ${layerNumber} alters the mandated architecture (18 invariant H/L layers). Continue?`,
+            delete: fr
+                ? `Prescription Fresnel : supprimer la couche ${layerNumber} casse l'invariant des 18 couches. Continuer ?`
+                : `Fresnel prescription: deleting layer ${layerNumber} breaks the 18-layer invariant. Continue?`,
+            add: fr
+                ? `Prescription Fresnel : ajouter une couche (n° ${layerNumber}) casse l'invariant des 18 couches. Continuer ?`
+                : `Fresnel prescription: adding a layer (no. ${layerNumber}) breaks the 18-layer invariant. Continue?`,
+            clean: fr
+                ? `Prescription Fresnel : avec ce seuil, le nettoyage supprimerait ou fusionnerait des couches et casserait l'invariant des 18 couches. Continuer ?`
+                : `Fresnel prescription: with this threshold, cleanup would remove or merge layers and break the 18-layer invariant. Continue?`
+        };
+        return confirm(messages[kind]);
+    }
+
     function attachTableEvents() {
         document.querySelectorAll('.selLayerMat').forEach(el => {
             el.onchange = (e) => {
                 const idx = parseInt(e.target.dataset.idx);
+                if (!confirmFresnelChange('material', idx + 1)) {
+                    e.target.value = appState.layers[idx].matId;
+                    return;
+                }
                 appState.layers[idx].matId = e.target.value;
                     renderLayersTable();
                 runFullSimulation();
@@ -3700,6 +4226,12 @@
         document.querySelectorAll('.chkLayerLock').forEach(el => {
             el.onchange = (e) => {
                 const idx = parseInt(e.target.dataset.idx);
+                // Libérer une couche 1–15 de la prescription Fresnel : confirmation
+                // explicite, puis bandeau d'avertissement tant que c'est le cas.
+                if (!e.target.checked && idx < 15 && !confirmFresnelChange('unlock', idx + 1)) {
+                    e.target.checked = true;
+                    return;
+                }
                 appState.layers[idx].locked = e.target.checked;
                 syncOptimizationScopeFromLocks();
                 appState.monteCarloRuns = [];
@@ -3711,6 +4243,7 @@
             el.onclick = (e) => {
                 const btn = e.target.closest('.btnDelLayer');
                 const idx = parseInt(btn.dataset.idx);
+                if (!confirmFresnelChange('delete', idx + 1)) return;
                 appState.layers.splice(idx, 1);
                     syncOptimizationScopeFromLocks();
                     renderLayersTable();
@@ -4465,16 +4998,23 @@
         appState.monteCarloSamples = [];
         // Les résultats affichés se rapportaient à l'empilement précédent : les
         // laisser serait à la fois faux et une réponse offerte sur un plateau.
-        const opti = document.getElementById('txtOptiResult');
-        if (opti) opti.textContent = currentLang === 'fr'
-            ? 'Mérite initial/final affiché après optimisation.'
-            : 'Initial/final merit is displayed after optimization.';
-        const mc = document.getElementById('txtMonteCarloResult');
-        if (mc) mc.textContent = currentLang === 'fr'
-            ? 'Toutes les couches déposées sont perturbées. Le verrouillage ne concerne que BFGS.'
-            : 'Every deposited layer is perturbed. Locking applies to BFGS only.';
+        liveBi('txtOptiResult',
+            'Mérite initial/final affiché après optimisation.',
+            'Initial/final merit is displayed after optimization.');
+        liveBi('txtMonteCarloResult',
+            'Toutes les couches déposées sont perturbées. Le verrouillage ne concerne que BFGS.',
+            'Every deposited layer is perturbed. Locking applies to BFGS only.');
         const audit = document.getElementById('txtFabricationSummary');
         if (audit) audit.dataset.revealed = '0';
+        // Nouvel empilement : l'annulation d'aiguille et le diagnostic π(z) se
+        // rapportaient au précédent.
+        needleUndoState = null;
+        needleBestInfo = null;
+        recommendedNeedleStack = null;
+        document.getElementById('divNeedleAdvice')?.classList.add('hidden');
+        updateNeedleUndoButton();
+        // Seul le préréglage Fresnel active les garde-fous d'architecture.
+        appState.fresnelPreset = presetKey === 'fresnel18';
         appState.designL0 = 550;
         appState.designIncDeg = 0;
         appState.lMin = 350;
@@ -4702,6 +5242,7 @@
         });
 
         document.getElementById('btnAddLayer').addEventListener('click', () => {
+            if (!confirmFresnelChange('add', appState.layers.length + 1)) return;
             appState.layers.push({ matId: "ZnS_fresnel", unit: "QWOT", val: 1.0, locked: false });
             applyOptimizationScope({ render: false, alertOnError: false });
             renderLayersTable();
@@ -4723,40 +5264,46 @@
         });
         document.getElementById('btnDoClean').addEventListener('click', () => {
             if (!appState.layers.length) return;
-            const seuil = Math.max(0, parseFloat(document.getElementById('inpCleanThreshold').value) || 0);
-            const nSup = getMediumIndex(appState.superstrat, appState.designL0, appState.customSuperN).r;
+            const seuil = cleanThresholdNm();
             const avant = appState.layers.length;
             const objectif = getObjectiveMode();
             const meritAvant = evaluateObjective(null, objectif).value;
+            const fresnelAvant = fresnelPresetActive();
+            const sauvegarde = appState.layers.map(l => ({ ...l }));
 
-            // 1) tout en nanomètres, 2) suppression sous le seuil, 3) fusion des voisins identiques
-            let couches = appState.layers.map(l => ({
-                matId: l.matId, locked: l.locked, unit: 'nm',
-                val: getPhysicalThicknessNm(l, appState.designL0, appState.designIncDeg, nSup)
-            }));
-            couches = couches.filter(l => l.val >= seuil);
-            const fusion = [];
-            for (const c of couches) {
-                const prev = fusion[fusion.length - 1];
-                if (prev && prev.matId === c.matId) { prev.val += c.val; prev.locked = prev.locked && c.locked; }
-                else fusion.push({ ...c });
-            }
-            if (!fusion.length) {
+            // Même règle que le nettoyage automatique : une couche verrouillée est
+            // un choix explicite de l'utilisateur — jamais supprimée ni fusionnée.
+            const rep = cleanStackInPlace(seuil);
+            if (rep.aborted) {
                 alert(currentLang === 'fr'
                     ? 'Seuil trop élevé : toutes les couches seraient supprimées.'
                     : 'Threshold too high: every layer would be removed.');
                 return;
             }
-            appState.layers = fusion;
+            if (fresnelAvant && (rep.removed || rep.merged) && !confirmFresnelChangeAfter(sauvegarde)) return;
+            // Le nettoyage renumérote : la portée BFGS suit les verrous effectifs.
+            syncOptimizationScopeFromLocks();
             renderLayersTable();
             runFullSimulation();
             const meritApres = evaluateObjective(null, objectif).value;
-            const supprimees = avant - couches.length;
-            const fusionnees = couches.length - fusion.length;
-            document.getElementById('txtCleanNote').textContent = currentLang === 'fr'
-                ? `${supprimees} couche(s) supprimée(s) sous ${formatStat(seuil, 1)} nm, ${fusionnees} fusion(s) : ${avant} → ${fusion.length} couches. Mérite ${formatStat(meritAvant, 3)} → ${formatStat(meritApres, 3)}. Réoptimisez si l'écart est significatif.`
-                : `${supprimees} layer(s) removed below ${formatStat(seuil, 1)} nm, ${fusionnees} merge(s): ${avant} → ${fusion.length} layers. Merit ${formatStat(meritAvant, 3)} → ${formatStat(meritApres, 3)}. Re-optimize if the gap is significant.`;
+            const supprimees = rep.removed;
+            const fusionnees = rep.merged;
+            const apres = appState.layers.length;
+            const verrous = sauvegarde.filter(l => l.locked).length;
+            liveText('txtCleanNote', () => (currentLang === 'fr'
+                ? `${supprimees} couche(s) supprimée(s) sous ${formatStat(seuil, 1)} nm, ${fusionnees} fusion(s) : ${avant} → ${apres} couches. Couches verrouillées conservées telles quelles : ${verrous}. Mérite ${formatStat(meritAvant, 3)} → ${formatStat(meritApres, 3)}. Réoptimisez si l'écart est significatif.`
+                : `${supprimees} layer(s) removed below ${formatStat(seuil, 1)} nm, ${fusionnees} merge(s): ${avant} → ${apres} layers. Locked layers kept as they are: ${verrous}. Merit ${formatStat(meritAvant, 3)} → ${formatStat(meritApres, 3)}. Re-optimize if the gap is significant.`));
         });
+
+        /* Nettoyage déjà appliqué sur une prescription Fresnel : demande
+           confirmation, et restaure l'empilement en cas de refus. */
+        function confirmFresnelChangeAfter(sauvegarde) {
+            const courant = appState.layers;
+            appState.layers = sauvegarde.map(l => ({ ...l }));
+            const ok = confirmFresnelChange('clean', '');
+            if (ok) appState.layers = courant;
+            return ok;
+        }
 
         document.getElementById('btnParseFormula').addEventListener('click', () => {
             document.getElementById('formulaBox').classList.toggle('hidden');
@@ -4766,6 +5313,14 @@
             const formula = document.getElementById('inpFormulaStr').value;
             if (formula) {
                 appState.layers = parseStackFormula(formula);
+                // Empilement saisi librement : ni préréglage Fresnel actif, ni
+                // aiguille à annuler sur l'ancien empilement.
+                appState.fresnelPreset = false;
+                needleUndoState = null;
+                needleBestInfo = null;
+                recommendedNeedleStack = null;
+                document.getElementById('divNeedleAdvice')?.classList.add('hidden');
+                updateNeedleUndoButton();
                 setOptimizationScope('all', '', false);
                 renderLayersTable();
                 runFullSimulation();
@@ -4815,9 +5370,9 @@
                 updateFabricationSummary();
                 renderDesignReview();
                 updateCharts();
-                document.getElementById('txtMonteCarloResult').textContent = currentLang === 'fr'
-                    ? 'Hypothèses modifiées : relancez la qualification statistique.'
-                    : 'Assumptions changed: rerun the statistical qualification.';
+                liveBi('txtMonteCarloResult',
+                    'Hypothèses modifiées : relancez la qualification statistique.',
+                    'Assumptions changed: rerun the statistical qualification.');
             });
         });
 
@@ -4830,13 +5385,18 @@
             // compare deux lignes de chiffres sans jamais voir les deux spectres.
             // Il est figé EN NANOMÈTRES : une épaisseur en QWOT dépendrait du λ₀
             // courant, et l'instantané changerait de sens si on modifiait le banc.
+            // On archive l'empilement EFFECTIVEMENT qualifié (mémorisé par la
+            // qualification), et non l'éventuel empilement courant.
             const nSup = getMediumIndex(appState.superstrat, appState.designL0, appState.customSuperN).r;
-            appState.reviewRecords[slotIndex] = {
-                ...appState.lastQualification, name,
-                stack: appState.layers.map(l => ({
+            const qualifiedStack = Array.isArray(appState.lastQualification.stack)
+                ? appState.lastQualification.stack.map(l => ({ ...l }))
+                : appState.layers.map(l => ({
                     matId: l.matId, locked: l.locked, unit: 'nm',
                     val: getPhysicalThicknessNm(l, appState.designL0, appState.designIncDeg, nSup)
-                })),
+                }));
+            appState.reviewRecords[slotIndex] = {
+                ...appState.lastQualification, name,
+                stack: qualifiedStack,
                 superstrat: appState.superstrat, substrat: appState.substrat,
                 designL0: appState.designL0, designIncDeg: appState.designIncDeg
             };
@@ -4870,10 +5430,10 @@
             appState.monteCarloRuns = [];
             appState.monteCarloSamples = [];
             appState.lastQualification = null;
-            document.getElementById('txtOptiResult').textContent = currentLang === 'fr' ? 'Nouvelle fonction de mérite sélectionnée.' : 'New merit function selected.';
-            document.getElementById('txtMonteCarloResult').textContent = currentLang === 'fr'
-                ? 'Toutes les couches déposées sont perturbées. Le verrouillage ne concerne que BFGS.'
-                : 'Every deposited layer is perturbed. Locking applies to BFGS only.';
+            liveBi('txtOptiResult', 'Nouvelle fonction de mérite sélectionnée.', 'New merit function selected.');
+            liveBi('txtMonteCarloResult',
+                'Toutes les couches déposées sont perturbées. Le verrouillage ne concerne que BFGS.',
+                'Every deposited layer is perturbed. Locking applies to BFGS only.');
             updateMeritGridNote();
             updateMeritIncidenceWarning();
             updateAcceptanceUI();
@@ -4883,14 +5443,14 @@
         });
     document.getElementById('btnAnalyzeNeedle')?.addEventListener('click', analyzeNeedlePosition);
     document.getElementById('btnApplyNeedleSplit')?.addEventListener('click', applyRecommendedNeedle);
+    document.getElementById('btnUndoNeedle')?.addEventListener('click', undoNeedleInsertion);
+    updateNeedleUndoButton();
 
-    
-    // Écouteurs pour le calcul réactif du facteur Qr généralisé
-    ['inpQrB1Min', 'inpQrB1Max', 'inpQrPassMin', 'inpQrPassMax', 'inpQrB2Min', 'inpQrB2Max'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('input', calculateMetrics);
-    });
-
+        // Le seuil de nettoyage EST la borne basse de BFGS : le panneau BFGS
+        // l'affiche et le suit en direct.
+        ['input', 'change'].forEach(evt =>
+            document.getElementById('inpCleanThreshold')?.addEventListener(evt, updateBfgsBoundsNote));
+        updateBfgsBoundsNote();
 
         document.getElementById('selMatInspect').addEventListener('change', updateMaterialInspection);
 
@@ -4906,7 +5466,9 @@
         if (!appState.lastCalc) return;
         const calc = appState.lastCalc;
         const isSpec = appState.mode === "spectral";
-        let csv = isSpec ? "Longueur_d_onde_nm,R_moy,R_s,R_p,T_moy,T_s,T_p,A_moy\n" : "Angle_deg,R_moy,R_s,R_p,T_moy,T_s,T_p,A_moy\n";
+        const fr = currentLang === 'fr';
+        const columns = fr ? 'R_moy,R_s,R_p,T_moy,T_s,T_p,A_moy' : 'R_avg,R_s,R_p,T_avg,T_s,T_p,A_avg';
+        let csv = (isSpec ? (fr ? 'Longueur_d_onde_nm,' : 'Wavelength_nm,') : 'Angle_deg,') + columns + '\n';
 
         for (let i = 0; i < calc.x.length; i++) {
             csv += `${calc.x[i]},${calc.R_avg[i].toFixed(4)},${calc.Rs[i].toFixed(4)},${calc.Rp[i].toFixed(4)},${calc.T_avg[i].toFixed(4)},${calc.Ts[i].toFixed(4)},${calc.Tp[i].toFixed(4)},${calc.A_avg[i].toFixed(4)}\n`;
@@ -4915,15 +5477,18 @@
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = `Simulation_Couches_Minces_${appState.mode}.csv`;
+        const mode = isSpec ? 'spectral' : (fr ? 'angulaire' : 'angular');
+        link.download = fr ? `Simulation_Couches_Minces_${mode}.csv` : `Thin_Film_Simulation_${mode}.csv`;
         link.click();
     }
 
     function exportPNG() {
         if (!mainChart) return;
+        const fr = currentLang === 'fr';
+        const mode = appState.mode === 'spectral' ? 'spectral' : (fr ? 'angulaire' : 'angular');
         const link = document.createElement('a');
         link.href = mainChart.toBase64Image();
-        link.download = `Graphique_Couches_Minces_${appState.mode}.png`;
+        link.download = fr ? `Graphique_Couches_Minces_${mode}.png` : `Thin_Film_Chart_${mode}.png`;
         link.click();
     }
 
@@ -5039,7 +5604,7 @@
                 'text-white text-xs font-bold px-3 py-2 rounded-lg shadow-lg max-w-xs text-left';
             badge.addEventListener('click', () => {
                 const lignes = Garde.violations
-                    .map(v => `• ${v.code} (${v.nb}×)\n  ${v.detail}`).join('\n');
+                    .map(v => `• ${v.code} (${v.nb}×)\n  ${Garde.texteDetail(v.detail, currentLang)}`).join('\n');
                 alert((currentLang === 'fr'
                     ? 'Contrôle interne : une propriété physique garantie a été violée.\n' +
                       'Les valeurs affichées ne sont pas fiables. Signalez ceci à votre enseignant.\n\n'
@@ -5068,14 +5633,15 @@
             designL0: 550, designIncDeg: 0, layers: [], considerBackside: false,
         }, o);
         const ecart = (a, b) => Math.abs(a - b);
-        const echecs = [];
+        const echecs = [];   // couples { fr, en }
 
         // 1. Dioptre air/BK7 : formule de Fresnel exacte.
         const nBk7 = MATERIALS_DB.BK7.getN(550).r;
         const attenduDioptre = ((1 - nBk7) / (1 + nBk7)) ** 2;
         const obtenuDioptre = computeTMMPoint(550, 0, socle({})).R_avg;
         if (ecart(obtenuDioptre, attenduDioptre) > 1e-12) {
-            echecs.push(`dioptre air/BK7 : ${obtenuDioptre} au lieu de ${attenduDioptre}`);
+            echecs.push({ fr: `dioptre air/BK7 : ${obtenuDioptre} au lieu de ${attenduDioptre}`,
+                          en: `air/BK7 interface: ${obtenuDioptre} instead of ${attenduDioptre}` });
         }
 
         // 2. Métal épais : la réflectivité rejoint le métal semi-infini.
@@ -5086,7 +5652,8 @@
                 layers: [{ matId: cle, val: 500, unit: 'nm', locked: false }],
             })).R_avg;
             if (ecart(obtenu, attendu) > 1e-6) {
-                echecs.push(`${cle} 500 nm : R = ${obtenu} au lieu de ${attendu}`);
+                echecs.push({ fr: `${cle} 500 nm : R = ${obtenu} au lieu de ${attendu}`,
+                              en: `${cle} 500 nm: R = ${obtenu} instead of ${attendu}` });
             }
         }
 
@@ -5094,7 +5661,8 @@
         const critique = Math.asin(1 / nBk7) * 180 / Math.PI;
         const tir = computeTMMPoint(550, critique + 5, socle({ superstrat: 'BK7', substrat: 'Air' }));
         if (ecart(tir.Rs, 1) > 1e-12 || ecart(tir.Rp, 1) > 1e-12) {
-            echecs.push(`réflexion totale : Rs = ${tir.Rs}, Rp = ${tir.Rp}`);
+            echecs.push({ fr: `réflexion totale : Rs = ${tir.Rs}, Rp = ${tir.Rp}`,
+                          en: `total internal reflection: Rs = ${tir.Rs}, Rp = ${tir.Rp}` });
         }
 
         // 4. Conservation et égalité S/P sur un empilement absorbant, à incidence
@@ -5110,7 +5678,10 @@
         // Les garde-fous de computeTMMPoint ont déjà signalé toute anomalie ici.
 
         if (echecs.length) {
-            Garde.faute('autocontrole_demarrage', echecs.join(' | '));
+            Garde.faute('autocontrole_demarrage', {
+                fr: echecs.map(e => e.fr).join(' | '),
+                en: echecs.map(e => e.en).join(' | ')
+            });
         }
         return echecs.length === 0 && Garde.intact;
     }
@@ -5187,6 +5758,7 @@
         ["Quasi-Newton (BFGS)", "Quasi-Newton (BFGS)"],
         ["Monte-Carlo", "Monte Carlo"],
         ["Appariée", "Paired"],
+        ["↶ Annuler l'aiguille", "↶ Undo needle"],
         ["🎛 Libre", "🎛 Free"],
         ["🎓 Étudiant", "🎓 Student"],
         ["Exercice :", "Exercise:"],
@@ -5351,6 +5923,13 @@
         ["Longueur d'onde de référence pour calculer l'épaisseur physique à partir du QWOT", "Reference wavelength used to convert QWOT into physical thickness"],
         ["Angle de référence pour l'épaisseur QWOT (souvent 0°)", "Reference angle for QWOT thickness (usually 0°)"],
         ["Tapez H L 2H etc. puis cliquez sur Appliquer", "Enter H L 2H etc., then click Apply"],
+        ["Ex: (HL)^3 2H (LH)^3 ou H,L,2H,L", "e.g. (HL)^3 2H (LH)^3 or H,L,2H,L"],
+        ["Ajouter une fenêtre spectrale à évaluer. Le mérite est la moyenne de R sur l'ensemble des fenêtres déclarées ; ce qui n'est couvert par aucune d'elles est indifférent.",
+         "Add a spectral window to evaluate. The merit is the mean of R over all declared windows; anything covered by none of them is \"don't care\"."],
+        ["Comparer deux designs qualifiés sur des hypothèses strictement identiques",
+         "Compare two qualified designs under strictly identical assumptions"],
+        ["Restaurer l'empilement d'avant la dernière insertion d'aiguille (couches, verrous et portée BFGS)",
+         "Restore the stack as it was before the last needle insertion (layers, locks and BFGS scope)"],
         ["Générer les couches", "Generate layers"],
         ["Verrouiller pour l'optimisation", "Lock for optimization"],
         ["Supprimer la couche", "Delete layer"],
@@ -5558,6 +6137,10 @@
         setText('btnLoadReviewA',
             'Charger la référence Fresnel · 18 couches',
             'Load the 18-layer Fresnel reference');
+        setText('btnUndoNeedle', "↶ Annuler l'aiguille", '↶ Undo needle');
+        setTitle('btnUndoNeedle',
+            "Restaurer l'empilement d'avant la dernière insertion d'aiguille (couches, verrous et portée BFGS)",
+            'Restore the stack as it was before the last needle insertion (layers, locks and BFGS scope)');
         renderExerciseSelector();
 
         const help = HELP_COPY[currentLang];
@@ -5568,12 +6151,9 @@
         const helpClose = document.getElementById('btnCloseHelp2');
         if (helpClose) helpClose.textContent = help.close;
 
-        document.getElementById('txtOptiResult').textContent = currentLang === 'fr'
-            ? 'Mérite initial/final affiché après optimisation.'
-            : 'Initial/final merit is displayed after optimization.';
-        document.getElementById('txtMonteCarloResult').textContent = currentLang === 'fr'
-            ? 'Toutes les couches déposées sont perturbées. Le verrouillage ne concerne que BFGS.'
-            : 'Every deposited layer is perturbed. Locking applies to BFGS only.';
+        // Résultats BFGS, Monte-Carlo et nettoyage : ils sont RE-RÉDIGÉS dans la
+        // nouvelle langue à partir des valeurs calculées, jamais effacés.
+        refreshLiveTexts();
 
         renderLayersTable();
         // Les blocs générés dynamiquement portent leur propre texte : on les
@@ -5582,8 +6162,11 @@
         renderBandAnalyzer();
         renderDesignReview();
         applyUiMode();
-        applyOptimizationScope({ render: false, alertOnError: false });
-        updateSynthesisCycle('optimize');
+        // Portée BFGS : on ré-annonce la portée EFFECTIVE (verrous courants) sans
+        // réappliquer la liste saisie, et l'étape du cycle n'est pas réinitialisée.
+        renderOptimizationScopeNote();
+        updateSynthesisCycle(appState.cycleStage);
+        updateBfgsBoundsNote();
         updateMeritGridNote();
         updateMeritIncidenceWarning();
         updateAcceptanceUI();
@@ -5591,7 +6174,9 @@
         if (!document.getElementById('divShortcuts').classList.contains('hidden')) toggleShortcutPanel(true);
         updateCharts();
         updateMaterialInspection();
-        if (!document.getElementById('divNeedleAdvice').classList.contains('hidden')) analyzeNeedlePosition();
+        // Diagnostic π(z) : re-rédigé, pas recalculé (aucun effet sur les verrous).
+        if (!document.getElementById('divNeedleAdvice').classList.contains('hidden')) renderNeedleAdvice();
+        if (typeof rafraichirBadgeGarde === 'function') rafraichirBadgeGarde();
         if (window.lucide) lucide.createIcons();
         if (window.MathJax?.typesetPromise) MathJax.typesetPromise(helpBody ? [helpBody] : undefined).catch(() => {});
     }

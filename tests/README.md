@@ -56,7 +56,7 @@ conventions à l'intérieur du code testé.
 
 ## Contenu
 
-### `test_physique.js` — 59 contrôles
+### `test_physique.js` — 74 contrôles
 
 | Section | Ce qui est vérifié |
 |---|---|
@@ -65,19 +65,34 @@ conventions à l'intérieur du code testé.
 | C. Algorithme croisé | Abelès contre Airy sur 5 empilements × 14 longueurs d'onde × 4 incidences |
 | D. Lois physiques | égalité S/P à incidence normale, $R+T \le 1$, $R+T=1$ en domaine transparent, couche métallique épaisse, réflexion totale, décroissance monotone, effet de l'ordre de dépôt, neutralité d'une couche nulle |
 | E. Prescription Fresnel | 18 couches, alternance et couches doubles, spectre borné, moyennes de bande et $Q_r$, échantillonnage des trois bandes |
+| F. Milieux semi-infinis | substrat absorbant (Si, indices personnalisés $k = 0{,}8$ et $k = 3$) sous trois empilements, 9 longueurs d'onde × 4 incidences, S et P, R et T contre Airy ; contre-exemple ZnS 1 QWOT sur Si (32,29 % à 400 nm, 41,86 % à 350 nm) ; $R+T \le 1$ par polarisation et $R+T+A=1$ ; sortie évanescente sous couche d'or (Kretschmann) ; réflexion totale à travers une couche transparente |
 
-### `test_algorithmes.js` — 66 contrôles
+### `test_algorithmes.js` — 109 contrôles
 
 Intervalle de Wilson (conformité et propriétés, dont « 1000/1000 ne prouve pas
-100 % »), quantiles, générateur à graine (reproductibilité, uniformité par
-$\chi^2$), tirage gaussien (moments, asymétrie, aplatissement, règle des
-$\pm1/2/3\sigma$, et vérification que $\sigma = \Delta d/2$ place bien 95 % des
-erreurs dans $\pm\Delta d$), BFGS (quadratique, vallée étroite, Rosenbrock,
-déterminisme, décroissance stricte du coût, respect des couches figées, bornes
-basse et haute, convergence **locale** démontrée par deux départs différents),
-analyse d'une liste de couches.
+100 % »), **verdict de qualification** (`qualificationVerdict` : règle du guide
+§9.2 vérifiée sur 1 071 cas, les trois zones dont « p̂ sous l'exigence mais borne
+haute au-dessus → inconclusif », 1000/1000 face à 100 %, frontières strictes et
+tolérance de 1e-9, monotonie en fonction de l'exigence), **comparateur A/B**
+(chaque hypothèse — seuils Qr et T̄pass, graine, polarisation, grille, incidence,
+Δd, N, dmin, rendement exigé, mérite — invalide la comparaison ; nombres de
+couches différents → non apparié ; différences appariée et non appariée),
+quantiles, générateur à graine (reproductibilité, uniformité par $\chi^2$),
+tirage gaussien (moments, asymétrie, aplatissement, règle des $\pm1/2/3\sigma$,
+et vérification que $\sigma = \Delta d/2$ place bien 95 % des erreurs dans
+$\pm\Delta d$), BFGS (quadratique, vallée étroite, Rosenbrock, déterminisme,
+décroissance stricte du coût, respect des couches figées, bornes basse et
+haute, **borne basse égale au seuil de nettoyage sans plancher caché** — seuils
+0, 0,2 et 5 nm —, **départ hors bornes projeté** — aiguille de 0,1 nm, couche de
+1 500 nm —, convergence **locale** démontrée par deux départs différents),
+analyse d'une liste de couches et **compaction en plages** (`1,2,3,5 → 1-3,5`)
+relue à l'identique.
 
-### `test_gardefous.js` — 19 contrôles
+`tests/lib/extraction.js` expose les champs simulés de l'interface
+(`M.__champs`) : un test peut y écrire un réglage, par exemple
+`M.__champs.inpCleanThreshold = '0.2'`, puis le retirer.
+
+### `test_gardefous.js` — 22 contrôles
 
 Le simulateur embarque des **garde-fous d'exécution** (objet `Garde`) qui
 vérifient, en cours de calcul et *avant tout rabotage*, les propriétés dont on
@@ -90,8 +105,11 @@ Ce module teste les deux moitiés de la propriété : **silence** en usage norma
 (9 000 points spectraux, optimisations, intervalles) et **déclenchement** sur
 des défauts délibérément réinjectés dans des copies du simulateur — mélange de
 conventions d'indice, écriture hors périmètre, remontée du coût, mérite annoncé
-faux, intervalle incohérent. Il mesure aussi leur surcoût, qui doit rester
-sous 15 % sur le chemin critique.
+faux, intervalle incohérent. Il vérifie aussi qu'un départ hors bornes (aiguille
+de 0,1 nm sous le seuil, couche au-delà de 1 200 nm) ne déclenche plus
+`bfgs_borne_violee`, et que les détails bilingues des violations sont rendus
+dans la langue demandée. Il mesure enfin leur surcoût, qui doit rester sous
+15 % sur le chemin critique.
 
 ### `test_documents.py` — contrôles hors ligne
 
@@ -101,7 +119,8 @@ perturbées), balisage (identifiants uniques, liens et ancres valides, aucun
 `<` pris pour une balise), **typographie mathématique** (tout indice ou exposant
 de plus d'un caractère accolé — `$T_{pass}$` et non `$T_pass$` —, délimiteurs
 `$` appariés, aucune commande LaTeX hors de la configuration MathJax livrée),
-homologie stricte FR/EN (mêmes questions, mêmes identifiants, mêmes encarts),
+homologie stricte FR/EN (mêmes questions, mêmes identifiants, mêmes encarts,
+mêmes valeurs numériques question par question),
 absence de français dans l'anglais et réciproquement, absence de résultat
 pré-mâché, intégrité du paquet hors ligne (aucune ressource distante,
 bibliothèques embarquées, **copies à jour vis-à-vis des sources**, manifeste

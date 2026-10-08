@@ -103,6 +103,17 @@
             letter-spacing: 0.5px;
         }
 
+        /* ── Renvoi vers le portail en ligne ── */
+        .online-link {
+            font-family: var(--sans);
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin: 16px 0 0;
+        }
+        .online-link a { color: var(--secondary-color); font-weight: 600; text-decoration: none; }
+        .online-link a:hover { text-decoration: underline; }
+
         /* ── Titres ── */
         h1, h2, h3, h4 { color: var(--heading); margin-top: 2.5em; margin-bottom: 0.8em; font-family: var(--sans); }
         h2 { font-size: 22px; font-weight: 600; color: var(--secondary-color); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
@@ -288,6 +299,9 @@
         <h1>Théorie des Couches Minces Optiques</h1>
         <p class="subtitle">Formalisme matriciel de Macleod et modélisation numérique</p>
         <span class="tag">Du L2 au M2 — trois niveaux de lecture</span>
+        <p class="online-link">Version en ligne et simulateur interactif :
+            <a href="index.html" target="_blank" rel="noopener">tpcouchesminces.vercel.app</a>
+        </p>
     </div>
     
     <p>Ce document détaille la physique et les équations permettant de calculer les propriétés optiques d'un empilement de couches minces. Conçu pour les étudiants en physique numérique et optique, il tisse le lien entre l'intuition physique (interférences), les équations de Maxwell, et l'implémentation numérique via la méthode des matrices de transfert (TMM).</p>
@@ -1331,6 +1345,9 @@ def compute_tmm(n_inc, n_exit, n_layers, d_layers, wl, theta0=0.0, pol='s'):
     <hr>
     <footer>
         <p><em>Document pédagogique (du L2 au M2) — Basé sur H.A. Macleod, <i>Thin-Film Optical Filters</i>.</em></p>
+        <p class="online-link">Version en ligne et simulateur interactif :
+            <a href="index.html" target="_blank" rel="noopener">tpcouchesminces.vercel.app</a>
+        </p>
     </footer>
 </body>
 </html>

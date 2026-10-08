@@ -3,7 +3,7 @@
 **Statut :** version consolidée, seule documentation Markdown de référence  
 **Niveau :** BUT 3, Master, école d’ingénieurs  
 **Langues :** français et anglais  
-**Dernière remise à niveau :** 24 septembre 2026  
+**Dernière remise à niveau :** 8 octobre 2026  
 **Recette du corpus :** automatisée — `python tests/lancer.py` (voir §13)  
 
 ---
@@ -25,7 +25,7 @@ Le corpus actif comprend :
 - `tests/` : recette automatisée (`python tests/lancer.py`) ;
 - `.vercelignore` et `vercel.json` : liste blanche de publication et en-têtes du site.
 
-Aucune variante historique, archive de travail ou rapport intermédiaire n’est conservé dans le corpus actif. **Le dépôt GitHub est public** : le corrigé, les comparaisons et les copies d’IA restent sur le poste de l’enseignant, exclus par `.gitignore`. Ils ne doivent jamais être ajoutés au dépôt, même temporairement : l’historique git les conserverait. En cas de contradiction, les invariants du §2 prévalent.
+Aucune variante historique, archive de travail ou rapport intermédiaire n’est conservé dans le corpus actif. **Le dépôt GitHub est public** : le corrigé, les comparaisons et les copies d’IA restent sur le poste de l’enseignant, exclus par `.gitignore` ; les archives de travail sont rangées dans `archives_hors_corpus/`, également ignoré. Ils ne doivent jamais être ajoutés au dépôt, même temporairement : l’historique git les conserverait. En cas de contradiction, les invariants du §2 prévalent.
 
 ---
 
@@ -229,7 +229,9 @@ Analyser π(z) → vérifier le maximum → Insérer l’aiguille
 → BFGS automatique → contrôler structure, mérite et dmin
 ```
 
-Le logiciel doit distinguer clairement le diagnostic, qui ne modifie rien, de l’insertion, qui modifie l’empilement. Une sauvegarde de l’état précédent permet l’annulation.
+Le logiciel doit distinguer clairement le diagnostic, qui ne modifie rien, de l’insertion, qui modifie l’empilement. Une sauvegarde de l’état précédent (couches, verrous, portée BFGS) permet l’annulation par le bouton **Annuler l’aiguille / Undo needle**.
+
+L’aiguille de 0,1 nm est plus fine que la borne basse de BFGS : avant l’étape BFGS automatique, l’empilement est explicitement projeté dans les bornes et le message de résultat l’annonce. Après toute renumérotation (insertion, nettoyage), la liste des couches spécifiques est resynchronisée et affichée ; une ancienne liste n’est jamais réappliquée en silence. Avec le préréglage Fresnel, l’insertion est refusée, car elle romprait l’invariant des 18 couches ; l’analyse $\pi(z)$ reste disponible.
 
 Les limites pédagogiques à discuter sont le pas spatial, l’absence d’évaluation aux interfaces, la différence finie à épaisseur non nulle et le caractère local du BFGS qui suit.
 
@@ -282,13 +284,13 @@ Le verdict est :
 
 - **qualifié** si la borne basse dépasse le rendement exigé ;
 - **non qualifié** si la borne haute reste sous l’exigence ;
-- **inconclusif** dans la zone de recouvrement.
+- **inconclusif** dans la zone de recouvrement, égalités comprises : 1000 succès sur 1000 face à une exigence de 100 % restent inconclusifs.
 
 Le logiciel rapporte aussi P05 pour les grandeurs à maximiser, P95 pour les grandeurs à minimiser, la moyenne, l’écart-type, le minimum, le maximum et le taux de fabricabilité.
 
 ### 9.3 Comparaison A/B
 
-Le comparateur mémorise deux designs quelconques. Pour être valide, une comparaison doit partager : mérite, bandes, grille, incidence, polarisation, $\Delta d$, $N$, graine, $d_{min}$, seuils optiques et rendement exigé.
+Le comparateur mémorise deux designs quelconques. Pour être valide, une comparaison doit partager : mérite, bandes, grille, incidence, polarisation, $\Delta d$, $N$, graine, $d_{min}$, seuils optiques et rendement exigé. L’appariement tirage par tirage suppose en outre le même nombre de couches ; sinon, le comparateur le signale et ne présente pas la différence comme appariée.
 
 La graine fixe permet une comparaison appariée. Le tableau affiche notamment :
 
@@ -328,7 +330,7 @@ Une recommandation pour le moniteur quartz doit signaler les informations procé
 Excel est réservé à deux apprentissages qui justifient un calcul externe :
 
 1. **Q12 — matrice d’une couche.** Construction explicite avec `COMPLEXE()` et `IMPRODUIT()` pour rompre la boîte noire TMM.
-2. **Q14 — cartographie $R(d_1,d_2)$.** Calcul d’une surface 2D et lecture des vallées, plateaux et minima locaux.
+2. **Q14 — cartographie $R(d_1,d_2)$.** Grille 5 × 5, $d_{ZnS}$ et $d_{YF_3}$ de 20 à 140 nm au pas de 30 nm, identique dans les deux énoncés et dans le classeur ; lecture des vallées, plateaux et minima locaux.
 
 La cible libre et la RMSE sont construites directement dans le simulateur. Aucun onglet Q29 ou résultat prérempli ne doit subsister dans le classeur.
 
@@ -361,6 +363,7 @@ La recette anglaise recherche notamment les mots français résiduels fréquents
 - 18 couches, 15 figées, 3 variables ;
 - bandes 460–500, 535–565, 620–680 dans le simulateur et les deux énoncés ;
 - aucun résultat de rendement ou verdict pré-mâché ;
+- mêmes valeurs numériques, question par question, dans les deux énoncés ;
 - aucun identifiant HTML dupliqué ;
 - aucun lien local rompu.
 
@@ -376,11 +379,13 @@ La recette anglaise recherche notamment les mots français résiduels fréquents
 - même état initial + BFGS : mêmes épaisseurs finales ;
 - BFGS Fresnel : seules 16–18 changent ;
 - Monte-Carlo Fresnel : 18 couches perturbées ;
-- même graine et mêmes hypothèses : réalisations appariées.
+- même graine et mêmes hypothèses : réalisations appariées ;
+- substrat ou superstrat absorbant : Abelès et Airy concordent, en S comme en P ;
+- verdict de Wilson : les trois zones, y compris $\hat p <$ exigence $\le p_{sup}$ (inconclusif).
 
 ### 13.3 Tests GUI
 
-- bascule FR/EN sur toutes les zones, y compris après calcul ;
+- bascule FR/EN sur toutes les zones, y compris après calcul, sans effacer les résultats affichés ;
 - mode libre : mérite Cible libre imposé et cible vide ;
 - mérites sans pertinence masqués selon l’exercice ;
 - saisie et validation d’une liste de couches spécifiques ;
@@ -440,7 +445,7 @@ La prescription à 18 couches est désormais un invariant commun au simulateur, 
 
 ### 14.7 Avis global
 
-La recette du §13 est automatisée (`tests/`) ; sa partie hors ligne a été exécutée avec succès le 24 septembre 2026, et la vérification en ligne du §13.5 confirme que le site n’expose plus aucun fichier non publié. Un seul point de cette vérification dépend de la visibilité du dépôt : tant que celui-ci reste public, son historique git conserve le corrigé et le contrôle correspondant échoue ; il passe dès que le dépôt n’est plus public. Le dispositif est de niveau professionnel et adapté à un public BUT 3 avancé, Master ou école d’ingénieurs. Sa valeur tient moins au nombre de fonctionnalités qu’à la cohérence entre mesure, optimisation locale, fabricabilité, statistiques et dépôt réel.
+La recette du §13 est automatisée (`tests/`) ; sa partie hors ligne a été exécutée avec succès le 8 octobre 2026, et la vérification en ligne du §13.5 confirme que le site n’expose plus aucun fichier non publié. Un seul point de cette vérification dépend de la visibilité du dépôt : tant que celui-ci reste public, son historique git conserve le corrigé et le contrôle correspondant échoue ; il passe dès que le dépôt n’est plus public. Le dispositif est de niveau professionnel et adapté à un public BUT 3 avancé, Master ou école d’ingénieurs. Sa valeur tient moins au nombre de fonctionnalités qu’à la cohérence entre mesure, optimisation locale, fabricabilité, statistiques et dépôt réel.
 
 ---
 

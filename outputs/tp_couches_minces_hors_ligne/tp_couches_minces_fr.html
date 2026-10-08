@@ -96,17 +96,17 @@
                 <div class="border border-emerald-200 bg-emerald-50 rounded-lg p-3">
                     <div class="text-emerald-600 font-bold text-sm tracking-tight">★☆☆ &nbsp;Application</div>
                     <p class="text-emerald-950 mt-1">Relevé, lecture de courbe, formule directe. Aucune question de ce niveau ne doit vous bloquer : si c'est le cas, revoyez le rappel théorique avant de continuer.</p>
-                    <p class="mt-1.5 font-mono text-[10px] text-emerald-700">7 questions — 19 %</p>
+                    <p class="mt-1.5 font-mono text-[10px] text-emerald-700">7 questions — 22 %</p>
                 </div>
                 <div class="border border-amber-200 bg-amber-50 rounded-lg p-3">
                     <div class="text-amber-600 font-bold text-sm tracking-tight">★★☆ &nbsp;Analyse</div>
                     <p class="text-amber-950 mt-1">Plusieurs étapes enchaînées, traitement de données, interprétation physique. C'est le cœur du TP : prévoyez du temps et un brouillon.</p>
-                    <p class="mt-1.5 font-mono text-[10px] text-amber-700">17 questions — 47 %</p>
+                    <p class="mt-1.5 font-mono text-[10px] text-amber-700">15 questions — 47 %</p>
                 </div>
                 <div class="border border-rose-200 bg-rose-50 rounded-lg p-3">
                     <div class="text-rose-600 font-bold text-sm tracking-tight">★★★ &nbsp;Expertise</div>
                     <p class="text-rose-950 mt-1">Vous construisez la méthode, vous décidez et vous argumentez. Il n'y a pas de réponse unique à recopier : c'est votre raisonnement qui est évalué.</p>
-                    <p class="mt-1.5 font-mono text-[10px] text-rose-700">12 questions — 33 %</p>
+                    <p class="mt-1.5 font-mono text-[10px] text-rose-700">10 questions — 31 %</p>
                 </div>
             </div>
             <p class="mt-3 text-[11px] text-slate-600 bg-slate-50 border-l-4 border-slate-300 p-2 rounded-r">
@@ -122,7 +122,7 @@
             Ce parcours modulaire vise la maîtrise du calcul, de l'optimisation, de la <strong>fabricabilité</strong> et du diagnostic d'empilements optiques (antireflets, miroirs de Bragg et filtres résonnants). Un minimum nominal n'est jamais considéré comme un design abouti tant que sa robustesse au procédé n'est pas démontrée. Les durées affichées sont des repères de travail, non des limites imposées ; l'enseignant compose librement son parcours.
                     <br><br>
                     <div class="bg-emerald-50 border-l-4 border-emerald-500 p-2.5 rounded text-xs text-emerald-950 font-medium">
-                        🎯 <strong>Projet Salle Blanche :</strong> seul le <strong>filtre passe-bande interférentiel</strong> des exercices VII, VIII et X fera l'objet d'un dépôt réel sous vide à l'<strong>Institut Fresnel</strong>, avec l'équipe de dépôt de la salle blanche.
+                        🎯 <strong>Projet Salle Blanche :</strong> seul le <strong>filtre passe-bande interférentiel</strong> conçu aux exercices VII et VIII, puis diagnostiqué en IX, fera l'objet d'un dépôt réel sous vide à l'<strong>Institut Fresnel</strong>, avec l'équipe de dépôt de la salle blanche.
                     </div>
                 </div>
             </section>
@@ -161,7 +161,7 @@
                     <li><strong>Dimensionner l'échantillon :</strong> $N=100$ pour explorer, $N=500$ pour comparer, $N=1000$ pour une qualification pédagogique.</li>
                     <li><strong>Rapporter des statistiques robustes :</strong> rendement, IC95 % de Wilson, moyenne, écart-type d'échantillon et P05/P50/P95.</li>
                     <li><strong>Regarder le centile défavorable :</strong> P95 d'un coût à minimiser ; P05 d'une performance à maximiser.</li>
-                    <li><strong>Décider :</strong> <em>qualifié</em>, <em>qualifié sous conditions</em> ou <em>non qualifié</em>, avec marges et hypothèses.</li>
+                    <li><strong>Décider :</strong> <em>qualifié</em>, <em>inconclusif</em> (étude à compléter) ou <em>non qualifié</em>, avec marges et hypothèses.</li>
                 </ol>
             </div>
             <div class="mt-3 grid md:grid-cols-2 gap-3">
@@ -184,7 +184,7 @@
                     $$\phi_i = \frac{2\pi d_i}{\lambda} \sqrt{N_i^2 - N_0^2 \sin^2\theta_0}$$
                 </div>
                 <p>
-                    La matrice caractéristique unitaire d'une couche est :
+                    La matrice caractéristique d'une couche, unimodulaire ($\det M_i = 1$), est :
                 </p>
                 <div class="equation text-center font-mono text-indigo-900">
                     $$M_i = \begin{pmatrix} \cos \phi_i & \frac{i}{\eta_i} \sin \phi_i \\ i\eta_i \sin \phi_i & \cos \phi_i \end{pmatrix}$$
@@ -282,7 +282,7 @@
                     <div class="flex items-start gap-3">
                         <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q3</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div>
                         <div class="text-sm text-slate-800">
-                            Comparez les ordres de grandeur de $k$ pour un métal ($Al, Au$) et un semi-conducteur ($Si, Ge$). Justifiez la différence en terme de porteurs libres et de gap électronique $E_g$.
+                            Comparez les ordres de grandeur de $k$ pour un métal ($Al, Au$) et un semi-conducteur ($Si, Ge$). Justifiez la différence en termes de porteurs libres et de gap électronique $E_g$.
                         </div>
                     </div>
                 </div>
@@ -293,7 +293,7 @@
                         <div class="text-sm text-slate-800 space-y-2">
                             <p>Examinez les matériaux <strong>ZnS (Haut indice H)</strong> et <strong>YF3 (Bas indice L)</strong> utilisés en salle blanche à l'Institut Fresnel. Relevez leurs indices à $550\,\text{nm}$ et calculez le contraste $(n_H-n_L)/(n_H+n_L)$.</p>
                             <div class="bg-amber-50 border-l-4 border-amber-400 p-2 rounded-r text-xs text-amber-900">
-                                🔑 <strong>Gardez ce nombre :</strong> il fixe la largeur de la bande interdite du miroir, $\Delta\lambda \simeq \frac{4\lambda_0}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L}$, dont vous aurez besoin dès l'exercice VI et surtout en IX pour placer correctement vos bandes de mesure.
+                                🔑 <strong>Gardez ce nombre :</strong> il fixe la largeur de la bande interdite du miroir, $\Delta\lambda \simeq \frac{4\lambda_0}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L}$, dont vous aurez besoin dès l'exercice VI et surtout en VIII (Q23) pour juger le placement des bandes de mesure. Attention : cette largeur est symétrique en nombre d'onde, pas en longueur d'onde — les bornes valent $\lambda_0/(1 \pm \frac{2}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L})$, et la bande s'étend donc plus loin du côté rouge que du côté bleu.
                             </div>
                         </div>
                     </div>
@@ -315,7 +315,7 @@
   <rect x="60" y="130" width="520" height="80" fill="#e2e8f0"/>
   <line x1="60" y1="130" x2="580" y2="130" stroke="#334155" stroke-width="2"/>
   <text x="70" y="120" font-size="10" fill="#0369a1" font-family="Inter,system-ui,sans-serif">n₀ = 1 (air)</text>
-  <text x="70" y="150" font-size="10" fill="#475569" font-family="Inter,system-ui,sans-serif">n₁ = 1,5187 (BK7)</text>
+  <text x="70" y="150" font-size="10" fill="#475569" font-family="Inter,system-ui,sans-serif">n₁ = 1,5185 (BK7)</text>
   <line x1="320" y1="30" x2="320" y2="205" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 4"/>
   <text x="326" y="42" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">Normale</text>
   <line x1="180" y1="45" x2="320" y2="130" stroke="#f59e0b" stroke-width="2.5"/>
@@ -347,7 +347,7 @@
                     <div class="flex items-start gap-3">
                         <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q5</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Niveau 1 — Application : relevé, lecture de courbe, formule directe">&#9733;&#9734;&#9734;</span></div>
                         <div class="text-sm text-slate-800 space-y-2">
-                            <p><strong>Calcul théorique :</strong> Déterminez $R$ et $T$ en incidence normale pour une interface Air/BK7 ($n_{BK7} \approx 1.5187$ à $550\,\text{nm}$) à l'aide des formules de Fresnel.</p>
+                            <p><strong>Calcul théorique :</strong> Déterminez $R$ et $T$ en incidence normale pour une interface Air/BK7 ($n_{BK7} \approx 1{,}5185$ à $550\,\text{nm}$) à l'aide des formules de Fresnel.</p>
                             <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">🔍 <strong>Auto-contrôle :</strong> votre $R$ doit tomber entre 3 % et 5 %. Si vous trouvez 0,04, vous avez oublié de convertir en pourcentage ; si vous trouvez 20 %, vous avez confondu $r$ et $R=|r|^2$.</div>
                         </div>
                     </div>
@@ -525,7 +525,7 @@
                     <div class="flex items-start gap-3">
                         <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q13</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Niveau 1 — Application : relevé, lecture de courbe, formule directe">&#9733;&#9734;&#9734;</span></div>
                         <div class="text-sm text-slate-800">
-                            Ajoutez deux couches ($ZnS$ puis $YF_3$). Ajustez manuellement les épaisseurs physiques $d_{ZnS}$ et $d_{YF3}$ ($< 150\,\text{nm}$) pour minimiser $R$ à $550\,\text{nm}$ (le minimum absolu théorique se situe vers $d_{ZnS} \approx 15\text{--}16\,\text{nm}$ et $d_{YF3} \approx 124\text{--}125\,\text{nm}$, où $R < 0{,}001\,\%$). Arrêtez-vous dès que $R < 0{,}5\,\%$, ou après dix modifications sans gain. <strong>Comptez une modification chaque fois que vous changez une épaisseur</strong>, et notez ce total : vous le comparerez en Q16 au nombre d'évaluations que consomme l'optimiseur.
+                            Ajoutez deux couches ($ZnS$ puis $YF_3$). Ajustez manuellement les épaisseurs physiques $d_{ZnS}$ et $d_{YF3}$ ($< 150\,\text{nm}$) pour minimiser $R$ à $550\,\text{nm}$. Arrêtez-vous dès que $R < 0{,}5\,\%$, ou après dix modifications sans gain. <strong>Comptez une modification chaque fois que vous changez une épaisseur</strong>, et notez ce total : il chiffre le coût d'une recherche à la main, sur deux paramètres seulement.
                         </div>
                     </div>
                 </div>
@@ -536,10 +536,10 @@
                         <div class="text-sm text-slate-800 space-y-2">
                             <p><strong>Cartographie 2D sous Excel :</strong> Avant d'utiliser les optimiseurs automatiques, étudiez la topologie du problème. Pour $\lambda = 550\,\text{nm}$ :</p>
                             <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
-                                <li>Relevez $R$ sur une grille croisée : $d_{ZnS}$ de <strong>60 à 140 nm</strong> et $d_{YF3}$ de <strong>80 à 160 nm</strong>, par pas de <strong>20 nm</strong> — soit 25 mesures. <em>Ces bornes ne sont pas arbitraires : elles couvrent environ une période d'oscillation de $R$. Un pas plus large sous-échantillonnerait le paysage et la vallée disparaîtrait.</em></li>
+                                <li>Relevez $R$ sur une grille croisée : $d_{ZnS}$ de <strong>20 à 140 nm</strong> et $d_{YF3}$ de <strong>20 à 140 nm</strong>, par pas de <strong>30 nm</strong> — soit 25 mesures, à reporter dans l'onglet <code>Q14_Cartographie</code> du classeur. <em>Ces bornes ne sont pas arbitraires : elles couvrent environ une période d'oscillation de $R$ en $d_{ZnS}$ ($\lambda/2n_H \approx 116$ nm). Un pas plus large sous-échantillonnerait le paysage et les vallées disparaîtraient.</em></li>
                                 <li>Saisissez ce tableau à double entrée dans Excel et tracez un graphique de type <strong>Surface 3D ou Contour</strong>.</li>
                                 <li>Observez la vallée de minimum et repérez les coordonnées du point optimal.</li>
-                                <li>Votre minimum de Q13 est-il dans cette vallée ? Y a-t-il plusieurs vallées ?</li>
+                                <li>Votre minimum de Q13 est-il dans l'une de ces vallées ? Combien de vallées distinctes voyez-vous, et que vous apprend le pas de 30 nm sur la position exacte de leurs fonds ?</li>
                             </ul>
                         </div>
                     </div>
@@ -561,7 +561,7 @@
                                     <li>Regardez le P95 à $\pm5\,\text{nm}$ : il dépasse le seuil alors que la moyenne le respecte. Que signifie concrètement cet écart pour un lot de production ?</li>
                                     <li><strong>Isolez la couche critique — à la main, pas au Monte-Carlo.</strong> Le tirage perturbe <em>toujours</em> les deux couches : le verrouillage ne concerne que BFGS, jamais la fabrication. Procédez donc par sensibilité : partez du nominal, ajoutez $+3\,\text{nm}$ à ZnS seul et relevez le mérite ; revenez au nominal, ajoutez $+3\,\text{nm}$ à YF₃ seul et relevez. Laquelle des deux dégrade le plus ? Reliez votre réponse à l'indice et à l'épaisseur optique $n\cdot d$ de chaque couche.</li>
                                 </ul>
-                                <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">🔍 <strong>Auto-contrôle :</strong> avec la bonne fenêtre, le rendement à $\Delta d=5$ nm doit être <strong>inférieur ou égal</strong> à celui à $\Delta d=3$ nm — c'est le seul ordre garanti. Si vous obtenez 0 % partout, la fenêtre du mérite est restée à 400–750 nm. Si vous obtenez 100 % dans les deux cas, votre marge nominale est trop confortable pour que l'épreuve discrimine : resserrez le seuil (essayez 0,3 % au lieu de 0,8 %) et refaites les deux tirages. Un protocole qui ne sépare rien n'est pas un protocole.</div>
+                                <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">🔍 <strong>Auto-contrôle :</strong> avec la bonne fenêtre, le rendement à $\Delta d=5$ nm doit être <strong>inférieur ou égal</strong> à celui à $\Delta d=3$ nm — c'est l'ordre attendu, même s'il n'est pas mathématiquement garanti. Si vous obtenez 0 % partout, la fenêtre du mérite est restée à 400–750 nm. Si vous obtenez 100 % dans les deux cas, votre marge nominale est trop confortable pour que l'épreuve discrimine : resserrez le seuil (essayez 0,3 % au lieu de 0,8 %) et refaites les deux tirages. Un protocole qui ne sépare rien n'est pas un protocole.</div>
                                 <p class="text-xs text-slate-500">Un simple écart-type sans critère d'acceptation ne constitue pas une conclusion de robustesse.</p>
                             </div>
                         </div>
@@ -635,7 +635,7 @@
                         <div class="text-sm text-slate-800 space-y-2">
                             <p><strong>Étude de convergence locale de BFGS.</strong> En mode <strong>🎓 Étudiant</strong>, exercice V, activez le mérite <code>R moyen</code> sur <strong>400–750 nm</strong> avec un seuil de <strong>0,5 %</strong>. Objectif : un antireflet <em>large bande</em> sur BK7 en ZnS/YF₃.</p>
                             <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
-                                🧠 <strong>Commencez par l'erreur instructive.</strong> Relevez d'abord le mérite du <strong>verre nu</strong> (aucune couche) : c'est votre point de comparaison. Construisez ensuite l'empilement le plus naturel — des couches quart d'onde <code>H L</code>, puis <code>H L H L</code>. <strong>Le mérite est deux à trois fois PIRE que le verre nu.</strong> Ce n'est pas une erreur de manipulation. Expliquez-le : que fait une couche quart d'onde de <em>haut</em> indice posée sur du verre, du point de vue de l'interférence ? Un antireflet est-il forcément un empilement quart d'onde ?
+                                🧠 <strong>Commencez par l'erreur instructive.</strong> Relevez d'abord le mérite du <strong>verre nu</strong> (aucune couche) : c'est votre point de comparaison. Construisez ensuite l'empilement le plus naturel — des couches quart d'onde <code>H L</code>, puis <code>H L H L</code>. <strong>Le mérite est PIRE que celui du verre nu — nettement pour <code>H L</code>, massivement pour <code>H L H L</code>.</strong> Ce n'est pas une erreur de manipulation. Expliquez-le : que fait une couche quart d'onde de <em>haut</em> indice posée sur du verre, du point de vue de l'interférence ? Un antireflet est-il forcément un empilement quart d'onde ?
                             </div>
                             <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
                                 <li>Repartez de couches <strong>fines et dissymétriques</strong> (quelques dizaines de nanomètres), et non de quarts d'onde. L'optimiseur est une <strong>descente locale</strong> : il rejoint le minimum de la vallée où vous le posez, et n'en cherche aucune autre.</li>
@@ -656,7 +656,7 @@
                             <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
                                 <li>Partez d'une seule couche de départ : <code>YF3</code> d'épaisseur physique $150\,\text{nm}$ sur verre BK7.</li>
                                 <li>Cliquez sur le bouton <strong>📍 Analyser Aiguille</strong>. Lisez attentivement le diagnostic : quel matériau et quelle position physique $z$ l'analyse de perturbation vous recommande-t-elle ?</li>
-                                <li>Le diagnostic trace numériquement la fonction $\pi(z)=[J_0-J_{\delta}(z)]/\delta$ tous les $5\,\text{nm}$ avec une aiguille virtuelle $\delta=0{,}1\,\text{nm}$. Repérez la position physique $z$ (depuis le substrat) où la fonction de perturbation $\pi(z)$ atteint son maximum positif ($z \approx 25\text{--}30\,\text{nm}$), puis insérez l'aiguille recommandée.</li>
+                                <li>Le diagnostic trace numériquement la fonction $\pi(z)=[J_0-J_{\delta}(z)]/\delta$ tous les $5\,\text{nm}$ avec une aiguille virtuelle $\delta=0{,}1\,\text{nm}$. Repérez la position physique $z$ (depuis le substrat) où la fonction de perturbation $\pi(z)$ atteint son maximum positif, puis insérez l'aiguille recommandée.</li>
                                 <li>Cliquez sur <strong>Insérer l'aiguille</strong> : le logiciel crée la couche virtuelle de $0{,}1\,\text{nm}$ puis lance automatiquement une optimisation BFGS. Comparez le mérite juste avant l'insertion et après ce raffinement.</li>
                                 <li><strong>Analyse critique :</strong> Expliquez l'intérêt de la démarche en deux étapes (diagnostic de nucléation $\to$ raffinement local).</li>
                             </ul>
@@ -689,7 +689,7 @@
                                 🧠 <strong>Ne vous précipitez pas sur la formule.</strong> Comparez votre largeur mesurée à la prédiction $\Delta\lambda = \frac{4\lambda_0}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L}$ calculée en Q4 : <strong>l'écart est important, de l'ordre du tiers.</strong> Ce n'est pas une erreur de mesure. Regardez $R_{max}$ : de combien dépasse-t-il votre seuil de 90 % ? Que se passe-t-il pour la largeur mesurée si $R_{max}$ frôle le seuil ? Formulez une hypothèse — vous la testerez en Q19.
                             </div>
                             <div class="bg-amber-50 border-l-4 border-amber-400 p-2 rounded-r text-xs text-amber-900">
-                                🔑 <strong>Résultat à conserver :</strong> <strong>les bornes de bande interdite conditionnent tout l'exercice IX</strong> — une bande de mesure placée hors de cet intervalle ne mesure pas le filtre, elle mesure la fuite du miroir. Vous les affinerez en Q19 sur un miroir plus épais.
+                                🔑 <strong>Résultat à conserver :</strong> <strong>les bornes de bande interdite vous serviront en VIII (Q23)</strong> à juger le placement des bandes de mesure : une bande de réjection placée là où l'empilement ne bloque plus ne mesure pas le filtre, elle mesure une fuite. Vous les affinerez en Q19 sur un miroir plus épais.
                             </div>
                         </div>
                     </div>
@@ -788,7 +788,7 @@
                             <p><strong>Mesure manuelle imposée.</strong> Avec un pas spectral de $0{,}1\,\text{nm}$, relevez au curseur : (a) le maximum $T_{max}$ et sa longueur d’onde, (b) le niveau $T_{max}/2$, (c) les <strong>deux</strong> intersections $\lambda_1$ et $\lambda_2$, (d) la largeur $\lambda_2-\lambda_1$, (e) le <strong>centre à mi-hauteur</strong> $(\lambda_1+\lambda_2)/2$. Utilisez le zoom par zone pour affiner chaque intersection, puis le bouton <code>Vue initiale</code> pour revenir au spectre complet.</p>
                             <p class="mt-1.5">Cette prescription contient <strong>trois espaceurs $2H$</strong>, donc trois cavités couplées : c'est ce qu'on appelle un filtre <em>multicavité</em>. Sa passante est bien plus large que celle des filtres à une seule cavité de Q21 — ne transposez pas leur ordre de grandeur — et surtout son sommet est <strong>plat et ondulé</strong>. Vous y trouverez plusieurs maxima presque égaux : le plus haut peut basculer de l'un à l'autre pour une variation minime de l'empilement. <strong>C'est donc le centre à mi-hauteur (e), et non la position du maximum, qui repère la passante de façon fiable</strong> ; c'est lui que vous reprendrez aux exercices IX et X.</p>
                             <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">
-                                🔍 <strong>Auto-contrôle méthodologique :</strong> mesurez à mi-hauteur de la <em>fenêtre</em> ($T_{max}/2$), jamais à 50 % de l’échelle. Ce filtre a trois cavités : son sommet est plat et ondulé, ce n’est pas un pic. Recommencez aux pas de 0,5 nm puis 2 nm, comparez les deux intersections et chiffrez l’incertitude de lecture induite par le pas.
+                                🔍 <strong>Auto-contrôle méthodologique :</strong> mesurez à mi-hauteur de la <em>fenêtre</em> ($T_{max}/2$), jamais à 50 % de l’échelle. Ce filtre a trois cavités : son sommet est plat et ondulé, ce n’est pas un pic. Le pas d'affichage du simulateur est figé à 0,1 nm : pour chiffrer l'effet du pas, exportez le CSV et, sous Excel, ne gardez qu'une ligne sur 5 (pas de 0,5 nm) puis une sur 20 (pas de 2 nm). Relevez de nouveau $T_{max}$, $\lambda_1$ et $\lambda_2$ sur chaque grille et chiffrez l’incertitude de lecture induite par le pas.
                             </div>
                             <div class="bg-emerald-50 border-l-4 border-emerald-500 p-2 rounded-r text-xs text-emerald-950">
                                 🎯 <strong>Livrable à conserver :</strong> exportez le CSV nominal et l'image du spectre. <strong>Ce même empilement à 18 couches est repris sans modification d’architecture dans les exercices VIII à X, puis fabriqué à Fresnel.</strong> Sans ce fichier, la suite du projet ne peut pas être menée de façon traçable.
@@ -820,7 +820,7 @@
                         <div>• Transmission passante exigée : <strong>$\overline{T}_{pass} \ge 85\,\%$</strong></div>
                     </div>
                     <div class="text-amber-200 border-t border-slate-600 pt-2 mt-1">
-                        ⚠ <strong>Pourquoi ces bandes-là ?</strong> Elles sont toutes situées <em>à l'intérieur</em> de la bande interdite du miroir ZnS/YF₃ que vous avez mesurée en Q18. C'est une décision d'ingénierie, pas une donnée naturelle : en Q23 vous devrez montrer ce qui se passe si on la prend au hasard.
+                        ⚠ <strong>Pourquoi ces bandes-là ?</strong> La passante encadre la résonance des cavités ; les deux bandes de réjection sont placées là où l'empilement complet à 18 couches bloque. Elles débordent pourtant de la bande interdite du miroir simple mesurée en Q18–Q19 : vérifiez-le, puis contrôlez sur le spectre de Q22 que $T$ reste faible sur toute leur étendue. C'est une décision d'ingénierie, pas une donnée naturelle : en Q23 vous devrez montrer ce qui se passe si on la prend au hasard.
                     </div>
                     <div class="font-mono text-emerald-300 border-t border-slate-600 pt-2">
                         $Q_r=\dfrac{2\,\overline{T}_{535-565}}{\overline{T}_{460-500}+\overline{T}_{620-680}}$
@@ -860,7 +860,7 @@
                                 <li>Passez en mode <strong>🎓 Étudiant</strong>, exercice VIII : le mérite <code>Maximiser Qr</code> y est sélectionné d'office. Sa formule reprend strictement les bandes 460–500, 535–565 et 620–680 nm ; l'analyseur de bandes reste un instrument de mesure indépendant.</li>
                                 <li>Fixez à <strong>2 nm</strong> le seuil de nettoyage : il devient aussi la borne basse de BFGS. Notez cette contrainte dans le dossier de conception ; un optimum numérique sous ce seuil n'est pas admissible.</li>
                                 <li>Choisissez <code>Couches spécifiques</code>, puis autorisez <strong>uniquement les couches 16, 17 et 18</strong>. Contrôlez dans le tableau que les couches 1 à 15 sont figées. Cette contrainte correspond au composant qui sera déposé et ne doit jamais être relâchée.</li>
-                                <li>Lancez BFGS et consignez $Q_r$, $\overline{T}_{pass}$ et les trois épaisseurs avant/après. Notez le compromis physique : BFGS maximise $Q_r$ (qui dépasse 200) en écrasant la réjection hors bande, mais au détriment de la transmission passante $\overline{T}_{pass}$ qui fléchit (de $\approx 97{,}9\,\%$ à $\approx 93{,}7\,\%$) tandis que la couche 18 s'amenuise. Vérifiez que le nombre de couches, leur ordre et les quinze premières épaisseurs sont rigoureusement inchangés.</li>
+                                <li>Lancez BFGS et consignez $Q_r$, $\overline{T}_{pass}$ et les trois épaisseurs avant/après. Les deux grandeurs évoluent-elles dans le même sens ? Que devient la couche 18 ? Vérifiez que le nombre de couches, leur ordre et les quinze premières épaisseurs sont rigoureusement inchangés.</li>
                                 <li>Testez la reproductibilité en rechargeant la prescription puis en relançant BFGS avec les mêmes réglages. Expliquez pourquoi l'identité des résultats est attendue d'un algorithme déterministe.</li>
                                 <li>Refusez toute amélioration nominale qui crée une couche sous $d_{min}$ ou dégrade la transmission passante sous le seuil : un score $Q_r$ isolé n'est pas un dossier de fabrication.</li>
                             </ul>
@@ -873,7 +873,7 @@
                         <div class="text-sm text-slate-800 space-y-2">
                             <p><strong>Revue pré-fabrication — qualification robuste sans résultat préfourni.</strong></p>
                             <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
-                                <li><strong>(a)</strong> Conservez la prescription optimisée de Q24 : 18 couches, quinze premières inchangées, trois dernières issues de BFGS. Fixez $d_{min}=1$ nm et écrivez les critères de conformité stricts du lot : un tirage est accepté si et seulement si $Q_r \ge 50$ ET $\overline{T}_{pass} \ge 95\,\%$ (spécification haute exigence) ou $\ge 90\,\%$ (spécification nominale).
+                                <li><strong>(a)</strong> Conservez la prescription optimisée de Q24 : 18 couches, quinze premières inchangées, trois dernières issues de BFGS. Fixez $d_{min}=1$ nm et écrivez, avant toute simulation, les critères d'acceptation d'un tirage — au minimum les deux exigences du cahier des charges, $Q_r \ge 30$ ET $\overline{T}_{pass} \ge 85\,\%$ ; tout durcissement doit être justifié — ainsi que le <strong>rendement minimal exigé</strong> du lot, reporté dans le champ <code>Rendement exigé</code> : c'est lui qui servira en (d).
                                 <br><span class="text-[11px]">Deux seuils différents, à ne pas confondre : les <strong>2 nm</strong> de Q24 bornent par le bas ce que <em>l'optimiseur</em> a le droit de proposer ; le <strong>$d_{min}=1$ nm</strong> d'ici est l'épaisseur minimale que l'on accepte de <em>déposer</em>, et il sert à trier les tirages du Monte-Carlo. Le premier contraint un calcul, le second juge une fabrication. Justifiez leurs valeurs dans votre dossier.</span></li>
                                 <li><strong>(b)</strong> Pour $\Delta d=1$, 2 puis 5 nm, exécutez d'abord $N=100$ pour contrôler le protocole, puis $N=1000$ pour la décision. La graine doit rester identique.</li>
                                 <li><strong>(c)</strong> Pour chaque sévérité, rapportez rendement, IC95 % de Wilson, P05($Q_r$), P05($\overline{T}_{pass}$), taux de fabricabilité et nombre de couches perturbées. Le Monte-Carlo perturbe les <strong>18 couches déposées</strong> : le verrouillage des quinze premières ne concernait que BFGS.</li>
@@ -1001,7 +1001,7 @@
 
                 <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q28</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Contrat de qualification :</strong> choisissez le passe-bande Fresnel ou une extension personnalisée préalablement validée. Passez le simulateur en mode <code>Étudiant → X. Revue de conception</code>. Vérifiez les milieux extérieurs, puis écrivez avant tout calcul la fenêtre, l'incidence, la polarisation, la métrique, <strong>les bandes exactes</strong>, la grille de calcul, les <strong>tolérances d'acceptation</strong>, $d_{min}$, $\Delta d$ et le rendement minimal exigé. Reportez ce dernier dans le champ <em>Rendement exigé</em>. Distinguez exigences et simples objectifs d'amélioration.</div></div></div>
 
-                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q29</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Audit de fabricabilité nominale :</strong> produisez le tableau matériau/épaisseur/ordre, puis <strong>établissez vous-même</strong> nombre de couches et de matériaux, $d_{min}$, $d_{max}$ et épaisseur totale — le simulateur ne les affiche pas ; le bouton <em>« vérifier mon audit »</em> n'est là que pour contrôler votre résultat une fois celui-ci écrit. Identifiez les couches sous le seuil, les épaisseurs incompatibles avec la résolution et toute complexité non justifiée par le gain optique. <em>Remarque à discuter :</em> sur un empilement quart d'onde à 550 nm, la couche la plus fine mesure $d_{min} = 58{,}0\,\text{nm}$ ($ZnS$), soit près de soixante fois le seuil $d_{min}=1$ nm. Ce garde-fou est-il alors inactif ? Dans quelles circonstances redevient-il contraignant ?</div></div></div>
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q29</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Audit de fabricabilité nominale :</strong> produisez le tableau matériau/épaisseur/ordre, puis <strong>établissez vous-même</strong> nombre de couches et de matériaux, $d_{min}$, $d_{max}$ et épaisseur totale — le simulateur ne les affiche pas ; le bouton <em>« vérifier mon audit »</em> n'est là que pour contrôler votre résultat une fois celui-ci écrit. Identifiez les couches sous le seuil, les épaisseurs incompatibles avec la résolution et toute complexité non justifiée par le gain optique. <em>Remarque à discuter :</em> sur un empilement quart d'onde à 550 nm, la couche la plus fine dépasse 55 nm, soit plus de cinquante fois le seuil $d_{min}=1$ nm. Ce garde-fou est-il alors inactif ? Dans quelles circonstances redevient-il contraignant ?</div></div></div>
 
                 <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q30</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Convergence statistique :</strong> la graine étant figée, les tirages sont rigoureusement identiques d'une exécution à l'autre : exécutez $N=100$, 500 et 1000. Tracez ou tabulez rendement et bornes de l'IC95 % de Wilson. Mesurez la largeur de l'intervalle dans les trois cas : par quel facteur se resserre-t-elle quand $N$ est multiplié par 10, et cela correspond-il à la loi en $1/\sqrt{N}$ ? Expliquez pourquoi les 100 premiers tirages sont utiles pour explorer mais insuffisants pour prononcer la qualification.</div></div></div>
 
@@ -1132,7 +1132,7 @@
                                     <li><strong>Audit nominal</strong> : nombre de couches et de matériaux, $d_{min}$, $d_{max}$, épaisseur totale. Une couche sous le seuil de dépôt disqualifie le design.</li>
                                     <li><strong>Qualification statistique</strong> : <em>Évaluer la robustesse</em>, $N=1000$. Rapportez rendement, IC95 %, centile défavorable et taux de fabricabilité.</li>
                                     <li><strong>Sensibilité à $\Delta d$</strong> : déterminez la précision de dépôt à exiger du procédé pour tenir le rendement visé.</li>
-                                    <li><strong>Décision</strong> : <em>qualifié</em>, <em>qualifié sous conditions</em> ou <em>non qualifié</em>, avec vos hypothèses et au moins deux limites du modèle.</li>
+                                    <li><strong>Décision</strong> : <em>qualifié</em>, <em>inconclusif</em> (étude à compléter) ou <em>non qualifié</em>, avec vos hypothèses et au moins deux limites du modèle.</li>
                                 </ul>
                                 <p class="text-slate-700 mt-1">Un design « optimisé » sans étude de faisabilité n'est pas un livrable : c'est un brouillon.</p>
                             </div>
@@ -1156,10 +1156,10 @@
                 <div class="space-y-2">
                     <h3 class="font-bold text-slate-900 text-sm">🎯 Six défis, du plus simple au plus exigeant</h3>
                     <div class="grid md:grid-cols-2 gap-2 text-xs">
-                        <div class="border border-emerald-200 bg-emerald-50/60 rounded p-2"><span class="text-emerald-600 font-bold">★☆☆</span> <strong>Miroir froid.</strong> $R \ge 95\,\%$ <em>en tout point</em> de $700-850$ nm, et $\overline{T} \ge 85\,\%$ sur $420-650$ nm. Combien de couches vous faut-il ? <em>Repère : un empilement quart d'onde centré à 775 nm y parvient ; cherchez le nombre minimal.</em></div>
-                        <div class="border border-emerald-200 bg-emerald-50/60 rounded p-2"><span class="text-emerald-600 font-bold">★☆☆</span> <strong>Antireflet d'une seule couleur.</strong> Visez $\overline{R} \le 1\,\%$ sur $530-570$ nm uniquement, avec ZnS/YF₃ sur BK7. Comparez au large bande de Q16 : le prix de la largeur de bande. <em>Vous n'atteindrez pas 0,2 % : comparez $n_L=1{,}469$ à l'indice idéal $\sqrt{n_{BK7}}=1{,}232$ de Q10, et concluez sur ce qui limite — l'algorithme ou les matériaux ?</em></div>
-                        <div class="border border-amber-200 bg-amber-50/60 rounded p-2"><span class="text-amber-600 font-bold">★★☆</span> <strong>Filtre coupe-bande (notch).</strong> Essayez de bloquer $T \le 1\,\%$ sur $525-545$ nm en gardant $\overline{T} \ge 80\,\%$ ailleurs dans le visible. <em>Mesurez la largeur réellement obtenue sous 10 % de transmission : elle ne descendra pas sous ≈ 150 nm, quel que soit le nombre de couches. Reliez cette limite au contraste d'indice de Q4 et dites quel couple de matériaux il faudrait pour un notch de 20 nm.</em></div>
-                        <div class="border border-amber-200 bg-amber-50/60 rounded p-2"><span class="text-amber-600 font-bold">★★☆</span> <strong>Séparateur 50/50.</strong> $R=T=50\,\%$ sur $450-650$ nm, RMSE visée $\le 18$ points. <em>Une cible non extrême est plus dure qu'une cible extrême : $R=0$ ou $R=1$ sont des points naturels de l'interférence, $R=50\,\%$ ne l'est pas. Vérifiez qu'ajouter des couches n'aide presque plus au-delà de 3, et expliquez pourquoi.</em></div>
+                        <div class="border border-emerald-200 bg-emerald-50/60 rounded p-2"><span class="text-emerald-600 font-bold">★☆☆</span> <strong>Miroir chaud.</strong> $R \ge 95\,\%$ <em>en tout point</em> de $700-850$ nm, et $\overline{T} \ge 85\,\%$ sur $420-650$ nm : il renvoie le proche infrarouge et laisse passer le visible — l'inverse d'un miroir froid. Combien de couches vous faut-il ? <em>Repère : un empilement quart d'onde centré à 775 nm y parvient ; cherchez le nombre minimal.</em></div>
+                        <div class="border border-emerald-200 bg-emerald-50/60 rounded p-2"><span class="text-emerald-600 font-bold">★☆☆</span> <strong>Antireflet d'une seule couleur.</strong> Visez $\overline{R} \le 0{,}2\,\%$ sur $530-570$ nm uniquement, avec ZnS/YF₃ sur BK7. <em>Une monocouche de YF₃ n'y parvient pas : comparez $n_L=1{,}469$ à l'indice idéal $\sqrt{n_{BK7}}=1{,}232$ de Q10. Montrez qu'un second matériau lève cette limite (pensez à Q13), puis comparez la largeur de votre zone $R < 0{,}2\,\%$ à celle du large bande de Q16 : c'est le prix de la largeur de bande.</em></div>
+                        <div class="border border-amber-200 bg-amber-50/60 rounded p-2"><span class="text-amber-600 font-bold">★★☆</span> <strong>Filtre coupe-bande (notch).</strong> Essayez de bloquer $T \le 1\,\%$ sur $525-545$ nm en gardant $\overline{T} \ge 80\,\%$ ailleurs dans le visible. <em>Avec un empilement quart d'onde $(HL)^{n}H$, mesurez la largeur obtenue sous 10 % de transmission : dès que le rejet atteint 1 %, elle dépasse 150 nm quel que soit $n$. Reliez cette limite au contraste d'indice de Q4. Essayez ensuite des couches trois quarts d'onde, $(3H\,3L)^n\,3H$ : que devient la largeur, et pourquoi ? Pour un notch de 20 nm, quels leviers restent — ordre plus élevé, autre couple de matériaux ?</em></div>
+                        <div class="border border-amber-200 bg-amber-50/60 rounded p-2"><span class="text-amber-600 font-bold">★★☆</span> <strong>Séparateur 50/50.</strong> $R=T=50\,\%$ sur $450-650$ nm, RMSE visée $\le 1$ point. <em>Une seule couche de ZnS plafonne vers un tiers de réflexion : il faut combiner plusieurs couches pour atteindre 50 %, puis aplatir la réponse sur 200 nm. Tracez la meilleure RMSE obtenue en fonction du nombre de couches, de 1 à 7 : à partir de combien de couches le gain devient-il marginal ? Pourquoi une couche de plus n'aide-t-elle pas toujours, et que révèle cette courbe du caractère local de BFGS ?</em></div>
                         <div class="border border-rose-200 bg-rose-50/60 rounded p-2"><span class="text-rose-600 font-bold">★★★</span> <strong>Le vôtre, qualifié.</strong> Écrivez un cahier des charges complet, atteignez-le, puis qualifiez-le ($N=1000$). Rendez la fiche de décision de Q28–Q32 sur <em>votre</em> composant.</div>
                         <div class="border border-rose-200 bg-rose-50/60 rounded p-2"><span class="text-rose-600 font-bold">★★★</span> <strong>Le duel.</strong> Faites concevoir une cible par un autre binôme, échangez les fichiers JSON, et qualifiez le design de l'autre. Défendez ou réfutez sa conclusion.</div>
                     </div>
@@ -1193,6 +1193,9 @@
     <footer class="bg-slate-900 text-slate-400 py-8 px-6 text-center text-xs border-t border-slate-800">
         <p class="font-bold text-white mb-1">BUT 3 FI Parcours MCPC — étudiants L2 · L3 · M1 · M2 — Institut Fresnel 2026</p>
         <p class="text-slate-500">Parcours modulaire de simulation des couches minces optiques</p>
+        <p class="text-slate-400 mt-3">Version en ligne et simulateur interactif :
+            <a href="index.html" target="_blank" rel="noopener" class="text-indigo-300 font-semibold hover:text-white underline">tpcouchesminces.vercel.app</a>
+        </p>
     </footer>
 
     <script>

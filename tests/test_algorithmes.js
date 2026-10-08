@@ -66,6 +66,119 @@ V.groupe('1. Intervalle de confiance de Wilson à 95 %');
     V.proche('0/100 : borne haute conforme à la valeur tabulée', hi0, 0.03698, 5e-4);
 }
 
+/* ------------------------------------------- 1 bis. verdict de qualification */
+V.groupe('1 bis. Verdict de qualification (guide §9.2)');
+{
+    /* Règle du référentiel, réécrite ici sur la référence de Wilson :
+         qualifié     si 100·borne basse > exigence ;
+         non qualifié si 100·borne haute < exigence ;
+         inconclusif  sinon (comparaisons strictes, tolérance 1e-9). */
+    const reference = (x, n, exigence) => {
+        const [lo, hi] = R.wilson(x, n);
+        if (100 * lo > exigence + 1e-9) return 'qualified';
+        if (100 * hi < exigence - 1e-9) return 'rejected';
+        return 'inconclusive';
+    };
+    let ecarts = 0, total = 0, exemple = '';
+    for (const n of [100, 500, 1000]) {
+        for (let x = 0; x <= n; x += Math.max(1, Math.floor(n / 50))) {
+            for (const exigence of [0, 50, 80, 90, 95, 99, 100]) {
+                total++;
+                const a = M.qualificationVerdict(x, n, exigence);
+                const b = reference(x, n, exigence);
+                if (a !== b) { ecarts++; exemple = exemple || `${x}/${n} pour ${exigence} % : ${a} au lieu de ${b}`; }
+            }
+        }
+    }
+    V.verifie(`verdict conforme à la règle du guide sur ${total} cas`, ecarts === 0, exemple);
+
+    // Les trois zones, sur des cas lisibles.
+    V.verifie('zone qualifiée : 990/1000 face à 95 % → QUALIFIÉ',
+        M.qualificationVerdict(990, 1000, 95) === 'qualified');
+    V.verifie('zone rejetée : 800/1000 face à 90 % → NON QUALIFIÉ',
+        M.qualificationVerdict(800, 1000, 90) === 'rejected');
+    const [, hi88] = M.wilsonInterval(88, 100);
+    V.verifie('88/100 face à 90 % : p̂ sous l’exigence mais borne haute au-dessus → INCONCLUSIF',
+        100 * hi88 > 90 && M.qualificationVerdict(88, 100, 90) === 'inconclusive',
+        `borne haute ${(100 * hi88).toFixed(2)} %, verdict ${M.qualificationVerdict(88, 100, 90)}`);
+    V.verifie('92/100 face à 90 % : p̂ au-dessus mais borne basse en dessous → INCONCLUSIF',
+        M.qualificationVerdict(92, 100, 90) === 'inconclusive');
+    V.verifie('1000/1000 face à 100 % → INCONCLUSIF (la borne basse vaut 99,6 %)',
+        M.qualificationVerdict(1000, 1000, 100) === 'inconclusive');
+    V.verifie('0/1000 face à 0 % → INCONCLUSIF (aucune borne ne franchit strictement 0 %)',
+        M.qualificationVerdict(0, 1000, 0) === 'inconclusive');
+
+    // Frontières : égalité → inconclusif ; au-delà de la tolérance → tranché.
+    const [lo, hi] = M.wilsonInterval(930, 1000);
+    V.verifie('borne basse exactement égale à l’exigence → INCONCLUSIF (comparaison stricte)',
+        M.qualificationVerdict(930, 1000, 100 * lo) === 'inconclusive');
+    V.verifie('écart de 5e-10 point sous la borne basse → INCONCLUSIF (tolérance d’arrondi)',
+        M.qualificationVerdict(930, 1000, 100 * lo - 5e-10) === 'inconclusive');
+    V.verifie('exigence 1e-6 point sous la borne basse → QUALIFIÉ',
+        M.qualificationVerdict(930, 1000, 100 * lo - 1e-6) === 'qualified');
+    V.verifie('borne haute exactement égale à l’exigence → INCONCLUSIF',
+        M.qualificationVerdict(930, 1000, 100 * hi) === 'inconclusive');
+    V.verifie('exigence 1e-6 point au-dessus de la borne haute → NON QUALIFIÉ',
+        M.qualificationVerdict(930, 1000, 100 * hi + 1e-6) === 'rejected');
+
+    // Monotonie : quand l'exigence monte, le verdict ne peut que se dégrader.
+    const rang = { qualified: 0, inconclusive: 1, rejected: 2 };
+    let retours = 0;
+    for (const [x, n] of [[45, 50], [870, 1000], [99, 100]]) {
+        let precedent = 0;
+        for (let exigence = 0; exigence <= 100; exigence += 0.25) {
+            const r = rang[M.qualificationVerdict(x, n, exigence)];
+            if (r < precedent) retours++;
+            precedent = r;
+        }
+    }
+    V.verifie('le verdict se dégrade de façon monotone quand l’exigence augmente', retours === 0,
+        `${retours} retour(s) en arrière`);
+}
+
+/* ------------------------------------------- 1 ter. comparateur A/B */
+V.groupe('1 ter. Comparateur A/B : hypothèses et appariement (guide §9.3)');
+{
+    const base = {
+        objective: 'qr', meritConfigSignature: 'QR', gridSignature: 'G', polarisationSignature: 'moy',
+        acceptanceSignature: JSON.stringify({ qrMin: 30, tpassMin: 85 }), incidenceDeg: 0,
+        toleranceNm: 2, numRuns: 4, seed: 42, minimumThicknessNm: 1, requiredYieldPct: 90,
+        layerCount: 18, accepted: 2, complianceFlags: [true, false, true, false]
+    };
+    const sig = (r) => M.reviewAssumptionSignature(r);
+    V.verifie('deux qualifications identiques ont la même signature', sig(base) === sig({ ...base }));
+    const variantes = [
+        ['seuil Qr', { acceptanceSignature: JSON.stringify({ qrMin: 25, tpassMin: 85 }) }],
+        ['seuil T̄pass', { acceptanceSignature: JSON.stringify({ qrMin: 30, tpassMin: 80 }) }],
+        ['graine', { seed: 7 }],
+        ['polarisation', { polarisationSignature: '["s"]' }],
+        ['grille ou bandes', { gridSignature: 'G2' }],
+        ['incidence', { incidenceDeg: 10 }],
+        ['Δd', { toleranceNm: 5 }],
+        ['N', { numRuns: 8 }],
+        ['dmin', { minimumThicknessNm: 2 }],
+        ['rendement exigé', { requiredYieldPct: 95 }],
+        ['mérite', { meritConfigSignature: 'AR' }],
+    ];
+    for (const [nom, delta] of variantes) {
+        V.verifie(`une différence de ${nom} rend la comparaison invalide`,
+            M.reviewPairingStatus(base, { ...base, ...delta }) === 'invalid');
+    }
+    V.verifie('mêmes hypothèses et même nombre de couches → comparaison appariée',
+        M.reviewPairingStatus(base, { ...base, complianceFlags: [true, true, false, false] }) === 'paired');
+    V.verifie('mêmes hypothèses mais 18 et 20 couches → NON appariée',
+        M.reviewPairingStatus(base, { ...base, layerCount: 20 }) === 'unpaired');
+    V.verifie('un seul instantané → statut « single »', M.reviewPairingStatus(base, null) === 'single');
+
+    // Différence appariée : seules les réalisations discordantes comptent.
+    const B = { ...base, accepted: 3, complianceFlags: [true, true, true, false] };
+    const d = M.pairedYieldDifference(base, B);
+    V.proche('différence appariée B−A = +25 points sur 4 tirages', d.diffPct, 25, 1e-12);
+    const u = M.unpairedYieldDifference(base, B);
+    V.proche('différence non appariée B−A = +25 points (estimation ponctuelle)', u.diffPct, 25, 1e-12);
+    V.verifie('l’intervalle non apparié encadre l’estimation', u.lowPct <= 25 && u.highPct >= 25);
+}
+
 /* ------------------------------------------------------- 2. quantiles */
 V.groupe('2. Quantiles empiriques');
 {
@@ -242,6 +355,38 @@ V.groupe('5. Optimiseur quasi-Newton BFGS');
             r2.thick.every(x => x <= 1200 + 1e-9), r2.thick.join(', '));
     }
 
+    // (g bis) La borne basse vaut EXACTEMENT le seuil de nettoyage actif, sans
+    // plancher caché (l'ancien code imposait max(0,5 ; seuil)).
+    {
+        V.verifie('bornes par défaut [2 ; 1200] nm',
+            M.bfgsBoundsNm().min === 2 && M.bfgsBoundsNm().max === 1200,
+            JSON.stringify(M.bfgsBoundsNm()));
+        M.__champs.inpCleanThreshold = '0.2';
+        const r = M.bfgsDescent([100, 100], [0, 1], (d) => d[0] + d[1]);
+        V.verifie('seuil 0,2 nm : la borne basse de BFGS vaut 0,2 nm',
+            M.bfgsBoundsNm().min === 0.2, String(M.bfgsBoundsNm().min));
+        V.verifie('seuil 0,2 nm : BFGS descend jusqu’à 0,2 nm, pas jusqu’à un plancher de 0,5 nm',
+            r.thick.every(x => x >= 0.2 - 1e-9 && x < 0.5), r.thick.join(', '));
+        M.__champs.inpCleanThreshold = '0';
+        V.verifie('seuil 0 nm : borne basse nulle', M.bfgsBoundsNm().min === 0);
+        M.__champs.inpCleanThreshold = '5';
+        const r5 = M.bfgsDescent([100, 100], [0, 1], (d) => d[0] + d[1]);
+        V.verifie('seuil 5 nm : aucune épaisseur libre sous 5 nm',
+            r5.thick.every(x => x >= 5 - 1e-9), r5.thick.join(', '));
+        delete M.__champs.inpCleanThreshold;
+    }
+
+    // (g ter) Départ hors bornes (aiguille de 0,1 nm, couche > 1200 nm) : le
+    // point de départ est ramené dans le domaine avant la descente.
+    {
+        const r = M.bfgsDescent([0.1, 50, 1500], [0, 1, 2], (d) => d[0] + (d[1] - 60) ** 2 - d[2] / 1e3);
+        V.verifie('une aiguille de 0,1 nm est portée à la borne basse (2 nm)',
+            Math.abs(r.thick[0] - 2) < 1e-12, String(r.thick[0]));
+        V.verifie('une couche de 1500 nm est ramenée à 1200 nm', Math.abs(r.thick[2] - 1200) < 1e-9,
+            String(r.thick[2]));
+        V.proche('la variable intérieure converge malgré tout', r.thick[1], 60, 0.05);
+    }
+
     // (h) Aucune variable libre : l'appel doit rendre l'empilement intact.
     {
         const depart = [10, 20, 30];
@@ -313,6 +458,21 @@ V.groupe('6. Analyse d’une liste de couches (« 1,3,5-7 »)');
     V.verifie('les doublons sont fusionnés et la liste est triée',
         r.ok && JSON.stringify(r.indices) === JSON.stringify([2, 3, 4]),
         r.ok ? r.indices.join(',') : r.reason);
+
+    /* Resynchronisation de la portée après renumérotation : la liste est
+       reconstruite depuis les verrous effectifs, compactée en plages, et doit
+       se relire à l'identique. */
+    V.verifie('compaction : 1,2,3,5 → « 1-3,5 »', M.compactLayerList([1, 2, 3, 5]) === '1-3,5',
+        M.compactLayerList([1, 2, 3, 5]));
+    V.verifie('compaction : 16,17,18 → « 16-18 »', M.compactLayerList([16, 17, 18]) === '16-18');
+    V.verifie('compaction : liste vide → chaîne vide', M.compactLayerList([]) === '');
+    let allersRetours = 0;
+    for (const libres of [[1], [2, 4, 6], [1, 2, 3, 7, 8, 20], [16, 17, 18, 19, 20]]) {
+        const relue = M.parseLayerSelection(M.compactLayerList(libres), 20);
+        if (!relue.ok || relue.indices.map(i => i + 1).join() !== libres.join()) allersRetours++;
+    }
+    V.verifie('toute liste compactée se relit à l’identique', allersRetours === 0,
+        `${allersRetours} écart(s)`);
 }
 
 process.exit(V.bilan() === 0 ? 0 : 1);
