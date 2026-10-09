@@ -105,6 +105,21 @@
             /* Pas de clic droit au doigt : l'appui long remplace le menu contextuel. */
             canvas { touch-action: manipulation; }
         }
+        /* Infobulles d'aide : le texte explicatif quitte la face avant et ne
+           s'affiche qu'à la demande (survol, focus clavier ou toucher). */
+        .tip { display: inline-flex; align-items: center; justify-content: center;
+               width: 13px; height: 13px; flex-shrink: 0; border-radius: 9999px;
+               font: italic 700 9px/1 Georgia, 'Times New Roman', serif;
+               color: #4f46e5; background: #eef2ff; border: 1px solid #a5b4fc;
+               cursor: help; user-select: none; vertical-align: middle; align-self: center; }
+        .tip:hover, .tip:focus-visible { background: #4f46e5; color: #fff; outline: none; }
+        .tip.hidden { display: none; }
+        #txtCleanNote:empty { display: none; }
+        #tipBubble { position: fixed; z-index: 1000; max-width: 300px; padding: 6px 9px;
+                     border-radius: 6px; background: #1e293b; color: #f8fafc;
+                     font-size: 11px; line-height: 1.45; font-weight: 400;
+                     box-shadow: 0 6px 16px rgba(15, 23, 42, .28); pointer-events: none; }
+        #tipBubble[hidden] { display: none; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
@@ -121,7 +136,7 @@
                         Simulateur Couches Minces Optiques
                         <span id="txtAudienceBadge" class="text-xs bg-indigo-500/40 text-indigo-200 font-semibold px-2 py-0.5 rounded-full border border-indigo-400/30">BUT 3 FI Parcours MCPC — étudiants L2 · L3 · M1 · M2</span>
                     </h1>
-                    <p class="text-xs text-indigo-300">Méthode matricielle d'Abelès (TMM) • Parcours modulaire à durées indicatives</p>
+                    <p class="text-xs text-indigo-300">Méthode matricielle d'Abelès (TMM)</p>
                 </div>
             </div>
 
@@ -265,10 +280,11 @@
                         <span id="lblCleanThresh" class="font-semibold">Supprimer les couches sous</span>
                         <input type="number" id="inpCleanThreshold" value="2" min="0" max="50" step="0.5" class="w-14 text-center border border-amber-300 rounded py-0.5 font-mono">
                         <span>nm</span>
+                        <span id="tipClean" class="tip" tabindex="0" role="button" data-tip="Les couches trop fines sont supprimées, puis les couches voisines de même matériau sont fusionnées. Le mérite est réévalué : vérifiez ce que le nettoyage vous coûte." aria-label="Les couches trop fines sont supprimées, puis les couches voisines de même matériau sont fusionnées. Le mérite est réévalué : vérifiez ce que le nettoyage vous coûte.">i</span>
                         <button id="btnDoClean" class="ml-auto bg-amber-600 hover:bg-amber-700 text-white font-bold px-2 py-0.5 rounded">Appliquer</button>
                         <button id="btnCancelClean" class="text-amber-700 hover:text-amber-900 font-bold px-1.5">✕</button>
                     </div>
-                    <p id="txtCleanNote" class="leading-tight">Les couches trop fines sont supprimées, puis les couches voisines de même matériau sont fusionnées. Le mérite est réévalué : vérifiez ce que le nettoyage vous coûte.</p>
+                    <p id="txtCleanNote" class="leading-tight"></p>
                 </div>
 
                 <!-- Référence de Design pour le QWOT -->
@@ -290,19 +306,16 @@
 
                 <!-- Zone de saisie rapide de Formule (masquable) -->
                 <div id="formulaBox" class="hidden p-3 bg-indigo-50/70 border-b border-indigo-100 space-y-2 text-xs">
-                    <label class="font-bold text-indigo-900 block">Saisie rapide d'empilement :</label>
+                    <label class="font-bold text-indigo-900 flex items-center gap-1">Saisie rapide d'empilement : <span id="tipFormula" class="tip" tabindex="0" role="button" data-tip="H = ZnS (ou haut indice), L = YF3 (ou bas indice). Le préfixe est un multiple de quart d'onde : 2H = demi-onde. Parenthèses et puissances acceptées, ex. (HL)^3 2H (LH)^3." aria-label="H = ZnS (ou haut indice), L = YF3 (ou bas indice). Le préfixe est un multiple de quart d'onde : 2H = demi-onde. Parenthèses et puissances acceptées, ex. (HL)^3 2H (LH)^3.">i</span></label>
                     <div class="flex gap-2">
                         <input type="text" id="inpFormulaStr" title="Tapez H L 2H etc. puis cliquez sur Appliquer" placeholder="Ex: (HL)^3 2H (LH)^3 ou H,L,2H,L" class="w-full bg-white border border-indigo-300 rounded px-2.5 py-1.5 font-mono text-xs focus:ring-2 focus:ring-indigo-400 outline-none">
                         <button id="btnApplyFormula" title="Générer les couches" class="bg-indigo-600 text-white px-3 py-1.5 rounded font-bold hover:bg-indigo-700 transition flex-shrink-0">
                             Appliquer
                         </button>
                     </div>
-                    <button id="btnLoadFresnel18" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 rounded font-bold transition" title="Charger la prescription de fabrication Fresnel et figer les 15 premières couches pour BFGS">
-                        Charger la référence Fresnel · 18 couches · 15 figées + 3 libres
+                    <button id="btnLoadFresnel18" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 rounded font-bold transition" title="Charger la prescription de fabrication Fresnel : 18 couches, les 15 premières figées pour BFGS, les 3 dernières libres.">
+                        Charger la référence Fresnel
                     </button>
-                    <div class="text-[11px] text-slate-500 flex justify-between">
-                        <span>H = ZnS (ou haut indice) | L = YF3 (ou bas indice)</span>
-                    </div>
                 </div>
 
                 <!-- Tableau interactif des couches -->
@@ -416,13 +429,11 @@
                         <input type="checkbox" id="chkShowP" checked title="Afficher la Polarisation P (TM)" class="rounded text-blue-600 focus:ring-0">
                         <span>Pola P (TM)</span>
                     </label>
+                    <span id="polDegenerateNote" class="tip hidden" tabindex="0" role="button" data-tip="θ = 0° : le plan d'incidence n'est pas défini, S et P sont dégénérés — une seule courbe est tracée. Inclinez le banc pour les séparer." aria-label="θ = 0° : le plan d'incidence n'est pas défini, S et P sont dégénérés — une seule courbe est tracée. Inclinez le banc pour les séparer.">i</span>
                 </div>
                 <!-- À θ = 0 le plan d'incidence n'est plus défini : S et P sont
                      rigoureusement dégénérés. Tracer trois courbes identiques
                      laisserait croire à trois grandeurs distinctes. -->
-                <p id="polDegenerateNote" class="hidden text-[10px] text-slate-500 italic mt-1 leading-snug">
-                    θ = 0° : le plan d'incidence n'est pas défini, S et P sont dégénérés — une seule courbe est tracée. Inclinez le banc pour les séparer.
-                </p>
             </div>
 
             <!-- Carte 4 : Outils Avancés du TP (Optimiseur, Monte-Carlo & Métriques Qr) -->
@@ -444,11 +455,10 @@
                             <div class="font-bold text-indigo-900 flex items-center justify-between">
                                 <span class="flex items-center gap-1">
                                     Optimiseur :
-                                    <i data-lucide="help-circle" class="w-3.5 h-3.5 text-indigo-500 cursor-help" id="icoOptiHelp" title="OPTIMISATION : ajuste les épaisseurs d'un empilement dont le NOMBRE DE COUCHES EST FIXE. Quasi-Newton (BFGS) approche la hessienne à l'ordre 2 par différences finies ; c'est le standard industriel, et il est déterministe — deux lancements identiques donnent le même résultat. La méthode de l'aiguille, elle, ne relève pas de l'optimisation : elle CRÉE une couche. Elle a son propre bloc, plus bas."></i>
+                                    <span id="icoOptiHelp" class="tip" tabindex="0" role="button" data-tip="OPTIMISATION : BFGS ajuste les épaisseurs des couches libres, à nombre de couches constant. Il est déterministe et converge vers un minimum local dépendant du point de départ. La méthode de l'aiguille modifie ensuite la structure en créant une couche." aria-label="OPTIMISATION : BFGS ajuste les épaisseurs des couches libres, à nombre de couches constant. Il est déterministe et converge vers un minimum local dépendant du point de départ. La méthode de l'aiguille modifie ensuite la structure en créant une couche.">i</span>
                                 </span>
                                 <span class="text-[10px] bg-indigo-200 text-indigo-900 font-semibold px-1.5 py-0.5 rounded" title="Approximation hessienne de 2nd ordre, déterministe, à nombre de couches constant">Quasi-Newton (BFGS)</span>
                             </div>
-                            <p id="txtOptiAlgoNote" class="text-[9px] text-indigo-700/80 mt-1 leading-snug">Ajuste les <strong>épaisseurs</strong> des couches libres, sans jamais en ajouter ni en retirer.</p>
                             <div class="flex items-center gap-1.5 mt-1">
                                 <label for="selMeritObjective" class="text-[10px] font-bold text-indigo-900 shrink-0 whitespace-nowrap">Mérite :</label>
                                 <select id="selMeritObjective" class="bg-white border border-indigo-300 rounded px-1.5 py-0.5 text-[10px] w-full text-indigo-900 font-medium">
@@ -457,9 +467,7 @@
                                     <option value="custom">🎨 Cible libre (design personnalisé)</option>
                                 </select>
                             </div>
-                            <p id="meritLockNote" class="hidden text-[9px] text-fuchsia-800 bg-fuchsia-50 border border-fuchsia-200 rounded px-1.5 py-1 mt-1 leading-snug">
-                                🔒 Mode libre : la cible personnalisée est le seul mérite disponible. Définissez votre cahier des charges ci-dessous. Les mérites d'exercice s'activent en mode étudiant.
-                            </p>
+                            <p id="meritLockNote" class="hidden text-[9px] text-fuchsia-800 bg-fuchsia-50 border border-fuchsia-200 rounded px-1.5 py-1 mt-1 leading-snug flex items-center gap-1"><span>🔒 Mode libre : mérite « Cible libre » uniquement.</span><span id="tipMeritLock" class="tip" tabindex="0" role="button" data-tip="Définissez votre cahier des charges dans l'éditeur de cible. Les mérites d'exercice (R moyen, Maximiser Qr) s'activent en mode 🎓 Étudiant." aria-label="Définissez votre cahier des charges dans l'éditeur de cible. Les mérites d'exercice (R moyen, Maximiser Qr) s'activent en mode 🎓 Étudiant.">i</span></p>
                             <!-- Fenêtre et seuil du mérite antireflet : un mérite n'existe
                                  pas sans sa fenêtre spectrale. Qualifier sur 400–750 nm un
                                  antireflet conçu à 550 nm n'a aucun sens (cf. Q15). -->
@@ -509,11 +517,11 @@
                                         <p id="txtOptimizeLayerList" class="mt-0.5 text-[8.5px] text-indigo-700 leading-tight">Sélectionnez au moins une couche existante.</p>
                                     </div>
                                     <p id="txtFresnelScopeWarning" class="hidden mb-1 text-[8.5px] font-bold text-orange-900 bg-orange-100 border border-orange-400 rounded px-1.5 py-1 leading-tight"></p>
-                                    <p id="txtBfgsBounds" class="mb-1 text-[8.5px] text-indigo-800 leading-tight"></p>
+                                    <p class="mb-1 text-[8.5px] text-indigo-800 leading-tight flex items-center gap-1"><span id="txtBfgsBounds"></span><span id="tipBfgsBounds" class="tip" tabindex="0" role="button" data-tip="La borne basse est le seuil de nettoyage actif : BFGS ne peut pas proposer une couche qu'il déclarerait lui-même non déposable." aria-label="La borne basse est le seuil de nettoyage actif : BFGS ne peut pas proposer une couche qu'il déclarerait lui-même non déposable.">i</span></p>
                                     <button id="btnRunOptimizer" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1 px-1.5 rounded transition shadow-sm flex items-center justify-center gap-1 text-[10px]" title="BFGS ajuste les épaisseurs des couches libres, puis l'empilement est nettoyé (couches trop fines retirées, voisines identiques fusionnées) et réoptimisé.">
                                         <i data-lucide="sparkles" class="w-3 h-3"></i> Optimiser les épaisseurs
                                     </button>
-                                    <p id="txtOptiResult" class="mt-1 text-[9px] text-indigo-900 bg-white border border-indigo-200 rounded px-1.5 py-1">Mérite initial/final affiché après optimisation.</p>
+                                    <p id="txtOptiResult" class="mt-1 text-[9px] text-indigo-900 bg-white border border-indigo-200 rounded px-1.5 py-1">—</p>
                                 </div>
 
                                 <div class="flex items-center gap-1 px-1">
@@ -525,10 +533,9 @@
                                 <div id="stepNeedle" class="rounded border border-amber-300 bg-amber-50/60 p-1.5 transition">
                                     <div class="flex items-center gap-1.5 mb-1">
                                         <span class="w-4 h-4 shrink-0 rounded-full bg-amber-600 text-white text-[9px] font-bold flex items-center justify-center">2</span>
-                                        <span id="lblSynthesisTitle" class="text-[10px] font-bold text-amber-900">Créer une couche</span>
+                                        <span id="lblSynthesisTitle" class="text-[10px] font-bold text-amber-900">Créer une couche</span><span id="tipSynthesis" class="tip" tabindex="0" role="button" data-tip="La méthode de l'aiguille insère une couche de 0,1 nm là où le mérite y gagne le plus, puis lance automatiquement BFGS." aria-label="La méthode de l'aiguille insère une couche de 0,1 nm là où le mérite y gagne le plus, puis lance automatiquement BFGS.">i</span>
                                         <span id="tagStepNeedle" class="ml-auto text-[8px] bg-amber-200 text-amber-900 px-1 py-0.5 rounded font-semibold">synthèse</span>
                                     </div>
-                                    <p id="txtSynthesisNote" class="text-[9px] text-amber-900/90 leading-snug mb-1">La méthode de l'aiguille <strong>insère une couche de 0,1 nm</strong> là où le mérite y gagne le plus, puis lance automatiquement BFGS.</p>
                                     <label id="lblNeedleMaterial" class="block text-[9px] font-semibold text-amber-900 mb-1">Matériau de l'aiguille
                                         <select id="selNeedleMaterial" class="mt-0.5 w-full bg-white border border-amber-300 rounded px-1 py-0.5 text-[9px]">
                                             <option value="auto">Automatique — partenaire technologique</option>
@@ -554,7 +561,7 @@
                             </div>
                             <p id="txtNeedleAdvice">--</p>
                             <div class="bg-white border border-amber-200 rounded p-1.5">
-                                <div id="txtNeedlePiCaption" class="text-[9px] text-amber-900 font-semibold mb-1">Fonction numérique π(z) — une valeur positive indique une insertion favorable.</div>
+                                <div id="txtNeedlePiCaption" class="text-[9px] text-amber-900 font-semibold mb-1 flex items-center gap-1"><span>Fonction π(z)</span><span id="tipNeedlePi" class="tip" tabindex="0" role="button" data-tip="Une valeur positive indique une insertion favorable. Balayage tous les 5 nm à l'intérieur des couches avec une aiguille de 0,1 nm ; les interfaces ne sont pas évaluées." aria-label="Une valeur positive indique une insertion favorable. Balayage tous les 5 nm à l'intérieur des couches avec une aiguille de 0,1 nm ; les interfaces ne sont pas évaluées.">i</span></div>
                                 <div class="relative h-40 w-full">
                                     <canvas id="needlePiChartCanvas"></canvas>
                                 </div>
@@ -569,24 +576,17 @@
                     <div data-panel="mc" class="bg-amber-50/60 p-2.5 rounded-lg border border-amber-200/80 space-y-1.5 flex flex-col justify-between">
                         <div>
                             <div class="font-bold text-amber-900 flex items-center justify-between">
-                                <span>Qualification fabrication :</span>
+                                <span class="flex items-center gap-1"><span>Qualification fabrication :</span><span id="tipMcModel" class="tip" tabindex="0" role="button" data-tip="Modèle d'erreur : chaque couche déposée reçoit une erreur gaussienne indépendante, d'écart-type σ = Δd/2. Toutes les couches sont perturbées : le verrouillage ne concerne que BFGS. Tirages reproductibles (graine figée)." aria-label="Modèle d'erreur : chaque couche déposée reçoit une erreur gaussienne indépendante, d'écart-type σ = Δd/2. Toutes les couches sont perturbées : le verrouillage ne concerne que BFGS. Tirages reproductibles (graine figée).">i</span></span>
                                 <span class="text-[10px] bg-amber-200 text-amber-900 font-semibold px-1.5 py-0.5 rounded" title="Rendement, intervalle de confiance et centiles sur des épaisseurs perturbées">Monte-Carlo</span>
                             </div>
                             <div class="grid grid-cols-2 gap-1.5 mt-1 text-[9px]">
-                                <!-- Modèle volontairement réduit à l'essentiel : une erreur
-                                     gaussienne indépendante sur chaque couche déposée. Le verrou
-                                     de ligne ne sert qu'à BFGS. La graine est figée à 42 afin que
-                                     les comparaisons A/B utilisent les mêmes réalisations. -->
-                                <p id="txtMcModel" class="col-span-2 text-[9px] text-amber-900 leading-snug" style="grid-column: 1 / -1;">
-                                    <strong>Modèle d'erreur :</strong> chaque couche déposée reçoit une erreur gaussienne indépendante, d'écart-type σ = Δd/2. Le verrouillage ne concerne que BFGS. Tirages reproductibles (graine figée).
-                                </p>
                                 <!-- Un rendement n'existe pas sans tolérance sur la
                                      spécification : c'est la fraction des tirages qui RESTENT
                                      dans le cahier des charges. Tant que ce seuil n'est pas
                                      écrit, « 77 % de rendement » ne veut rien dire. On l'affiche
                                      donc en toutes lettres, et on le rend réglable. -->
                                 <div id="divAcceptance" class="col-span-2 bg-white border border-amber-300 rounded px-1.5 py-1 leading-snug" style="grid-column: 1 / -1;">
-                                    <div class="font-bold text-amber-900 mb-0.5" id="lblAcceptTitle">Tolérances du cahier des charges — un tirage est conforme si :</div>
+                                    <div class="font-bold text-amber-900 mb-0.5 flex items-center gap-1"><span id="lblAcceptTitle">Critères de conformité :</span><span id="tipAccept" class="tip" tabindex="0" role="button" data-tip="Un tirage est conforme s'il reste dans ces tolérances. Le rendement est la fraction des tirages conformes : sans tolérances écrites, il n'est pas défini." aria-label="Un tirage est conforme s'il reste dans ces tolérances. Le rendement est la fraction des tirages conformes : sans tolérances écrites, il n'est pas défini.">i</span></div>
                                     <div id="divAcceptQr" class="hidden flex items-center gap-1 flex-wrap">
                                         <span>$Q_r \ge$</span>
                                         <input id="inpAcceptQr" type="number" value="30" min="1" max="500" step="1" class="w-12 text-center border border-amber-300 rounded py-0.5 font-mono text-[9px]">
@@ -621,7 +621,7 @@
                                         <option value="5">5,0 nm</option>
                                     </select>
                                 </label>
-                                <label>Rendement exigé
+                                <label><span class="flex items-center gap-1"><span>Rendement exigé</span><span id="tipVerdict" class="tip" tabindex="0" role="button" data-tip="Verdict : qualifié si la borne basse de l'IC95 % de Wilson dépasse cette exigence ; non qualifié si la borne haute reste dessous ; inconclusif sinon." aria-label="Verdict : qualifié si la borne basse de l'IC95 % de Wilson dépasse cette exigence ; non qualifié si la borne haute reste dessous ; inconclusif sinon.">i</span></span>
                                     <div class="mt-0.5 flex items-center gap-1"><input id="inpRequiredYield" type="number" value="90" min="0" max="100" step="1" class="w-full bg-white border border-amber-300 rounded px-1 py-0.5 text-[9px] font-mono"><span>%</span></div>
                                 </label>
                             </div>
@@ -630,7 +630,7 @@
                         <button id="btnRunMonteCarlo" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-1 px-2 rounded transition shadow-sm flex items-center justify-center gap-1">
                             <i data-lucide="shield-check" class="w-3 h-3"></i> Évaluer la robustesse
                         </button>
-                        <p id="txtMonteCarloResult" class="text-[9px] leading-relaxed text-amber-950 bg-white/80 border border-amber-200 rounded px-1.5 py-1" style="white-space: pre-line;">Toutes les couches déposées sont perturbées. Le rendement inclut la fabricabilité et la conformité optique.</p>
+                        <p id="txtMonteCarloResult" class="text-[9px] leading-relaxed text-amber-950 bg-white/80 border border-amber-200 rounded px-1.5 py-1" style="white-space: pre-line;">—</p>
                     </div>
 
                     <!-- Comparateur A/B de revue de conception -->
@@ -679,7 +679,7 @@
                      principal, pas une option secondaire de l'optimiseur. -->
                 <div id="divCustomTarget" class="hidden p-3 bg-white border-2 border-indigo-400 rounded-lg space-y-2 shadow-sm">
                                 <div class="flex items-center justify-between">
-                                    <span id="lblCustomTargetTitle" class="text-[10px] font-extrabold text-indigo-900">🎨 Votre cahier des charges</span>
+                                    <span class="flex items-center gap-1"><span id="lblCustomTargetTitle" class="text-[10px] font-extrabold text-indigo-900">🎨 Votre cahier des charges</span><span id="tipCustomTarget" class="tip" tabindex="0" role="button" data-tip="Tout ce qui n'est couvert par aucun segment est « indifférent » et n'entre pas dans le score. La note est une RMSE pondérée par les poids des segments." aria-label="Tout ce qui n'est couvert par aucun segment est « indifférent » et n'entre pas dans le score. La note est une RMSE pondérée par les poids des segments.">i</span></span>
                                     <div class="flex gap-1">
                                         <button id="btnTargetPreset" class="text-[9px] bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded px-1.5 py-0.5 font-bold text-slate-700" title="Charger un exemple de cible">Exemple</button>
                                         <button id="btnTargetClear" class="text-[9px] bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded px-1.5 py-0.5 font-bold text-rose-700" title="Supprimer tous les segments">Vider</button>
@@ -721,7 +721,7 @@
                      autre rapport restent a la charge de l'etudiant. -->
                 <div data-panel="bands" class="p-2.5 bg-slate-50 border border-slate-200 rounded-lg space-y-1.5 text-[10px]">
                     <div class="flex justify-between items-center font-semibold text-slate-700 border-b border-slate-200 pb-1">
-                        <span id="lblBandAnalyzer">Analyseur de bandes spectrales</span>
+                        <span class="flex items-center gap-1"><span id="lblBandAnalyzer">Analyseur de bandes spectrales</span><span id="tipBandNote" class="tip" tabindex="0" role="button" data-tip="Instrument de mesure uniquement : choisissez R, T ou A et relevez sa moyenne sur chaque bande. Les grandeurs dérivées — facteur de réjection, contraste, rapport de bandes — sont à calculer séparément. Ces réglages n'agissent ni sur l'optimiseur ni sur le Monte-Carlo." aria-label="Instrument de mesure uniquement : choisissez R, T ou A et relevez sa moyenne sur chaque bande. Les grandeurs dérivées — facteur de réjection, contraste, rapport de bandes — sont à calculer séparément. Ces réglages n'agissent ni sur l'optimiseur ni sur le Monte-Carlo.">i</span></span>
                         <div class="flex gap-1">
                             <button id="btnAddBand" class="text-[9px] bg-indigo-600 hover:bg-indigo-700 text-white rounded px-1.5 py-0.5 font-bold" title="Ajouter une bande de mesure">+ Bande</button>
                             <button id="btnResetQrBands" class="text-[9px] text-indigo-600 hover:underline font-bold" title="Rétablir les bandes de référence du TP (550nm)">Défaut TP</button>
@@ -743,7 +743,6 @@
                             <tbody id="tbodyBands"></tbody>
                         </table>
                     </div>
-                    <p id="txtBandNote" class="text-[9px] text-slate-500 leading-tight"></p>
                     <p id="txtQrBandWarning" class="hidden text-[9px] font-bold text-red-700 bg-red-50 border border-red-200 rounded px-1.5 py-1 leading-tight"></p>
                 </div>
             </div>
@@ -777,9 +776,9 @@
                         <button id="btnResetChartView" class="px-2 py-1 rounded font-semibold bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 transition flex items-center gap-1" title="Rétablir les échelles initiales du graphique">
                             <i data-lucide="scan" class="w-3 h-3"></i><span id="lblResetChartView">Vue initiale</span>
                         </button>
+                        <span id="tipChartHelp" class="tip" tabindex="0" role="button" data-tip="Molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · clic droit (appui long sur mobile) : exporter les courbes en CSV." aria-label="Molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · clic droit (appui long sur mobile) : exporter les courbes en CSV.">i</span>
                     </div>
                 </div>
-                <p id="txtChartExportHint" class="text-[10px] text-slate-400 -mt-2 mb-2">💡 Molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · clic droit : exporter en CSV.</p>
 
                 <!-- Zone du Canvas Chart.js -->
                 <div id="mainChartWrap" class="relative flex-grow min-h-[380px] w-full overflow-hidden">
@@ -875,7 +874,7 @@
                     $$\phi_j = \frac{2\pi d_j}{\lambda} \sqrt{N_j^2 - N_0^2 \sin^2\theta_0}$$
                 </p>
                 <p>
-                    La matrice caractéristique unitaire de la couche est :
+                    La matrice caractéristique de la couche, unimodulaire ($\det M_j = 1$), est :
                     $$M_j = \begin{pmatrix} \cos\phi_j & \frac{i}{\eta_j}\sin\phi_j \\ i\eta_j\sin\phi_j & \cos\phi_j \end{pmatrix}$$
                 </p>
                 <h4 class="font-bold text-slate-900 text-sm">Polarisation S (TE) vs P (TM) & Incidence Oblique</h4>
@@ -1703,10 +1702,9 @@
         }).join('');
         tbody.innerHTML = rows || `<tr><td colspan="6" class="py-2 text-center text-slate-400">${fr ? 'Aucune bande — cliquez sur « + Bande ».' : 'No band — click "+ Band".'}</td></tr>`;
 
-        const note = document.getElementById('txtBandNote');
-        if (note) note.innerHTML = fr
-            ? "Instrument de <strong>mesure uniquement</strong> : choisissez R, T ou A et relevez sa moyenne sur chaque bande. Les grandeurs dérivées — facteur de réjection, contraste, rapport de bandes — sont à calculer séparément. Ces réglages n'agissent ni sur l'optimiseur ni sur le Monte-Carlo."
-            : "<strong>Measurement only</strong>: select R, T or A and read its average over each band. Derived quantities — rejection factor, contrast, band ratios — must be calculated separately. These settings do not affect the optimizer or Monte-Carlo.";
+        setTipText('tipBandNote',
+            "Instrument de mesure uniquement : choisissez R, T ou A et relevez sa moyenne sur chaque bande. Les grandeurs dérivées — facteur de réjection, contraste, rapport de bandes — sont à calculer séparément. Ces réglages n'agissent ni sur l'optimiseur ni sur le Monte-Carlo.",
+            "Measurement only: select R, T or A and read its average over each band. Derived quantities — rejection factor, contrast, band ratios — must be calculated separately. These settings do not affect the optimizer or Monte-Carlo.");
         updateQrBandWarning();
     }
 
@@ -2101,8 +2099,8 @@
         const r = evaluateCustomTarget(null);
         const covered = t.segments.reduce((a, s) => a + Math.max(0, s.lmax - s.lmin), 0);
         document.getElementById('txtCustomTargetNote').textContent = fr
-            ? `${r.points} points évalués sur ${covered.toFixed(0)} nm spécifiés. Tout ce qui n'est pas couvert est « indifférent » et n'entre pas dans le score. RMSE actuelle : ${Number.isFinite(r.rmse) ? r.rmse.toFixed(2) + ' %' : '—'}.`
-            : `${r.points} points evaluated over ${covered.toFixed(0)} nm specified. Anything not covered is "don't care" and does not enter the score. Current RMSE: ${Number.isFinite(r.rmse) ? r.rmse.toFixed(2) + '%' : '—'}.`;
+            ? `${r.points} points évalués sur ${covered.toFixed(0)} nm spécifiés. RMSE actuelle : ${Number.isFinite(r.rmse) ? r.rmse.toFixed(2) + ' %' : '—'}.`
+            : `${r.points} points evaluated over ${covered.toFixed(0)} nm specified. Current RMSE: ${Number.isFinite(r.rmse) ? r.rmse.toFixed(2) + '%' : '—'}.`;
     }
 
     function wireTargetButtons() {
@@ -2232,8 +2230,8 @@
             const t = getCustomTarget();
             if (!t.segments.length) {
                 el.textContent = fr
-                    ? '⚠ Mérite indéfini : aucun segment de cible. Cliquez sur « + Segment » puis construisez votre cahier des charges dans le tableau.'
-                    : '⚠ Merit undefined: no target segment. Click "+ Segment", then build your specification in the table.';
+                    ? '⚠ Mérite indéfini : ajoutez un segment de cible (« + Segment »).'
+                    : '⚠ Merit undefined: add a target segment ("+ Segment").';
                 return;
             }
             // Chaque segment porte son propre angle : annoncer un angle unique
@@ -2247,8 +2245,8 @@
         }
         if (o === 'qr') {
             txt = fr
-                ? `Mérite Qr figé : T̄(535–565) ÷ moyenne[T̄(460–500), T̄(620–680)], pas ${MERIT_GRIDS.qr.step} nm. Indépendant de l'analyseur de mesure. Critère : Qr ≥ ${ACCEPTANCE.qr.qr} et Tpass ≥ ${ACCEPTANCE.qr.tpass} %.`
-                : `Fixed Qr merit: T̄(535–565) ÷ mean[T̄(460–500), T̄(620–680)], ${MERIT_GRIDS.qr.step} nm step. Independent of the measurement analyzer. Criterion: Qr ≥ ${ACCEPTANCE.qr.qr} and Tpass ≥ ${ACCEPTANCE.qr.tpass}%.`;
+                ? `Mérite Qr figé : T̄(535–565) ÷ moyenne[T̄(460–500), T̄(620–680)], pas ${MERIT_GRIDS.qr.step} nm. Critère : Qr ≥ ${ACCEPTANCE.qr.qr} et Tpass ≥ ${ACCEPTANCE.qr.tpass} %.`
+                : `Fixed Qr merit: T̄(535–565) ÷ mean[T̄(460–500), T̄(620–680)], ${MERIT_GRIDS.qr.step} nm step. Criterion: Qr ≥ ${ACCEPTANCE.qr.qr} and Tpass ≥ ${ACCEPTANCE.qr.tpass}%.`;
         } else {
             const g = getArConfig();
             if (!g.windows.length) {
@@ -2332,13 +2330,13 @@
         if (o === 'custom') {
             const t = getCustomTarget();
             other.innerHTML = fr
-                ? `l'écart à <strong>votre cible</strong> reste sous <strong>RMSE ≤ ${formatStat(t.threshold, 1)} %</strong> — seuil réglé dans l'éditeur de cible, sur ${t.segments.length} segment(s).`
-                : `the deviation from <strong>your target</strong> stays below <strong>RMSE ≤ ${formatStat(t.threshold, 1)}%</strong> — set in the target editor, over ${t.segments.length} segment(s).`;
+                ? `<strong>RMSE ≤ ${formatStat(t.threshold, 1)} %</strong> sur votre cible (${t.segments.length} segment(s))`
+                : `<strong>RMSE ≤ ${formatStat(t.threshold, 1)}%</strong> on your target (${t.segments.length} segment(s))`;
         } else if (o === 'ar') {
             const g = getArConfig();
             other.innerHTML = fr
-                ? `<strong>R̄ ≤ ${formatStat(g.threshold, 2)} %</strong> sur la ou les fenêtres déclarées — seuil réglé sous le sélecteur de mérite.`
-                : `<strong>mean R ≤ ${formatStat(g.threshold, 2)}%</strong> over the declared window(s) — set below the merit selector.`;
+                ? `<strong>R̄ ≤ ${formatStat(g.threshold, 2)} %</strong> sur les fenêtres déclarées`
+                : `<strong>mean R ≤ ${formatStat(g.threshold, 2)}%</strong> over the declared window(s)`;
         }
         if (window.MathJax?.typesetPromise) MathJax.typesetPromise([qrBox]).catch(() => {});
     }
@@ -2942,8 +2940,8 @@
         const adverse = adverseStatisticText(q);
         const lo = formatStat(q.yieldLowPct, 1), hi = formatStat(q.yieldHighPct, 1);
         return fr
-            ? `Décision : ${decisionLabel} — IC95 % de Wilson [${lo} ; ${hi}] % pour une exigence de ${formatStat(q.requiredYieldPct, 1)} % (qualifié si la borne basse la dépasse, non qualifié si la borne haute reste dessous, inconclusif sinon). ${q.accepted}/${q.numRuns} conformes, rendement = ${formatStat(q.yieldPct, 1)} %.\nFabricabilité : ${q.feasibleCount}/${q.numRuns} (${formatStat(q.feasibilityPct, 1)} %) — dmin ≥ ${formatStat(q.minimumThicknessNm, 1)} nm.\nOptique (réalisations fabricables) : ${meritLabel} = ${formatStat(q.meanMerit)} ± ${formatStat(q.stdMerit)} ; min/max = ${formatStat(q.meritMin)} / ${formatStat(q.meritMax)} ; P05/P50/P95 = ${formatStat(q.p05)} / ${formatStat(q.p50)} / ${formatStat(q.p95)} ; défavorable : ${adverse}.${conditionalNote}\nHypothèses : ${modelLabel}, Δd = ${formatStat(q.toleranceNm, 1)} nm, graine ${q.seed}, ${q.perturbedCount} couche(s) perturbée(s) — critère ${criteria}.`
-            : `Decision: ${decisionLabel} — 95% Wilson CI [${lo}, ${hi}]% for a ${formatStat(q.requiredYieldPct, 1)}% requirement (qualified if the lower bound exceeds it, not qualified if the upper bound stays below it, inconclusive otherwise). ${q.accepted}/${q.numRuns} compliant, yield = ${formatStat(q.yieldPct, 1)}%.\nManufacturability: ${q.feasibleCount}/${q.numRuns} (${formatStat(q.feasibilityPct, 1)}%) — dmin ≥ ${formatStat(q.minimumThicknessNm, 1)} nm.\nOptics (feasible realizations): ${meritLabel} = ${formatStat(q.meanMerit)} ± ${formatStat(q.stdMerit)}; min/max = ${formatStat(q.meritMin)} / ${formatStat(q.meritMax)}; P05/P50/P95 = ${formatStat(q.p05)} / ${formatStat(q.p50)} / ${formatStat(q.p95)}; adverse: ${adverse}.${conditionalNote}\nAssumptions: ${modelLabel}, Δd = ${formatStat(q.toleranceNm, 1)} nm, seed ${q.seed}, ${q.perturbedCount} perturbed layer(s) — criterion ${criteria}.`;
+            ? `Décision : ${decisionLabel} — IC95 % de Wilson [${lo} ; ${hi}] % pour une exigence de ${formatStat(q.requiredYieldPct, 1)} %. ${q.accepted}/${q.numRuns} conformes, rendement = ${formatStat(q.yieldPct, 1)} %.\nFabricabilité : ${q.feasibleCount}/${q.numRuns} (${formatStat(q.feasibilityPct, 1)} %) — dmin ≥ ${formatStat(q.minimumThicknessNm, 1)} nm.\nOptique (réalisations fabricables) : ${meritLabel} = ${formatStat(q.meanMerit)} ± ${formatStat(q.stdMerit)} ; min/max = ${formatStat(q.meritMin)} / ${formatStat(q.meritMax)} ; P05/P50/P95 = ${formatStat(q.p05)} / ${formatStat(q.p50)} / ${formatStat(q.p95)} ; défavorable : ${adverse}.${conditionalNote}\nHypothèses : ${modelLabel}, Δd = ${formatStat(q.toleranceNm, 1)} nm, graine ${q.seed}, ${q.perturbedCount} couche(s) perturbée(s) — critère ${criteria}.`
+            : `Decision: ${decisionLabel} — 95% Wilson CI [${lo}, ${hi}]% for a ${formatStat(q.requiredYieldPct, 1)}% requirement. ${q.accepted}/${q.numRuns} compliant, yield = ${formatStat(q.yieldPct, 1)}%.\nManufacturability: ${q.feasibleCount}/${q.numRuns} (${formatStat(q.feasibilityPct, 1)}%) — dmin ≥ ${formatStat(q.minimumThicknessNm, 1)} nm.\nOptics (feasible realizations): ${meritLabel} = ${formatStat(q.meanMerit)} ± ${formatStat(q.stdMerit)}; min/max = ${formatStat(q.meritMin)} / ${formatStat(q.meritMax)}; P05/P50/P95 = ${formatStat(q.p05)} / ${formatStat(q.p50)} / ${formatStat(q.p95)}; adverse: ${adverse}.${conditionalNote}\nAssumptions: ${modelLabel}, Δd = ${formatStat(q.toleranceNm, 1)} nm, seed ${q.seed}, ${q.perturbedCount} perturbed layer(s) — criterion ${criteria}.`;
     }
 
     /* Calcul auxiliaire cohérent avec l'ordre de dépôt du moteur principal. */
@@ -3453,8 +3451,8 @@
         if (!el) return;
         const { min, max } = bfgsBoundsNm();
         el.textContent = currentLang === 'fr'
-            ? `Bornes BFGS : [${formatStat(min, 1)} ; ${formatStat(max, 0)}] nm — la borne basse est le seuil de nettoyage actif.`
-            : `BFGS bounds: [${formatStat(min, 1)}; ${formatStat(max, 0)}] nm — the lower bound is the active cleanup threshold.`;
+            ? `Bornes BFGS : [${formatStat(min, 1)} ; ${formatStat(max, 0)}] nm`
+            : `BFGS bounds: [${formatStat(min, 1)}; ${formatStat(max, 0)}] nm`;
     }
 
     /* Liste de numéros 1-based triés, compactée en plages : 1,2,3,5 → « 1-3,5 ». */
@@ -4969,9 +4967,11 @@
             const box = banner.firstElementChild;
             if (ex && box) {
                 const fr = currentLang === 'fr';
+                // La consigne détaillée est dans l'énoncé : ici, une infobulle suffit.
+                const consigne = (fr ? ex.taskFr : ex.taskEn).replace(/"/g, '&quot;');
                 box.innerHTML = `<span class="font-extrabold">${ex.num}. ${fr ? ex.fr : ex.en}</span>`
                     + `<span class="ml-2 opacity-80">${ex.qFr}</span>`
-                    + `<span class="block mt-0.5 opacity-90">${fr ? ex.taskFr : ex.taskEn}</span>`;
+                    + ` <span class="tip ml-1" tabindex="0" role="button" data-tip="${consigne}" aria-label="${consigne}">i</span>`;
             }
         }
         if (window.lucide) lucide.createIcons();
@@ -4998,12 +4998,8 @@
         appState.monteCarloSamples = [];
         // Les résultats affichés se rapportaient à l'empilement précédent : les
         // laisser serait à la fois faux et une réponse offerte sur un plateau.
-        liveBi('txtOptiResult',
-            'Mérite initial/final affiché après optimisation.',
-            'Initial/final merit is displayed after optimization.');
-        liveBi('txtMonteCarloResult',
-            'Toutes les couches déposées sont perturbées. Le verrouillage ne concerne que BFGS.',
-            'Every deposited layer is perturbed. Locking applies to BFGS only.');
+        liveBi('txtOptiResult', '—', '—');
+        liveBi('txtMonteCarloResult', '—', '—');
         const audit = document.getElementById('txtFabricationSummary');
         if (audit) audit.dataset.revealed = '0';
         // Nouvel empilement : l'annulation d'aiguille et le diagnostic π(z) se
@@ -5430,10 +5426,8 @@
             appState.monteCarloRuns = [];
             appState.monteCarloSamples = [];
             appState.lastQualification = null;
-            liveBi('txtOptiResult', 'Nouvelle fonction de mérite sélectionnée.', 'New merit function selected.');
-            liveBi('txtMonteCarloResult',
-                'Toutes les couches déposées sont perturbées. Le verrouillage ne concerne que BFGS.',
-                'Every deposited layer is perturbed. Locking applies to BFGS only.');
+            liveBi('txtOptiResult', '—', '—');
+            liveBi('txtMonteCarloResult', '—', '—');
             updateMeritGridNote();
             updateMeritIncidenceWarning();
             updateAcceptanceUI();
@@ -5686,7 +5680,57 @@
         return echecs.length === 0 && Garde.intact;
     }
 
+    /* Infobulles ⓘ : une seule bulle flottante, positionnée en coordonnées
+       fenêtre pour ne jamais être rognée par une carte à débordement masqué. */
+    function initInfoTips() {
+        const bulle = document.getElementById('tipBubble');
+        if (!bulle) return;
+        let courant = null;
+        const montrer = el => {
+            const texte = el.getAttribute('data-tip');
+            if (!texte) return;
+            courant = el;
+            bulle.textContent = texte;
+            bulle.hidden = false;
+            const r = el.getBoundingClientRect();
+            const b = bulle.getBoundingClientRect();
+            const x = Math.max(8, Math.min(r.left + r.width / 2 - b.width / 2, innerWidth - b.width - 8));
+            let y = r.bottom + 6;
+            if (y + b.height > innerHeight - 8) y = Math.max(8, r.top - b.height - 6);
+            bulle.style.left = `${x}px`;
+            bulle.style.top = `${y}px`;
+        };
+        const cacher = () => { courant = null; bulle.hidden = true; };
+        document.addEventListener('mouseover', e => {
+            const el = e.target.closest && e.target.closest('[data-tip]');
+            if (el) { if (el !== courant) montrer(el); } else if (courant && document.activeElement !== courant) cacher();
+        });
+        document.addEventListener('focusin', e => {
+            const el = e.target.closest && e.target.closest('[data-tip]');
+            if (el) montrer(el); else cacher();
+        });
+        // Au toucher, le clic ouvre la bulle ; dans un <label>, il ne doit pas
+        // non plus activer le champ associé.
+        document.addEventListener('click', e => {
+            const el = e.target.closest && e.target.closest('[data-tip]');
+            if (el) { e.preventDefault(); montrer(el); } else if (courant) cacher();
+        });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') cacher(); });
+        window.addEventListener('scroll', cacher, true);
+        window.addEventListener('resize', cacher);
+    }
+
+    /** Texte d'une infobulle, dans la langue courante. */
+    function setTipText(idOrEl, frText, enText) {
+        const el = typeof idOrEl === 'string' ? document.getElementById(idOrEl) : idOrEl;
+        if (!el) return;
+        const texte = currentLang === 'fr' ? frText : enText;
+        el.setAttribute('data-tip', texte);
+        el.setAttribute('aria-label', texte);
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+        initInfoTips();
         autocontroleDemarrage();
         lucide.createIcons();
         initCharts();
@@ -5734,10 +5778,7 @@
     let currentLang = 'fr';
 
     const UI_TEXT_PAIRS = [
-        ["θ = 0° : le plan d'incidence n'est pas défini, S et P sont dégénérés — une seule courbe est tracée. Inclinez le banc pour les séparer.",
-         "θ = 0°: the plane of incidence is undefined, S and P are degenerate — a single curve is plotted. Tilt the bench to separate them."],
-        ["🔒 Mode libre : la cible personnalisée est le seul mérite disponible. Définissez votre cahier des charges ci-dessous. Les mérites d'exercice s'activent en mode étudiant.",
-         "🔒 Free mode: the custom target is the only available merit. Define your specification below. Exercise merits become available in student mode."],
+        ["🔒 Mode libre : mérite « Cible libre » uniquement.", "🔒 Free mode: “Free target” merit only."],
         ["Optimiser les épaisseurs", "Optimize thicknesses"],
         ["Couches à optimiser", "Layers to optimize"],
         ["Toutes les couches", "All layers"],
@@ -5764,7 +5805,7 @@
         ["Exercice :", "Exercise:"],
         ["Design de départ", "Starting design"],
         ["Simulateur Couches Minces Optiques", "Optical Thin-Film Simulator"],
-        ["Méthode matricielle d'Abelès (TMM) • Parcours modulaire à durées indicatives", "Abelès transfer-matrix method (TMM) • Modular path with indicative times"],
+        ["Méthode matricielle d'Abelès (TMM)", "Abelès transfer-matrix method (TMM)"],
         ["Modèles :", "Templates:"],
         ["Nouveau projet...", "New project..."],
         ["1. Interface nue (Air / BK7)", "1. Bare interface (Air / BK7)"],
@@ -5790,7 +5831,6 @@
         ["couche(s) — ordre : substrat → superstrat", "layer(s) — order: substrate → superstrate"],
         ["Saisie rapide d'empilement :", "Quick stack entry:"],
         ["Appliquer", "Apply"],
-        ["H = ZnS (ou haut indice) | L = YF3 (ou bas indice)", "H = ZnS (or high index) | L = YF3 (or low index)"],
         ["Matériau", "Material"],
         ["Épaisseur", "Thickness"],
         ["Unité", "Unit"],
@@ -5814,9 +5854,8 @@
         ["R moyen 400–750 nm (AR)", "Mean R, 400–750 nm (AR)"],
         ["Maximiser Qr (Projet Fresnel)", "Maximize Qr (Fresnel project)"],
         ["Optimiser", "Optimize"],
-        ["Mérite initial/final affiché après optimisation.", "Initial/final merit is displayed after optimization."],
         ["Diagnostic de l'Aiguille :", "Needle diagnostic:"],
-        ["Fonction numérique π(z) — une valeur positive indique une insertion favorable.", "Numerical π(z) function — a positive value indicates a favorable insertion."],
+        ["Fonction π(z)", "π(z) function"],
         ["⚡ Insérer + optimiser par BFGS", "⚡ Insert + optimize with BFGS"],
         ["Qualification fabrication :", "Manufacturing qualification:"],
         ["Tolérance", "Tolerance"],
@@ -5825,7 +5864,7 @@
         ["Rendement exigé", "Required yield"],
         ["Comparateur A/B — revue :", "A/B comparator — review:"],
         ["Superposer les spectres de A et B sur le graphique", "Overlay the A and B spectra on the chart"],
-        ["Tolérances du cahier des charges — un tirage est conforme si :", "Specification tolerances — a draw is compliant if:"],
+        ["Critères de conformité :", "Compliance criteria:"],
         ["et", "and"],
         ["Charger la référence Fresnel · 18 couches", "Load the 18-layer Fresnel reference"],
         ["Nom du design", "Design name"],
@@ -5886,7 +5925,7 @@
         ["Pola", "Pol."],
         ["Poids", "Weight"],
         ["Raccourcis clavier", "Keyboard shortcuts"],
-        ["💡 Molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · clic droit : exporter en CSV.", "💡 Wheel: centered zoom · drag: box zoom · Shift + drag: pan · right-click: export CSV."],
+
         ["Nettoyer", "Clean up"],
         ["Analyseur de bandes spectrales", "Spectral band analyzer"],
         ["Fenêtres évaluées (nm)", "Evaluated windows (nm)"],
@@ -5896,10 +5935,30 @@
         ["Moyenne", "Average"],
         ["Supprimer les couches sous", "Remove layers thinner than"],
         ["Appliquer", "Apply"],
-        ["Les couches trop fines sont supprimées, puis les couches voisines de même matériau sont fusionnées. Le mérite est réévalué : vérifiez ce que le nettoyage vous coûte.", "Layers that are too thin are removed, then adjacent layers of the same material are merged. The merit is re-evaluated: check what the cleanup costs you."]
     ];
 
     const UI_ATTRIBUTE_PAIRS = [
+        // Infobulles ⓘ (data-tip, aria-label)
+        ["H = ZnS (ou haut indice), L = YF3 (ou bas indice). Le préfixe est un multiple de quart d'onde : 2H = demi-onde. Parenthèses et puissances acceptées, ex. (HL)^3 2H (LH)^3.",
+         "H = ZnS (or high index), L = YF3 (or low index). The prefix is a multiple of a quarter wave: 2H = half wave. Brackets and powers accepted, e.g. (HL)^3 2H (LH)^3."],
+        ["Les couches trop fines sont supprimées, puis les couches voisines de même matériau sont fusionnées. Le mérite est réévalué : vérifiez ce que le nettoyage vous coûte.",
+         "Layers that are too thin are removed, then adjacent layers of the same material are merged. The merit is re-evaluated: check what the cleanup costs you."],
+        ["θ = 0° : le plan d'incidence n'est pas défini, S et P sont dégénérés — une seule courbe est tracée. Inclinez le banc pour les séparer.",
+         "θ = 0°: the plane of incidence is undefined, S and P are degenerate — a single curve is plotted. Tilt the bench to separate them."],
+        ["Définissez votre cahier des charges dans l'éditeur de cible. Les mérites d'exercice (R moyen, Maximiser Qr) s'activent en mode 🎓 Étudiant.",
+         "Define your specification in the target editor. Exercise merits (mean R, Maximize Qr) become available in 🎓 Student mode."],
+        ["La borne basse est le seuil de nettoyage actif : BFGS ne peut pas proposer une couche qu'il déclarerait lui-même non déposable.",
+         "The lower bound is the active cleanup threshold: BFGS cannot propose a layer it would itself declare impossible to deposit."],
+        ["Une valeur positive indique une insertion favorable. Balayage tous les 5 nm à l'intérieur des couches avec une aiguille de 0,1 nm ; les interfaces ne sont pas évaluées.",
+         "A positive value indicates a favorable insertion. Scan every 5 nm inside the layers with a 0.1 nm needle; interfaces are not evaluated."],
+        ["Un tirage est conforme s'il reste dans ces tolérances. Le rendement est la fraction des tirages conformes : sans tolérances écrites, il n'est pas défini.",
+         "A draw is compliant if it stays within these tolerances. The yield is the fraction of compliant draws: without written tolerances, it is undefined."],
+        ["Verdict : qualifié si la borne basse de l'IC95 % de Wilson dépasse cette exigence ; non qualifié si la borne haute reste dessous ; inconclusif sinon.",
+         "Verdict: qualified if the lower bound of the 95% Wilson CI exceeds this requirement; not qualified if the upper bound stays below it; inconclusive otherwise."],
+        ["Tout ce qui n'est couvert par aucun segment est « indifférent » et n'entre pas dans le score. La note est une RMSE pondérée par les poids des segments.",
+         "Anything not covered by a segment is a don't-care region and does not enter the score. The score is an RMSE weighted by the segment weights."],
+        ["Molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · clic droit (appui long sur mobile) : exporter les courbes en CSV.",
+         "Wheel: centered zoom · drag: box zoom · Shift + drag: pan · right-click (long press on mobile): export the curves as CSV."],
         ["Ajouter une fenêtre spectrale à évaluer. Le mérite est la moyenne de R sur l'ensemble des fenêtres déclarées ; ce qui n'est couvert par aucune d'elles est indifférent.",
          "Add a spectral window to evaluate. The merit is the mean of R over all declared windows; anything outside them does not count."],
         ["Comparer deux designs qualifiés sur des hypothèses strictement identiques",
@@ -6035,8 +6094,8 @@
             attrLookup.set(pair[0], pair[targetIndex]);
             attrLookup.set(pair[1], pair[targetIndex]);
         });
-        document.querySelectorAll('[title],[placeholder]').forEach(el => {
-            ['title', 'placeholder'].forEach(attr => {
+        document.querySelectorAll('[title],[placeholder],[data-tip],[aria-label]').forEach(el => {
+            ['title', 'placeholder', 'data-tip', 'aria-label'].forEach(attr => {
                 const value = el.getAttribute(attr);
                 if (value && attrLookup.has(value)) el.setAttribute(attr, attrLookup.get(value));
             });
@@ -6087,25 +6146,18 @@
             'Fixed 0.1° step: sufficient to locate Brewster and critical angles with the cursor.');
 
         const optiHelp = document.getElementById('icoOptiHelp');
-        if (optiHelp) optiHelp.setAttribute('title', fr
-            ? "OPTIMISATION : BFGS ajuste les épaisseurs à nombre de couches constant. Il est déterministe et converge vers un minimum local dépendant du point de départ. La méthode de l'aiguille modifie ensuite la structure en créant une couche."
-            : 'OPTIMIZATION: BFGS adjusts thicknesses at a fixed layer count. It is deterministic and converges to a local minimum that depends on the starting point. The needle method then changes the structure by creating a layer.');
+        setTipText(optiHelp,
+            "OPTIMISATION : BFGS ajuste les épaisseurs des couches libres, à nombre de couches constant. Il est déterministe et converge vers un minimum local dépendant du point de départ. La méthode de l'aiguille modifie ensuite la structure en créant une couche.",
+            'OPTIMIZATION: BFGS adjusts the thicknesses of unlocked layers at a fixed layer count. It is deterministic and converges to a local minimum that depends on the starting point. The needle method then changes the structure by creating a layer.');
         const optiBadge = optiHelp?.closest('.font-bold')?.querySelector('span[title]');
         if (optiBadge) optiBadge.title = fr
             ? 'BFGS déterministe, à nombre de couches constant'
             : 'Deterministic BFGS with a fixed layer count';
-        const algoNote = document.getElementById('txtOptiAlgoNote');
-        if (algoNote) algoNote.innerHTML = fr
-            ? 'Ajuste les <strong>épaisseurs</strong> des couches libres, sans jamais en ajouter ni en retirer.'
-            : 'Adjusts the <strong>thicknesses</strong> of unlocked layers without ever adding or removing layers.';
-        const synthesisNote = document.getElementById('txtSynthesisNote');
-        if (synthesisNote) synthesisNote.innerHTML = fr
-            ? "La méthode de l'aiguille <strong>insère une couche de 0,1 nm</strong> là où le mérite y gagne le plus, puis lance automatiquement BFGS."
-            : 'The needle method <strong>inserts a 0.1 nm layer</strong> where it improves the merit most, then runs BFGS automatically.';
-        const mcModel = document.getElementById('txtMcModel');
-        if (mcModel) mcModel.innerHTML = fr
-            ? "<strong>Modèle d'erreur :</strong> chaque couche déposée reçoit une erreur gaussienne indépendante, d'écart-type σ = Δd/2. Le verrouillage ne concerne que BFGS. Tirages reproductibles (graine figée)."
-            : '<strong>Error model:</strong> every deposited layer receives an independent Gaussian error with standard deviation σ = Δd/2. Locking applies to BFGS only. Reproducible draws (fixed seed).';
+        setTipText('tipSynthesis', "La méthode de l'aiguille insère une couche de 0,1 nm là où le mérite y gagne le plus, puis lance automatiquement BFGS.",
+            'The needle method inserts a 0.1 nm layer where it improves the merit most, then runs BFGS automatically.');
+        setTipText('tipMcModel',
+            "Modèle d'erreur : chaque couche déposée reçoit une erreur gaussienne indépendante, d'écart-type σ = Δd/2. Toutes les couches sont perturbées : le verrouillage ne concerne que BFGS. Tirages reproductibles (graine figée).",
+            'Error model: every deposited layer receives an independent Gaussian error with standard deviation σ = Δd/2. All layers are perturbed: locking applies to BFGS only. Reproducible draws (fixed seed).');
         const mcBadge = document.querySelector('[data-panel="mc"] span[title]');
         if (mcBadge) mcBadge.title = fr
             ? 'Rendement, intervalle de confiance et centiles sur des épaisseurs perturbées'
@@ -6128,12 +6180,10 @@
         setTitle('btnResetChartView',
             'Rétablir les échelles initiales du graphique',
             'Restore the chart’s initial scales');
-        setText('btnLoadFresnel18',
-            'Charger la référence Fresnel · 18 couches · 15 figées + 3 libres',
-            'Load Fresnel reference · 18 layers · 15 locked + 3 free');
+        setText('btnLoadFresnel18', 'Charger la référence Fresnel', 'Load the Fresnel reference');
         setTitle('btnLoadFresnel18',
-            'Charger la prescription de fabrication Fresnel et figer les 15 premières couches pour BFGS',
-            'Load the Fresnel manufacturing prescription and lock the first 15 layers for BFGS');
+            'Charger la prescription de fabrication Fresnel : 18 couches, les 15 premières figées pour BFGS, les 3 dernières libres.',
+            'Load the Fresnel manufacturing prescription: 18 layers, the first 15 locked for BFGS, the last 3 free.');
         setText('btnLoadReviewA',
             'Charger la référence Fresnel · 18 couches',
             'Load the 18-layer Fresnel reference');
@@ -6184,5 +6234,6 @@
     document.getElementById('btnLangFR')?.addEventListener('click', () => setAppLanguagePro('fr'));
     document.getElementById('btnLangEN')?.addEventListener('click', () => setAppLanguagePro('en'));
 </script>
+    <div id="tipBubble" role="tooltip" hidden></div>
 </body>
 </html>
