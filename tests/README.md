@@ -14,9 +14,11 @@ python tests/lancer.py
 |---|---|
 | `python tests/lancer.py` | tout, avec le détail contrôle par contrôle |
 | `python tests/lancer.py --court` | bilan seul |
-| `python tests/lancer.py physique` | un seul module (`physique`, `algorithmes`, `gardefous`, `documents`) |
+| `python tests/lancer.py physique` | un seul module (`physique`, `algorithmes`, `gardefous`, `materiaux`, `arriere`, `documents`) |
 | `python tests/lancer.py --en-ligne` | ajoute `deploiement` : interroge le site et GitHub (réseau requis) |
 | `node tests/test_physique.js` | module physique isolé |
+| `node tests/test_materiaux.js` | imports, commandes, stockage, instantanés et cas opaques |
+| `node tests/test_arriere.js` | deux faces : calcul, épaisseurs fixes et éditeur bilingue |
 | `python tests/test_documents.py` | module documents isolé |
 
 Code de retour : **0** si tout passe, **1** sinon.
@@ -29,6 +31,36 @@ TP_SIMULATEUR=/chemin/vers/simulateur_modifie.html python tests/lancer.py
 ```
 
 Prérequis : Node.js et Python 3, sans aucune bibliothèque externe.
+
+### Matériaux personnalisés — `test_materiaux.js`
+
+80 contrôles exécutent le script réel complet dans un contexte isolé, avec
+un DOM et un stockage simulés. Ils couvrent les commandes de l'éditeur,
+les CSV à décimales françaises ou entre guillemets, le choix nm/µm, les
+importations et éditions atomiques, la précision des points, les codes de
+formules réservés et uniques, les créations rapides, la récupération d'un
+stockage endommagé, les imports asynchrones et la conservation des tables
+dans les instantanés A/B. Les erreurs de stockage sont visibles.
+
+La mise à l'échelle du moteur pour les couches opaques est comparée à la
+récursion indépendante d'Airy sur 432 valeurs R/T en S/P ; elle est aussi
+confrontée à la limite de Fresnel du métal semi-infini et à un miroir de
+2000 couches. Les essais de commandes ne remplacent que les effets
+graphiques : ils exécutent les vrais gestionnaires du simulateur.
+
+### Face arrière connue — `test_arriere.js`
+
+28 contrôles couvrent la lame nue, les antireflets, le milieu de sortie,
+les réflexions totales, le rejet du substrat absorbant, les épaisseurs
+imposées et la conservation de l'énergie. Une référence indépendante
+Airy/Rouard calcule le composant entier cohérent pour 1024 phases dans
+le substrat, puis moyenne les intensités : 96 comparaisons R/T en S/P,
+avec coatings asymétriques, absorbants et métalliques épais.
+
+Les vrais gestionnaires de l'éditeur sont exécutés pour vérifier la copie
+indépendante, les préréglages, la formule, les instantanés figés, le calcul
+auxiliaire de mérite et les libellés FR/EN. L'arrière reste fixe quand les
+épaisseurs et la référence QWOT de l'avant changent.
 
 ## Principe
 
@@ -146,7 +178,7 @@ compris**. À lancer après chaque déploiement.
 
 ## Ajouter un test
 
-Les trois fichiers utilisent le même harnais minimal :
+Les modules JavaScript utilisent le même harnais minimal :
 
 ```js
 V.verifie('libellé lisible', condition, 'détail affiché en cas d’échec');

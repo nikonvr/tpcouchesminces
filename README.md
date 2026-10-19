@@ -30,14 +30,45 @@ Ouvrir `simulateur_couches_minces.html` ou `tp_couches_minces_fr.html` dans un
 navigateur récent. Aucune installation. Hors ligne : ouvrir
 `outputs/tp_couches_minces_hors_ligne/index.html`.
 
-Le simulateur s'ouvre en **mode libre**. Pour les exercices, cliquer sur
-**🎓 Étudiant** puis choisir l'exercice : c'est ce qui rend disponibles les
-mérites « R moyen » et « Maximiser Qr ».
+Le simulateur s'ouvre sur un **accueil étudiant** : choisir son exercice
+affiche les outils utiles et une consigne visible. Les mérites « R moyen »
+et « Maximiser Qr » deviennent disponibles dans les exercices concernés.
+Le bouton **🎛 Libre** ouvre la conception d'un composant personnel.
+
+Les matériaux personnels se définissent dans **+ Matériau** par une table
+`λ, n, k`, saisie ou importée (CSV/TXT/TSV, deux colonnes si k = 0).
+Les décimales françaises sont acceptées avec tabulations, espaces ou
+points-virgules. Choisir explicitement nm ou µm en cas de doute ; le mode Auto
+utilise l'en-tête `lambda_nm`/`lambda_um`, sinon une plage entièrement ≤ 25
+est interprétée en µm. Une importation invalide conserve la table précédente.
+Les limites acceptées sont 100–5000 nm, 0,01 ≤ n ≤ 20 et 0 ≤ k ≤ 30.
+Les points gardent leur précision, sont interpolés par PCHIP, et les valeurs
+de bord sont maintenues hors de la table. Une ligne définit un indice constant.
+
+Les tables sont sauvegardées dans le navigateur courant : exporter en CSV
+pour les transférer ou les conserver indépendamment de ce navigateur.
+Le superstrat doit être transparent. Les matériaux peuvent servir aux couches
+des deux faces, au substrat et au milieu de sortie.
+
+**Face arrière connue :** cocher **Inclure la face arrière**, puis choisir une
+face nue, une couche de silice quart d'onde, copier la face avant ou saisir
+les couches en nm. Sur chaque face, la couche 1 touche le substrat. Les
+réglages avancés permettent de définir le milieu de sortie et une formule.
+Le traitement arrière reste fixe pendant l'optimisation et le Monte-Carlo
+de la face avant ; changer la référence QWOT avant ne change pas ses nm.
+
+Le modèle demande un **substrat épais transparent (k = 0)** : les interférences
+dans chaque coating sont cohérentes, les réflexions multiples entre les
+deux faces sont additionnées en intensité. Les couches peuvent absorber.
+Les franges d'une lame mince cohérente et l'absorption dans l'épaisseur du
+substrat ne sont pas modélisées.
 
 ## Maintenance
 
 ```bash
 python tests/lancer.py           # recette complète, code de retour 0/1
+python tests/lancer.py materiaux # contrôles ciblés sur les matériaux personnels
+python tests/lancer.py arriere   # deux faces, référence indépendante et commandes
 python .sync_offline.py          # régénère le paquet hors ligne et son manifeste
 ```
 

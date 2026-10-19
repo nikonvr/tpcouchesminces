@@ -625,11 +625,11 @@ except (OSError, ValueError) as e:
 # ---------------------------------------------------------------------------
 groupe("11. Cohérence énoncé ↔ outils étudiants")
 
-# Le simulateur s'ouvre en mode libre, où les mérites d'exercice sont masqués.
-# L'énoncé doit le dire AVANT la première question qui en a besoin (Q15).
+# L'accueil étudiant propose le choix d'exercice. L'énoncé doit expliquer
+# cette étape avant la première question utilisant un mérite (Q15).
 for nom, marqueur_mode, marqueur_q15 in (
-        (ENONCE_FR, "Mode Étudiant — à activer avant chaque exercice", ">Q15<"),
-        (ENONCE_EN, "Student mode — switch it on before each exercise", ">Q15<")):
+        (ENONCE_FR, "Accueil Étudiant — choisissez votre exercice", ">Q15<"),
+        (ENONCE_EN, "Student welcome — choose your exercise", ">Q15<")):
     src = DOCS.get(nom, "")
     i_mode, i_q15 = src.find(marqueur_mode), src.find(marqueur_q15)
     verifie(f"« {nom} » explique le passage en mode Étudiant avant Q15",

@@ -34,6 +34,8 @@ const BLOCS = [
     ['function', 'getMediumIndex'],
     ['function', 'getPhysicalThicknessNm'],
     ['function', 'computeTMMPoint'],
+    ['function', 'resolveBacksideMedium'],
+    ['function', 'computeIncoherentBackside'],
     ['function', 'multiply2x2'],
     ['function', 'computeRTFromMatrix'],
     ['function', 'createSeededRandom'],

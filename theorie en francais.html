@@ -974,19 +974,20 @@
 
     <!-- 7. BACKSIDE CORRECTION -->
     <h2 id="finite_sub">7. Substrat d'épaisseur finie <span class="badge-l2">Niveau 2</span></h2>
-    <p>Les équations précédentes supposent un substrat de sortie semi-infini. En réalité, une lame de verre possède une face arrière. En raison de l'épaisseur importante du substrat (millimétrique, $\gg \lambda$), la cohérence optique spatiale est perdue. On ne somme donc plus les amplitudes complexes (interférences), mais les <strong>intensités</strong> des rebonds multiples incohérents dans le verre.</p>
+    <p>Les équations précédentes supposent un substrat de sortie semi-infini. En réalité, une lame de verre possède une face arrière. Pour un substrat épais (souvent millimétrique), lorsque les conditions d'éclairement ou la résolution spectrale moyennent la phase entre les deux faces, on adopte un modèle incohérent pour ces trajets. On ne somme donc plus les amplitudes complexes (interférences), mais les <strong>intensités</strong> des rebonds multiples incohérents dans le verre.</p>
 
     <div class="formula-box">
         <strong>Formule générale pour une lame à face arrière incohérente</strong>
         <ol style="text-align: left;">
             <li>On calcule d'abord la face traitée éclairée depuis l'air : $R_{front}$ et $T_{front}$.</li>
             <li>On calcule ensuite la même face vue depuis l'intérieur du substrat : $R'_{front}$ et $T'_{front}$.</li>
-            <li>On prend la face arrière nue : $R_{back}$ et $T_{back}$.</li>
+            <li>On calcule la face arrière vue depuis le substrat, nue ou traitée par un empilement connu : $R_{back}$ et $T_{back}$.</li>
         </ol>
         On obtient alors :
         $$R_{total} = R_{front} + \frac{T_{front} \cdot T'_{front} \cdot R_{back}}{1 - R'_{front} \cdot R_{back}}$$
         $$T_{total} = \frac{T_{front} \cdot T_{back}}{1 - R'_{front} \cdot R_{back}}$$
     </div>
+    <p>Ces formules s'appliquent séparément en polarisations S et P, avant de calculer une moyenne non polarisée. Dans le simulateur, le substrat doit être transparent ($k=0$) ; les couches des deux faces peuvent absorber. Le traitement arrière, saisi en épaisseurs physiques, reste fixe pendant l'optimisation et l'étude des tolérances de la face avant. Une lame dont les franges sont résolues demande un calcul cohérent du composant entier.</p>
     <p><em>À retenir : en optique linéaire passive, la transmittance de puissance est réciproque. Autrement dit, si elle est bien définie et bien normalisée, on a $T'_{front} = T_{front}$. Ce qui peut changer avec le sens d'illumination, ce sont surtout $R$ et $A$.</em></p>
     <p><em>Important : dans le cas d'un substrat fini, $T_{total}$ n'est pas la même chose que $T_{front}$. Il faut appliquer la formule complète ci-dessus ; sinon, on commet une erreur de physique.</em></p>
     <p><em>Exemple rapide : un verre nu réfléchit environ 4% par face ($R_{front} = R'_{front} = R_{back} \approx 0.04$). La réflectance totale d'une vitre simple vaut alors environ $7.7\%$. La transmittance totale doit, elle aussi, être recalculée avec la formule de substrat fini.</em></p>

@@ -147,10 +147,8 @@
                     <button id="btnLangFR" class="bg-indigo-600 text-white font-bold px-2 py-1 rounded text-xs shadow-sm transition" title="Passer en Français">🇫🇷 FR</button>
                     <button id="btnLangEN" class="text-indigo-300 hover:text-white font-medium px-2 py-1 rounded text-xs transition" title="Switch to English">🇬🇧 EN</button>
                 </div>
-                <!-- SÉLECTEUR DE MODE — le mode libre est le mode par défaut :
-                     l'application est d'abord un outil de conception. Le mode
-                     étudiant se choisit explicitement et reconfigure l'écran
-                     exercice par exercice. -->
+                <!-- L'accueil étudiant invite à choisir l'exercice avant
+                     d'afficher ses outils. La conception libre reste accessible. -->
                 <div class="flex items-center bg-indigo-950/80 rounded-lg p-0.5 border border-indigo-700/50">
                     <button id="btnModeLibre" class="px-2.5 py-1 rounded-md text-xs font-bold transition" title="Outil de conception complet, sans échafaudage pédagogique">🎛 Libre</button>
                     <button id="btnModeEtudiant" class="px-2.5 py-1 rounded-md text-xs font-medium transition" title="Interface simplifiée, adaptée exercice par exercice">🎓 Étudiant</button>
@@ -163,12 +161,13 @@
                     </select>
                 </div>
                 <div id="wrapPreset" class="flex items-center">
-                    <button id="btnStartDesign" class="flex items-center gap-1 bg-indigo-800 hover:bg-indigo-700 text-indigo-100 px-2.5 py-1.5 rounded-lg border border-indigo-600 transition font-medium" title="Repartir du design de départ : miroir quart d'onde à trois couches (H L H) à 550 nm sur BK7. À vous de le faire évoluer.">
-                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> <span id="lblStartDesign">Design de départ</span>
+                    <button id="btnStartDesign" class="flex items-center gap-1 bg-indigo-800 hover:bg-indigo-700 text-indigo-100 px-2.5 py-1.5 rounded-lg border border-indigo-600 transition font-medium" title="Repartir de l’empilement de départ : miroir quart d'onde à trois couches (H L H) à 550 nm sur BK7. À vous de le faire évoluer.">
+                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> <span id="lblStartDesign">Empilement de départ</span>
                     </button>
                 </div>
 
                 <!-- Outil de comparaison / Superposition -->
+                <div id="headerResults" class="flex items-center flex-wrap gap-2">
                 <button id="btnStoreMemory" class="flex items-center gap-1 bg-indigo-800 hover:bg-indigo-700 text-indigo-100 px-2.5 py-1.5 rounded-lg border border-indigo-600 transition font-medium" title="Mémoriser le spectre actuel pour le superposer à d'autres calculs">
                     <i data-lucide="bookmark-plus" class="w-3.5 h-3.5"></i> Mémoriser Courbe
                 </button>
@@ -182,8 +181,9 @@
                 <button id="btnExportPNG" title="Exporter le graphique au format Image PNG" class="flex items-center gap-1 bg-indigo-800 hover:bg-indigo-700 text-indigo-100 px-2.5 py-1.5 rounded-lg border border-indigo-600 transition font-medium">
                     <i data-lucide="image" class="w-3.5 h-3.5"></i> Image
                 </button>
+                </div>
                 <button id="btnFreeDesign" title="Définir votre propre cahier des charges spectral et optimiser dessus — raccourci : D" class="flex items-center gap-1 bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-2.5 py-1.5 rounded-lg border border-fuchsia-400 transition font-semibold shadow-sm">
-                    <i data-lucide="crosshair" class="w-3.5 h-3.5"></i> <span id="lblFreeDesign">Design libre</span>
+                    <i data-lucide="crosshair" class="w-3.5 h-3.5"></i> <span id="lblFreeDesign">Conception libre</span>
                 </button>
                 <button id="btnShortcuts" title="Raccourcis clavier (touche ?)" class="hidden sm:flex items-center gap-1 bg-indigo-800 hover:bg-indigo-700 text-indigo-100 px-2 py-1.5 rounded-lg border border-indigo-600 transition font-mono font-bold">
                     ?
@@ -221,9 +221,9 @@
                     <span class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
                         <i data-lucide="globe" class="w-4 h-4 text-indigo-600"></i> 1. Milieux Extérieurs
                     </span>
-                    <label class="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer" title="Réflexion incohérente de la face arrière, valable pour l'interface nue uniquement">
+                    <label id="lblBacksideToggle" class="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
                         <input type="checkbox" id="chkBackside" class="rounded text-indigo-600 focus:ring-0">
-                        <span>Face arrière (interface nue)</span>
+                        <span id="txtBacksideToggle">Inclure la face arrière</span>
                     </label>
                 </div>
                 <div class="p-4 grid grid-cols-2 gap-3 text-xs">
@@ -243,7 +243,7 @@
                     <div>
                         <div class="flex items-center justify-between mb-1">
                             <label class="font-semibold text-slate-700">Substrat (Émergent) :</label>
-                            <button id="btnOpenMatFromMedia" type="button" class="text-[10px] text-indigo-600 hover:text-indigo-800 font-bold hover:underline flex items-center gap-0.5" title="Créer ou éditer un matériau personnalisé en mode table pour le substrat (backing) ou les couches">+ Table (n,k)</button>
+                            <button id="btnOpenMatFromMedia" type="button" class="text-[10px] text-indigo-600 hover:text-indigo-800 font-bold hover:underline flex items-center gap-0.5" title="Créer ou éditer un matériau personnalisé en mode table pour le substrat ou les couches">+ Table (n,k)</button>
                         </div>
                         <select id="selSubstrat" title="Support physique sur lequel les couches sont déposées" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-2 py-1.5 focus:ring-2 focus:ring-indigo-500 outline-none font-medium">
                             <option value="BK7" selected>BK7 (verre Schott)</option>
@@ -258,6 +258,7 @@
                         </div>
                     </div>
                 </div>
+                <div id="backsidePanel" class="hidden border-t border-emerald-200"></div>
             </div>
 
             <!-- Carte 2 : Structure de l'Empilement -->
@@ -296,12 +297,12 @@
                 <!-- Référence de Design pour le QWOT -->
                 <div class="p-3 bg-slate-50 border-b border-slate-200 text-xs flex items-center justify-between gap-2">
                     <div class="flex items-center gap-1.5">
-                        <span class="font-medium text-slate-600">$\lambda_0$ design :</span>
+                        <span class="font-medium text-slate-600">$\lambda_0$ <span class="refLabel">réf. :</span></span>
                         <input type="number" id="inpL0Design" title="Longueur d'onde de référence pour calculer l'épaisseur physique à partir du QWOT" value="550" step="10" min="200" max="2000" class="w-16 bg-white border border-slate-300 rounded px-2 py-1 text-xs font-semibold text-center">
                         <span class="text-slate-500">nm</span>
                     </div>
                     <div class="flex items-center gap-1.5">
-                        <span class="font-medium text-slate-600">$\theta_0$ design :</span>
+                        <span class="font-medium text-slate-600">$\theta_0$ <span class="refLabel">réf. :</span></span>
                         <input type="number" id="inpIncDesign" title="Angle de référence pour l'épaisseur QWOT (souvent 0°)" value="0" step="1" min="0" max="89" class="w-12 bg-white border border-slate-300 rounded px-2 py-1 text-xs font-semibold text-center">
                         <span class="text-slate-500">°</span>
                     </div>
@@ -470,7 +471,7 @@
                                 <select id="selMeritObjective" class="bg-white border border-indigo-300 rounded px-1.5 py-0.5 text-[10px] w-full text-indigo-900 font-medium">
                                     <option value="ar">R moyen 400–750 nm (AR)</option>
                                     <option value="qr">Maximiser Qr (Projet Fresnel)</option>
-                                    <option value="custom">🎨 Cible libre (design personnalisé)</option>
+                                    <option value="custom">🎨 Cible libre (conception personnelle)</option>
                                 </select>
                             </div>
                             <p id="meritLockNote" class="hidden text-[9px] text-fuchsia-800 bg-fuchsia-50 border border-fuchsia-200 rounded px-1.5 py-1 mt-1 leading-snug flex items-center gap-1"><span>🔒 Mode libre : mérite « Cible libre » uniquement.</span><span id="tipMeritLock" class="tip" tabindex="0" role="button" data-tip="Définissez votre cahier des charges dans l'éditeur de cible. Les mérites d'exercice (R moyen, Maximiser Qr) s'activent en mode 🎓 Étudiant." aria-label="Définissez votre cahier des charges dans l'éditeur de cible. Les mérites d'exercice (R moyen, Maximiser Qr) s'activent en mode 🎓 Étudiant.">i</span></p>
@@ -582,7 +583,7 @@
                     <div data-panel="mc" class="bg-amber-50/60 p-2.5 rounded-lg border border-amber-200/80 space-y-1.5 flex flex-col justify-between">
                         <div>
                             <div class="font-bold text-amber-900 flex items-center justify-between">
-                                <span class="flex items-center gap-1"><span>Qualification fabrication :</span><span id="tipMcModel" class="tip" tabindex="0" role="button" data-tip="Modèle d'erreur : chaque couche déposée reçoit une erreur gaussienne indépendante, d'écart-type σ = Δd/2. Toutes les couches sont perturbées : le verrouillage ne concerne que BFGS. Tirages reproductibles (graine figée)." aria-label="Modèle d'erreur : chaque couche déposée reçoit une erreur gaussienne indépendante, d'écart-type σ = Δd/2. Toutes les couches sont perturbées : le verrouillage ne concerne que BFGS. Tirages reproductibles (graine figée).">i</span></span>
+                                <span class="flex items-center gap-1"><span>Qualification fabrication :</span><span id="tipMcModel" class="tip" tabindex="0" role="button" data-tip="Modèle d'erreur : chaque couche déposée reçoit une erreur gaussienne indépendante, d'écart-type σ = Δd/2. Toutes les couches de face avant sont perturbées ; le traitement arrière connu reste fixe. Le verrouillage ne concerne que BFGS. Tirages reproductibles (graine figée)." aria-label="Modèle d'erreur : chaque couche déposée reçoit une erreur gaussienne indépendante, d'écart-type σ = Δd/2. Toutes les couches de face avant sont perturbées ; le traitement arrière connu reste fixe. Le verrouillage ne concerne que BFGS. Tirages reproductibles (graine figée).">i</span></span>
                                 <span class="text-[10px] bg-amber-200 text-amber-900 font-semibold px-1.5 py-0.5 rounded" title="Rendement, intervalle de confiance et centiles sur des épaisseurs perturbées">Monte-Carlo</span>
                             </div>
                             <div class="grid grid-cols-2 gap-1.5 mt-1 text-[9px]">
@@ -644,14 +645,14 @@
                         <div>
                             <div class="font-bold text-emerald-900 flex items-center justify-between gap-2">
                                 <span>Comparateur A/B — revue :</span>
-                                <span class="text-[10px] bg-emerald-200 text-emerald-900 font-semibold px-1.5 py-0.5 rounded" title="Comparer deux designs qualifiés sur des hypothèses strictement identiques">Appariée</span>
+                                <span class="text-[10px] bg-emerald-200 text-emerald-900 font-semibold px-1.5 py-0.5 rounded" title="Comparer deux empilements qualifiés sur des hypothèses strictement identiques">Appariée</span>
                             </div>
                             <div class="grid grid-cols-1 gap-1.5 mt-1">
                                 <button id="btnLoadReviewA" class="text-[9px] bg-white hover:bg-emerald-100 border border-emerald-300 text-emerald-900 rounded px-1.5 py-1 font-bold">Charger la référence Fresnel · 18 couches</button>
                             </div>
                             <div class="flex items-end gap-1.5 mt-1 text-[9px]">
-                                <label class="flex-1">Nom du design
-                                    <input id="inpReviewDesignName" type="text" value="Design A" maxlength="40" class="mt-0.5 w-full bg-white border border-emerald-300 rounded px-1 py-0.5 text-[9px]">
+                                <label class="flex-1">Nom de l’empilement
+                                    <input id="inpReviewDesignName" type="text" value="A" maxlength="40" class="mt-0.5 w-full bg-white border border-emerald-300 rounded px-1 py-0.5 text-[9px]">
                                 </label>
                                 <button id="btnCaptureReviewA" disabled class="bg-emerald-700 disabled:bg-slate-300 disabled:text-slate-500 text-white font-bold rounded px-2 py-1">Capturer en A</button>
                                 <button id="btnCaptureReviewB" disabled class="bg-emerald-700 disabled:bg-slate-300 disabled:text-slate-500 text-white font-bold rounded px-2 py-1">Capturer en B</button>
@@ -667,7 +668,7 @@
                         <div class="overflow-x-auto mobile-scroll-x bg-white/80 border border-emerald-200 rounded">
                             <table class="w-full text-[9px] border-collapse">
                                 <thead><tr class="text-slate-500 border-b border-emerald-200">
-                                    <th class="text-left px-1 py-0.5">Indicateur</th><th class="text-right px-1">Design A</th><th class="text-right px-1">Design B</th>
+                                    <th class="text-left px-1 py-0.5">Indicateur</th><th class="text-right px-1">Empilement A</th><th class="text-right px-1">Empilement B</th>
                                 </tr></thead>
                                 <tbody id="tbodyReview"><tr><td colspan="3" class="text-center text-slate-400 px-1 py-2">Aucun instantané capturé.</td></tr></tbody>
                             </table>
@@ -820,7 +821,7 @@
                         <i data-lucide="database" class="w-4 h-4 text-indigo-600"></i> Base Matériaux & Dispersion $N(\lambda) = n - ik$
                     </span>
                     <div class="flex items-center gap-2 flex-wrap">
-                        <button id="btnNewCustomMat" type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] px-2.5 py-1 rounded-md font-bold shadow-sm transition flex items-center gap-1" title="Créer un nouveau matériau personnalisé défini par une table (λ, n, k) utilisable comme couche ou comme substrat (backing)">
+                        <button id="btnNewCustomMat" type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] px-2.5 py-1 rounded-md font-bold shadow-sm transition flex items-center gap-1" title="Créer un nouveau matériau personnalisé défini par une table (λ, n, k) utilisable comme couche ou comme substrat">
                             <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> + Nouveau matériau (table)
                         </button>
                         <span class="text-[11px] text-slate-500">
@@ -877,8 +878,8 @@
                             <div id="divCustomMatChips" class="flex items-center gap-1 flex-wrap"></div>
                         </div>
                         <div class="flex items-center gap-1.5 flex-wrap">
-                            <button id="btnUseCustomAsSub" type="button" class="bg-slate-700 hover:bg-slate-800 text-white text-[11px] px-2 py-1 rounded font-semibold transition" title="Appliquer immédiatement ce matériau comme Substrat (Backing) de la simulation">
-                                → Substrat (Backing)
+                            <button id="btnUseCustomAsSub" type="button" class="bg-slate-700 hover:bg-slate-800 text-white text-[11px] px-2 py-1 rounded font-semibold transition" title="Appliquer immédiatement ce matériau comme Substrat de la simulation">
+                                → Substrat
                             </button>
                             <button id="btnAddCustomAsLayer" type="button" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] px-2 py-1 rounded font-semibold transition" title="Ajouter immédiatement une couche (1 QWOT) de ce matériau dans l'empilement">
                                 → + Couche
@@ -935,9 +936,14 @@
                                 <button id="btnCancelPasteMat" type="button" class="text-slate-500 hover:text-slate-800 text-[11px] px-1.5 py-0.5">Fermer</button>
                             </div>
                         </div>
-                        <p class="text-[10px] text-slate-600 leading-snug">
-                            Format accepté : 2 ou 3 colonnes par ligne (<strong>λ  n</strong> ou <strong>λ  n  k</strong>), séparées par tabulation, point-virgule, virgule ou espace. Si λ ≤ 25, l'unité est automatiquement reconnue en <strong>µm</strong> et convertie en <strong>nm</strong>.
+                        <p id="txtMatImportHelp" class="text-[10px] text-slate-600 leading-snug">
+                            Format accepté : 2 ou 3 colonnes par ligne (<strong>λ  n</strong> ou <strong>λ  n  k</strong>). Décimales françaises acceptées avec tabulations, espaces ou points-virgules. Les données invalides sont signalées et la table précédente est conservée.
                         </p>
+                        <label class="flex items-center gap-2"><span id="lblMatImportUnit">Unité des longueurs d’onde :</span>
+                            <select id="selMatImportUnit" class="border border-slate-300 rounded px-2 py-1">
+                                <option value="auto">Auto (en-tête ou plage)</option><option value="nm">nm</option><option value="um">µm</option>
+                            </select>
+                        </label>
                         <textarea id="txtPasteMatData" rows="4" class="w-full font-mono text-[11px] bg-slate-50 border border-slate-300 rounded p-1.5 outline-none" placeholder="400&#9;1.530&#9;0&#10;550&#9;1.518&#9;0&#10;700&#9;1.513&#9;0"></textarea>
                         <div class="flex justify-end gap-2">
                             <button id="btnApplyPastedMat" type="button" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-3 py-1 text-[11px] font-bold">
@@ -961,8 +967,8 @@
                             <tbody id="tbodyCustomMatTable" class="divide-y divide-slate-100 text-xs"></tbody>
                         </table>
                     </div>
-                    <p class="text-[10px] text-slate-500 leading-tight">
-                        💡 <strong>Astuce :</strong> 1 seule ligne = indice constant sur tout le spectre ; 2 lignes ou plus = interpolation cubique monotone PCHIP (sans oscillation parasite, garantissant k ≥ 0). Les points de la table sont tracés par des cercles sur les courbes n(λ) et k(λ) ci-dessus.
+                    <p id="txtMatTableHelp" class="text-[10px] text-slate-500 leading-tight">
+                        1 point = indice constant ; plusieurs points = interpolation PCHIP. Hors de la table, les valeurs de bord sont maintenues. Limites de saisie : 100–5000 nm, 0,01 ≤ n ≤ 20, 0 ≤ k ≤ 30. Le milieu incident doit rester transparent.
                     </p>
                 </div>
             </div>
@@ -1457,15 +1463,19 @@
         customSubN: 1.52,
         customSubK: 0.0,
         considerBackside: false,
+        backLayers: [],
+        backMedium: 'Air',
+        backCustomN: 1,
+        backCustomK: 0,
+        backDesignL0: 550,
 
         designL0: 550,
         designIncDeg: 0,
 
         layers: [],
 
-        // Mode d'interface : « libre » par defaut (outil de conception complet),
-        // « etudiant » sur choix explicite (une mise en page par exercice).
-        uiMode: 'libre',
+        // Accueil étudiant, puis outils adaptés à l'exercice choisi.
+        uiMode: 'etudiant',
         exercise: null,
 
         // Fenêtres spectrales du mérite antireflet (plusieurs possibles).
@@ -1531,17 +1541,17 @@
     /* =========================================================================
        4. MOTEUR PHYSIQUE : MÉTHODE DES MATRICES DE TRANSFERT (TMM)
        ========================================================================= */
-    function getMediumIndex(mediumName, lambda_nm, customN, customK = 0) {
+    function getMediumIndex(mediumName, lambda_nm, customN, customK = 0, materialTables = null) {
         if (mediumName === "Custom") return Complex.new(customN, customK);
+        if (materialTables && Object.hasOwn(materialTables, mediumName)) return interpolateTable(materialTables[mediumName], lambda_nm);
         if (MATERIALS_DB[mediumName]) return MATERIALS_DB[mediumName].getN(lambda_nm);
         return Complex.new(1.0, 0.0);
     }
 
-    function getPhysicalThicknessNm(layer, lambda0, incDesignDeg, nSuperDesign) {
+    function getPhysicalThicknessNm(layer, lambda0, incDesignDeg, nSuperDesign, materialTables = null) {
         if (layer.unit === "nm") return Math.max(0, layer.val);
-        const mat = MATERIALS_DB[layer.matId];
-        const nComplex = mat ? mat.getN(lambda0) : Complex.new(1.5, 0.0);
-        const nReal = Math.max(1.0, nComplex.r);
+        const nComplex = getMediumIndex(layer.matId, lambda0, 1.5, 0, materialTables);
+        const nReal = Math.max(0.01, nComplex.r);
 
         const sinInc = nSuperDesign * Math.sin(incDesignDeg * Math.PI / 180.0);
         const cosSq = 1.0 - (sinInc / nReal) * (sinInc / nReal);
@@ -1553,22 +1563,32 @@
     function computeTMMPoint(lambda_nm, thetaIncDeg, state, thicknessOverrides = null) {
         const thetaRad = thetaIncDeg * Math.PI / 180.0;
 
-        const N_super = getMediumIndex(state.superstrat, lambda_nm, state.customSuperN);
-        const N_sub = getMediumIndex(state.substrat, lambda_nm, state.customSubN, state.customSubK);
+        const N_super = getMediumIndex(state.superstrat, lambda_nm, state.customSuperN, 0, state.materialTables);
+        const N_sub = getMediumIndex(state.substrat, lambda_nm, state.customSubN, state.customSubK, state.materialTables);
 
         const alpha = N_super.r * Math.sin(thetaRad);
 
         let M_s = [{ r: 1, i: 0 }, { r: 0, i: 0 }, { r: 0, i: 0 }, { r: 1, i: 0 }];
         let M_p = [{ r: 1, i: 0 }, { r: 0, i: 0 }, { r: 0, i: 0 }, { r: 1, i: 0 }];
+        let logScaleS = 0, logScaleP = 0;
+        // Une échelle commune ne change pas r. Elle est conservée séparément
+        // pour t, afin que les couches opaques ne fassent pas déborder cosh/sinh.
+        const normalizeMatrix = M => {
+            let norm = 0;
+            for (const z of M) norm = Math.max(norm, Math.abs(z.r), Math.abs(z.i));
+            if (norm < 1e80) return 0;
+            for (const z of M) { z.r /= norm; z.i /= norm; }
+            return Math.log(norm);
+        };
 
-        const N_super_design = getMediumIndex(state.superstrat, state.designL0, state.customSuperN).r;
+        const N_super_design = getMediumIndex(state.superstrat, state.designL0, state.customSuperN, 0, state.materialTables).r;
 
         for (let i = 0; i < state.layers.length; i++) {
             const lay = state.layers[i];
-            const d_nm = thicknessOverrides ? thicknessOverrides[i] : getPhysicalThicknessNm(lay, state.designL0, state.designIncDeg, N_super_design);
+            const d_nm = thicknessOverrides ? thicknessOverrides[i] : getPhysicalThicknessNm(lay, state.designL0, state.designIncDeg, N_super_design, state.materialTables);
             if (d_nm <= 0) continue;
 
-            const N_layer = getMediumIndex(lay.matId, lambda_nm, 1.5);
+            const N_layer = getMediumIndex(lay.matId, lambda_nm, 1.5, 0, state.materialTables);
             const eps_c = Complex.sqr(N_layer);
 
             const gamma_sq = Complex.sub(eps_c, Complex.new(alpha * alpha, 0));
@@ -1589,8 +1609,19 @@
             const phiConst = (2.0 * Math.PI * d_nm) / lambda_nm;
             const phi = Complex.mulReal(gamma, phiConst);
 
-            const cosPhi = Complex.cos(phi);
-            const sinPhi = Complex.sin(phi);
+            let cosPhi, sinPhi;
+            const attenuation = Math.abs(phi.i);
+            if (attenuation > 30) {
+                const e = Math.exp(-2 * attenuation);
+                const ch = (1 + e) / 2, sh = Math.sign(phi.i) * (1 - e) / 2;
+                cosPhi = Complex.new(Math.cos(phi.r) * ch, -Math.sin(phi.r) * sh);
+                sinPhi = Complex.new(Math.sin(phi.r) * ch, Math.cos(phi.r) * sh);
+                logScaleS += attenuation;
+                logScaleP += attenuation;
+            } else {
+                cosPhi = Complex.cos(phi);
+                sinPhi = Complex.sin(phi);
+            }
 
             const eta_s = gamma;
             const eta_p = Complex.div(eps_use, gamma);
@@ -1609,6 +1640,8 @@
             // La lumière les rencontre donc dans l'ordre inverse : M = Mn ... M2 M1.
             M_s = multiply2x2(ML_s_00, ML_s_01, ML_s_10, ML_s_11, M_s);
             M_p = multiply2x2(ML_p_00, ML_p_01, ML_p_10, ML_p_11, M_p);
+            logScaleS += normalizeMatrix(M_s);
+            logScaleP += normalizeMatrix(M_p);
         }
 
         // Milieux semi-infinis : EXACTEMENT la même convention que les couches.
@@ -1639,10 +1672,12 @@
         const etaSub_s = milieuSub.s;
         const etaSub_p = milieuSub.p;
 
-        // Le modèle incohérent de face arrière est volontairement limité à l'interface nue (Q6).
-        const includeBareBackside = state.considerBackside && state.layers.length === 0;
-        const [Rs, Ts] = computeRTFromMatrix(M_s, eta0_s, etaSub_s, includeBareBackside);
-        const [Rp, Tp] = computeRTFromMatrix(M_p, eta0_p, etaSub_p, includeBareBackside);
+        let [Rs, Ts] = computeRTFromMatrix(M_s, eta0_s, etaSub_s, logScaleS);
+        let [Rp, Tp] = computeRTFromMatrix(M_p, eta0_p, etaSub_p, logScaleP);
+        if (state.considerBackside) {
+            ({ Rs, Rp, Ts, Tp } = computeIncoherentBackside(lambda_nm, thetaIncDeg, state,
+                { Rs, Rp, Ts, Tp }, thicknessOverrides));
+        }
 
         const R_avg = (Rs + Rp) / 2.0;
         const T_avg = (Ts + Tp) / 2.0;
@@ -1658,6 +1693,62 @@
         };
     }
 
+    function resolveBacksideMedium(state) {
+        const id = state.backMedium === 'Same' ? state.superstrat : (state.backMedium || 'Air');
+        return { id,
+            n: state.backMedium === 'Same' ? state.customSuperN : (state.backCustomN ?? 1),
+            k: state.backMedium === 'Same' ? 0 : (state.backCustomK ?? 0) };
+    }
+
+    function computeIncoherentBackside(lambda_nm, thetaIncDeg, state, front, thicknessOverrides = null) {
+        const bulk = getMediumIndex(state.substrat, lambda_nm, state.customSubN, state.customSubK, state.materialTables);
+        if (bulk.i !== 0) throw new Error(currentLang === 'fr'
+            ? 'Le calcul à deux faces exige un substrat transparent (k = 0).'
+            : 'The two-sided calculation requires a transparent substrate (k = 0).');
+        const incident = getMediumIndex(state.superstrat, lambda_nm, state.customSuperN, 0, state.materialTables);
+        const alpha = incident.r * Math.sin(thetaIncDeg * Math.PI / 180);
+        // Pas de propagation dans un substrat épais au-delà de l'angle critique.
+        // La limite de réflexion totale appartient au calcul de la face avant.
+        if (alpha >= bulk.r) return front;
+        const bulkAngle = Math.asin(Math.max(-1, Math.min(1, alpha / bulk.r))) * 180 / Math.PI;
+        const nDesign = getMediumIndex(state.superstrat, state.designL0, state.customSuperN, 0, state.materialTables).r;
+        const frontNm = state.layers.map((l, i) => ({ matId: l.matId, unit: 'nm',
+            val: thicknessOverrides ? thicknessOverrides[i]
+                : getPhysicalThicknessNm(l, state.designL0, state.designIncDeg, nDesign, state.materialTables) }));
+        const reverse = computeTMMPoint(lambda_nm, bulkAngle, {
+            ...state, considerBackside: false,
+            superstrat: state.substrat, customSuperN: state.customSubN,
+            substrat: state.superstrat, customSubN: state.customSuperN, customSubK: 0,
+            layers: frontNm.reverse()
+        });
+        const out = resolveBacksideMedium(state);
+        const rearNm = (state.backLayers || []).map(l => ({ matId: l.matId, unit: 'nm',
+            val: getPhysicalThicknessNm(l, state.backDesignL0 || 550, 0, 1, state.materialTables) }));
+        // Les deux listes suivent le dépôt, du substrat vers l'extérieur.
+        // Vue de l'intérieur, la face arrière est donc parcourue en sens inverse
+        // de la convention d'entrée du moteur cohérent.
+        const rear = computeTMMPoint(lambda_nm, bulkAngle, {
+            ...state, considerBackside: false,
+            superstrat: state.substrat, customSuperN: state.customSubN,
+            substrat: out.id, customSubN: out.n, customSubK: out.k,
+            layers: rearNm.reverse()
+        });
+        const combined = {};
+        for (const pol of ['s', 'p']) {
+            const r = 'R' + pol, t = 'T' + pol;
+            const denominator = (1 - reverse[r]) + reverse[r] * (1 - rear[r]);
+            if (denominator <= 0 || front[t] === 0) { combined[r] = front[r]; combined[t] = 0; }
+            else {
+                // Somme de tous les allers-retours en intensité, polarisation
+                // par polarisation. Une face absorbante impose son propre T :
+                // ni T = 1-R, ni R identique dans les deux sens ne sont supposés.
+                combined[r] = front[r] + front[t] * reverse[t] * rear[r] / denominator;
+                combined[t] = front[t] * rear[t] / denominator;
+            }
+        }
+        return combined;
+    }
+
     function multiply2x2(a00, a01, a10, a11, B) {
         const b00 = B[0], b01 = B[1], b10 = B[2], b11 = B[3];
         return [
@@ -1668,7 +1759,7 @@
         ];
     }
 
-    function computeRTFromMatrix(M, eta0, etaSub, considerBackside) {
+    function computeRTFromMatrix(M, eta0, etaSub, matrixLogScale = 0) {
         const m00 = M[0], m01 = M[1], m10 = M[2], m11 = M[3];
 
         const t1 = Complex.mul(eta0, m00);
@@ -1687,15 +1778,7 @@
         const etaSubReal = Math.max(1e-12, etaSub.r);
         const eta0Real = Math.max(1e-12, eta0.r);
         let T = (etaSubReal / eta0Real) * Complex.absSqr(t);
-
-        if (considerBackside) {
-            // Plaque nue, deux dioptres identiques et réflexions multiples incohérentes.
-            const R_face = R;
-            const T_face = 1.0 - R_face;
-            const denomFini = Math.max(1e-12, 1.0 - R_face * R_face);
-            R = R_face + (T_face * T_face * R_face) / denomFini;
-            T = (T_face * T_face) / denomFini;
-        }
+        if (matrixLogScale !== 0) T = Math.exp(Math.log(T) - 2 * matrixLogScale);
 
         // Contrôle AVANT le rabotage : c'est le seul instant où une valeur
         // aberrante est encore visible. Après, elle ressemble à un résultat.
@@ -1705,6 +1788,7 @@
     }
 
     function runFullSimulation() {
+        updateBacksideAvailability();
         // Toute modification du design ou du domaine d'analyse invalide une qualification précédente.
         interrompreMonteCarlo();
         appState.monteCarloRuns = [];
@@ -2584,7 +2668,8 @@
             runs: record.numRuns,
             seed: record.seed ?? null,
             minimumThickness: record.minimumThicknessNm,
-            requiredYield: record.requiredYieldPct
+            requiredYield: record.requiredYieldPct,
+            opticalMedia: record.opticalMediaSignature ?? null
         });
     }
 
@@ -2795,7 +2880,9 @@
 
         const totalOf = rec => rec.stack.reduce((a, l) => a + Number(l.val || 0), 0);
         const scale = Math.max(...withStack.map(totalOf));
-        const style = matId => {
+        const style = (matId, rec) => {
+            const frozen = rec.opticalState?.materialLabels?.[matId];
+            if (frozen) return ['bg-emerald-600', 'text-white', frozen.sym];
             if (MATERIALS_DB[matId]?.type === 'custom_table') {
                 return ['bg-emerald-600', 'text-white', MATERIALS_DB[matId]?.sym || (currentLang === 'fr' ? 'Perso' : 'Cust')];
             }
@@ -2810,15 +2897,15 @@
             if (!rec || !Array.isArray(rec.stack) || !rec.stack.length) return '';
             const tot = totalOf(rec);
             const segs = rec.stack.map((l, i) => {
-                const [bg, fg, lbl] = style(l.matId);
+                const [bg, fg, lbl] = style(l.matId, rec);
                 const pct = (Number(l.val || 0) / scale) * 100;
                 return `<div class="h-full ${bg} ${fg} border-r border-white/40 flex items-center justify-center text-[8px] font-bold overflow-hidden"
                              style="width:${pct.toFixed(3)}%"
-                             title="${fr ? 'Couche' : 'Layer'} ${i + 1} — ${l.matId} — ${Number(l.val).toFixed(1)} nm">${pct > 4 ? lbl : ''}</div>`;
+                             title="${fr ? 'Couche' : 'Layer'} ${i + 1} — ${l.matId} — ${Number(l.val).toFixed(1)} nm">${pct > 4 ? escapeReviewText(lbl) : ''}</div>`;
             }).join('');
             return `<div>
                 <div class="flex items-baseline justify-between text-[9px] mb-0.5">
-                    <span class="font-bold text-emerald-900">${k === 0 ? 'A' : 'B'} · ${rec.name || ''}</span>
+                    <span class="font-bold text-emerald-900">${k === 0 ? 'A' : 'B'} · ${escapeReviewText(rec.name || '')}</span>
                     <span class="text-slate-500">${rec.stack.length} ${fr ? 'couches' : 'layers'} · ${tot.toFixed(0)} nm</span>
                 </div>
                 <div class="h-4 w-full bg-slate-100 rounded-sm overflow-hidden flex border border-slate-300">${segs}</div>
@@ -3001,8 +3088,20 @@
             ? JSON.stringify(customTarget.segments.map(s => s.pol || 'moy'))
             : 'moy';
 
+        const opticalState = captureOpticalState();
+        const opticalMediaSignature = JSON.stringify({
+            superstrat: opticalState.superstrat, substrat: opticalState.substrat,
+            customSuperN: opticalState.customSuperN, customSubN: opticalState.customSubN, customSubK: opticalState.customSubK,
+            superTable: opticalState.materialTables[opticalState.superstrat] || null,
+            subTable: opticalState.materialTables[opticalState.substrat] || null,
+            considerBackside: opticalState.considerBackside,
+            backside: opticalState.considerBackside ? {
+                medium: opticalState.backMedium, n: opticalState.backCustomN, k: opticalState.backCustomK,
+                layers: opticalState.backLayers, tables: opticalState.materialTables
+            } : null
+        });
         const record = {
-            objective, decisionKey, requiredYieldPct, acceptance,
+            objective, decisionKey, requiredYieldPct, acceptance, opticalState, opticalMediaSignature,
             arWindows: objective === 'ar' ? arConfig.windows : [],
             layerCount: appState.layers.length,
             materialCount: new Set(appState.layers.map(layer => layer.matId)).size,
@@ -3034,7 +3133,7 @@
         if (bouton) bouton.disabled = false;
         const zone = document.getElementById('txtMonteCarloResult');
         if (zone) zone.textContent = currentLang === 'fr'
-            ? 'Qualification interrompue : le design a changé pendant le calcul. Relancez-la.'
+            ? 'Qualification interrompue : l’empilement a changé pendant le calcul. Relancez-la.'
             : 'Qualification interrupted: the design changed during the run. Start it again.';
     }
 
@@ -3056,7 +3155,8 @@
             ? (fr ? ` ⚠ statistiques conditionnelles aux ${q.feasibleCount} réalisations fabricables`
                   : ` ⚠ statistics conditional on the ${q.feasibleCount} feasible realizations`)
             : '';
-        const criteria = criteriaTextFor(q);
+        const criteria = criteriaTextFor(q) + (q.opticalState?.considerBackside
+            ? (fr ? ' ; traitement arrière connu conservé fixe' : '; known rear coating kept fixed') : '');
         const adverse = adverseStatisticText(q);
         const lo = formatStat(q.yieldLowPct, 1), hi = formatStat(q.yieldHighPct, 1);
         return fr
@@ -3065,13 +3165,36 @@
     }
 
     /* Calcul auxiliaire cohérent avec l'ordre de dépôt du moteur principal. */
-    function computeTMMPointCustom(lambda_nm, theta_deg, superKey, subKey, layersList) {
+    function captureOpticalState(state = appState) {
+        const ids = new Set([state.superstrat, state.substrat, resolveBacksideMedium(state).id,
+            ...state.layers.map(l => l.matId), ...(state.backLayers || []).map(l => l.matId)]);
+        const materialTables = {}, materialLabels = {};
+        for (const id of ids) {
+            const mat = MATERIALS_DB[id];
+            if (mat?.type === 'custom_table') {
+                materialTables[id] = mat.table.map(p => ({ ...p }));
+                materialLabels[id] = { name: mat.name, sym: mat.sym };
+            }
+        }
+        return {
+            superstrat: state.superstrat, substrat: state.substrat,
+            customSuperN: state.customSuperN, customSubN: state.customSubN, customSubK: state.customSubK,
+            designL0: state.designL0, designIncDeg: state.designIncDeg, considerBackside: state.considerBackside,
+            backLayers: (state.backLayers || []).map(l => ({ ...l })),
+            backMedium: state.backMedium || 'Air', backCustomN: state.backCustomN ?? 1, backCustomK: state.backCustomK ?? 0,
+            backDesignL0: state.backDesignL0 || 550,
+            materialTables, materialLabels
+        };
+    }
+
+    function computeTMMPointCustom(lambda_nm, theta_deg, superKey, subKey, layersList, opticalState = null) {
         const localState = {
             ...appState,
+            ...(opticalState || {}),
             superstrat: superKey,
             substrat: subKey,
             layers: layersList,
-            considerBackside: false
+            considerBackside: opticalState?.considerBackside ?? appState.considerBackside
         };
         return computeTMMPoint(lambda_nm, theta_deg, localState);
     }
@@ -3374,8 +3497,8 @@
                 applyButton.classList.toggle('opacity-50', fresnel);
                 applyButton.classList.toggle('cursor-not-allowed', fresnel);
             }
-            const needleName = needleMaterialLabel(bestInfo.needleMatId);
-            const parentName = needleMaterialLabel(bestInfo.parentMatId);
+            const needleName = escapeReviewText(needleMaterialLabel(bestInfo.needleMatId));
+            const parentName = escapeReviewText(needleMaterialLabel(bestInfo.parentMatId));
             const deltaValue = Math.abs(bestInfo.candidateValue - bestInfo.initialValue);
             const fresnelNote = fresnel
                 ? (fr ? '<br><strong>Prescription Fresnel active :</strong> l’insertion est refusée, car elle porterait l’empilement à 20 couches et casserait l’invariant des 18 couches. Ce diagnostic reste consultable.'
@@ -4102,51 +4225,84 @@
             }
         }
 
-        // Expand parenthesized groups like (HL)^3 or (2H 2L)^4 or (M1 L)^4
-        str = str.replace(/\(([^)]+)\)\^(\d+)/g, (match, group, count) => {
-            const groupTokens = group.match(/[0-9.]*(?:ZNS|YF3|SIO2|BK7|SI|H|L|[A-Za-z0-9_]+)/gi) || [group];
-            const spacedGroup = groupTokens.filter(t => t.trim().length > 0).join(' ');
-            return Array(parseInt(count)).fill(spacedGroup).join(' ');
-        });
-
-        // Match all individual layer tokens
-        const rawTokens = str.match(/[0-9.]*(?:ZNS|YF3|SIO2|BK7|SI|H|L|[A-Za-z0-9_]+)/gi) || [];
-        const tokens = rawTokens.map(t => t.trim()).filter(t => t.length > 0);
-        const layers = [];
-
-        for (const token of tokens) {
-            let mult = 1.0;
-            let matId = "ZnS_fresnel";
-
-            const match = token.match(/^([0-9.]+)?([A-Za-z0-9_]+)$/);
-            if (match) {
-                if (match[1]) mult = parseFloat(match[1]);
-                const sym = match[2].toUpperCase();
-                const customMat = (appState.customMaterials || []).find(m =>
-                    (m.sym && m.sym.toUpperCase() === sym) || (m.id && m.id.toUpperCase() === sym)
-                );
-                if (customMat) matId = customMat.id;
-                else if (sym === 'H' || sym === 'ZNS') matId = "ZnS_fresnel";
-                else if (sym === 'L' || sym === 'YF3') matId = "YF3_fresnel";
-                else if (sym === 'SIO2' || sym === 'SILICE') matId = "FusedSilica";
-                else if (sym === 'SI') matId = "Si";
-                else if (sym === 'BK7') matId = "BK7";
-                else if (MATERIALS_DB[match[2]]) matId = match[2];
-                else matId = "ZnS_fresnel";
+        const symbols = materialFormulaSymbols();
+        const keys = Object.keys(symbols).sort((a, b) => b.length - a.length);
+        const input = str.toUpperCase();
+        let pos = 0;
+        const fail = () => { throw new Error(currentLang === 'fr'
+            ? `Formule invalide près de « ${str.slice(pos, pos + 20)} ». Utilisez des codes de matériaux connus et au plus 2000 couches.`
+            : `Invalid formula near "${str.slice(pos, pos + 20)}". Use known material codes and at most 2000 layers.`); };
+        const spaces = () => { while (/\s/.test(input[pos] || '') && pos < input.length) pos++; };
+        const sequence = (nested = false, depth = 0) => {
+            if (depth > 20) fail();
+            const layers = [];
+            while (pos < input.length) {
+                spaces();
+                if (pos === input.length || input[pos] === ')') break;
+                if (input[pos] === '(') {
+                    pos++;
+                    const group = sequence(true, depth + 1);
+                    if (input[pos] !== ')' || !group.length) fail();
+                    pos++; spaces();
+                    let count = 1;
+                    if (input[pos] === '^') {
+                        pos++; spaces();
+                        const number = /^\d+/.exec(input.slice(pos));
+                        if (!number) fail();
+                        count = Number(number[0]); pos += number[0].length;
+                    }
+                    if (!Number.isSafeInteger(count) || count < 1 || layers.length + group.length * count > 2000) fail();
+                    for (let i = 0; i < count; i++) layers.push(...group.map(l => ({ ...l })));
+                } else {
+                    const number = /^(?:\d+(?:\.\d*)?|\.\d+)/.exec(input.slice(pos));
+                    const mult = number ? Number(number[0]) : 1;
+                    if (number) pos += number[0].length;
+                    spaces();
+                    const key = keys.find(k => input.startsWith(k, pos));
+                    if (!key || !Number.isFinite(mult) || layers.length >= 2000) fail();
+                    pos += key.length;
+                    layers.push({ matId: symbols[key], unit: 'QWOT', val: mult, locked: false });
+                }
             }
+            if (!nested && pos < input.length) fail();
+            return layers;
+        };
+        return sequence();
+    }
 
-            layers.push({
-                matId: matId,
-                unit: "QWOT",
-                val: mult,
-                locked: false
-            });
+    function materialFormulaSymbols(includeCustom = true) {
+        const symbols = Object.create(null);
+        for (const id of Object.keys(MATERIALS_DB)) {
+            if (MATERIALS_DB[id].type !== 'custom_table') symbols[id.toUpperCase()] = id;
         }
+        Object.assign(symbols, { H: 'ZnS_fresnel', ZNS: 'ZnS_fresnel', L: 'YF3_fresnel', YF3: 'YF3_fresnel', SIO2: 'FusedSilica', SILICE: 'FusedSilica' });
+        if (includeCustom) for (const mat of appState.customMaterials || []) {
+            symbols[mat.sym.toUpperCase()] = mat.id;
+            symbols[mat.id.toUpperCase()] = mat.id;
+        }
+        return symbols;
+    }
 
-        return layers;
+    function validCustomMaterialSymbol(sym, excludedId = null) {
+        return /^[A-Z][A-Z0-9_]{0,5}$/.test(sym) && !Object.hasOwn(materialFormulaSymbols(false), sym)
+            && !(appState.customMaterials || []).some(m => m.id !== excludedId && m.sym === sym);
+    }
+
+    function nextCustomMaterialSymbol() {
+        let num = 1;
+        while (!validCustomMaterialSymbol(`M${num}`)) num++;
+        return `M${num}`;
+    }
+
+    function nextCustomMaterialId() {
+        const base = `custom_mat_${Date.now()}`;
+        let id = base, num = 1;
+        while (Object.hasOwn(MATERIALS_DB, id)) id = `${base}_${num++}`;
+        return id;
     }
 
     function renderLayersTable() {
+        updateBacksideAvailability();
         const tbody = document.getElementById('layersTableBody');
         const emptyMsg = document.getElementById('emptyLayersMsg');
         tbody.innerHTML = '';
@@ -4226,11 +4382,139 @@
         Al2O3: 'Al2O3', FusedSilica: 'SiO2', AR_Theorique: 'AR (n=1,225)', BK7: 'BK7', Si: 'Si'
     };
 
+    function updateBacksideAvailability() {
+        const box = document.getElementById('chkBackside');
+        if (!box) return;
+        const sub = MATERIALS_DB[appState.substrat];
+        const absorbing = appState.substrat === 'Custom' ? appState.customSubK > 0 : sub?.table?.some(p => p.k > 0);
+        box.disabled = !!absorbing;
+        if (box.disabled) { box.checked = false; appState.considerBackside = false; }
+        box.checked = appState.considerBackside;
+        const label = document.getElementById('txtBacksideToggle');
+        if (label) label.textContent = currentLang === 'fr' ? 'Inclure la face arrière' : 'Include rear surface';
+        box.title = currentLang === 'fr'
+            ? (absorbing ? 'Le modèle à deux faces demande un substrat transparent (k = 0).' : 'Calculer le composant entier, avec les réflexions sur la face arrière du substrat.')
+            : (absorbing ? 'The two-sided model requires a transparent substrate (k = 0).' : 'Calculate the whole component, including reflections from the rear surface of the substrate.');
+        document.getElementById('lblBacksideToggle')?.setAttribute('title', box.title);
+        document.getElementById('backsidePanel')?.classList.toggle('hidden', !appState.considerBackside);
+        document.getElementById('backsidePanel')?.setAttribute('data-rear-enabled', String(appState.considerBackside));
+    }
+
+    function materialUsedInDesign(id) {
+        return appState.substrat === id || appState.superstrat === id || appState.layers.some(l => l.matId === id)
+            || resolveBacksideMedium(appState).id === id || (appState.backLayers || []).some(l => l.matId === id);
+    }
+
+    function rearMaterialOptions(current) {
+        return Object.keys(MATERIALS_DB).filter(id => id !== 'Air' && id !== 'BK7').map(id => {
+            const mat = MATERIALS_DB[id];
+            const name = mat.type === 'custom_table' ? mat.name : id === 'AR_Theorique'
+                ? (currentLang === 'fr' ? 'AR idéal' : 'Ideal AR') : (MAT_SHORT[id] || id);
+            return `<option value="${id}" ${id === current ? 'selected' : ''}>${escapeReviewText(name)}</option>`;
+        }).join('');
+    }
+
+    function renderBacksideEditor() {
+        const panel = document.getElementById('backsidePanel');
+        if (!panel) return;
+        const fr = currentLang === 'fr', t = (a, b) => fr ? a : b;
+        const advancedOpen = panel.querySelector?.('details')?.open;
+        const oldFormula = panel.querySelector?.('#inpBackFormula')?.value || '';
+        const layers = appState.backLayers || [];
+        const button = 'border border-emerald-200 bg-white hover:bg-emerald-50 rounded-lg px-2 py-1.5 font-semibold transition';
+        const namedMedium = id => id === 'Custom' ? `n = ${appState.backCustomN}` : id === 'Same'
+            ? t('Comme devant', 'Same as front') : id === 'FusedSilica' ? t('Silice', 'Silica')
+            : MATERIALS_DB[id]?.type === 'custom_table' ? MATERIALS_DB[id].name : (MAT_SHORT[id] || id);
+        const options = [['Air', 'Air (n = 1)'], ['Same', t('Même milieu que devant', 'Same medium as front')], ['BK7', 'BK7'],
+            ['FusedSilica', t('Silice', 'Silica')], ['Custom', t('Indice constant…', 'Constant index…')],
+            ...(appState.customMaterials || []).map(m => [m.id, m.name])]
+            .map(([id, name]) => `<option value="${id}" ${id === appState.backMedium ? 'selected' : ''}>${escapeReviewText(name)}</option>`).join('');
+        panel.innerHTML = `
+            <div class="bg-emerald-50 border-b border-emerald-200 px-4 py-2.5 flex justify-between gap-2 items-center">
+                <strong class="text-xs text-emerald-900">${t('Face arrière', 'Rear surface')}</strong>
+                <span class="text-[10px] text-emerald-800">${t('Traitement connu · fixe', 'Known coating · fixed')}</span>
+            </div>
+            <div class="p-3 space-y-3 text-xs">
+                <div class="flex items-center gap-1 text-center text-[10px] font-semibold" aria-label="${t('Sens de la lumière', 'Light direction')}">
+                    <span class="flex-1 bg-indigo-50 text-indigo-800 rounded py-2">${t('Face avant', 'Front surface')}</span><span>→</span>
+                    <span class="flex-1 bg-slate-100 text-slate-700 rounded py-2">${escapeReviewText(appState.substrat === 'Custom' ? t('Substrat', 'Substrate') : namedMedium(appState.substrat))}</span><span>→</span>
+                    <span class="flex-1 bg-emerald-50 text-emerald-900 rounded py-2">${layers.length ? `${layers.length} ${t('couche(s)', 'layer(s)')}` : t('Face nue', 'Uncoated')}</span>
+                </div>
+                <div class="flex gap-1.5 flex-wrap">
+                    <button type="button" data-rear-action="bare" class="${button}" aria-pressed="${layers.length === 0}">${t('Face nue', 'Uncoated')}</button>
+                    <button type="button" data-rear-action="quarter" class="${button}" title="${t('Une couche de silice quart d’onde à la longueur d’onde de référence arrière.', 'One quarter-wave silica layer at the rear reference wavelength.')}">${t('SiO₂ quart d’onde', 'Quarter-wave SiO₂')}</button>
+                    <button type="button" data-rear-action="copy" class="${button}" title="${t('Copie les matériaux et les épaisseurs physiques actuelles ; la copie restera indépendante.', 'Copy the current materials and physical thicknesses; the copy stays independent.')}">${t('Copier la face avant', 'Copy front coating')}</button>
+                </div>
+                <p class="text-[10px] text-slate-600">${t('Les couches sont comptées depuis le substrat. Ce traitement reste fixe quand on optimise ou perturbe la face avant.', 'Layers are numbered from the substrate. This coating stays fixed while the front coating is optimized or perturbed.')}</p>
+                ${layers.length ? `<div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="text-[10px] text-slate-500"><tr><th>#</th><th>${t('Matériau', 'Material')}</th><th>${t('Épaisseur (nm)', 'Thickness (nm)')}</th><th></th></tr></thead><tbody>${layers.map((l, i) => `
+                    <tr class="border-b border-slate-100"><td class="py-1.5 text-slate-400">${i+1}</td>
+                    <td><select data-rear-index="${i}" data-rear-prop="matId" aria-label="${t('Matériau arrière, couche', 'Rear material, layer')} ${i+1}" class="w-full border border-slate-300 rounded px-1 py-1">${rearMaterialOptions(l.matId)}</select></td>
+                    <td><input type="number" step="any" min="0" max="1000000" value="${l.val}" data-rear-index="${i}" data-rear-prop="val" aria-label="${t('Épaisseur arrière, couche', 'Rear thickness, layer')} ${i+1}" class="w-20 border border-slate-300 rounded px-1 py-1 font-mono"></td>
+                    <td><button type="button" data-rear-action="delete" data-rear-index="${i}" class="text-red-600 px-2 py-1" aria-label="${t('Supprimer la couche arrière', 'Delete rear layer')} ${i+1}">✕</button></td></tr>`).join('')}</tbody></table></div>`
+                    : `<p class="bg-slate-50 rounded-lg p-2 text-slate-600">${t('Le substrat donne directement sur le milieu de sortie : aucune couche arrière.', 'The substrate meets the exit medium directly: no rear coating.')}</p>`}
+                <button type="button" data-rear-action="add" class="text-emerald-800 font-semibold">${t('+ Ajouter une couche', '+ Add a layer')}</button>
+                <details ${advancedOpen ? 'open' : ''} class="border-t border-slate-100 pt-2"><summary class="cursor-pointer text-[11px] font-semibold text-slate-600">${t('Réglages avancés', 'Advanced settings')}</summary>
+                    <div class="space-y-2 pt-2">
+                        <label class="block">${t('Milieu après la face arrière', 'Medium after the rear surface')}<select id="selBackMedium" class="block w-full border border-slate-300 rounded px-2 py-1 mt-1">${options}</select></label>
+                        ${appState.backMedium === 'Custom' ? `<div class="flex gap-2"><label>n <input id="inpBackN" type="number" step="any" min="0.1" max="20" value="${appState.backCustomN}" class="w-20 border rounded px-1 py-1"></label><label>k <input id="inpBackK" type="number" step="any" min="0" max="30" value="${appState.backCustomK}" class="w-20 border rounded px-1 py-1"></label></div>` : ''}
+                        <label class="block">${t('λ₀ pour créer des quarts d’onde (nm)', 'λ₀ for creating quarter-wave layers (nm)')}<input id="inpBackL0" type="number" min="200" max="2500" step="any" value="${appState.backDesignL0}" class="block w-24 border border-slate-300 rounded px-2 py-1 mt-1"></label>
+                        <label class="block">${t('Formule arrière en QWOT', 'Rear formula in QWOT')}<input id="inpBackFormula" type="text" placeholder="H L H" title="${t('Exemples : (HL)^3 ou M1 L', 'Examples: (HL)^3 or M1 L')}" value="${escapeReviewText(oldFormula)}" class="block w-full border border-slate-300 rounded px-2 py-1 mt-1 font-mono"></label>
+                        <button type="button" data-rear-action="formula" class="${button}">${t('Appliquer la formule', 'Apply formula')}</button>
+                        <p class="text-[10px] text-slate-500">${t('La formule est convertie en nm à incidence normale. Changer λ₀ ne modifie pas les couches déjà saisies.', 'The formula is converted to nm at normal incidence. Changing λ₀ does not change existing layers.')}</p>
+                    </div>
+                </details>
+                <p class="text-[10px] text-emerald-900">${t('Sortie :', 'Exit:')} ${escapeReviewText(namedMedium(appState.backMedium))} · ${t('Substrat épais transparent · réflexions multiples incohérentes', 'Thick transparent substrate · incoherent multiple reflections')}</p>
+            </div>`;
+    }
+
+    function wireBacksideEditor() {
+        const panel = document.getElementById('backsidePanel');
+        if (!panel) return;
+        const commit = () => { invalidateMaterialAnalysis(); renderBacksideEditor(); runFullSimulation(); };
+        panel.addEventListener('change', e => {
+            const el = e.target;
+            const i = Number(el.dataset.rearIndex);
+            if (el.dataset.rearProp && appState.backLayers[i]) {
+                if (el.dataset.rearProp === 'matId') appState.backLayers[i].matId = el.value;
+                else {
+                    const value = Number(el.value);
+                    if (el.value === '' || !Number.isFinite(value) || value < 0 || value > 1e6) { renderBacksideEditor(); return; }
+                    appState.backLayers[i].val = value;
+                }
+            } else if (el.id === 'selBackMedium') appState.backMedium = el.value;
+            else if (['inpBackN', 'inpBackK', 'inpBackL0'].includes(el.id)) {
+                const value = Number(el.value), limits = {inpBackN:[0.1,20,'backCustomN'],inpBackK:[0,30,'backCustomK'],inpBackL0:[200,2500,'backDesignL0']}[el.id];
+                if (el.value === '' || !Number.isFinite(value) || value < limits[0] || value > limits[1]) { renderBacksideEditor(); return; }
+                appState[limits[2]] = value;
+            } else return;
+            commit();
+        });
+        panel.addEventListener('click', e => {
+            const button = e.target.closest('[data-rear-action]');
+            if (!button) return;
+            const action = button.dataset.rearAction;
+            if (action === 'bare') appState.backLayers = [];
+            else if (action === 'quarter') appState.backLayers = [{matId:'FusedSilica',unit:'nm',val:appState.backDesignL0 / (4 * MATERIALS_DB.FusedSilica.getN(appState.backDesignL0).r)}];
+            else if (action === 'add') appState.backLayers.push({matId:'FusedSilica',unit:'nm',val:100});
+            else if (action === 'delete') appState.backLayers.splice(Number(button.dataset.rearIndex), 1);
+            else if (action === 'copy') {
+                const n = getMediumIndex(appState.superstrat, appState.designL0, appState.customSuperN).r;
+                appState.backLayers = appState.layers.map(l => ({matId:l.matId,unit:'nm',val:getPhysicalThicknessNm(l,appState.designL0,appState.designIncDeg,n)}));
+            } else if (action === 'formula') {
+                try {
+                    const layers = parseStackFormula(document.getElementById('inpBackFormula').value);
+                    appState.backLayers = layers.map(l => ({matId:l.matId,unit:'nm',val:getPhysicalThicknessNm(l,appState.backDesignL0,0,1)}));
+                } catch (err) { alert(err.message); return; }
+            } else return;
+            commit();
+        });
+    }
+
     function layerMaterialOptions(current) {
         const fr = currentLang === 'fr';
         const opt = (id, disabled) =>
             `<option value="${id}" ${current === id ? 'selected' : ''} ${disabled && current !== id ? 'disabled' : ''}>`
-            + `${MAT_SHORT[id] || id}${disabled ? (fr ? ' — substrat' : ' — substrate') : ''}</option>`;
+            + `${id === 'AR_Theorique' ? (fr ? 'AR idéal (n ≈ 1,225)' : 'Ideal AR (n ≈ 1.225)') : (MAT_SHORT[id] || id)}${disabled ? (fr ? ' — substrat' : ' — substrate') : ''}</option>`;
         const customList = (appState.customMaterials || []).map(m =>
             `<option value="${m.id}" ${current === m.id ? 'selected' : ''}>★ ${escapeReviewText(m.name || m.id)}${m.sym ? ' (' + m.sym + ')' : ''}</option>`
         ).join('');
@@ -4281,7 +4565,7 @@
 
             const seg = document.createElement('div');
             seg.style.width = `${pct}%`;
-            seg.title = `${currentLang === 'fr' ? 'Couche' : 'Layer'} ${idx+1}: ${lay.matId} (${d.toFixed(1)} nm)${lay.locked ? (currentLang === 'fr' ? ' [Verrouillée]' : ' [Locked]') : ''}`;
+            seg.title = `${currentLang === 'fr' ? 'Couche' : 'Layer'} ${idx+1}: ${MAT_SHORT[lay.matId] || lay.matId} (${d.toFixed(1)} nm)${lay.locked ? (currentLang === 'fr' ? ' [Verrouillée]' : ' [Locked]') : ''}`;
 
             if (MATERIALS_DB[lay.matId]?.type === 'custom_table') {
                 seg.className = `h-full bg-emerald-600 border-r border-emerald-700 flex items-center justify-center text-[9px] text-white font-bold overflow-hidden ${lay.locked ? 'opacity-80' : ''}`;
@@ -4679,7 +4963,7 @@
                 if (!rec || !Array.isArray(rec.stack) || !rec.stack.length) return;
                 const pts = calc.x.map(l => ({
                     x: l,
-                    y: computeTMMPointCustom(l, rec.incidenceDeg ?? 0, rec.superstrat, rec.substrat, rec.stack).T_avg * 100
+                    y: computeTMMPointCustom(l, rec.incidenceDeg ?? 0, rec.superstrat, rec.substrat, rec.stack, rec.opticalState).T_avg * 100
                 }));
                 datasets.push({
                     label: `${rec.name || (k === 0 ? 'A' : 'B')} — T`,
@@ -4904,35 +5188,101 @@
     /* =========================================================================
        MODULE MATÉRIAUX PERSONNALISÉS (MODE TABLE CONVIVIAL λ, n, k)
        Permet à l'utilisateur de concevoir ses propres matériaux sous forme de
-       table (λ, n, k) et de les utiliser comme couches ou comme substrat (backing).
+       table (λ, n, k) et de les utiliser comme couches ou comme substrat.
        ========================================================================= */
     const STORAGE_KEY_CUSTOM_MATS = 'simulateur_cm_custom_materials';
 
-    function sanitizeMatTable(table) {
+    function sanitizeMatTable(table, requireTransparent = false) {
         if (!Array.isArray(table) || table.length === 0) {
-            return [{ l: 550, n: 1.52, k: 0 }];
+            throw new Error(currentLang === 'fr' ? 'La table doit contenir au moins un point.' : 'The table must contain at least one point.');
         }
         const cleaned = table
-            .map(pt => ({
-                l: Math.max(100, Math.min(5000, Math.round(Number(pt.l) * 10) / 10 || 550)),
-                n: Math.max(0.01, Math.min(20, Math.round(Number(pt.n) * 10000) / 10000 || 1.5)),
-                k: Math.max(0, Math.min(30, Math.round(Number(pt.k) * 100000) / 100000 || 0))
-            }))
+            .map((pt, i) => {
+                const numeric = v => (typeof v === 'number' || (typeof v === 'string' && v.trim() !== '')) ? Number(v) : NaN;
+                const l = numeric(pt?.l), n = numeric(pt?.n), k = pt?.k === undefined ? 0 : numeric(pt.k);
+                if (!Number.isFinite(l) || l < 100 || l > 5000 || !Number.isFinite(n) || n < 0.01 || n > 20 || !Number.isFinite(k) || k < 0 || k > 30) {
+                    throw new Error(currentLang === 'fr'
+                        ? `Point ${i + 1} invalide : 100 ≤ λ ≤ 5000 nm, 0,01 ≤ n ≤ 20 et 0 ≤ k ≤ 30 sont requis.`
+                        : `Invalid point ${i + 1}: require 100 ≤ λ ≤ 5000 nm, 0.01 ≤ n ≤ 20 and 0 ≤ k ≤ 30.`);
+                }
+                if (requireTransparent && k !== 0) throw new Error(currentLang === 'fr'
+                    ? 'Le milieu incident doit être transparent (k = 0). Changez de superstrat avant de rendre ce matériau absorbant.'
+                    : 'The incident medium must be transparent (k = 0). Choose another superstrate before making this material absorbing.');
+                return { l, n, k };
+            })
             .sort((a, b) => a.l - b.l);
-        const deduped = [];
-        for (const pt of cleaned) {
-            if (deduped.length && Math.abs(deduped[deduped.length - 1].l - pt.l) < 1e-4) {
-                deduped[deduped.length - 1] = pt;
-            } else {
-                deduped.push(pt);
+        for (let i = 1; i < cleaned.length; i++) {
+            if (cleaned[i].l === cleaned[i - 1].l) {
+                throw new Error(currentLang === 'fr'
+                    ? `Longueur d’onde répétée : ${cleaned[i].l} nm. Conservez un seul point par longueur d’onde.`
+                    : `Duplicate wavelength: ${cleaned[i].l} nm. Keep one point per wavelength.`);
             }
         }
-        return deduped.length ? deduped : [{ l: 550, n: 1.52, k: 0 }];
+        return cleaned;
+    }
+
+    function parseMaterialTableText(raw, unit = 'auto') {
+        const fr = currentLang === 'fr';
+        const fail = (line, message) => { throw new Error(`${fr ? 'Ligne' : 'Line'} ${line}: ${message}`); };
+        const rows = [];
+        const numericToken = /^[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)(?:e[+-]?\d+)?$/i;
+        let headerUnit = null, seenHeader = false;
+        const lines = String(raw).replace(/^\uFEFF/, '').split(/\r?\n/);
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line || /^(#|\/\/)/.test(line)) continue;
+            const spaceParts = line.split(/\s+/);
+            const spaceNumbers = spaceParts.length >= 2 && spaceParts.length <= 3 && spaceParts.every(p => numericToken.test(p));
+            const separator = line.includes(';') ? ';' : line.includes('\t') ? '\t' : spaceNumbers ? null : ',';
+            let parts;
+            if (separator === null) {
+                parts = line.split(/\s+/);
+            } else {
+                parts = []; let field = '', quoted = false;
+                for (let j = 0; j < line.length; j++) {
+                    const ch = line[j];
+                    if (ch === '"') {
+                        if (quoted && line[j + 1] === '"') { field += '"'; j++; }
+                        else quoted = !quoted;
+                    } else if (ch === separator && !quoted) { parts.push(field.trim()); field = ''; }
+                    else field += ch;
+                }
+                if (quoted) fail(i + 1, fr ? 'Guillemet non fermé.' : 'Unclosed quote.');
+                parts.push(field.trim());
+            }
+            if (/^(lambda|wavelength|wl|λ)/i.test(parts[0])) {
+                if (rows.length || seenHeader || parts.length < 2 || parts.length > 3 || !/^n$/i.test(parts[1])
+                    || (parts.length === 3 && !/^k$/i.test(parts[2]))) {
+                    fail(i + 1, fr ? 'En-tête inattendu. Utilisez une seule table λ, n, k.' : 'Unexpected header. Use a single wavelength, n, k table.');
+                }
+                seenHeader = true;
+                if (/nm/i.test(parts[0])) headerUnit = 'nm';
+                else if (/(um|µm|μm)/i.test(parts[0])) headerUnit = 'um';
+                continue;
+            }
+            if (parts.length < 2 || parts.length > 3 || parts.some(p => !numericToken.test(p))) {
+                fail(i + 1, fr ? 'Deux ou trois nombres requis : λ, n et éventuellement k.' : 'Two or three numbers required: wavelength, n and optionally k.');
+            }
+            const values = parts.map(p => Number(p.replace(',', '.')));
+            rows.push({ l: values[0], n: values[1], k: values[2] ?? 0 });
+        }
+        let resolvedUnit = unit === 'auto' ? headerUnit : unit;
+        if (!resolvedUnit && rows.length) {
+            const small = rows.every(p => p.l > 0 && p.l <= 25);
+            const large = rows.every(p => p.l > 25);
+            if (!small && !large) fail(1, fr ? 'Unité ambiguë : choisissez nm ou µm.' : 'Ambiguous units: select nm or µm.');
+            resolvedUnit = small ? 'um' : 'nm';
+        }
+        return sanitizeMatTable(rows.map(p => ({ ...p, l: p.l * (resolvedUnit === 'um' ? 1000 : 1) })));
     }
 
     function registerCustomMaterialInDb(mat) {
-        if (!mat || !mat.id) return;
-        const safeTable = sanitizeMatTable(mat.table);
+        if (!mat || !/^custom_mat_[A-Za-z0-9_]+$/.test(mat.id) || !validCustomMaterialSymbol(mat.sym, mat.id)) {
+            throw new Error(currentLang === 'fr' ? 'Identifiant ou code de matériau invalide.' : 'Invalid material identifier or code.');
+        }
+        const safeTable = sanitizeMatTable(mat.table, appState.superstrat === mat.id);
+        const previous = MATERIALS_DB[mat.id];
+        if (previous) invalidateMaterialAnalysis();
         mat.table = safeTable;
         MATERIALS_DB[mat.id] = {
             name: mat.name || mat.id,
@@ -4945,32 +5295,51 @@
             }
         };
         MAT_SHORT[mat.id] = mat.sym || mat.name || mat.id;
+        if (appState.customMaterials.some(m => m.id === mat.id)) refreshMaterialSelectors(true);
+    }
+
+    function invalidateMaterialAnalysis() {
+        needleUndoState = null;
+        needleBestInfo = null;
+        recommendedNeedleStack = null;
+        document.getElementById('divNeedleAdvice')?.classList.add('hidden');
+        updateNeedleUndoButton();
     }
 
     function saveCustomMaterialsToStorage() {
         try {
             localStorage.setItem(STORAGE_KEY_CUSTOM_MATS, JSON.stringify(appState.customMaterials));
+            appState.customMaterialStorageError = false;
+            return true;
         } catch (_err) {
-            // Silencieux si quota ou restriction de stockage
+            if (!appState.customMaterialStorageError) alert(currentLang === 'fr'
+                ? 'Sauvegarde locale indisponible. Les matériaux restent utilisables pendant cette session : exportez vos tables en CSV pour les conserver.'
+                : 'Local storage unavailable. Materials remain usable this session: export your tables as CSV to keep them.');
+            appState.customMaterialStorageError = true;
+            return false;
         }
     }
 
     function initCustomMaterials() {
         let loaded = null;
+        let damaged = 0;
         try {
             const raw = localStorage.getItem(STORAGE_KEY_CUSTOM_MATS);
-            if (raw) loaded = JSON.parse(raw);
+            if (raw !== null) {
+                loaded = JSON.parse(raw);
+                if (!Array.isArray(loaded)) throw new Error('invalid schema');
+            }
         } catch (_err) {
-            loaded = null;
+            loaded = [];
+            damaged++;
         }
 
-        if (Array.isArray(loaded) && loaded.length > 0) {
-            appState.customMaterials = loaded;
-        } else {
-            appState.customMaterials = [
+        const firstUse = loaded === null;
+        if (firstUse) {
+            loaded = [
                 {
                     id: 'custom_mat_1',
-                    name: 'Verre / Backing personnalisé',
+                    name: 'M1',
                     sym: 'M1',
                     type: 'custom_table',
                     description: 'Table dispersive (λ, n, k) personnalisée, utilisable comme substrat ou couche',
@@ -4981,10 +5350,28 @@
                     ]
                 }
             ];
-            saveCustomMaterialsToStorage();
         }
 
-        appState.customMaterials.forEach(m => registerCustomMaterialInDb(m));
+        appState.customMaterials = [];
+        for (const item of loaded) {
+            try {
+                if (!item || typeof item.id !== 'string' || !/^custom_mat_[A-Za-z0-9_]+$/.test(item.id)
+                    || appState.customMaterials.some(m => m.id === item.id)) throw new Error('invalid id');
+                let sym = typeof item.sym === 'string' ? item.sym.trim().toUpperCase() : '';
+                if (!validCustomMaterialSymbol(sym)) { sym = nextCustomMaterialSymbol(); damaged++; }
+                const mat = {
+                    id: item.id, name: String(item.name || item.id).slice(0, 200), sym,
+                    type: 'custom_table', description: String(item.description || '').slice(0, 2000),
+                    table: sanitizeMatTable(item.table)
+                };
+                registerCustomMaterialInDb(mat);
+                appState.customMaterials.push(mat);
+            } catch (_err) { damaged++; }
+        }
+        if (firstUse) saveCustomMaterialsToStorage();
+        if (damaged) alert(currentLang === 'fr'
+            ? 'Certaines données locales de matériaux sont invalides. Les entrées illisibles ont été écartées et les codes ambigus réattribués. Les autres tables restent disponibles ; le stockage original est conservé jusqu’à votre prochaine modification.'
+            : 'Some local material data is invalid. Unreadable entries were skipped and ambiguous codes reassigned. Other tables remain available; original storage is kept until your next edit.');
         appState.activeCustomMatId = appState.customMaterials[0]?.id || null;
         refreshMaterialSelectors();
     }
@@ -5048,7 +5435,7 @@
                           + `<option value="Custom">${fr ? 'Indice personnalisé (constant n)' : 'Custom index (constant n)'}</option>`;
             if (appState.customMaterials.length > 0) {
                 superHtml += `<optgroup label="${fr ? 'Matériaux personnalisés (table)' : 'Custom materials (table)'}">`
-                           + appState.customMaterials.map(m => `<option value="${m.id}">★ ${escapeReviewText(m.name || m.id)}${m.sym ? ' (' + m.sym + ')' : ''}</option>`).join('')
+                           + appState.customMaterials.map(m => `<option value="${m.id}" ${m.table.some(p => p.k > 0) ? 'disabled' : ''}>★ ${escapeReviewText(m.name || m.id)}${m.sym ? ' (' + m.sym + ')' : ''}${m.table.some(p => p.k > 0) ? (fr ? ' — incident absorbant exclu' : ' — absorbing incidence unsupported') : ''}</option>`).join('')
                            + `</optgroup>`;
             }
             selSuper.innerHTML = superHtml;
@@ -5060,20 +5447,21 @@
         if (selNeedle) {
             const curVal = preserve ? selNeedle.value : 'auto';
             let needleHtml = `<option value="auto">${fr ? 'Automatique — partenaire technologique' : 'Automatic — process partner'}</option>`
-                           + `<option value="ZnS_fresnel">ZnS (n ≈ 2,35)</option>`
-                           + `<option value="YF3_fresnel">YF3 (n ≈ 1,47)</option>`
-                           + `<option value="TiO2">TiO2 (n ≈ 2,35)</option>`
-                           + `<option value="Si3N4">Si3N4 (n ≈ 2,02)</option>`
-                           + `<option value="Al2O3">Al2O3 (n ≈ 1,65)</option>`
-                           + `<option value="FusedSilica">SiO2 (n ≈ 1,46)</option>`;
+                           + `<option value="ZnS_fresnel">ZnS (n ≈ ${fr ? '2,35' : '2.35'})</option>`
+                           + `<option value="YF3_fresnel">YF3 (n ≈ ${fr ? '1,47' : '1.47'})</option>`
+                           + `<option value="TiO2">TiO2 (n ≈ ${fr ? '2,35' : '2.35'})</option>`
+                           + `<option value="Si3N4">Si3N4 (n ≈ ${fr ? '2,02' : '2.02'})</option>`
+                           + `<option value="Al2O3">Al2O3 (n ≈ ${fr ? '1,65' : '1.65'})</option>`
+                           + `<option value="FusedSilica">SiO2 (n ≈ ${fr ? '1,46' : '1.46'})</option>`;
             if (appState.customMaterials.length > 0) {
                 needleHtml += `<optgroup label="${fr ? 'Matériaux personnalisés (table)' : 'Custom materials (table)'}">`
                             + appState.customMaterials.map(m => `<option value="${m.id}">★ ${escapeReviewText(m.name || m.id)}</option>`).join('')
                             + `</optgroup>`;
             }
             selNeedle.innerHTML = needleHtml;
-            if (curVal) selNeedle.value = curVal;
+            selNeedle.value = curVal && (curVal === 'auto' || MATERIALS_DB[curVal]) ? curVal : 'auto';
         }
+        renderBacksideEditor();
     }
 
     function getActiveCustomMat() {
@@ -5121,13 +5509,13 @@
                 <tr class="hover:bg-slate-50 transition">
                     <td class="py-1 px-2 text-center text-slate-400 font-bold">${idx + 1}</td>
                     <td class="py-1 px-2">
-                        <input type="number" step="1" min="100" max="5000" value="${pt.l}" class="inpMatRowL w-24 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono font-semibold" data-idx="${idx}">
+                        <input type="number" step="any" min="100" max="5000" value="${pt.l}" class="inpMatRowL w-24 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono font-semibold" data-idx="${idx}">
                     </td>
                     <td class="py-1 px-2">
-                        <input type="number" step="0.001" min="0.01" max="20" value="${pt.n}" class="inpMatRowN w-24 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono font-semibold" data-idx="${idx}">
+                        <input type="number" step="any" min="0.01" max="20" value="${pt.n}" class="inpMatRowN w-24 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono font-semibold" data-idx="${idx}">
                     </td>
                     <td class="py-1 px-2">
-                        <input type="number" step="0.0001" min="0" max="30" value="${pt.k || 0}" class="inpMatRowK w-24 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono font-semibold" data-idx="${idx}">
+                        <input type="number" step="any" min="0" max="30" value="${pt.k || 0}" class="inpMatRowK w-24 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono font-semibold" data-idx="${idx}">
                     </td>
                     <td class="py-1 px-2 text-right">
                         <button type="button" class="btnDelMatRow text-red-500 hover:text-red-700 p-1 rounded font-bold" data-idx="${idx}" title="${fr ? 'Supprimer cette ligne' : 'Delete this row'}" ${(mat.table || []).length <= 1 ? 'disabled style="opacity:0.3;cursor:not-allowed;"' : ''}>
@@ -5143,7 +5531,7 @@
         const statusEl = document.getElementById('txtCustomMatStatus');
         if (statusEl) {
             const count = (mat.table || []).length;
-            const N0 = mat.getN ? mat.getN(appState.designL0) : Complex.new(1.5, 0);
+            const N0 = MATERIALS_DB[mat.id].getN(appState.designL0);
             const N0Str = `n(${appState.designL0} nm) = ${N0.r.toFixed(3)}${N0.i > 0 ? ' - i' + N0.i.toFixed(4) : ''}`;
             if (count === 1) {
                 statusEl.textContent = fr
@@ -5153,6 +5541,9 @@
                 statusEl.textContent = fr
                     ? `${count} points → interpolation cubique PCHIP [${mat.table[0].l}–${mat.table[count - 1].l} nm] (${N0Str})`
                     : `${count} points → PCHIP cubic interpolation [${mat.table[0].l}–${mat.table[count - 1].l} nm] (${N0Str})`;
+                statusEl.textContent += fr
+                    ? ' Hors de la table : valeurs de bord maintenues.'
+                    : ' Outside the table: endpoint values held constant.';
             }
         }
     }
@@ -5163,15 +5554,18 @@
 
         const updateRow = (idx, key, val) => {
             if (!mat.table[idx]) return;
-            mat.table[idx][key] = val;
-            if (key === 'l') {
-                mat.table = sanitizeMatTable(mat.table);
+            try {
+                mat.table = sanitizeMatTable(mat.table.map((pt, i) => i === idx ? { ...pt, [key]: val } : pt), appState.superstrat === mat.id);
+            } catch (err) {
+                alert(err.message);
+                renderCustomMatEditor(mat.id);
+                return;
             }
             registerCustomMaterialInDb(mat);
             saveCustomMaterialsToStorage();
             renderCustomMatEditor(mat.id);
             updateMaterialInspection();
-            if (appState.substrat === mat.id || appState.superstrat === mat.id || appState.layers.some(l => l.matId === mat.id)) {
+            if (materialUsedInDesign(mat.id)) {
                 renderLayersTable();
                 runFullSimulation();
             }
@@ -5180,19 +5574,19 @@
         document.querySelectorAll('.inpMatRowL').forEach(el => {
             el.onchange = e => {
                 const idx = parseInt(e.target.dataset.idx, 10);
-                updateRow(idx, 'l', parseFloat(e.target.value) || 550);
+                updateRow(idx, 'l', e.target.value === '' ? NaN : Number(e.target.value));
             };
         });
         document.querySelectorAll('.inpMatRowN').forEach(el => {
             el.onchange = e => {
                 const idx = parseInt(e.target.dataset.idx, 10);
-                updateRow(idx, 'n', parseFloat(e.target.value) || 1.5);
+                updateRow(idx, 'n', e.target.value === '' ? NaN : Number(e.target.value));
             };
         });
         document.querySelectorAll('.inpMatRowK').forEach(el => {
             el.onchange = e => {
                 const idx = parseInt(e.target.dataset.idx, 10);
-                updateRow(idx, 'k', parseFloat(e.target.value) || 0);
+                updateRow(idx, 'k', e.target.value === '' ? NaN : Number(e.target.value));
             };
         });
         document.querySelectorAll('.btnDelMatRow').forEach(el => {
@@ -5206,7 +5600,7 @@
                 saveCustomMaterialsToStorage();
                 renderCustomMatEditor(mat.id);
                 updateMaterialInspection();
-                if (appState.substrat === mat.id || appState.superstrat === mat.id || appState.layers.some(l => l.matId === mat.id)) {
+                if (materialUsedInDesign(mat.id)) {
                     renderLayersTable();
                     runFullSimulation();
                 }
@@ -5254,35 +5648,41 @@
         document.getElementById('inpCustomMatName')?.addEventListener('input', e => {
             const mat = getActiveCustomMat();
             if (!mat) return;
-            mat.name = e.target.value.trim() || 'Matériau';
+            mat.name = e.target.value.trim() || mat.sym;
             MATERIALS_DB[mat.id].name = mat.name;
             MAT_SHORT[mat.id] = mat.sym || mat.name;
             saveCustomMaterialsToStorage();
             refreshMaterialSelectors(true);
             renderLayersTable();
-            renderVisualStackBar(0);
         });
 
-        document.getElementById('inpCustomMatSym')?.addEventListener('input', e => {
+        document.getElementById('inpCustomMatSym')?.addEventListener('change', e => {
             const mat = getActiveCustomMat();
             if (!mat) return;
-            const cleanSym = e.target.value.trim().toUpperCase().replace(/[^A-Z0-9_]/g, '');
-            mat.sym = cleanSym || 'M1';
+            const cleanSym = e.target.value.trim().toUpperCase();
+            if (!validCustomMaterialSymbol(cleanSym, mat.id)) {
+                alert(currentLang === 'fr'
+                    ? 'Code invalide ou déjà utilisé : 1 à 6 lettres, chiffres ou _, en commençant par une lettre. Les codes de référence (H, L, Si…) sont réservés.'
+                    : 'Invalid or duplicate code: 1 to 6 letters, digits or _, starting with a letter. Reference codes (H, L, Si…) are reserved.');
+                e.target.value = mat.sym;
+                return;
+            }
+            mat.sym = cleanSym;
+            e.target.value = cleanSym;
             MATERIALS_DB[mat.id].sym = mat.sym;
             MAT_SHORT[mat.id] = mat.sym || mat.name;
             saveCustomMaterialsToStorage();
             refreshMaterialSelectors(true);
             renderLayersTable();
-            renderVisualStackBar(0);
         });
 
         document.getElementById('btnNewCustomMat')?.addEventListener('click', () => {
             const num = appState.customMaterials.length + 1;
-            const newId = `custom_mat_${Date.now()}`;
+            const newId = nextCustomMaterialId();
             const newMat = {
                 id: newId,
-                name: currentLang === 'fr' ? `Nouveau matériau ${num}` : `New material ${num}`,
-                sym: `M${num}`,
+                name: nextCustomMaterialSymbol(),
+                sym: nextCustomMaterialSymbol(),
                 type: 'custom_table',
                 description: currentLang === 'fr' ? 'Table de points (λ, n, k) personnalisée' : 'Custom (λ, n, k) table points',
                 table: [
@@ -5294,7 +5694,8 @@
             appState.customMaterials.push(newMat);
             registerCustomMaterialInDb(newMat);
             saveCustomMaterialsToStorage();
-            refreshMaterialSelectors(false);
+            refreshMaterialSelectors(true);
+            renderLayersTable();
             openCustomMatEditorFromAnywhere(newId);
         });
 
@@ -5305,7 +5706,7 @@
             if (!srcMat) return;
 
             const num = appState.customMaterials.length + 1;
-            const newId = `custom_mat_${Date.now()}`;
+            const newId = nextCustomMaterialId();
             let newTable = [];
             if (Array.isArray(srcMat.table) && srcMat.table.length > 0) {
                 newTable = srcMat.table.map(pt => ({ l: pt.l, n: pt.n, k: pt.k || 0 }));
@@ -5320,11 +5721,11 @@
                 }
             }
 
-            const baseName = srcMat.name || srcKey;
+            const baseName = srcMat.type === 'custom_table' ? srcMat.name : (MAT_SHORT[srcKey] || srcKey);
             const newMat = {
                 id: newId,
                 name: `${baseName} (${currentLang === 'fr' ? 'table' : 'table'})`,
-                sym: `M${num}`,
+                sym: nextCustomMaterialSymbol(),
                 type: 'custom_table',
                 description: `${currentLang === 'fr' ? 'Copie en mode table de' : 'Table copy of'} ${baseName}`,
                 table: sanitizeMatTable(newTable)
@@ -5333,7 +5734,8 @@
             appState.customMaterials.push(newMat);
             registerCustomMaterialInDb(newMat);
             saveCustomMaterialsToStorage();
-            refreshMaterialSelectors(false);
+            refreshMaterialSelectors(true);
+            renderLayersTable();
             openCustomMatEditorFromAnywhere(newId);
         });
 
@@ -5341,6 +5743,12 @@
             const mat = getActiveCustomMat();
             if (!mat) return;
             const fr = currentLang === 'fr';
+            if (materialUsedInDesign(mat.id)) {
+                alert(fr
+                    ? 'Ce matériau est utilisé dans le design courant. Changez d’abord les couches ou milieux concernés pour pouvoir le supprimer.'
+                    : 'This material is used by the current design. Change the affected layers or media before deleting it.');
+                return;
+            }
             const confirmMsg = fr
                 ? `Supprimer définitivement le matériau personnalisé « ${mat.name} » ?`
                 : `Permanently delete custom material "${mat.name}"?`;
@@ -5350,12 +5758,7 @@
             if (idx >= 0) appState.customMaterials.splice(idx, 1);
             delete MATERIALS_DB[mat.id];
             delete MAT_SHORT[mat.id];
-
-            if (appState.substrat === mat.id) appState.substrat = 'BK7';
-            if (appState.superstrat === mat.id) appState.superstrat = 'Air';
-            appState.layers.forEach(lay => {
-                if (lay.matId === mat.id) lay.matId = 'ZnS_fresnel';
-            });
+            invalidateMaterialAnalysis();
 
             saveCustomMaterialsToStorage();
             refreshMaterialSelectors(false);
@@ -5379,8 +5782,8 @@
             } else if (mat.table.length === 1) {
                 const single = mat.table[0];
                 mat.table = [
-                    { l: Math.max(300, single.l - 100), n: single.n, k: single.k || 0 },
-                    { l: Math.min(1000, single.l + 100), n: single.n, k: single.k || 0 }
+                    { ...single },
+                    { ...single, l: single.l <= 4900 ? single.l + 100 : single.l - 100 }
                 ];
             } else {
                 let maxGap = 0, insertL = 550;
@@ -5388,14 +5791,14 @@
                     const gap = mat.table[i + 1].l - mat.table[i].l;
                     if (gap > maxGap) {
                         maxGap = gap;
-                        insertL = Math.round((mat.table[i].l + mat.table[i + 1].l) / 2);
+                        insertL = (mat.table[i].l + mat.table[i + 1].l) / 2;
                     }
                 }
                 const lastL = mat.table[mat.table.length - 1].l;
                 if (lastL < 850 && 850 - lastL > maxGap) {
                     insertL = Math.min(850, lastL + 50);
                 }
-                const interpolated = mat.getN(insertL);
+                const interpolated = MATERIALS_DB[mat.id].getN(insertL);
                 mat.table.push({
                     l: insertL,
                     n: Math.round(interpolated.r * 10000) / 10000,
@@ -5407,7 +5810,7 @@
             saveCustomMaterialsToStorage();
             renderCustomMatEditor(mat.id);
             updateMaterialInspection();
-            if (appState.substrat === mat.id || appState.superstrat === mat.id || appState.layers.some(l => l.matId === mat.id)) {
+            if (materialUsedInDesign(mat.id)) {
                 renderLayersTable();
                 runFullSimulation();
             }
@@ -5423,7 +5826,7 @@
                     : `Reduce table to a single point (constant index across all wavelengths)?`);
                 if (!ok) return;
             }
-            const N0 = mat.getN(appState.designL0);
+            const N0 = MATERIALS_DB[mat.id].getN(appState.designL0);
             mat.table = [{
                 l: appState.designL0,
                 n: Math.round(N0.r * 10000) / 10000,
@@ -5433,7 +5836,7 @@
             saveCustomMaterialsToStorage();
             renderCustomMatEditor(mat.id);
             updateMaterialInspection();
-            if (appState.substrat === mat.id || appState.superstrat === mat.id || appState.layers.some(l => l.matId === mat.id)) {
+            if (materialUsedInDesign(mat.id)) {
                 renderLayersTable();
                 runFullSimulation();
             }
@@ -5444,7 +5847,7 @@
             if (!mat) return;
             const newTable = [];
             for (let l = 350; l <= 800; l += 50) {
-                const N = mat.getN(l);
+                const N = MATERIALS_DB[mat.id].getN(l);
                 newTable.push({
                     l,
                     n: Math.round(N.r * 10000) / 10000,
@@ -5456,7 +5859,7 @@
             saveCustomMaterialsToStorage();
             renderCustomMatEditor(mat.id);
             updateMaterialInspection();
-            if (appState.substrat === mat.id || appState.superstrat === mat.id || appState.layers.some(l => l.matId === mat.id)) {
+            if (materialUsedInDesign(mat.id)) {
                 renderLayersTable();
                 runFullSimulation();
             }
@@ -5472,40 +5875,22 @@
         document.getElementById('btnApplyPastedMat')?.addEventListener('click', () => {
             const mat = getActiveCustomMat();
             if (!mat) return;
-            const fr = currentLang === 'fr';
             const raw = document.getElementById('txtPasteMatData')?.value || '';
-            const lines = raw.split(/\r?\n/);
-            const parsed = [];
-
-            for (const line of lines) {
-                const trimmed = line.trim();
-                if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) continue;
-                // Découpe par séparateurs : tabulation, point-virgule, virgule, espaces
-                const parts = trimmed.split(/[\t;, ]+/).map(p => p.trim()).filter(Boolean);
-                if (parts.length < 2) continue;
-                let l = parseFloat(parts[0].replace(',', '.'));
-                let n = parseFloat(parts[1].replace(',', '.'));
-                let k = parts[2] ? parseFloat(parts[2].replace(',', '.')) : 0;
-                if (!Number.isFinite(l) || !Number.isFinite(n)) continue;
-                // Détection automatique micromètres -> nanomètres si lambda <= 25 (ex : 0.55 µm -> 550 nm)
-                if (l <= 25) l = l * 1000;
-                parsed.push({ l, n, k: Number.isFinite(k) ? k : 0 });
-            }
-
-            if (parsed.length === 0) {
-                alert(fr
-                    ? 'Aucun point valide trouvé dans le texte collé. Vérifiez le format (au moins 2 colonnes numériques : λ et n).'
-                    : 'No valid points found in pasted text. Check the format (at least 2 numeric columns: λ and n).');
+            let table;
+            try {
+                table = parseMaterialTableText(raw, document.getElementById('selMatImportUnit')?.value || 'auto');
+                table = sanitizeMatTable(table, appState.superstrat === mat.id);
+            } catch (err) {
+                alert(err.message);
                 return;
             }
-
-            mat.table = sanitizeMatTable(parsed);
+            mat.table = table;
             registerCustomMaterialInDb(mat);
             saveCustomMaterialsToStorage();
             renderCustomMatEditor(mat.id);
             updateMaterialInspection();
             document.getElementById('divPasteMatBox')?.classList.add('hidden');
-            if (appState.substrat === mat.id || appState.superstrat === mat.id || appState.layers.some(l => l.matId === mat.id)) {
+            if (materialUsedInDesign(mat.id)) {
                 renderLayersTable();
                 runFullSimulation();
             }
@@ -5517,13 +5902,22 @@
         document.getElementById('inpImportMatFile')?.addEventListener('change', e => {
             const file = e.target.files && e.target.files[0];
             if (!file) return;
+            const targetId = getActiveCustomMat()?.id;
+            const previousTable = JSON.stringify(getActiveCustomMat()?.table);
+            const previousUnit = document.getElementById('selMatImportUnit')?.value;
             const reader = new FileReader();
             reader.onload = ev => {
+                if (getActiveCustomMat()?.id !== targetId || JSON.stringify(getActiveCustomMat()?.table) !== previousTable
+                    || document.getElementById('selMatImportUnit')?.value !== previousUnit) {
+                    alert(currentLang === 'fr' ? 'Import annulé : le matériau ou les réglages ont changé pendant la lecture du fichier. Relancez l’import.' : 'Import cancelled: material or settings changed while reading the file. Import again.');
+                    return;
+                }
                 const text = ev.target.result;
                 const textarea = document.getElementById('txtPasteMatData');
                 if (textarea) textarea.value = text;
                 document.getElementById('btnApplyPastedMat')?.click();
             };
+            reader.onerror = () => alert(currentLang === 'fr' ? 'Lecture du fichier impossible. La table précédente est conservée.' : 'Unable to read the file. The previous table is unchanged.');
             reader.readAsText(file);
             e.target.value = '';
         });
@@ -5540,6 +5934,7 @@
             link.href = URL.createObjectURL(blob);
             link.download = `materiau_${mat.sym || mat.id}.csv`;
             link.click();
+            setTimeout(() => URL.revokeObjectURL(link.href), 1000);
         });
 
         document.getElementById('btnUseCustomAsSub')?.addEventListener('click', () => {
@@ -5721,7 +6116,7 @@
 
         { id: 10, num: 'X', fr: 'Revue de conception', en: 'Design review',
           qFr: 'Q28 – Q32', panels: ['media', 'stack', 'sim', 'tools', 'optimizer', 'mc', 'review', 'bands', 'chart'], allowedMerits: ['qr', 'custom'],
-          taskFr: 'Comparez deux designs sur les mêmes réalisations et prononcez une décision de qualification argumentée.',
+          taskFr: 'Comparez deux empilements sur les mêmes réalisations et prononcez une décision de qualification argumentée.',
           taskEn: 'Compare two designs on the same realizations and issue a reasoned qualification decision.' }
     ];
 
@@ -5729,7 +6124,7 @@
         const sel = document.getElementById('selExercise');
         if (!sel) return;
         const selected = appState.exercise ? String(appState.exercise) : '';
-        sel.innerHTML = '<option value="">—</option>' + EXERCISES.map(e =>
+        sel.innerHTML = `<option value="" disabled>${currentLang === 'fr' ? 'Choisir un exercice…' : 'Choose an exercise…'}</option>` + EXERCISES.map(e =>
             `<option value="${e.id}">${e.num}. ${currentLang === 'fr' ? e.fr : e.en}</option>`).join('');
         sel.value = selected;
     }
@@ -5737,7 +6132,9 @@
     function applyUiMode() {
         const student = appState.uiMode === 'etudiant';
         const ex = student ? EXERCISES.find(e => e.id === appState.exercise) : null;
-        const visible = ex ? new Set(ex.panels) : new Set(ALL_PANELS);
+        const visible = ex ? new Set(ex.panels) : new Set(student ? [] : ALL_PANELS);
+        document.querySelector('main')?.classList.toggle('hidden', student && !ex);
+        document.getElementById('headerResults')?.classList.toggle('hidden', !visible.has('chart'));
 
         // Le comparateur A/B n'a d'objet qu'une fois une qualification exécutée :
         // avant cela il n'affiche que des tirets et encombre la colonne. En mode
@@ -5764,7 +6161,7 @@
             left.className = left.className.replace(/lg:col-span-\d+/, rightUsed ? 'lg:col-span-5' : 'lg:col-span-12');
             right.className = right.className.replace(/lg:col-span-\d+/, leftUsed ? 'lg:col-span-7' : 'lg:col-span-12');
         }
-        // Le raccourci « Design libre » n'a de sens qu'en mode libre.
+        // Le raccourci « Conception libre » n'a de sens qu'en mode libre.
         document.getElementById('btnFreeDesign')?.classList.toggle('hidden', student);
 
         // Boutons de mode
@@ -5802,7 +6199,7 @@
         // étudiant, il court-circuiterait la traduction du cahier des charges.
         document.getElementById('btnTargetPreset')?.classList.toggle('hidden', student);
         // L'éditeur de cible est le poste de travail du mode libre : il est ouvert
-        // d'emblée, sans exiger un détour par le raccourci « Design libre ».
+        // d'emblée, sans exiger un détour par le raccourci « Conception libre ».
         if (!student) {
             document.getElementById('divCustomTarget')?.classList.remove('hidden');
             if (typeof renderCustomTargetEditor === 'function') renderCustomTargetEditor();
@@ -5812,15 +6209,22 @@
         // Bandeau de consigne
         const banner = document.getElementById('exerciseBanner');
         if (banner) {
-            banner.classList.toggle('hidden', !ex);
+            banner.classList.toggle('hidden', !student);
             const box = banner.firstElementChild;
+            if (student && !ex && box) {
+                const fr = currentLang === 'fr';
+                box.innerHTML = `<h2 class="text-lg font-bold mb-1">${fr ? 'Quel exercice faites-vous ?' : 'Which exercise are you working on?'}</h2>`
+                    + `<p class="mb-4 text-sm">${fr ? 'Choisissez votre exercice : seuls les outils utiles seront affichés. Construisez ensuite votre empilement en suivant l’énoncé.' : 'Choose your exercise to display only the tools you need. Then build your stack using the lab handout.'}</p>`
+                    + `<div class="grid sm:grid-cols-2 gap-2">${EXERCISES.map(e => `<button type="button" data-exercise="${e.id}" class="bg-white border border-emerald-200 rounded-lg p-3 text-left hover:bg-emerald-100 focus-visible:ring-2 focus-visible:ring-emerald-700 transition"><strong class="block">${e.num}. ${fr ? e.fr : e.en}</strong><span class="text-[11px] text-slate-600">${e.qFr}</span></button>`).join('')}</div>`
+                    + `<button type="button" data-free-mode class="mt-4 text-indigo-800 font-semibold underline underline-offset-2">${fr ? 'Projet personnel ? Ouvrir la conception libre' : 'Your own project? Open free design'}</button>`;
+            }
             if (ex && box) {
                 const fr = currentLang === 'fr';
-                // La consigne détaillée est dans l'énoncé : ici, une infobulle suffit.
-                const consigne = (fr ? ex.taskFr : ex.taskEn).replace(/"/g, '&quot;');
                 box.innerHTML = `<span class="font-extrabold">${ex.num}. ${fr ? ex.fr : ex.en}</span>`
                     + `<span class="ml-2 opacity-80">${ex.qFr}</span>`
-                    + ` <span class="tip ml-1" tabindex="0" role="button" data-tip="${consigne}" aria-label="${consigne}">i</span>`;
+                    + `<p class="mt-1">${fr ? ex.taskFr : ex.taskEn}</p>`
+                    + (ex.id === 2
+                        ? `<button type="button" data-single-interface class="mt-2 font-bold underline underline-offset-2" title="${fr ? 'Retirer les couches et désactiver la face arrière, en conservant les deux milieux choisis.' : 'Remove layers and disable the rear surface, keeping the two selected media.'}">${fr ? 'Revenir à une seule interface' : 'Return to a single interface'}</button>` : '');
             }
         }
         if (window.lucide) lucide.createIcons();
@@ -5833,6 +6237,7 @@
     function enterExercise(id) {
         appState.uiMode = 'etudiant';
         appState.exercise = id;
+        renderExerciseSelector();
         applyUiMode();
     }
 
@@ -5843,6 +6248,7 @@
     }
 
     function loadPreset(presetKey) {
+        appState.considerBackside = false;
         appState.monteCarloRuns = [];
         appState.monteCarloSamples = [];
         // Les résultats affichés se rapportaient à l'empilement précédent : les
@@ -6068,6 +6474,12 @@
         });
 
         document.getElementById('selSuperstrat').addEventListener('change', (e) => {
+            const mat = MATERIALS_DB[e.target.value];
+            if (mat?.type === 'custom_table' && mat.table.some(p => p.k > 0)) {
+                alert(currentLang === 'fr' ? 'Le milieu incident doit être transparent (k = 0).' : 'The incident medium must be transparent (k = 0).');
+                e.target.value = appState.superstrat;
+                return;
+            }
             appState.superstrat = e.target.value;
             document.getElementById('divCustomSuper').classList.toggle('hidden', e.target.value !== 'Custom');
             renderLayersTable();
@@ -6083,6 +6495,8 @@
 
         document.getElementById('chkBackside').addEventListener('change', (e) => {
             appState.considerBackside = e.target.checked;
+            invalidateMaterialAnalysis();
+            renderBacksideEditor();
             runFullSimulation();
         });
 
@@ -6157,7 +6571,10 @@
         document.getElementById('btnApplyFormula').addEventListener('click', () => {
             const formula = document.getElementById('inpFormulaStr').value;
             if (formula) {
-                appState.layers = parseStackFormula(formula);
+                let layers;
+                try { layers = parseStackFormula(formula); }
+                catch (err) { alert(err.message); return; }
+                appState.layers = layers;
                 // Empilement saisi librement : ni préréglage Fresnel actif, ni
                 // aiguille à annuler sur l'ancien empilement.
                 appState.fresnelPreset = false;
@@ -6224,7 +6641,7 @@
         const captureReviewSlot = slotIndex => {
             if (!appState.lastQualification) return;
             const input = document.getElementById('inpReviewDesignName');
-            const fallback = `Design ${slotIndex === 0 ? 'A' : 'B'}`;
+            const fallback = slotIndex === 0 ? 'A' : 'B';
             const name = (input?.value || '').trim() || fallback;
             // L'empilement lui-même est archivé avec ses conditions : sans lui, on
             // compare deux lignes de chiffres sans jamais voir les deux spectres.
@@ -6239,11 +6656,13 @@
                     matId: l.matId, locked: l.locked, unit: 'nm',
                     val: getPhysicalThicknessNm(l, appState.designL0, appState.designIncDeg, nSup)
                 }));
+            const opticalState = appState.lastQualification.opticalState || captureOpticalState();
             appState.reviewRecords[slotIndex] = {
                 ...appState.lastQualification, name,
                 stack: qualifiedStack,
-                superstrat: appState.superstrat, substrat: appState.substrat,
-                designL0: appState.designL0, designIncDeg: appState.designIncDeg
+                opticalState,
+                superstrat: opticalState.superstrat, substrat: opticalState.substrat,
+                designL0: opticalState.designL0, designIncDeg: opticalState.designIncDeg
             };
             renderDesignReview();
             updateCharts();
@@ -6352,7 +6771,7 @@
         { key: 'O', fr: 'Lancer l’optimiseur', en: 'Run the optimizer' },
         { key: 'N', fr: 'Analyser l’aiguille (Needle)', en: 'Analyze needle' },
         { key: 'G', fr: 'Basculer spectre λ / angle θ', en: 'Toggle spectrum / angle mode' },
-        { key: 'D', fr: 'Mode design libre (votre cible)', en: 'Free design mode (your target)' }
+        { key: 'D', fr: 'Conception libre (votre cible)', en: 'Free design mode (your target)' }
     ];
 
     /* Entrée directe dans le mode design libre : sélectionne le mérite, ouvre
@@ -6586,6 +7005,7 @@
         initCharts();
         setupMainChartNavigation();
         setupEventListeners();
+        wireBacksideEditor();
         wireCustomMatEvents();
         wireCustomTargetEditor();
         wireBandAnalyzer();
@@ -6610,17 +7030,33 @@
             });
         }
         document.getElementById('btnModeLibre')?.addEventListener('click', enterFreeMode);
+        document.getElementById('exerciseBanner')?.addEventListener('click', e => {
+            const choice = e.target.closest('[data-exercise]');
+            if (choice) enterExercise(Number(choice.dataset.exercise));
+            else if (e.target.closest('[data-free-mode]')) enterFreeMode();
+            else if (e.target.closest('[data-single-interface]')) {
+                appState.layers = [];
+                appState.considerBackside = false;
+                appState.fresnelPreset = false;
+                invalidateMaterialAnalysis();
+                renderLayersTable();
+                runFullSimulation();
+                applyUiMode();
+            }
+        });
         document.getElementById('btnModeEtudiant')?.addEventListener('click', () => {
             appState.uiMode = 'etudiant';
             applyUiMode();
             const sel = document.getElementById('selExercise');
             if (sel && !appState.exercise) sel.focus();
         });
-        loadPreset('start');
-        enterFreeMode();
+        loadPreset('empty');
+        applyUiMode();
         renderCustomTargetEditor();
         renderBandAnalyzer();
         renderDesignReview();
+        renderBacksideEditor();
+        setAppLanguagePro('fr');
     });
     
     /* =========================================================================
@@ -6629,6 +7065,9 @@
     let currentLang = 'fr';
 
     const UI_TEXT_PAIRS = [
+        ["réf. :", "ref.:"],
+        ["Empilement A", "Design A"],
+        ["Empilement B", "Design B"],
         ["🔒 Mode libre : mérite « Cible libre » uniquement.", "🔒 Free mode: “Free target” merit only."],
         ["Optimiser les épaisseurs", "Optimize thicknesses"],
         ["Couches à optimiser", "Layers to optimize"],
@@ -6654,7 +7093,7 @@
         ["🎛 Libre", "🎛 Free"],
         ["🎓 Étudiant", "🎓 Student"],
         ["Exercice :", "Exercise:"],
-        ["Design de départ", "Starting design"],
+        ["Empilement de départ", "Starting design"],
         ["Simulateur Couches Minces Optiques", "Optical Thin-Film Simulator"],
         ["Méthode matricielle d'Abelès (TMM)", "Abelès transfer-matrix method (TMM)"],
         ["Modèles :", "Templates:"],
@@ -6669,7 +7108,7 @@
         ["Image", "Image"],
         ["Aide & Théorie", "Help & theory"],
         ["1. Milieux Extérieurs", "1. Ambient media"],
-        ["Face arrière (interface nue)", "Backside (bare interface)"],
+        ["Inclure la face arrière", "Include rear surface"],
         ["Superstrat (Incident) :", "Superstrate (incident):"],
         ["Substrat (Émergent) :", "Substrate (emergent):"],
         ["BK7 (verre Schott)", "BK7 (Schott glass)"],
@@ -6718,7 +7157,7 @@
         ["Critères de conformité :", "Compliance criteria:"],
         ["et", "and"],
         ["Charger la référence Fresnel · 18 couches", "Load the 18-layer Fresnel reference"],
-        ["Nom du design", "Design name"],
+        ["Nom de l’empilement", "Design name"],
         ["Capturer en A", "Capture in A"],
         ["Capturer en B", "Capture in B"],
         ["Indicateur", "Indicator"],
@@ -6761,8 +7200,8 @@
         ["Fermer", "Close"],
         ["Simulateur Couches Minces • BUT 3 FI Parcours MCPC — étudiants L2 · L3 · M1 · M2 — Institut Fresnel 2026", "Optical Thin-Film Simulator • BUT 3 FI MCPC Path — L2 · L3 · M1 · M2 students — Institut Fresnel 2026"],
         ["Conçu pour remplacer OpenFilters avec un environnement web direct et pédagogique.", "Designed as a direct, educational web environment replacing OpenFilters."],
-        ["🎨 Cible libre (design personnalisé)", "🎨 Free target (custom design)"],
-        ["Design libre", "Free design"],
+        ["🎨 Cible libre (conception personnelle)", "🎨 Free target (custom design)"],
+        ["Conception libre", "Free design"],
         ["🎨 Votre cahier des charges", "🎨 Your specification"],
         ["Exemple", "Example"],
         ["Vider", "Clear"],
@@ -6808,7 +7247,7 @@
         ["Matériaux personnalisés (table)", "Custom materials (table)"],
         ["Indice personnalisé (constant n, k)", "Custom index (constant n, k)"],
         ["Indice personnalisé (constant n)", "Custom index (constant n)"],
-        ["→ Substrat (Backing)", "→ Substrate (Backing)"],
+        ["→ Substrat", "→ Substrate"],
         ["→ + Couche", "→ + Layer"]
     ];
 
@@ -6836,13 +7275,13 @@
          "Wheel: centered zoom · drag: box zoom · Shift + drag: pan · right-click (long press on mobile): export the curves as CSV."],
         ["Ajouter une fenêtre spectrale à évaluer. Le mérite est la moyenne de R sur l'ensemble des fenêtres déclarées ; ce qui n'est couvert par aucune d'elles est indifférent.",
          "Add a spectral window to evaluate. The merit is the mean of R over all declared windows; anything outside them does not count."],
-        ["Comparer deux designs qualifiés sur des hypothèses strictement identiques",
+        ["Comparer deux empilements qualifiés sur des hypothèses strictement identiques",
          "Compare two qualified designs under strictly identical assumptions"],
         ["Outil de conception complet, sans échafaudage pédagogique",
          "Full design tool, no pedagogical scaffolding"],
         ["Interface simplifiée, adaptée exercice par exercice",
          "Simplified interface, tailored to each exercise"],
-        ["Repartir du design de départ : miroir quart d'onde à trois couches (H L H) à 550 nm sur BK7. À vous de le faire évoluer.",
+        ["Repartir de l’empilement de départ : miroir quart d'onde à trois couches (H L H) à 550 nm sur BK7. À vous de le faire évoluer.",
          "Reset to the starting design: three-layer quarter-wave mirror (H L H) at 550 nm on BK7. Evolving it is up to you."],
         ["Modèles de départ", "Starting templates"],
         ["Mémoriser le spectre actuel pour le superposer à d'autres calculs", "Save the current spectrum for comparison with other calculations"],
@@ -6850,7 +7289,6 @@
         ["Exporter les données du spectre au format CSV", "Export spectrum data as CSV"],
         ["Exporter le graphique au format Image PNG", "Export the chart as a PNG image"],
         ["Afficher les formules matricielles et le guide — raccourci : H", "Show matrix formulas and user guide — shortcut: H"],
-        ["Réflexion incohérente de la face arrière, valable pour l'interface nue uniquement", "Incoherent backside reflection, valid for the bare interface only"],
         ["Milieu d'où provient la lumière (généralement l'Air)", "Medium from which light arrives (usually air)"],
         ["Support physique sur lequel les couches sont déposées", "Physical support on which layers are deposited"],
         ["Générer les couches depuis une formule symbolique", "Generate layers from a symbolic formula"],
@@ -6860,7 +7298,7 @@
         ["Ex: (HL)^3 2H (LH)^3 ou H,L,2H,L", "e.g. (HL)^3 2H (LH)^3 or H,L,2H,L"],
         ["Ajouter une fenêtre spectrale à évaluer. Le mérite est la moyenne de R sur l'ensemble des fenêtres déclarées ; ce qui n'est couvert par aucune d'elles est indifférent.",
          "Add a spectral window to evaluate. The merit is the mean of R over all declared windows; anything covered by none of them is \"don't care\"."],
-        ["Comparer deux designs qualifiés sur des hypothèses strictement identiques",
+        ["Comparer deux empilements qualifiés sur des hypothèses strictement identiques",
          "Compare two qualified designs under strictly identical assumptions"],
         ["Restaurer l'empilement d'avant la dernière insertion d'aiguille (couches, verrous et portée BFGS)",
          "Restore the stack as it was before the last needle insertion (layers, locks and BFGS scope)"],
@@ -6891,16 +7329,16 @@
         ["Afficher la Transmission (T) — raccourci : T", "Show transmittance (T) — shortcut: T"],
         ["Afficher l'Absorption (A) — raccourci : A", "Show absorption (A) — shortcut: A"],
         ["Absorption calculée : A = 100 - R - T", "Calculated absorption: A = 100 - R - T"],
-        ["Créer un nouveau matériau personnalisé défini par une table (λ, n, k) utilisable comme couche ou comme substrat (backing)",
-         "Create a new custom material defined by a (λ, n, k) table usable as layer or substrate (backing)"],
+        ["Créer un nouveau matériau personnalisé défini par une table (λ, n, k) utilisable comme couche ou comme substrat",
+         "Create a new custom material defined by a (λ, n, k) table usable as layer or substrate"],
         ["Copier ce matériau dans une nouvelle table (λ, n, k) modifiable librement",
          "Copy this material into a new freely editable (λ, n, k) table"],
         ["Créer ou éditer un matériau personnalisé en mode table pour les couches ou le substrat",
          "Create or edit a custom table material for layers or substrate"],
-        ["Créer ou éditer un matériau personnalisé en mode table pour le substrat (backing) ou les couches",
-         "Create or edit a custom table material for substrate (backing) or layers"],
-        ["Appliquer immédiatement ce matériau comme Substrat (Backing) de la simulation",
-         "Apply this material immediately as the substrate (backing) for simulation"],
+        ["Créer ou éditer un matériau personnalisé en mode table pour le substrat ou les couches",
+         "Create or edit a custom table material for substrate or layers"],
+        ["Appliquer immédiatement ce matériau comme Substrat de la simulation",
+         "Apply this material immediately as the substrate for simulation"],
         ["Ajouter immédiatement une couche (1 QWOT) de ce matériau dans l'empilement",
          "Immediately append a (1 QWOT) layer of this material to the stack"],
         ["Supprimer ce matériau personnalisé",
@@ -7059,8 +7497,8 @@
         setTipText('tipSynthesis', "La méthode de l'aiguille insère une couche de 0,1 nm là où le mérite y gagne le plus, puis lance automatiquement BFGS.",
             'The needle method inserts a 0.1 nm layer where it improves the merit most, then runs BFGS automatically.');
         setTipText('tipMcModel',
-            "Modèle d'erreur : chaque couche déposée reçoit une erreur gaussienne indépendante, d'écart-type σ = Δd/2. Toutes les couches sont perturbées : le verrouillage ne concerne que BFGS. Tirages reproductibles (graine figée).",
-            'Error model: every deposited layer receives an independent Gaussian error with standard deviation σ = Δd/2. All layers are perturbed: locking applies to BFGS only. Reproducible draws (fixed seed).');
+            "Modèle d'erreur : chaque couche déposée reçoit une erreur gaussienne indépendante, d'écart-type σ = Δd/2. Toutes les couches de face avant sont perturbées ; le traitement arrière connu reste fixe. Le verrouillage ne concerne que BFGS. Tirages reproductibles (graine figée).",
+            'Error model: every deposited layer receives an independent Gaussian error with standard deviation σ = Δd/2. All front layers are perturbed; the known rear coating stays fixed. Locking applies to BFGS only. Reproducible draws (fixed seed).');
         const mcBadge = document.querySelector('[data-panel="mc"] span[title]');
         if (mcBadge) mcBadge.title = fr
             ? 'Rendement, intervalle de confiance et centiles sur des épaisseurs perturbées'
@@ -7127,8 +7565,8 @@
         if (!document.getElementById('divShortcuts').classList.contains('hidden')) toggleShortcutPanel(true);
         setText('btnNewCustomMat', '+ Nouveau matériau (table)', '+ New material (table)');
         setTitle('btnNewCustomMat',
-            'Créer un nouveau matériau personnalisé défini par une table (λ, n, k) utilisable comme couche ou comme substrat (backing)',
-            'Create a new custom material defined by a (λ, n, k) table usable as layer or substrate (backing)');
+            'Créer un nouveau matériau personnalisé défini par une table (λ, n, k) utilisable comme couche ou comme substrat',
+            'Create a new custom material defined by a (λ, n, k) table usable as layer or substrate');
         setText('btnCloneInspectToCustom', 'Dupliquer en table éditable', 'Duplicate to editable table');
         setTitle('btnCloneInspectToCustom',
             'Copier ce matériau dans une nouvelle table (λ, n, k) modifiable librement',
@@ -7138,12 +7576,12 @@
             'Créer ou éditer un matériau personnalisé en mode table pour les couches ou le substrat',
             'Create or edit a custom table material for layers or substrate');
         setTitle('btnOpenMatFromMedia',
-            'Créer ou éditer un matériau personnalisé en mode table pour le substrat (backing) ou les couches',
-            'Create or edit a custom table material for substrate (backing) or layers');
-        setText('btnUseCustomAsSub', '→ Substrat (Backing)', '→ Substrate (Backing)');
+            'Créer ou éditer un matériau personnalisé en mode table pour le substrat ou les couches',
+            'Create or edit a custom table material for substrate or layers');
+        setText('btnUseCustomAsSub', '→ Substrat', '→ Substrate');
         setTitle('btnUseCustomAsSub',
-            'Appliquer immédiatement ce matériau comme Substrat (Backing) de la simulation',
-            'Apply this material immediately as the substrate (backing) for simulation');
+            'Appliquer immédiatement ce matériau comme Substrat de la simulation',
+            'Apply this material immediately as the substrate for simulation');
         setText('btnAddCustomAsLayer', '→ + Couche', '→ + Layer');
         setTitle('btnAddCustomAsLayer',
             'Ajouter immédiatement une couche (1 QWOT) de ce matériau dans l’empilement',
@@ -7154,8 +7592,18 @@
         setText('btnTogglePasteMat', '📋 Coller / Importer CSV-TXT', '📋 Paste / Import CSV-TXT');
         setText('btnExportMatCsv', 'Exporter CSV', 'Export CSV');
         setText('btnDeleteCustomMat', 'Supprimer', 'Delete');
+        setText('lblMatImportUnit', 'Unité des longueurs d’onde :', 'Wavelength unit:');
+        setText('txtMatImportHelp',
+            'Deux ou trois colonnes : λ, n, k (k optionnel). Décimales françaises acceptées avec tabulations, espaces ou points-virgules. En mode Auto, un en-tête lambda_nm/lambda_um prime ; sinon une plage entièrement ≤ 25 est lue en µm. Toute donnée invalide est refusée sans modifier la table.',
+            'Two or three columns: wavelength, n, k (optional k). Decimal commas are accepted with tabs, spaces or semicolons. Auto mode uses a lambda_nm/lambda_um header first; otherwise a range entirely ≤ 25 is read as µm. Invalid data is rejected without changing the table.');
+        const unitAuto = document.querySelector('#selMatImportUnit option[value="auto"]');
+        if (unitAuto) unitAuto.textContent = currentLang === 'fr' ? 'Auto (en-tête ou plage)' : 'Auto (header or range)';
+        setText('txtMatTableHelp',
+            '1 point = indice constant ; plusieurs points = interpolation PCHIP. Hors de la table, les valeurs de bord sont maintenues. Limites de saisie : 100–5000 nm, 0,01 ≤ n ≤ 20, 0 ≤ k ≤ 30. Le milieu incident doit rester transparent.',
+            '1 point = constant index; multiple points = PCHIP interpolation. Outside the table, endpoint values are held constant. Input limits: 100–5000 nm, 0.01 ≤ n ≤ 20, 0 ≤ k ≤ 30. The incident medium must remain transparent.');
 
         refreshMaterialSelectors(true);
+        renderBacksideEditor();
         renderCustomMatEditor();
         updateCharts();
         updateMaterialInspection();

@@ -34,6 +34,10 @@ MODULES = [
      "BFGS, tirage à graine, loi normale, Wilson, quantiles"),
     ("gardefous",   "node",   "test_gardefous.js",
      "les garde-fous se taisent en usage normal et parlent sur défaut"),
+    ("materiaux",   "node",   "test_materiaux.js",
+     "tables personnelles : imports, commandes, stockage, instantanés et couches opaques"),
+    ("arriere",     "node",   "test_arriere.js",
+     "deux coatings : limites analytiques, moyenne cohérente indépendante et interface FR/EN"),
     ("documents",   "python", "test_documents.py",
      "énoncés FR/EN, balisage, homologie, paquet hors ligne"),
 ]

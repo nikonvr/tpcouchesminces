@@ -462,3 +462,29 @@ Toute modification future doit être appliquée dans cet ordre :
 7. ne diffuser qu’après validation bilingue et numérique.
 
 Une fonctionnalité qui n’est ni enseignée, ni testée, ni documentée ne doit pas rester visible dans l’interface étudiante.
+
+
+### Matériaux et face arrière — mise à jour du 19 octobre 2026
+
+L'accueil propose maintenant les dix exercices. Le choix ne charge aucune
+solution : il configure les outils visibles et affiche une consigne. La
+conception libre reste disponible. Le changement de parcours conserve les
+couches et les réglages déjà saisis.
+
+Les matériaux personnels sont définis par tables λ/n/k, avec validation
+atomique, codes de formule uniques et stockage local. Les imports acceptent
+CSV à guillemets et décimales françaises ; le choix nm/µm est explicite. Les
+noms saisis par l'utilisateur restent ses données, dans les deux langues.
+
+La face arrière connue est un second empilement, fixé en nm, numéroté depuis
+le substrat. Les calculs cohérents avant, avant inversé et arrière fournissent
+leurs R/T en S et P ; les intensités des rebonds dans le substrat sont sommées
+avec le dénominateur 1 − R'avant × Rarrière. Le substrat doit être transparent
+et optiquement incohérent entre les faces. Les couches peuvent absorber. Le
+traitement arrière reste fixe pendant BFGS, l'aiguille et le Monte-Carlo ; les
+instantanés A/B figent aussi ses matériaux, épaisseurs et milieu de sortie.
+
+Recette complémentaire : `tests/test_materiaux.js` (80 contrôles) et
+`tests/test_arriere.js` (28 contrôles). La référence Airy cohérente moyennée
+sur 1024 phases concorde à mieux que 1,1 × 10⁻¹⁴ sur les 96 comparaisons
+R/T des deux faces testées.
