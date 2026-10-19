@@ -241,7 +241,10 @@
                     </div>
                     <!-- Substrat -->
                     <div>
-                        <label class="font-semibold text-slate-700 block mb-1">Substrat (Émergent) :</label>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="font-semibold text-slate-700">Substrat (Émergent) :</label>
+                            <button id="btnOpenMatFromMedia" type="button" class="text-[10px] text-indigo-600 hover:text-indigo-800 font-bold hover:underline flex items-center gap-0.5" title="Créer ou éditer un matériau personnalisé en mode table pour le substrat (backing) ou les couches">+ Table (n,k)</button>
+                        </div>
                         <select id="selSubstrat" title="Support physique sur lequel les couches sont déposées" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-2 py-1.5 focus:ring-2 focus:ring-indigo-500 outline-none font-medium">
                             <option value="BK7" selected>BK7 (verre Schott)</option>
                             <option value="Air">Air (n = 1.00)</option>
@@ -263,7 +266,10 @@
                     <span class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
                         <i data-lucide="layers" class="w-4 h-4 text-indigo-600"></i> 2. Empilement de Couches
                     </span>
-                    <div class="flex items-center gap-1">
+                    <div class="flex items-center gap-1 flex-wrap">
+                        <button id="btnOpenMatFromStack" type="button" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded border border-emerald-300 transition font-medium flex items-center gap-1" title="Créer ou éditer un matériau personnalisé en mode table pour les couches ou le substrat">
+                            <i data-lucide="table" class="w-3.5 h-3.5"></i> + Matériau
+                        </button>
                         <button id="btnCleanStack" class="bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded border border-amber-300 transition font-medium flex items-center gap-1" title="Nettoyer l'empilement : supprimer les couches trop fines et fusionner les couches voisines de même matériau (indispensable après plusieurs cycles d'aiguille)">
                             <i data-lucide="eraser" class="w-3.5 h-3.5"></i> Nettoyer
                         </button>
@@ -809,18 +815,23 @@
 
             <!-- Carte Inférieure : Visualiseur des indices n(λ) et k(λ) des Matériaux -->
             <div data-panel="materials" class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
-                <div class="flex justify-between items-center mb-2 pb-2 border-b border-slate-100">
+                <div class="flex justify-between items-center mb-2 pb-2 border-b border-slate-100 flex-wrap gap-2">
                     <span class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
                         <i data-lucide="database" class="w-4 h-4 text-indigo-600"></i> Base Matériaux & Dispersion $N(\lambda) = n - ik$
                     </span>
-                    <span class="text-[11px] text-slate-500">
-                        Sources : <a href="https://refractiveindex.info" target="_blank" class="text-indigo-600 hover:underline font-medium">refractiveindex.info</a> & Mesures Institut Fresnel
-                    </span>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button id="btnNewCustomMat" type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] px-2.5 py-1 rounded-md font-bold shadow-sm transition flex items-center gap-1" title="Créer un nouveau matériau personnalisé défini par une table (λ, n, k) utilisable comme couche ou comme substrat (backing)">
+                            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> + Nouveau matériau (table)
+                        </button>
+                        <span class="text-[11px] text-slate-500">
+                            Sources : <a href="https://refractiveindex.info" target="_blank" class="text-indigo-600 hover:underline font-medium">refractiveindex.info</a> & Mesures Institut Fresnel
+                        </span>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
                     <!-- Sélecteur de Matériau à examiner -->
-                    <div class="space-y-1">
+                    <div class="space-y-1.5">
                         <label class="font-semibold text-slate-600 block">Examiner un matériau :</label>
                         <select id="selMatInspect" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 font-medium outline-none">
                             <option value="ZnS_fresnel">ZnS (Salle blanche Fresnel)</option>
@@ -835,8 +846,13 @@
                             <option value="Al">Al - Aluminium (Rakic)</option>
                             <option value="Au">Au - Or (Johnson & Christy)</option>
                         </select>
-                        <div class="pt-2 text-[11px] text-slate-500 leading-tight" id="txtMatDescription">
+                        <div class="pt-1 text-[11px] text-slate-500 leading-tight" id="txtMatDescription">
                             ZnS : Matériau à haut indice ($n \approx 2.35$ à 550nm), transparent dans le visible.
+                        </div>
+                        <div class="pt-1 flex flex-wrap gap-1.5">
+                            <button id="btnCloneInspectToCustom" type="button" class="text-[11px] bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded px-2 py-1 font-semibold transition flex items-center gap-1" title="Copier ce matériau dans une nouvelle table (λ, n, k) modifiable librement">
+                                <i data-lucide="copy" class="w-3 h-3"></i> Dupliquer en table éditable
+                            </button>
                         </div>
                     </div>
 
@@ -849,6 +865,105 @@
                             <canvas id="matKChartCanvas"></canvas>
                         </div>
                     </div>
+                </div>
+
+                <!-- Éditeur convivial de Matériaux Personnalisés en Mode Table (λ, n, k) -->
+                <div id="divCustomMatEditor" class="hidden mt-4 pt-3 border-t border-emerald-200 bg-emerald-50/40 rounded-lg p-3 text-xs space-y-2.5">
+                    <div class="flex items-center justify-between flex-wrap gap-2">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="font-bold text-emerald-950 uppercase tracking-wide text-[11px] flex items-center gap-1">
+                                <i data-lucide="table" class="w-3.5 h-3.5 text-emerald-700"></i> Éditeur de Matériau Personnalisé — Mode Table (λ, n, k)
+                            </span>
+                            <div id="divCustomMatChips" class="flex items-center gap-1 flex-wrap"></div>
+                        </div>
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <button id="btnUseCustomAsSub" type="button" class="bg-slate-700 hover:bg-slate-800 text-white text-[11px] px-2 py-1 rounded font-semibold transition" title="Appliquer immédiatement ce matériau comme Substrat (Backing) de la simulation">
+                                → Substrat (Backing)
+                            </button>
+                            <button id="btnAddCustomAsLayer" type="button" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] px-2 py-1 rounded font-semibold transition" title="Ajouter immédiatement une couche (1 QWOT) de ce matériau dans l'empilement">
+                                → + Couche
+                            </button>
+                            <button id="btnDeleteCustomMat" type="button" class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-[11px] px-2 py-1 rounded font-semibold transition" title="Supprimer ce matériau personnalisé">
+                                Supprimer
+                            </button>
+                            <button id="btnCloseCustomMatEditor" type="button" class="text-slate-500 hover:text-slate-800 px-1.5 py-0.5 rounded font-bold text-xs" title="Masquer l'éditeur de table">✕</button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-end">
+                        <div class="sm:col-span-2">
+                            <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">Nom du matériau (affiché dans Couches, Substrat et Superstrat) :</label>
+                            <input type="text" id="inpCustomMatName" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs font-semibold" placeholder="Ex : Mon Substrat Verre / Couche Polymère">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">Code formule (1–6 car.) :</label>
+                            <input type="text" id="inpCustomMatSym" maxlength="6" class="w-full bg-white border border-slate-300 rounded px-2 py-1 text-xs font-mono font-bold uppercase" placeholder="M1" title="Symbole utilisable dans la Formule symbolique (ex : M1 L 2M1)">
+                        </div>
+                    </div>
+
+                    <!-- Barre d'outils conviviale de la table -->
+                    <div class="flex items-center justify-between flex-wrap gap-1.5 pt-1">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <button id="btnAddMatRow" type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] px-2 py-1 rounded font-semibold transition">
+                                + Ligne λ
+                            </button>
+                            <button id="btnSetMatConstant" type="button" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-[11px] px-2 py-1 rounded font-medium transition" title="Réduire la table à 1 seule ligne : l'indice (n, k) sera constant sur toutes les longueurs d'onde">
+                                Indice constant (1 pt)
+                            </button>
+                            <button id="btnGenMatGrid" type="button" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-[11px] px-2 py-1 rounded font-medium transition" title="Générer une grille régulière de 350 à 800 nm (pas de 50 nm) en échantillonnant la courbe actuelle">
+                                Grille 350–800 nm
+                            </button>
+                            <button id="btnTogglePasteMat" type="button" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200 text-[11px] px-2 py-1 rounded font-semibold transition" title="Coller des colonnes depuis Excel, un fichier texte/CSV ou refractiveindex.info">
+                                📋 Coller / Importer CSV-TXT
+                            </button>
+                            <button id="btnExportMatCsv" type="button" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-[11px] px-2 py-1 rounded font-medium transition" title="Exporter la table (λ, n, k) au format CSV">
+                                Exporter CSV
+                            </button>
+                            <input type="file" id="inpImportMatFile" accept=".csv,.txt,.tsv,.dat" class="hidden">
+                        </div>
+                        <span id="txtCustomMatStatus" class="text-[10px] text-emerald-900 font-medium"></span>
+                    </div>
+
+                    <!-- Zone de collage rapide / import CSV-TXT (masquée par défaut) -->
+                    <div id="divPasteMatBox" class="hidden bg-white border border-indigo-200 rounded-lg p-2.5 space-y-2">
+                        <div class="flex items-center justify-between flex-wrap gap-1">
+                            <span class="text-[11px] font-bold text-indigo-900">Coller un tableau (Excel, CSV, TXT, refractiveindex.info) ou importer un fichier :</span>
+                            <div class="flex items-center gap-1.5">
+                                <button id="btnImportMatFile" type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 rounded px-2 py-0.5 text-[11px] font-semibold">
+                                    📂 Choisir un fichier (.csv, .txt)
+                                </button>
+                                <button id="btnCancelPasteMat" type="button" class="text-slate-500 hover:text-slate-800 text-[11px] px-1.5 py-0.5">Fermer</button>
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-slate-600 leading-snug">
+                            Format accepté : 2 ou 3 colonnes par ligne (<strong>λ  n</strong> ou <strong>λ  n  k</strong>), séparées par tabulation, point-virgule, virgule ou espace. Si λ ≤ 25, l'unité est automatiquement reconnue en <strong>µm</strong> et convertie en <strong>nm</strong>.
+                        </p>
+                        <textarea id="txtPasteMatData" rows="4" class="w-full font-mono text-[11px] bg-slate-50 border border-slate-300 rounded p-1.5 outline-none" placeholder="400&#9;1.530&#9;0&#10;550&#9;1.518&#9;0&#10;700&#9;1.513&#9;0"></textarea>
+                        <div class="flex justify-end gap-2">
+                            <button id="btnApplyPastedMat" type="button" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-3 py-1 text-[11px] font-bold">
+                                Remplacer la table par ces points
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Table éditable (λ, n, k) -->
+                    <div class="max-h-56 overflow-y-auto border border-slate-200 rounded-lg bg-white">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-200 bg-slate-50 text-[10px] text-slate-600 uppercase">
+                                    <th class="py-1.5 px-2 w-10 text-center">#</th>
+                                    <th class="py-1.5 px-2">λ (nm)</th>
+                                    <th class="py-1.5 px-2">n (indice réel)</th>
+                                    <th class="py-1.5 px-2">k (extinction ≥ 0)</th>
+                                    <th class="py-1.5 px-2 w-14 text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyCustomMatTable" class="divide-y divide-slate-100 text-xs"></tbody>
+                        </table>
+                    </div>
+                    <p class="text-[10px] text-slate-500 leading-tight">
+                        💡 <strong>Astuce :</strong> 1 seule ligne = indice constant sur tout le spectre ; 2 lignes ou plus = interpolation cubique monotone PCHIP (sans oscillation parasite, garantissant k ≥ 0). Les points de la table sont tracés par des cercles sur les courbes n(λ) et k(λ) ci-dessus.
+                    </p>
                 </div>
             </div>
 
@@ -1408,7 +1523,9 @@
         mcSampleOffset: 0,
         lastQualification: null,
         reviewRecords: [null, null], // Instantanés figés des deux designs comparés (A/B)
-        savedMemories: [] // Pour la superposition de courbes (Q15)
+        savedMemories: [], // Pour la superposition de courbes (Q15)
+        customMaterials: [],
+        activeCustomMatId: null
     };
 
     /* =========================================================================
@@ -2679,6 +2796,9 @@
         const totalOf = rec => rec.stack.reduce((a, l) => a + Number(l.val || 0), 0);
         const scale = Math.max(...withStack.map(totalOf));
         const style = matId => {
+            if (MATERIALS_DB[matId]?.type === 'custom_table') {
+                return ['bg-emerald-600', 'text-white', MATERIALS_DB[matId]?.sym || (currentLang === 'fr' ? 'Perso' : 'Cust')];
+            }
             if (matId.includes('ZnS') || matId === 'TiO2' || matId === 'Si') return ['bg-indigo-600', 'text-white', matId.includes('ZnS') ? 'H' : (matId === 'TiO2' ? 'TiO₂' : 'Si')];
             if (matId === 'Si3N4') return ['bg-blue-500', 'text-white', 'SiN'];
             if (matId === 'Al2O3') return ['bg-cyan-300', 'text-cyan-950', 'Al₂O₃'];
@@ -3012,6 +3132,9 @@
     }
 
     function needleMaterialLabel(matId) {
+        if (MATERIALS_DB[matId]?.type === 'custom_table') {
+            return MATERIALS_DB[matId].name || matId;
+        }
         const labels = {
             ZnS_fresnel: currentLang === 'fr' ? 'ZnS (haut indice)' : 'ZnS (high index)',
             YF3_fresnel: currentLang === 'fr' ? 'YF3 (bas indice)' : 'YF3 (low index)',
@@ -3979,15 +4102,15 @@
             }
         }
 
-        // Expand parenthesized groups like (HL)^3 or (2H 2L)^4
+        // Expand parenthesized groups like (HL)^3 or (2H 2L)^4 or (M1 L)^4
         str = str.replace(/\(([^)]+)\)\^(\d+)/g, (match, group, count) => {
-            const groupTokens = group.match(/[0-9.]*(?:ZNS|YF3|SIO2|BK7|SI|H|L|[A-Za-z])/gi) || [group];
+            const groupTokens = group.match(/[0-9.]*(?:ZNS|YF3|SIO2|BK7|SI|H|L|[A-Za-z0-9_]+)/gi) || [group];
             const spacedGroup = groupTokens.filter(t => t.trim().length > 0).join(' ');
             return Array(parseInt(count)).fill(spacedGroup).join(' ');
         });
 
         // Match all individual layer tokens
-        const rawTokens = str.match(/[0-9.]*(?:ZNS|YF3|SIO2|BK7|SI|H|L|[A-Za-z])/gi) || [];
+        const rawTokens = str.match(/[0-9.]*(?:ZNS|YF3|SIO2|BK7|SI|H|L|[A-Za-z0-9_]+)/gi) || [];
         const tokens = rawTokens.map(t => t.trim()).filter(t => t.length > 0);
         const layers = [];
 
@@ -3999,11 +4122,16 @@
             if (match) {
                 if (match[1]) mult = parseFloat(match[1]);
                 const sym = match[2].toUpperCase();
-                if (sym === 'H' || sym === 'ZNS') matId = "ZnS_fresnel";
+                const customMat = (appState.customMaterials || []).find(m =>
+                    (m.sym && m.sym.toUpperCase() === sym) || (m.id && m.id.toUpperCase() === sym)
+                );
+                if (customMat) matId = customMat.id;
+                else if (sym === 'H' || sym === 'ZNS') matId = "ZnS_fresnel";
                 else if (sym === 'L' || sym === 'YF3') matId = "YF3_fresnel";
                 else if (sym === 'SIO2' || sym === 'SILICE') matId = "FusedSilica";
                 else if (sym === 'SI') matId = "Si";
                 else if (sym === 'BK7') matId = "BK7";
+                else if (MATERIALS_DB[match[2]]) matId = match[2];
                 else matId = "ZnS_fresnel";
             }
 
@@ -4103,7 +4231,14 @@
         const opt = (id, disabled) =>
             `<option value="${id}" ${current === id ? 'selected' : ''} ${disabled && current !== id ? 'disabled' : ''}>`
             + `${MAT_SHORT[id] || id}${disabled ? (fr ? ' — substrat' : ' — substrate') : ''}</option>`;
-        return `<optgroup label="${fr ? 'Matériaux déposables' : 'Depositable materials'}">`
+        const customList = (appState.customMaterials || []).map(m =>
+            `<option value="${m.id}" ${current === m.id ? 'selected' : ''}>★ ${escapeReviewText(m.name || m.id)}${m.sym ? ' (' + m.sym + ')' : ''}</option>`
+        ).join('');
+        const customOptgroup = customList
+            ? `<optgroup label="${fr ? 'Matériaux personnalisés (table)' : 'Custom materials (table)'}">${customList}</optgroup>`
+            : '';
+        return customOptgroup
+             + `<optgroup label="${fr ? 'Matériaux déposables' : 'Depositable materials'}">`
              + DEPOSITABLE.map(id => opt(id, false)).join('')
              + `</optgroup><optgroup label="${fr ? 'Substrats — non déposables' : 'Substrates — not depositable'}">`
              + SUBSTRATE_ONLY.map(id => opt(id, true)).join('')
@@ -4132,7 +4267,10 @@
                 : (fr ? 'Superstrat — milieu d’où vient la lumière' : 'Superstrate — medium the light comes from');
             return d;
         };
-        const shortName = key => ({ Air: 'Air', BK7: 'BK7', Si: 'Si', FusedSilica: 'SiO₂', Custom: fr ? 'perso.' : 'custom' }[key] || key);
+        const shortName = key => {
+            if (MATERIALS_DB[key]?.type === 'custom_table') return MATERIALS_DB[key].sym || (fr ? 'perso.' : 'custom');
+            return ({ Air: 'Air', BK7: 'BK7', Si: 'Si', FusedSilica: 'SiO₂', Custom: fr ? 'perso.' : 'custom' }[key] || key);
+        };
         bar.appendChild(medium(shortName(appState.substrat), 'sub'));
 
         const N_super_design = getMediumIndex(appState.superstrat, appState.designL0, appState.customSuperN).r;
@@ -4145,7 +4283,10 @@
             seg.style.width = `${pct}%`;
             seg.title = `${currentLang === 'fr' ? 'Couche' : 'Layer'} ${idx+1}: ${lay.matId} (${d.toFixed(1)} nm)${lay.locked ? (currentLang === 'fr' ? ' [Verrouillée]' : ' [Locked]') : ''}`;
 
-            if (lay.matId.includes('ZnS') || lay.matId === 'Si' || lay.matId === 'TiO2') {
+            if (MATERIALS_DB[lay.matId]?.type === 'custom_table') {
+                seg.className = `h-full bg-emerald-600 border-r border-emerald-700 flex items-center justify-center text-[9px] text-white font-bold overflow-hidden ${lay.locked ? 'opacity-80' : ''}`;
+                seg.textContent = MATERIALS_DB[lay.matId]?.sym || (fr ? 'Perso' : 'Cust');
+            } else if (lay.matId.includes('ZnS') || lay.matId === 'Si' || lay.matId === 'TiO2') {
                 seg.className = `h-full bg-indigo-600 border-r border-indigo-700 flex items-center justify-center text-[9px] text-white font-bold overflow-hidden ${lay.locked ? 'opacity-80' : ''}`;
                 seg.textContent = lay.matId.includes('ZnS') ? 'H' : lay.matId === 'TiO2' ? 'TiO₂' : 'Si';
             } else if (lay.matId === 'Si3N4') {
@@ -4760,14 +4901,701 @@
         }
     }
 
+    /* =========================================================================
+       MODULE MATÉRIAUX PERSONNALISÉS (MODE TABLE CONVIVIAL λ, n, k)
+       Permet à l'utilisateur de concevoir ses propres matériaux sous forme de
+       table (λ, n, k) et de les utiliser comme couches ou comme substrat (backing).
+       ========================================================================= */
+    const STORAGE_KEY_CUSTOM_MATS = 'simulateur_cm_custom_materials';
+
+    function sanitizeMatTable(table) {
+        if (!Array.isArray(table) || table.length === 0) {
+            return [{ l: 550, n: 1.52, k: 0 }];
+        }
+        const cleaned = table
+            .map(pt => ({
+                l: Math.max(100, Math.min(5000, Math.round(Number(pt.l) * 10) / 10 || 550)),
+                n: Math.max(0.01, Math.min(20, Math.round(Number(pt.n) * 10000) / 10000 || 1.5)),
+                k: Math.max(0, Math.min(30, Math.round(Number(pt.k) * 100000) / 100000 || 0))
+            }))
+            .sort((a, b) => a.l - b.l);
+        const deduped = [];
+        for (const pt of cleaned) {
+            if (deduped.length && Math.abs(deduped[deduped.length - 1].l - pt.l) < 1e-4) {
+                deduped[deduped.length - 1] = pt;
+            } else {
+                deduped.push(pt);
+            }
+        }
+        return deduped.length ? deduped : [{ l: 550, n: 1.52, k: 0 }];
+    }
+
+    function registerCustomMaterialInDb(mat) {
+        if (!mat || !mat.id) return;
+        const safeTable = sanitizeMatTable(mat.table);
+        mat.table = safeTable;
+        MATERIALS_DB[mat.id] = {
+            name: mat.name || mat.id,
+            sym: mat.sym || 'M1',
+            type: 'custom_table',
+            description: mat.description || '',
+            table: safeTable,
+            getN: function(lambda_nm) {
+                return interpolateTable(this.table, lambda_nm);
+            }
+        };
+        MAT_SHORT[mat.id] = mat.sym || mat.name || mat.id;
+    }
+
+    function saveCustomMaterialsToStorage() {
+        try {
+            localStorage.setItem(STORAGE_KEY_CUSTOM_MATS, JSON.stringify(appState.customMaterials));
+        } catch (_err) {
+            // Silencieux si quota ou restriction de stockage
+        }
+    }
+
+    function initCustomMaterials() {
+        let loaded = null;
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY_CUSTOM_MATS);
+            if (raw) loaded = JSON.parse(raw);
+        } catch (_err) {
+            loaded = null;
+        }
+
+        if (Array.isArray(loaded) && loaded.length > 0) {
+            appState.customMaterials = loaded;
+        } else {
+            appState.customMaterials = [
+                {
+                    id: 'custom_mat_1',
+                    name: 'Verre / Backing personnalisé',
+                    sym: 'M1',
+                    type: 'custom_table',
+                    description: 'Table dispersive (λ, n, k) personnalisée, utilisable comme substrat ou couche',
+                    table: [
+                        { l: 400, n: 1.530, k: 0.000 },
+                        { l: 550, n: 1.518, k: 0.000 },
+                        { l: 700, n: 1.513, k: 0.000 }
+                    ]
+                }
+            ];
+            saveCustomMaterialsToStorage();
+        }
+
+        appState.customMaterials.forEach(m => registerCustomMaterialInDb(m));
+        appState.activeCustomMatId = appState.customMaterials[0]?.id || null;
+        refreshMaterialSelectors();
+    }
+
+    function refreshMaterialSelectors(preserve = true) {
+        const fr = currentLang === 'fr';
+
+        // 1. selMatInspect
+        const selInspect = document.getElementById('selMatInspect');
+        if (selInspect) {
+            const curVal = preserve ? selInspect.value : null;
+            const refOptions = [
+                ['ZnS_fresnel', fr ? 'ZnS (Salle blanche Fresnel)' : 'ZnS (Fresnel cleanroom)'],
+                ['YF3_fresnel', fr ? 'YF3 (Salle blanche Fresnel)' : 'YF3 (Fresnel cleanroom)'],
+                ['TiO2', fr ? 'TiO2 (haut indice)' : 'TiO2 (high index)'],
+                ['Si3N4', fr ? 'Si3N4 (indice moyen-haut)' : 'Si3N4 (upper-mid index)'],
+                ['Al2O3', fr ? 'Al2O3 (indice intermédiaire)' : 'Al2O3 (intermediate index)'],
+                ['BK7', fr ? 'BK7 (Schott N-BK7)' : 'BK7 (Schott N-BK7)'],
+                ['FusedSilica', fr ? 'SiO2 (Palik / Malitson)' : 'SiO2 (Palik / Malitson)'],
+                ['Si', fr ? 'Si - Silicium (Palik / Green)' : 'Si - Silicon (Palik / Green)'],
+                ['Ge', fr ? 'Ge - Germanium (Palik)' : 'Ge - Germanium (Palik)'],
+                ['Al', fr ? 'Al - Aluminium (Rakic)' : 'Al - Aluminum (Rakic)'],
+                ['Au', fr ? 'Au - Or (Johnson & Christy)' : 'Au - Gold (Johnson & Christy)']
+            ];
+            let html = `<optgroup label="${fr ? 'Matériaux de référence' : 'Reference materials'}">`
+                     + refOptions.map(([k, lbl]) => `<option value="${k}">${lbl}</option>`).join('')
+                     + `</optgroup>`;
+            if (appState.customMaterials.length > 0) {
+                html += `<optgroup label="${fr ? 'Matériaux personnalisés (table)' : 'Custom materials (table)'}">`
+                      + appState.customMaterials.map(m => `<option value="${m.id}">★ ${escapeReviewText(m.name || m.id)}${m.sym ? ' (' + m.sym + ')' : ''}</option>`).join('')
+                      + `</optgroup>`;
+            }
+            selInspect.innerHTML = html;
+            if (curVal && MATERIALS_DB[curVal]) selInspect.value = curVal;
+        }
+
+        // 2. selSubstrat
+        const selSub = document.getElementById('selSubstrat');
+        if (selSub) {
+            const curVal = preserve ? selSub.value : appState.substrat;
+            let subHtml = `<option value="BK7">BK7 (${fr ? 'verre Schott' : 'Schott glass'})</option>`
+                        + `<option value="Air">Air (n = 1.00)</option>`
+                        + `<option value="FusedSilica">SiO2 / ${fr ? 'Silice fondue' : 'Fused silica'}</option>`
+                        + `<option value="Si">${fr ? 'Silicium' : 'Silicon'} (Si)</option>`
+                        + `<option value="Custom">${fr ? 'Indice personnalisé (constant n, k)' : 'Custom index (constant n, k)'}</option>`;
+            if (appState.customMaterials.length > 0) {
+                subHtml += `<optgroup label="${fr ? 'Matériaux personnalisés (table)' : 'Custom materials (table)'}">`
+                         + appState.customMaterials.map(m => `<option value="${m.id}">★ ${escapeReviewText(m.name || m.id)}${m.sym ? ' (' + m.sym + ')' : ''}</option>`).join('')
+                         + `</optgroup>`;
+            }
+            selSub.innerHTML = subHtml;
+            if (curVal && (MATERIALS_DB[curVal] || curVal === 'Custom')) selSub.value = curVal;
+        }
+
+        // 3. selSuperstrat
+        const selSuper = document.getElementById('selSuperstrat');
+        if (selSuper) {
+            const curVal = preserve ? selSuper.value : appState.superstrat;
+            let superHtml = `<option value="Air">Air (n = 1.00)</option>`
+                          + `<option value="BK7">BK7 (${fr ? 'verre Schott' : 'Schott glass'})</option>`
+                          + `<option value="Custom">${fr ? 'Indice personnalisé (constant n)' : 'Custom index (constant n)'}</option>`;
+            if (appState.customMaterials.length > 0) {
+                superHtml += `<optgroup label="${fr ? 'Matériaux personnalisés (table)' : 'Custom materials (table)'}">`
+                           + appState.customMaterials.map(m => `<option value="${m.id}">★ ${escapeReviewText(m.name || m.id)}${m.sym ? ' (' + m.sym + ')' : ''}</option>`).join('')
+                           + `</optgroup>`;
+            }
+            selSuper.innerHTML = superHtml;
+            if (curVal && (MATERIALS_DB[curVal] || curVal === 'Custom')) selSuper.value = curVal;
+        }
+
+        // 4. selNeedleMaterial
+        const selNeedle = document.getElementById('selNeedleMaterial');
+        if (selNeedle) {
+            const curVal = preserve ? selNeedle.value : 'auto';
+            let needleHtml = `<option value="auto">${fr ? 'Automatique — partenaire technologique' : 'Automatic — process partner'}</option>`
+                           + `<option value="ZnS_fresnel">ZnS (n ≈ 2,35)</option>`
+                           + `<option value="YF3_fresnel">YF3 (n ≈ 1,47)</option>`
+                           + `<option value="TiO2">TiO2 (n ≈ 2,35)</option>`
+                           + `<option value="Si3N4">Si3N4 (n ≈ 2,02)</option>`
+                           + `<option value="Al2O3">Al2O3 (n ≈ 1,65)</option>`
+                           + `<option value="FusedSilica">SiO2 (n ≈ 1,46)</option>`;
+            if (appState.customMaterials.length > 0) {
+                needleHtml += `<optgroup label="${fr ? 'Matériaux personnalisés (table)' : 'Custom materials (table)'}">`
+                            + appState.customMaterials.map(m => `<option value="${m.id}">★ ${escapeReviewText(m.name || m.id)}</option>`).join('')
+                            + `</optgroup>`;
+            }
+            selNeedle.innerHTML = needleHtml;
+            if (curVal) selNeedle.value = curVal;
+        }
+    }
+
+    function getActiveCustomMat() {
+        if (!appState.customMaterials || !appState.customMaterials.length) return null;
+        let found = appState.customMaterials.find(m => m.id === appState.activeCustomMatId);
+        if (!found) {
+            found = appState.customMaterials[0];
+            appState.activeCustomMatId = found.id;
+        }
+        return found;
+    }
+
+    function renderCustomMatEditor(targetId = null) {
+        if (targetId) appState.activeCustomMatId = targetId;
+        const mat = getActiveCustomMat();
+        const editorBox = document.getElementById('divCustomMatEditor');
+        if (!mat || !editorBox) return;
+
+        const fr = currentLang === 'fr';
+
+        // Chips
+        const chipsContainer = document.getElementById('divCustomMatChips');
+        if (chipsContainer) {
+            chipsContainer.innerHTML = appState.customMaterials.map(m => {
+                const isActive = m.id === mat.id;
+                const cls = isActive
+                    ? 'bg-emerald-700 text-white font-bold'
+                    : 'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-medium';
+                return `<button type="button" class="btnSelectCustomChip text-[10px] px-2 py-0.5 rounded transition ${cls}" data-matid="${m.id}">`
+                     + `${escapeReviewText(m.name || m.id)}`
+                     + `</button>`;
+            }).join('');
+        }
+
+        // Name & Symbol
+        const inpName = document.getElementById('inpCustomMatName');
+        const inpSym = document.getElementById('inpCustomMatSym');
+        if (inpName) inpName.value = mat.name || '';
+        if (inpSym) inpSym.value = mat.sym || '';
+
+        // Table Rows
+        const tbody = document.getElementById('tbodyCustomMatTable');
+        if (tbody) {
+            tbody.innerHTML = (mat.table || []).map((pt, idx) => `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="py-1 px-2 text-center text-slate-400 font-bold">${idx + 1}</td>
+                    <td class="py-1 px-2">
+                        <input type="number" step="1" min="100" max="5000" value="${pt.l}" class="inpMatRowL w-24 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono font-semibold" data-idx="${idx}">
+                    </td>
+                    <td class="py-1 px-2">
+                        <input type="number" step="0.001" min="0.01" max="20" value="${pt.n}" class="inpMatRowN w-24 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono font-semibold" data-idx="${idx}">
+                    </td>
+                    <td class="py-1 px-2">
+                        <input type="number" step="0.0001" min="0" max="30" value="${pt.k || 0}" class="inpMatRowK w-24 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono font-semibold" data-idx="${idx}">
+                    </td>
+                    <td class="py-1 px-2 text-right">
+                        <button type="button" class="btnDelMatRow text-red-500 hover:text-red-700 p-1 rounded font-bold" data-idx="${idx}" title="${fr ? 'Supprimer cette ligne' : 'Delete this row'}" ${(mat.table || []).length <= 1 ? 'disabled style="opacity:0.3;cursor:not-allowed;"' : ''}>
+                            ✕
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+            attachCustomMatRowEvents();
+        }
+
+        // Status
+        const statusEl = document.getElementById('txtCustomMatStatus');
+        if (statusEl) {
+            const count = (mat.table || []).length;
+            const N0 = mat.getN ? mat.getN(appState.designL0) : Complex.new(1.5, 0);
+            const N0Str = `n(${appState.designL0} nm) = ${N0.r.toFixed(3)}${N0.i > 0 ? ' - i' + N0.i.toFixed(4) : ''}`;
+            if (count === 1) {
+                statusEl.textContent = fr
+                    ? `1 point → indice constant sur tout le spectre (${N0Str})`
+                    : `1 point → constant index across spectrum (${N0Str})`;
+            } else {
+                statusEl.textContent = fr
+                    ? `${count} points → interpolation cubique PCHIP [${mat.table[0].l}–${mat.table[count - 1].l} nm] (${N0Str})`
+                    : `${count} points → PCHIP cubic interpolation [${mat.table[0].l}–${mat.table[count - 1].l} nm] (${N0Str})`;
+            }
+        }
+    }
+
+    function attachCustomMatRowEvents() {
+        const mat = getActiveCustomMat();
+        if (!mat) return;
+
+        const updateRow = (idx, key, val) => {
+            if (!mat.table[idx]) return;
+            mat.table[idx][key] = val;
+            if (key === 'l') {
+                mat.table = sanitizeMatTable(mat.table);
+            }
+            registerCustomMaterialInDb(mat);
+            saveCustomMaterialsToStorage();
+            renderCustomMatEditor(mat.id);
+            updateMaterialInspection();
+            if (appState.substrat === mat.id || appState.superstrat === mat.id || appState.layers.some(l => l.matId === mat.id)) {
+                renderLayersTable();
+                runFullSimulation();
+            }
+        };
+
+        document.querySelectorAll('.inpMatRowL').forEach(el => {
+            el.onchange = e => {
+                const idx = parseInt(e.target.dataset.idx, 10);
+                updateRow(idx, 'l', parseFloat(e.target.value) || 550);
+            };
+        });
+        document.querySelectorAll('.inpMatRowN').forEach(el => {
+            el.onchange = e => {
+                const idx = parseInt(e.target.dataset.idx, 10);
+                updateRow(idx, 'n', parseFloat(e.target.value) || 1.5);
+            };
+        });
+        document.querySelectorAll('.inpMatRowK').forEach(el => {
+            el.onchange = e => {
+                const idx = parseInt(e.target.dataset.idx, 10);
+                updateRow(idx, 'k', parseFloat(e.target.value) || 0);
+            };
+        });
+        document.querySelectorAll('.btnDelMatRow').forEach(el => {
+            el.onclick = e => {
+                const btn = e.target.closest('.btnDelMatRow');
+                const idx = parseInt(btn.dataset.idx, 10);
+                if (mat.table.length <= 1) return;
+                mat.table.splice(idx, 1);
+                mat.table = sanitizeMatTable(mat.table);
+                registerCustomMaterialInDb(mat);
+                saveCustomMaterialsToStorage();
+                renderCustomMatEditor(mat.id);
+                updateMaterialInspection();
+                if (appState.substrat === mat.id || appState.superstrat === mat.id || appState.layers.some(l => l.matId === mat.id)) {
+                    renderLayersTable();
+                    runFullSimulation();
+                }
+            };
+        });
+    }
+
+    function wireCustomMatEvents() {
+        const openCustomMatEditorFromAnywhere = (targetMatId = null) => {
+            const matPanel = document.querySelector('[data-panel="materials"]');
+            if (matPanel) matPanel.classList.remove('hidden');
+            let mat = targetMatId ? appState.customMaterials.find(m => m.id === targetMatId) : getActiveCustomMat();
+            if (!mat && appState.customMaterials.length === 0) {
+                document.getElementById('btnNewCustomMat')?.click();
+                mat = getActiveCustomMat();
+            }
+            if (mat) {
+                const selInspect = document.getElementById('selMatInspect');
+                if (selInspect) {
+                    selInspect.value = mat.id;
+                    updateMaterialInspection();
+                }
+            }
+            const editor = document.getElementById('divCustomMatEditor');
+            if (editor) {
+                editor.classList.remove('hidden');
+                editor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        };
+
+        document.getElementById('btnOpenMatFromMedia')?.addEventListener('click', () => openCustomMatEditorFromAnywhere());
+        document.getElementById('btnOpenMatFromStack')?.addEventListener('click', () => openCustomMatEditorFromAnywhere());
+
+        document.getElementById('divCustomMatChips')?.addEventListener('click', e => {
+            const btn = e.target.closest('.btnSelectCustomChip');
+            if (!btn) return;
+            const matId = btn.dataset.matid;
+            const selInspect = document.getElementById('selMatInspect');
+            if (selInspect) {
+                selInspect.value = matId;
+                updateMaterialInspection();
+            }
+        });
+
+        document.getElementById('inpCustomMatName')?.addEventListener('input', e => {
+            const mat = getActiveCustomMat();
+            if (!mat) return;
+            mat.name = e.target.value.trim() || 'Matériau';
+            MATERIALS_DB[mat.id].name = mat.name;
+            MAT_SHORT[mat.id] = mat.sym || mat.name;
+            saveCustomMaterialsToStorage();
+            refreshMaterialSelectors(true);
+            renderLayersTable();
+            renderVisualStackBar(0);
+        });
+
+        document.getElementById('inpCustomMatSym')?.addEventListener('input', e => {
+            const mat = getActiveCustomMat();
+            if (!mat) return;
+            const cleanSym = e.target.value.trim().toUpperCase().replace(/[^A-Z0-9_]/g, '');
+            mat.sym = cleanSym || 'M1';
+            MATERIALS_DB[mat.id].sym = mat.sym;
+            MAT_SHORT[mat.id] = mat.sym || mat.name;
+            saveCustomMaterialsToStorage();
+            refreshMaterialSelectors(true);
+            renderLayersTable();
+            renderVisualStackBar(0);
+        });
+
+        document.getElementById('btnNewCustomMat')?.addEventListener('click', () => {
+            const num = appState.customMaterials.length + 1;
+            const newId = `custom_mat_${Date.now()}`;
+            const newMat = {
+                id: newId,
+                name: currentLang === 'fr' ? `Nouveau matériau ${num}` : `New material ${num}`,
+                sym: `M${num}`,
+                type: 'custom_table',
+                description: currentLang === 'fr' ? 'Table de points (λ, n, k) personnalisée' : 'Custom (λ, n, k) table points',
+                table: [
+                    { l: 400, n: 1.620, k: 0.000 },
+                    { l: 550, n: 1.600, k: 0.000 },
+                    { l: 700, n: 1.590, k: 0.000 }
+                ]
+            };
+            appState.customMaterials.push(newMat);
+            registerCustomMaterialInDb(newMat);
+            saveCustomMaterialsToStorage();
+            refreshMaterialSelectors(false);
+            openCustomMatEditorFromAnywhere(newId);
+        });
+
+        document.getElementById('btnCloneInspectToCustom')?.addEventListener('click', () => {
+            const selInspect = document.getElementById('selMatInspect');
+            const srcKey = selInspect?.value;
+            const srcMat = MATERIALS_DB[srcKey];
+            if (!srcMat) return;
+
+            const num = appState.customMaterials.length + 1;
+            const newId = `custom_mat_${Date.now()}`;
+            let newTable = [];
+            if (Array.isArray(srcMat.table) && srcMat.table.length > 0) {
+                newTable = srcMat.table.map(pt => ({ l: pt.l, n: pt.n, k: pt.k || 0 }));
+            } else {
+                for (let l = 350; l <= 850; l += 50) {
+                    const N = srcMat.getN(l);
+                    newTable.push({
+                        l,
+                        n: Math.round(N.r * 10000) / 10000,
+                        k: Math.round(N.i * 100000) / 100000
+                    });
+                }
+            }
+
+            const baseName = srcMat.name || srcKey;
+            const newMat = {
+                id: newId,
+                name: `${baseName} (${currentLang === 'fr' ? 'table' : 'table'})`,
+                sym: `M${num}`,
+                type: 'custom_table',
+                description: `${currentLang === 'fr' ? 'Copie en mode table de' : 'Table copy of'} ${baseName}`,
+                table: sanitizeMatTable(newTable)
+            };
+
+            appState.customMaterials.push(newMat);
+            registerCustomMaterialInDb(newMat);
+            saveCustomMaterialsToStorage();
+            refreshMaterialSelectors(false);
+            openCustomMatEditorFromAnywhere(newId);
+        });
+
+        document.getElementById('btnDeleteCustomMat')?.addEventListener('click', () => {
+            const mat = getActiveCustomMat();
+            if (!mat) return;
+            const fr = currentLang === 'fr';
+            const confirmMsg = fr
+                ? `Supprimer définitivement le matériau personnalisé « ${mat.name} » ?`
+                : `Permanently delete custom material "${mat.name}"?`;
+            if (!confirm(confirmMsg)) return;
+
+            const idx = appState.customMaterials.findIndex(m => m.id === mat.id);
+            if (idx >= 0) appState.customMaterials.splice(idx, 1);
+            delete MATERIALS_DB[mat.id];
+            delete MAT_SHORT[mat.id];
+
+            if (appState.substrat === mat.id) appState.substrat = 'BK7';
+            if (appState.superstrat === mat.id) appState.superstrat = 'Air';
+            appState.layers.forEach(lay => {
+                if (lay.matId === mat.id) lay.matId = 'ZnS_fresnel';
+            });
+
+            saveCustomMaterialsToStorage();
+            refreshMaterialSelectors(false);
+            if (appState.customMaterials.length > 0) {
+                appState.activeCustomMatId = appState.customMaterials[0].id;
+                document.getElementById('selMatInspect').value = appState.activeCustomMatId;
+            } else {
+                appState.activeCustomMatId = null;
+                document.getElementById('selMatInspect').value = 'ZnS_fresnel';
+            }
+            updateMaterialInspection();
+            renderLayersTable();
+            runFullSimulation();
+        });
+
+        document.getElementById('btnAddMatRow')?.addEventListener('click', () => {
+            const mat = getActiveCustomMat();
+            if (!mat) return;
+            if (!mat.table || mat.table.length === 0) {
+                mat.table = [{ l: 550, n: 1.52, k: 0 }];
+            } else if (mat.table.length === 1) {
+                const single = mat.table[0];
+                mat.table = [
+                    { l: Math.max(300, single.l - 100), n: single.n, k: single.k || 0 },
+                    { l: Math.min(1000, single.l + 100), n: single.n, k: single.k || 0 }
+                ];
+            } else {
+                let maxGap = 0, insertL = 550;
+                for (let i = 0; i < mat.table.length - 1; i++) {
+                    const gap = mat.table[i + 1].l - mat.table[i].l;
+                    if (gap > maxGap) {
+                        maxGap = gap;
+                        insertL = Math.round((mat.table[i].l + mat.table[i + 1].l) / 2);
+                    }
+                }
+                const lastL = mat.table[mat.table.length - 1].l;
+                if (lastL < 850 && 850 - lastL > maxGap) {
+                    insertL = Math.min(850, lastL + 50);
+                }
+                const interpolated = mat.getN(insertL);
+                mat.table.push({
+                    l: insertL,
+                    n: Math.round(interpolated.r * 10000) / 10000,
+                    k: Math.round(interpolated.i * 100000) / 100000
+                });
+            }
+            mat.table = sanitizeMatTable(mat.table);
+            registerCustomMaterialInDb(mat);
+            saveCustomMaterialsToStorage();
+            renderCustomMatEditor(mat.id);
+            updateMaterialInspection();
+            if (appState.substrat === mat.id || appState.superstrat === mat.id || appState.layers.some(l => l.matId === mat.id)) {
+                renderLayersTable();
+                runFullSimulation();
+            }
+        });
+
+        document.getElementById('btnSetMatConstant')?.addEventListener('click', () => {
+            const mat = getActiveCustomMat();
+            if (!mat) return;
+            const fr = currentLang === 'fr';
+            if (mat.table.length > 1) {
+                const ok = confirm(fr
+                    ? `Réduire la table à 1 point unique (indice constant sur toutes les longueurs d'onde) ?`
+                    : `Reduce table to a single point (constant index across all wavelengths)?`);
+                if (!ok) return;
+            }
+            const N0 = mat.getN(appState.designL0);
+            mat.table = [{
+                l: appState.designL0,
+                n: Math.round(N0.r * 10000) / 10000,
+                k: Math.round(N0.i * 100000) / 100000
+            }];
+            registerCustomMaterialInDb(mat);
+            saveCustomMaterialsToStorage();
+            renderCustomMatEditor(mat.id);
+            updateMaterialInspection();
+            if (appState.substrat === mat.id || appState.superstrat === mat.id || appState.layers.some(l => l.matId === mat.id)) {
+                renderLayersTable();
+                runFullSimulation();
+            }
+        });
+
+        document.getElementById('btnGenMatGrid')?.addEventListener('click', () => {
+            const mat = getActiveCustomMat();
+            if (!mat) return;
+            const newTable = [];
+            for (let l = 350; l <= 800; l += 50) {
+                const N = mat.getN(l);
+                newTable.push({
+                    l,
+                    n: Math.round(N.r * 10000) / 10000,
+                    k: Math.round(N.i * 100000) / 100000
+                });
+            }
+            mat.table = sanitizeMatTable(newTable);
+            registerCustomMaterialInDb(mat);
+            saveCustomMaterialsToStorage();
+            renderCustomMatEditor(mat.id);
+            updateMaterialInspection();
+            if (appState.substrat === mat.id || appState.superstrat === mat.id || appState.layers.some(l => l.matId === mat.id)) {
+                renderLayersTable();
+                runFullSimulation();
+            }
+        });
+
+        document.getElementById('btnTogglePasteMat')?.addEventListener('click', () => {
+            document.getElementById('divPasteMatBox')?.classList.toggle('hidden');
+        });
+        document.getElementById('btnCancelPasteMat')?.addEventListener('click', () => {
+            document.getElementById('divPasteMatBox')?.classList.add('hidden');
+        });
+
+        document.getElementById('btnApplyPastedMat')?.addEventListener('click', () => {
+            const mat = getActiveCustomMat();
+            if (!mat) return;
+            const fr = currentLang === 'fr';
+            const raw = document.getElementById('txtPasteMatData')?.value || '';
+            const lines = raw.split(/\r?\n/);
+            const parsed = [];
+
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) continue;
+                // Découpe par séparateurs : tabulation, point-virgule, virgule, espaces
+                const parts = trimmed.split(/[\t;, ]+/).map(p => p.trim()).filter(Boolean);
+                if (parts.length < 2) continue;
+                let l = parseFloat(parts[0].replace(',', '.'));
+                let n = parseFloat(parts[1].replace(',', '.'));
+                let k = parts[2] ? parseFloat(parts[2].replace(',', '.')) : 0;
+                if (!Number.isFinite(l) || !Number.isFinite(n)) continue;
+                // Détection automatique micromètres -> nanomètres si lambda <= 25 (ex : 0.55 µm -> 550 nm)
+                if (l <= 25) l = l * 1000;
+                parsed.push({ l, n, k: Number.isFinite(k) ? k : 0 });
+            }
+
+            if (parsed.length === 0) {
+                alert(fr
+                    ? 'Aucun point valide trouvé dans le texte collé. Vérifiez le format (au moins 2 colonnes numériques : λ et n).'
+                    : 'No valid points found in pasted text. Check the format (at least 2 numeric columns: λ and n).');
+                return;
+            }
+
+            mat.table = sanitizeMatTable(parsed);
+            registerCustomMaterialInDb(mat);
+            saveCustomMaterialsToStorage();
+            renderCustomMatEditor(mat.id);
+            updateMaterialInspection();
+            document.getElementById('divPasteMatBox')?.classList.add('hidden');
+            if (appState.substrat === mat.id || appState.superstrat === mat.id || appState.layers.some(l => l.matId === mat.id)) {
+                renderLayersTable();
+                runFullSimulation();
+            }
+        });
+
+        document.getElementById('btnImportMatFile')?.addEventListener('click', () => {
+            document.getElementById('inpImportMatFile')?.click();
+        });
+        document.getElementById('inpImportMatFile')?.addEventListener('change', e => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const text = ev.target.result;
+                const textarea = document.getElementById('txtPasteMatData');
+                if (textarea) textarea.value = text;
+                document.getElementById('btnApplyPastedMat')?.click();
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        });
+
+        document.getElementById('btnExportMatCsv')?.addEventListener('click', () => {
+            const mat = getActiveCustomMat();
+            if (!mat) return;
+            let csv = 'lambda_nm,n,k\n';
+            (mat.table || []).forEach(pt => {
+                csv += `${pt.l},${pt.n},${pt.k || 0}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `materiau_${mat.sym || mat.id}.csv`;
+            link.click();
+        });
+
+        document.getElementById('btnUseCustomAsSub')?.addEventListener('click', () => {
+            const mat = getActiveCustomMat();
+            if (!mat) return;
+            appState.substrat = mat.id;
+            const selSub = document.getElementById('selSubstrat');
+            if (selSub) selSub.value = mat.id;
+            document.getElementById('divCustomSub')?.classList.add('hidden');
+            renderLayersTable();
+            runFullSimulation();
+            const status = document.getElementById('txtCustomMatStatus');
+            if (status) {
+                const fr = currentLang === 'fr';
+                status.textContent = fr
+                    ? `✓ « ${mat.name} » est maintenant le substrat actif !`
+                    : `✓ "${mat.name}" is now the active substrate!`;
+                setTimeout(() => { if (status.textContent.startsWith('✓')) renderCustomMatEditor(mat.id); }, 2500);
+            }
+        });
+
+        document.getElementById('btnAddCustomAsLayer')?.addEventListener('click', () => {
+            const mat = getActiveCustomMat();
+            if (!mat) return;
+            if (!confirmFresnelChange('add', appState.layers.length + 1)) return;
+            appState.layers.push({ matId: mat.id, unit: 'QWOT', val: 1.0, locked: false });
+            applyOptimizationScope({ render: false, alertOnError: false });
+            renderLayersTable();
+            runFullSimulation();
+        });
+
+        document.getElementById('btnCloseCustomMatEditor')?.addEventListener('click', () => {
+            document.getElementById('divCustomMatEditor')?.classList.add('hidden');
+        });
+    }
+
     function updateMaterialInspection() {
         const matKey = document.getElementById('selMatInspect').value;
         const mat = MATERIALS_DB[matKey];
         if (!mat || !matChart) return;
 
-        document.getElementById('txtMatDescription').textContent = currentLang === 'en'
-            ? (MATERIAL_DESCRIPTION_EN[matKey] || mat.description || "")
-            : (mat.description || "");
+        const isCustom = mat.type === 'custom_table';
+        if (isCustom) {
+            appState.activeCustomMatId = matKey;
+            renderCustomMatEditor(matKey);
+            document.getElementById('divCustomMatEditor')?.classList.remove('hidden');
+            const ptCount = (mat.table || []).length;
+            document.getElementById('txtMatDescription').textContent = currentLang === 'en'
+                ? `Custom table material "${mat.name}" (${ptCount} point${ptCount > 1 ? 's' : ''}, symbol: ${mat.sym || '-'}). Fully editable below.`
+                : `Matériau personnalisé table « ${mat.name} » (${ptCount} point${ptCount > 1 ? 's' : ''}, code : ${mat.sym || '-'}). Modifiable ci-dessous.`;
+        } else {
+            document.getElementById('divCustomMatEditor')?.classList.add('hidden');
+            document.getElementById('txtMatDescription').textContent = currentLang === 'en'
+                ? (MATERIAL_DESCRIPTION_EN[matKey] || mat.description || "")
+                : (mat.description || "");
+        }
 
         const xData = [];
         const nData = [];
@@ -4780,28 +5608,49 @@
             kData.push(N.i);
         }
 
-        // Deux graphiques distincts : n et k n'ont ni la même échelle ni le même
-        // ordre de grandeur. Les superposer sur un double axe écrase toujours l'un
-        // des deux et laisse croire à des variations qui n'existent pas.
-        matChart.data.datasets = [{
-            label: currentLang === 'fr' ? 'n (indice de réfraction)' : 'n (refractive index)',
+        const nDatasets = [{
+            label: currentLang === 'fr' ? 'n (interpolation)' : 'n (interpolation)',
             data: xData.map((x, i) => ({ x: x, y: nData[i] })),
             borderColor: '#4f46e5', backgroundColor: 'rgba(79,70,229,.08)',
             borderWidth: 2.2, pointRadius: 0, fill: true
         }];
+
+        if (Array.isArray(mat.table) && mat.table.length > 0) {
+            nDatasets.push({
+                label: currentLang === 'fr' ? 'Points table (n)' : 'Table points (n)',
+                data: mat.table.map(pt => ({ x: pt.l, y: pt.n })),
+                borderColor: '#312e81',
+                backgroundColor: '#4338ca',
+                pointRadius: 4.5,
+                pointHoverRadius: 6.5,
+                showLine: false,
+                fill: false
+            });
+        }
+        matChart.data.datasets = nDatasets;
         matChart.update();
 
         if (matKChart) {
-            const kmax = Math.max(...kData);
-            matKChart.data.datasets = [{
-                label: currentLang === 'fr' ? "k (coefficient d'extinction)" : 'k (extinction coefficient)',
+            const kmax = Math.max(...kData, ...(mat.table ? mat.table.map(pt => pt.k || 0) : []));
+            const kDatasets = [{
+                label: currentLang === 'fr' ? "k (interpolation)" : 'k (interpolation)',
                 data: xData.map((x, i) => ({ x: x, y: kData[i] })),
                 borderColor: '#dc2626', backgroundColor: 'rgba(220,38,38,.08)',
                 borderWidth: 2.2, pointRadius: 0, fill: true
             }];
-            // Un matériau transparent a k identiquement nul : sans échelle imposée,
-            // Chart.js afficherait un axe arbitraire et donnerait l'illusion d'une
-            // structure. On force alors une plage lisible et on le dit.
+            if (Array.isArray(mat.table) && mat.table.length > 0) {
+                kDatasets.push({
+                    label: currentLang === 'fr' ? 'Points table (k)' : 'Table points (k)',
+                    data: mat.table.map(pt => ({ x: pt.l, y: pt.k || 0 })),
+                    borderColor: '#7f1d1d',
+                    backgroundColor: '#dc2626',
+                    pointRadius: 4.5,
+                    pointHoverRadius: 6.5,
+                    showLine: false,
+                    fill: false
+                });
+            }
+            matKChart.data.datasets = kDatasets;
             matKChart.options.scales.y.min = 0;
             matKChart.options.scales.y.max = kmax > 1e-6 ? undefined : 1;
             matKChart.options.scales.y.title.text = kmax > 1e-6
@@ -5733,9 +6582,11 @@
         initInfoTips();
         autocontroleDemarrage();
         lucide.createIcons();
+        initCustomMaterials();
         initCharts();
         setupMainChartNavigation();
         setupEventListeners();
+        wireCustomMatEvents();
         wireCustomTargetEditor();
         wireBandAnalyzer();
         wireTargetButtons();
@@ -5935,6 +6786,30 @@
         ["Moyenne", "Average"],
         ["Supprimer les couches sous", "Remove layers thinner than"],
         ["Appliquer", "Apply"],
+        ["+ Nouveau matériau (table)", "+ New material (table)"],
+        ["Dupliquer en table éditable", "Duplicate to editable table"],
+        ["+ Matériau", "+ Material"],
+        ["+ Table (n,k)", "+ (n,k) Table"],
+        ["Éditeur de Matériau Personnalisé — Mode Table (λ, n, k)", "Custom Material Editor — Table Mode (λ, n, k)"],
+        ["Nom du matériau (affiché dans Couches, Substrat et Superstrat) :", "Material name (shown in Layers, Substrate and Superstrate):"],
+        ["Code formule (1–6 car.) :", "Formula code (1–6 chars):"],
+        ["+ Ligne λ", "+ λ Row"],
+        ["Indice constant (1 pt)", "Constant index (1 pt)"],
+        ["Grille 350–800 nm", "Grid 350–800 nm"],
+        ["📋 Coller / Importer CSV-TXT", "📋 Paste / Import CSV-TXT"],
+        ["Exporter CSV", "Export CSV"],
+        ["Coller un tableau (Excel, CSV, TXT, refractiveindex.info) ou importer un fichier :", "Paste a table (Excel, CSV, TXT, refractiveindex.info) or import a file:"],
+        ["📂 Choisir un fichier (.csv, .txt)", "📂 Choose a file (.csv, .txt)"],
+        ["Remplacer la table par ces points", "Replace table with these points"],
+        ["λ (nm)", "λ (nm)"],
+        ["n (indice réel)", "n (real index)"],
+        ["k (extinction ≥ 0)", "k (extinction ≥ 0)"],
+        ["Matériaux de référence", "Reference materials"],
+        ["Matériaux personnalisés (table)", "Custom materials (table)"],
+        ["Indice personnalisé (constant n, k)", "Custom index (constant n, k)"],
+        ["Indice personnalisé (constant n)", "Custom index (constant n)"],
+        ["→ Substrat (Backing)", "→ Substrate (Backing)"],
+        ["→ + Couche", "→ + Layer"]
     ];
 
     const UI_ATTRIBUTE_PAIRS = [
@@ -6015,7 +6890,35 @@
         ["Afficher la Réflectivité (R) — raccourci : R", "Show reflectance (R) — shortcut: R"],
         ["Afficher la Transmission (T) — raccourci : T", "Show transmittance (T) — shortcut: T"],
         ["Afficher l'Absorption (A) — raccourci : A", "Show absorption (A) — shortcut: A"],
-        ["Absorption calculée : A = 100 - R - T", "Calculated absorption: A = 100 - R - T"]
+        ["Absorption calculée : A = 100 - R - T", "Calculated absorption: A = 100 - R - T"],
+        ["Créer un nouveau matériau personnalisé défini par une table (λ, n, k) utilisable comme couche ou comme substrat (backing)",
+         "Create a new custom material defined by a (λ, n, k) table usable as layer or substrate (backing)"],
+        ["Copier ce matériau dans une nouvelle table (λ, n, k) modifiable librement",
+         "Copy this material into a new freely editable (λ, n, k) table"],
+        ["Créer ou éditer un matériau personnalisé en mode table pour les couches ou le substrat",
+         "Create or edit a custom table material for layers or substrate"],
+        ["Créer ou éditer un matériau personnalisé en mode table pour le substrat (backing) ou les couches",
+         "Create or edit a custom table material for substrate (backing) or layers"],
+        ["Appliquer immédiatement ce matériau comme Substrat (Backing) de la simulation",
+         "Apply this material immediately as the substrate (backing) for simulation"],
+        ["Ajouter immédiatement une couche (1 QWOT) de ce matériau dans l'empilement",
+         "Immediately append a (1 QWOT) layer of this material to the stack"],
+        ["Supprimer ce matériau personnalisé",
+         "Delete this custom material"],
+        ["Masquer l'éditeur de table",
+         "Hide the table editor"],
+        ["Ex : Mon Substrat Verre / Couche Polymère",
+         "e.g. My Glass Substrate / Polymer Layer"],
+        ["Symbole utilisable dans la Formule symbolique (ex : M1 L 2M1)",
+         "Symbol usable in Symbolic Formula (e.g. M1 L 2M1)"],
+        ["Réduire la table à 1 seule ligne : l'indice (n, k) sera constant sur toutes les longueurs d'onde",
+         "Reduce table to a single row: (n, k) index will be constant across all wavelengths"],
+        ["Générer une grille régulière de 350 à 800 nm (pas de 50 nm) en échantillonnant la courbe actuelle",
+         "Generate a regular grid from 350 to 800 nm (50 nm step) by sampling the current curve"],
+        ["Coller des colonnes depuis Excel, un fichier texte/CSV ou refractiveindex.info",
+         "Paste columns from Excel, a text/CSV file, or refractiveindex.info"],
+        ["Exporter la table (λ, n, k) au format CSV",
+         "Export (λ, n, k) table as CSV"]
     ];
 
     const HELP_COPY = {
@@ -6222,6 +7125,38 @@
         updateAcceptanceUI();
         refreshChartCsvTooltips();
         if (!document.getElementById('divShortcuts').classList.contains('hidden')) toggleShortcutPanel(true);
+        setText('btnNewCustomMat', '+ Nouveau matériau (table)', '+ New material (table)');
+        setTitle('btnNewCustomMat',
+            'Créer un nouveau matériau personnalisé défini par une table (λ, n, k) utilisable comme couche ou comme substrat (backing)',
+            'Create a new custom material defined by a (λ, n, k) table usable as layer or substrate (backing)');
+        setText('btnCloneInspectToCustom', 'Dupliquer en table éditable', 'Duplicate to editable table');
+        setTitle('btnCloneInspectToCustom',
+            'Copier ce matériau dans une nouvelle table (λ, n, k) modifiable librement',
+            'Copy this material into a new freely editable (λ, n, k) table');
+        setText('btnOpenMatFromStack', '+ Matériau', '+ Material');
+        setTitle('btnOpenMatFromStack',
+            'Créer ou éditer un matériau personnalisé en mode table pour les couches ou le substrat',
+            'Create or edit a custom table material for layers or substrate');
+        setTitle('btnOpenMatFromMedia',
+            'Créer ou éditer un matériau personnalisé en mode table pour le substrat (backing) ou les couches',
+            'Create or edit a custom table material for substrate (backing) or layers');
+        setText('btnUseCustomAsSub', '→ Substrat (Backing)', '→ Substrate (Backing)');
+        setTitle('btnUseCustomAsSub',
+            'Appliquer immédiatement ce matériau comme Substrat (Backing) de la simulation',
+            'Apply this material immediately as the substrate (backing) for simulation');
+        setText('btnAddCustomAsLayer', '→ + Couche', '→ + Layer');
+        setTitle('btnAddCustomAsLayer',
+            'Ajouter immédiatement une couche (1 QWOT) de ce matériau dans l’empilement',
+            'Immediately append a (1 QWOT) layer of this material to the stack');
+        setText('btnAddMatRow', '+ Ligne λ', '+ λ Row');
+        setText('btnSetMatConstant', 'Indice constant (1 pt)', 'Constant index (1 pt)');
+        setText('btnGenMatGrid', 'Grille 350–800 nm', 'Grid 350–800 nm');
+        setText('btnTogglePasteMat', '📋 Coller / Importer CSV-TXT', '📋 Paste / Import CSV-TXT');
+        setText('btnExportMatCsv', 'Exporter CSV', 'Export CSV');
+        setText('btnDeleteCustomMat', 'Supprimer', 'Delete');
+
+        refreshMaterialSelectors(true);
+        renderCustomMatEditor();
         updateCharts();
         updateMaterialInspection();
         // Diagnostic π(z) : re-rédigé, pas recalculé (aucun effet sur les verrous).
