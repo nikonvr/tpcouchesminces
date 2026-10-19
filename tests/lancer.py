@@ -38,6 +38,8 @@ MODULES = [
      "tables personnelles : imports, commandes, stockage, instantanés et couches opaques"),
     ("arriere",     "node",   "test_arriere.js",
      "deux coatings : limites analytiques, moyenne cohérente indépendante et interface FR/EN"),
+    ("interactions", "node",  "test_interactions.js",
+     "enchaînements : résultats périmés, imports de cible, saisies, sauvegarde, infobulles"),
     ("documents",   "python", "test_documents.py",
      "énoncés FR/EN, balisage, homologie, paquet hors ligne"),
 ]

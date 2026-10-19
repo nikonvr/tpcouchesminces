@@ -183,7 +183,7 @@
                 </button>
                 </div>
                 <button id="btnFreeDesign" title="Définir votre propre cahier des charges spectral et optimiser dessus — raccourci : D" class="flex items-center gap-1 bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-2.5 py-1.5 rounded-lg border border-fuchsia-400 transition font-semibold shadow-sm">
-                    <i data-lucide="crosshair" class="w-3.5 h-3.5"></i> <span id="lblFreeDesign">Conception libre</span>
+                    <i data-lucide="crosshair" class="w-3.5 h-3.5"></i> <span id="lblFreeDesign">Ma cible</span>
                 </button>
                 <button id="btnShortcuts" title="Raccourcis clavier (touche ?)" class="hidden sm:flex items-center gap-1 bg-indigo-800 hover:bg-indigo-700 text-indigo-100 px-2 py-1.5 rounded-lg border border-indigo-600 transition font-mono font-bold">
                     ?
@@ -203,6 +203,19 @@
             <div id="shortcutList"></div>
         </div>
     </header>
+
+    <!-- Sauvegarde automatique du travail -->
+    <div id="projectBar" class="max-w-7xl mx-auto px-4 pt-2 w-full">
+        <div class="flex items-center flex-wrap gap-2 text-[11px] text-slate-600 bg-white border border-slate-200 rounded-lg px-3 py-1.5">
+            <span id="txtProjectStatus" class="flex-grow">💾 Votre travail est enregistré automatiquement dans ce navigateur.</span>
+            <button id="btnProjectExport" type="button" class="bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded px-2 py-0.5 font-semibold text-slate-700" title="Télécharger tout votre travail (couches, milieux, face arrière, cible, bandes, exercice) dans un fichier .json, pour le rendre ou le reprendre sur un autre ordinateur">⬇ Exporter mon travail</button>
+            <button id="btnProjectImport" type="button" class="bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded px-2 py-0.5 font-semibold text-slate-700" title="Recharger un fichier de travail exporté auparavant. Votre travail actuel n'est remplacé que si le fichier est entièrement valide">⬆ Importer</button>
+            <button id="btnProjectReset" type="button" class="bg-white hover:bg-rose-50 border border-rose-300 rounded px-2 py-0.5 font-semibold text-rose-700" title="Vider l'empilement et revenir aux réglages de départ. Vos matériaux personnels sont conservés">↺ Repartir de zéro</button>
+        </div>
+    </div>
+
+    <!-- Guide de démarrage du mode libre -->
+    <div id="freeGuide" class="hidden max-w-7xl mx-auto px-4 pt-3 w-full"></div>
 
     <!-- Corps Principal de l'Application -->
     <div id="exerciseBanner" class="hidden max-w-7xl mx-auto px-4 pt-4 w-full">
@@ -346,6 +359,7 @@
                     <div id="emptyLayersMsg" class="py-6 text-center text-slate-400 text-xs italic">
                         Aucune couche déposée (interface nue). Cliquez sur "+ Couche" ou saisissez une formule symbolique.
                     </div>
+                    <p id="txtQwotWarning" class="hidden mx-2 my-1 text-[10px] font-bold text-amber-900 bg-amber-50 border border-amber-300 rounded px-1.5 py-1 leading-tight"></p>
                 </div>
 
                 <!-- Aperçu Visuel des Couches (Profil Géométrique) -->
@@ -731,7 +745,7 @@
                         <span class="flex items-center gap-1"><span id="lblBandAnalyzer">Analyseur de bandes spectrales</span><span id="tipBandNote" class="tip" tabindex="0" role="button" data-tip="Instrument de mesure uniquement : choisissez R, T ou A et relevez sa moyenne sur chaque bande. Les grandeurs dérivées — facteur de réjection, contraste, rapport de bandes — sont à calculer séparément. Ces réglages n'agissent ni sur l'optimiseur ni sur le Monte-Carlo." aria-label="Instrument de mesure uniquement : choisissez R, T ou A et relevez sa moyenne sur chaque bande. Les grandeurs dérivées — facteur de réjection, contraste, rapport de bandes — sont à calculer séparément. Ces réglages n'agissent ni sur l'optimiseur ni sur le Monte-Carlo.">i</span></span>
                         <div class="flex gap-1">
                             <button id="btnAddBand" class="text-[9px] bg-indigo-600 hover:bg-indigo-700 text-white rounded px-1.5 py-0.5 font-bold" title="Ajouter une bande de mesure">+ Bande</button>
-                            <button id="btnResetQrBands" class="text-[9px] text-indigo-600 hover:underline font-bold" title="Rétablir les bandes de référence du TP (550nm)">Défaut TP</button>
+                            <button id="btnResetQrBands" class="text-[9px] text-indigo-600 hover:underline font-bold" title="Rétablir les trois bandes de mesure de référence (460–500, 535–565, 620–680 nm)">Bandes par défaut</button>
                             <button id="btnExportBands" class="text-[9px] text-indigo-600 hover:underline font-bold" title="Exporter le tableau des moyennes en CSV">CSV</button>
                         </div>
                     </div>
@@ -783,7 +797,7 @@
                         <button id="btnResetChartView" class="px-2 py-1 rounded font-semibold bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 transition flex items-center gap-1" title="Rétablir les échelles initiales du graphique">
                             <i data-lucide="scan" class="w-3 h-3"></i><span id="lblResetChartView">Vue initiale</span>
                         </button>
-                        <span id="tipChartHelp" class="tip" tabindex="0" role="button" data-tip="Molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · clic droit (appui long sur mobile) : exporter les courbes en CSV." aria-label="Molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · clic droit (appui long sur mobile) : exporter les courbes en CSV.">i</span>
+                        <span id="tipChartHelp" class="tip" tabindex="0" role="button" data-tip="Ctrl + molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · « Vue initiale » : revenir au cadrage de départ · clic droit (appui long sur mobile) : exporter les courbes en CSV." aria-label="Ctrl + molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · « Vue initiale » : revenir au cadrage de départ · clic droit (appui long sur mobile) : exporter les courbes en CSV.">i</span>
                     </div>
                 </div>
 
@@ -1563,9 +1577,26 @@
 
         const sinInc = nSuperDesign * Math.sin(incDesignDeg * Math.PI / 180.0);
         const cosSq = 1.0 - (sinInc / nReal) * (sinInc / nReal);
+        // Mode évanescent à l'incidence de conception : aucun quart d'onde
+        // propagatif n'existe. La convention appliquée (incidence normale) est
+        // annoncée dans le tableau des couches (qwotEvanescentLayers).
         const cosVal = cosSq > 0 ? Math.sqrt(cosSq) : 1.0;
 
         return (layer.val * lambda0) / (4.0 * nReal * cosVal);
+    }
+
+    /* Couches en QWOT dont l'onde est évanescente à l'incidence de conception :
+       leur épaisseur est convertie à incidence normale, ce qu'il faut dire. */
+    function qwotEvanescentLayers(state = appState) {
+        const nSup = getMediumIndex(state.superstrat, state.designL0, state.customSuperN).r;
+        const sinInc = nSup * Math.sin(state.designIncDeg * Math.PI / 180.0);
+        return state.layers
+            .map((l, i) => {
+                if (l.unit === 'nm') return null;
+                const nReal = Math.max(0.01, getMediumIndex(l.matId, state.designL0, 1.5, 0).r);
+                return 1.0 - (sinInc / nReal) ** 2 > 0 ? null : i + 1;
+            })
+            .filter(Boolean);
     }
 
     function computeTMMPoint(lambda_nm, thetaIncDeg, state, thicknessOverrides = null) {
@@ -1797,12 +1828,10 @@
 
     function runFullSimulation() {
         updateBacksideAvailability();
-        // Toute modification du design ou du domaine d'analyse invalide une qualification précédente.
-        interrompreMonteCarlo();
-        appState.monteCarloRuns = [];
-        appState.monteCarloSamples = [];
-        appState.lastQualification = null;
-        renderDesignReview();
+        // Toute modification du design ou du domaine d'analyse invalide une
+        // qualification et un diagnostic d'aiguille précédents.
+        invalidateDerivedResults('le composant ou le domaine de calcul a changé.',
+            'the design or the computation range changed.');
         const res = {
             x: [],
             R_avg: [], Rs: [], Rp: [],
@@ -1878,11 +1907,29 @@
        précisément le travail demandé à l'étudiant (Q23). Les bandes de mesure
        n'ont aucun effet sur l'optimiseur ni sur le Monte-Carlo.
        ================================================================== */
+    /* Grilles spectrales : bornes et budget communs à tous les calculs.
+       On itère avec un compteur ENTIER : pour de très grandes valeurs, l += pas
+       peut ne plus faire progresser l en virgule flottante, et la boucle ne
+       finirait jamais. Au-delà du budget, la grille est refusée (liste vide) ;
+       l'appelant affiche alors la raison au lieu de geler la page. */
+    const GRID_LIMITS = Object.freeze({ lMin: 200, lMax: 2500, maxPoints: 20000, maxSegments: 50 });
+    function gridCount(lo, hi, step) {
+        if (![lo, hi, step].every(Number.isFinite) || step <= 0 || hi < lo) return 0;
+        return Math.floor((hi - lo) / step + 1e-9) + 1;
+    }
+    function gridPoints(lo, hi, step) {
+        const n = gridCount(lo, hi, step);
+        if (n === 0 || n > GRID_LIMITS.maxPoints) return [];
+        const out = new Array(n);
+        for (let k = 0; k < n; k++) out[k] = lo + k * step;
+        return out;
+    }
+
     function bandAverage(b, thicknesses, stackOverride = null) {
         const step = Math.max(0.05, Number(b.step) || 0.5);
         if (!(b.lmax > b.lmin)) return NaN;
         let sum = 0, n = 0;
-        for (let l = b.lmin; l <= b.lmax + 1e-9; l += step) {
+        for (const l of gridPoints(b.lmin, b.lmax, step)) {
             const pt = stackOverride
                 ? computeTMMPointCustom(l, appState.incSpecDeg, appState.superstrat, appState.substrat, stackOverride)
                 : computeTMMPoint(l, appState.incSpecDeg, appState, thicknesses);
@@ -1899,13 +1946,13 @@
         const rows = appState.bands.map((b, i) => {
             const avg = bandAverage(b, null);
             return `<tr class="border-b border-slate-100">
-              <td><input data-bd="lmin" data-i="${i}" type="number" step="1" value="${b.lmin}" class="w-12 border border-slate-300 rounded px-0.5 py-0.5 font-mono"></td>
-              <td><input data-bd="lmax" data-i="${i}" type="number" step="1" value="${b.lmax}" class="w-12 border border-slate-300 rounded px-0.5 py-0.5 font-mono"></td>
-              <td><input data-bd="step" data-i="${i}" type="number" step="0.1" min="0.05" value="${b.step}" class="w-11 border border-slate-300 rounded px-0.5 py-0.5 font-mono"></td>
+              <td><input data-bd="lmin" data-i="${i}" type="number" step="1" value="${escapeReviewText(b.lmin)}" class="w-12 border border-slate-300 rounded px-0.5 py-0.5 font-mono"></td>
+              <td><input data-bd="lmax" data-i="${i}" type="number" step="1" value="${escapeReviewText(b.lmax)}" class="w-12 border border-slate-300 rounded px-0.5 py-0.5 font-mono"></td>
+              <td><input data-bd="step" data-i="${i}" type="number" step="0.1" min="0.05" value="${escapeReviewText(b.step)}" class="w-11 border border-slate-300 rounded px-0.5 py-0.5 font-mono"></td>
               <td><select data-bd="qty" data-i="${i}" class="border border-slate-300 rounded px-0.5 py-0.5">
                     ${['T', 'R', 'A'].map(q => `<option value="${q}" ${b.qty === q ? 'selected' : ''}>${q}</option>`).join('')}
                   </select></td>
-              <td class="text-right font-bold text-slate-800">${Number.isFinite(avg) ? avg.toFixed(3) + ' %' : '—'}</td>
+              <td class="text-right font-bold text-slate-800" title="${Number.isFinite(avg) ? '' : (fr ? 'Bande invalide : λmax doit dépasser λmin, pas ≥ 0,05 nm, au plus 20 000 points.' : 'Invalid band: λmax must exceed λmin, step ≥ 0.05 nm, at most 20,000 points.')}">${Number.isFinite(avg) ? avg.toFixed(3) + ' %' : (fr ? '⚠ invalide' : '⚠ invalid')}</td>
               <td><button data-bddel="${i}" class="text-rose-600 hover:text-rose-800 font-bold px-1" title="${fr ? 'Supprimer' : 'Delete'}">✕</button></td>
             </tr>`;
         }).join('');
@@ -1917,8 +1964,8 @@
         updateQrBandWarning();
     }
 
-    // Avertit lorsqu'une bande sort de la plage spectrale calculée : la moyenne
-    // porterait alors silencieusement sur une bande tronquée.
+    // Signale une bande qui dépasse la fenêtre du graphique : la moyenne, elle,
+    // porte toujours sur la bande entière.
     function updateQrBandWarning() {
         const el = document.getElementById('txtQrBandWarning');
         if (!el) return;
@@ -1927,9 +1974,11 @@
             .filter(Boolean);
         el.classList.toggle('hidden', outside.length === 0);
         if (outside.length) {
+            // La moyenne est TOUJOURS calculée sur toute la bande demandée, quelle
+            // que soit la fenêtre du graphique : seul l'affichage est concerné.
             el.textContent = currentLang === 'fr'
-                ? `⚠ Bande(s) ${outside.join(', ')} hors de la plage calculée (${appState.lMin}–${appState.lMax} nm) : la moyenne porte sur une bande tronquée.`
-                : `⚠ Band(s) ${outside.join(', ')} outside the computed range (${appState.lMin}–${appState.lMax} nm): the average covers a truncated band.`;
+                ? `ℹ Bande(s) ${outside.join(', ')} en partie hors du graphique (${appState.lMin}–${appState.lMax} nm). La moyenne reste calculée sur toute la bande demandée ; élargissez λmin/λmax pour la voir.`
+                : `ℹ Band(s) ${outside.join(', ')} partly outside the plot (${appState.lMin}–${appState.lMax} nm). The average is still computed over the whole requested band; widen λmin/λmax to see it.`;
         }
     }
 
@@ -1961,6 +2010,7 @@
                 if (!(Number.isFinite(lo) && Number.isFinite(hi))) return null;
                 if (lo > hi) [lo, hi] = [hi, lo];
                 if (hi - lo <= 0) return null;
+                if (lo < GRID_LIMITS.lMin || hi > GRID_LIMITS.lMax) return null;
                 // Pas adaptatif : une fenêtre étroite doit être échantillonnée
                 // finement, sinon la moyenne repose sur une poignée de points.
                 // Reste à 10 nm sur 400–750 nm, pour ne pas changer Q16.
@@ -2021,14 +2071,72 @@
         { lmin: 450, lmax: 650, quantity: 'T', value: 100, weight: 1, angle: 0, pol: 'moy' }
     ];
 
+    /* Un segment n'est accepté que s'il est entièrement valide : nombres finis,
+       bornes dans la plage du banc, grandeur et polarisation connues. Le même
+       contrôle sert à la saisie et à l'import JSON : un fichier ne peut rien
+       faire entrer que le clavier refuserait. */
+    function cleanTargetSegment(s) {
+        if (!s || typeof s !== 'object' || Array.isArray(s)) return null;
+        const num = v => (typeof v === 'number' || (typeof v === 'string' && v.trim() !== '')) ? Number(v) : NaN;
+        const lmin = num(s.lmin), lmax = num(s.lmax), value = num(s.value);
+        const weight = s.weight === undefined ? 1 : num(s.weight);
+        const angle = s.angle === undefined || s.angle === null ? 0 : num(s.angle);
+        const quantity = s.quantity === undefined ? 'T' : s.quantity;
+        const pol = s.pol === undefined ? 'moy' : s.pol;
+        if (![lmin, lmax, value, weight, angle].every(Number.isFinite)) return null;
+        if (lmin < GRID_LIMITS.lMin || lmax > GRID_LIMITS.lMax || !(lmax > lmin)) return null;
+        if (value < 0 || value > 100 || weight < 0 || weight > 1000 || angle < 0 || angle > 89) return null;
+        if (!['T', 'R', 'A'].includes(quantity) || !['moy', 's', 'p'].includes(pol)) return null;
+        return { lmin, lmax, quantity, value, weight, angle, pol };
+    }
+
+    function targetGridPoints(segments, step) {
+        return segments.reduce((a, s) => a + ((Number(s.weight) || 0) > 0 ? gridCount(s.lmin, s.lmax, step) : 0), 0);
+    }
+
     function getCustomTarget() {
-        const segs = appState.customTarget.segments
-            .filter(s => Number.isFinite(s.lmin) && Number.isFinite(s.lmax) && s.lmax > s.lmin);
+        const raw = appState.customTarget.segments;
+        const segs = raw.map(cleanTargetSegment).filter(Boolean);
+        const step = Math.min(50, Math.max(0.1, Number(document.getElementById('inpTargetStep')?.value) || 5));
+        const points = targetGridPoints(segs, step);
         return {
             segments: segs,
-            step: Math.max(0.1, Number(document.getElementById('inpTargetStep')?.value) || 5),
-            threshold: Math.max(0.01, Number(document.getElementById('inpTargetThreshold')?.value) || 5)
+            step,
+            threshold: Math.min(100, Math.max(0.01, Number(document.getElementById('inpTargetThreshold')?.value) || 5)),
+            ignored: raw.length - segs.length,
+            points,
+            tooLarge: points > GRID_LIMITS.maxPoints || segs.length > GRID_LIMITS.maxSegments
         };
+    }
+
+    /* Lecture d'un fichier de cible : tout est validé dans une structure
+       temporaire, et l'état n'est remplacé qu'après validation COMPLÈTE.
+       Une erreur laisse donc la cible précédente strictement intacte. */
+    function parseCustomTargetFile(text) {
+        const fail = (fr, en) => { const e = new Error(en); e.fr = fr; e.en = en; return e; };
+        let o;
+        try { o = JSON.parse(text); }
+        catch (_e) { throw fail('JSON illisible.', 'unreadable JSON.'); }
+        if (!o || typeof o !== 'object' || !Array.isArray(o.segments))
+            throw fail('champ « segments » absent ou invalide.', '"segments" field missing or invalid.');
+        if (o.segments.length > GRID_LIMITS.maxSegments)
+            throw fail(`plus de ${GRID_LIMITS.maxSegments} segments.`, `more than ${GRID_LIMITS.maxSegments} segments.`);
+        const segs = o.segments.map(cleanTargetSegment);
+        const bad = segs.map((x, i) => (x ? null : i + 1)).filter(Boolean);
+        if (bad.length) throw fail(
+            `segment(s) ${bad.join(', ')} invalide(s) : bornes ${GRID_LIMITS.lMin}–${GRID_LIMITS.lMax} nm, valeur 0–100 %, poids 0–1000, angle 0–89°, grandeur T/R/A, polarisation moy/s/p.`,
+            `invalid segment(s) ${bad.join(', ')}: bounds ${GRID_LIMITS.lMin}–${GRID_LIMITS.lMax} nm, value 0–100%, weight 0–1000, angle 0–89°, quantity T/R/A, polarisation moy/s/p.`);
+        const opt = (v, lo, hi, fr, en) => {
+            if (v === undefined || v === null) return null;
+            const x = Number(v);
+            if (!Number.isFinite(x) || x < lo || x > hi) throw fail(fr, en);
+            return x;
+        };
+        const step = opt(o.step, 0.1, 50, 'pas hors de 0,1–50 nm.', 'step outside 0.1–50 nm.');
+        const threshold = opt(o.threshold, 0.01, 100, 'seuil hors de 0,01–100 %.', 'threshold outside 0.01–100%.');
+        if (targetGridPoints(segs, step ?? 5) > GRID_LIMITS.maxPoints)
+            throw fail(`plus de ${GRID_LIMITS.maxPoints} points de calcul.`, `more than ${GRID_LIMITS.maxPoints} computation points.`);
+        return { segments: segs, step, threshold };
     }
 
     /* Extrait R, T ou A dans la polarisation demandée. L'absorption en S ou en P
@@ -2048,6 +2156,7 @@
     // RMSE pondérée entre la réponse calculée et la cible déclarée.
     function evaluateCustomTarget(thicknesses) {
         const t = getCustomTarget();
+        if (t.tooLarge) return { rmse: NaN, points: 0, tooLarge: true };
         let sumSq = 0, sumW = 0, points = 0;
         for (const seg of t.segments) {
             const w = Math.max(0, Number(seg.weight) || 0);
@@ -2057,7 +2166,7 @@
             // spécifié en S à 45° et un antireflet en non polarisé à 0°, par
             // exemple). L'angle du banc ne sert qu'à l'affichage.
             const ang = Number.isFinite(Number(seg.angle)) ? Number(seg.angle) : appState.incSpecDeg;
-            for (let l = seg.lmin; l <= seg.lmax + 1e-9; l += t.step) {
+            for (const l of gridPoints(seg.lmin, seg.lmax, t.step)) {
                 const pt = computeTMMPoint(l, ang, appState, thicknesses);
                 const x = segQuantity(pt, seg.quantity, seg.pol) * 100;
                 const d = x - seg.value;
@@ -2077,7 +2186,13 @@
         const fr = lang === 'fr';
         const o = getObjectiveMode();
         if (o === 'custom') {
-            const useful = getCustomTarget().segments.filter(s => (Number(s.weight) || 0) > 0);
+            const target = getCustomTarget();
+            if (target.tooLarge) {
+                return fr
+                    ? `⚠ Mérite refusé : la cible demande plus de ${GRID_LIMITS.maxPoints} points (ou plus de ${GRID_LIMITS.maxSegments} segments). Augmentez le pas ou réduisez les bandes.`
+                    : `⚠ Merit refused: the target needs more than ${GRID_LIMITS.maxPoints} points (or more than ${GRID_LIMITS.maxSegments} segments). Increase the step or narrow the bands.`;
+            }
+            const useful = target.segments.filter(s => (Number(s.weight) || 0) > 0);
             if (!useful.length) {
                 return fr
                     ? '⚠ Mérite indéfini : votre cible libre ne contient aucun segment de poids non nul. Déclarez votre cahier des charges avant de lancer un calcul.'
@@ -2135,7 +2250,7 @@
         const g = getArConfig();
         let sumR = 0, count = 0;
         for (const w of g.windows) {
-            for (let l = w.min; l <= w.max + 1e-9; l += w.step) {
+            for (const l of gridPoints(w.min, w.max, w.step)) {
                 sumR += computeTMMPoint(l, appState.incSpecDeg, appState, thicknesses).R_avg * 100;
                 count++;
             }
@@ -2284,17 +2399,17 @@
         const QTY = { T: fr ? 'T (transmis)' : 'T (transmitted)', R: fr ? 'R (réfléchi)' : 'R (reflected)', A: fr ? 'A (absorbé)' : 'A (absorbed)' };
         tbody.innerHTML = appState.customTarget.segments.map((s, i) => `
             <tr class="border-b border-slate-100">
-              <td><input data-tg="lmin" data-i="${i}" type="number" step="1" value="${s.lmin}" class="w-11 border border-slate-300 rounded px-0.5 py-0.5 text-[9px] font-mono"></td>
-              <td><input data-tg="lmax" data-i="${i}" type="number" step="1" value="${s.lmax}" class="w-11 border border-slate-300 rounded px-0.5 py-0.5 text-[9px] font-mono"></td>
+              <td><input data-tg="lmin" data-i="${i}" type="number" step="1" value="${escapeReviewText(s.lmin)}" class="w-11 border border-slate-300 rounded px-0.5 py-0.5 text-[9px] font-mono"></td>
+              <td><input data-tg="lmax" data-i="${i}" type="number" step="1" value="${escapeReviewText(s.lmax)}" class="w-11 border border-slate-300 rounded px-0.5 py-0.5 text-[9px] font-mono"></td>
               <td><select data-tg="quantity" data-i="${i}" class="border border-slate-300 rounded px-0.5 py-0.5 text-[9px]">
                     ${['T', 'R', 'A'].map(q => `<option value="${q}" ${s.quantity === q ? 'selected' : ''}>${QTY[q]}</option>`).join('')}
                   </select></td>
-              <td><input data-tg="angle" data-i="${i}" type="number" step="1" min="0" max="89" value="${s.angle ?? 0}" class="w-10 border border-slate-300 rounded px-0.5 py-0.5 text-[9px] font-mono"></td>
+              <td><input data-tg="angle" data-i="${i}" type="number" step="1" min="0" max="89" value="${escapeReviewText(s.angle ?? 0)}" class="w-10 border border-slate-300 rounded px-0.5 py-0.5 text-[9px] font-mono"></td>
               <td><select data-tg="pol" data-i="${i}" class="border border-slate-300 rounded px-0.5 py-0.5 text-[9px]">
                     ${[['moy', POL.moy], ['s', 'S'], ['p', 'P']].map(([v, lbl]) => `<option value="${v}" ${(s.pol || 'moy') === v ? 'selected' : ''}>${lbl}</option>`).join('')}
                   </select></td>
-              <td><input data-tg="value" data-i="${i}" type="number" step="1" min="0" max="100" value="${s.value}" class="w-11 border border-slate-300 rounded px-0.5 py-0.5 text-[9px] font-mono"></td>
-              <td><input data-tg="weight" data-i="${i}" type="number" step="0.5" min="0" value="${s.weight}" class="w-10 border border-slate-300 rounded px-0.5 py-0.5 text-[9px] font-mono"></td>
+              <td><input data-tg="value" data-i="${i}" type="number" step="1" min="0" max="100" value="${escapeReviewText(s.value)}" class="w-11 border border-slate-300 rounded px-0.5 py-0.5 text-[9px] font-mono"></td>
+              <td><input data-tg="weight" data-i="${i}" type="number" step="0.5" min="0" value="${escapeReviewText(s.weight)}" class="w-10 border border-slate-300 rounded px-0.5 py-0.5 text-[9px] font-mono"></td>
               <td><button data-tgdel="${i}" class="text-rose-600 hover:text-rose-800 font-bold px-1" title="${fr ? 'Supprimer' : 'Delete'}">✕</button></td>
             </tr>`).join('');
 
@@ -2307,9 +2422,24 @@
         const t = getCustomTarget();
         const r = evaluateCustomTarget(null);
         const covered = t.segments.reduce((a, s) => a + Math.max(0, s.lmax - s.lmin), 0);
-        document.getElementById('txtCustomTargetNote').textContent = fr
+        document.getElementById('txtCustomTargetNote').textContent = (fr
             ? `${r.points} points évalués sur ${covered.toFixed(0)} nm spécifiés. RMSE actuelle : ${Number.isFinite(r.rmse) ? r.rmse.toFixed(2) + ' %' : '—'}.`
-            : `${r.points} points evaluated over ${covered.toFixed(0)} nm specified. Current RMSE: ${Number.isFinite(r.rmse) ? r.rmse.toFixed(2) + '%' : '—'}.`;
+            : `${r.points} points evaluated over ${covered.toFixed(0)} nm specified. Current RMSE: ${Number.isFinite(r.rmse) ? r.rmse.toFixed(2) + '%' : '—'}.`)
+            + targetValidityNote(t);
+    }
+
+    /* Signale les segments écartés et les cibles trop lourdes : une ligne
+       ignorée en silence ferait croire que la cible est prise en compte. */
+    function targetValidityNote(t) {
+        const fr = currentLang === 'fr';
+        let note = '';
+        if (t.ignored) note += fr
+            ? ` ⚠ ${t.ignored} segment(s) ignoré(s) : bornes ${GRID_LIMITS.lMin}–${GRID_LIMITS.lMax} nm avec λmin < λmax, valeur 0–100 %, poids ≥ 0, angle 0–89°.`
+            : ` ⚠ ${t.ignored} segment(s) ignored: bounds ${GRID_LIMITS.lMin}–${GRID_LIMITS.lMax} nm with λmin < λmax, value 0–100%, weight ≥ 0, angle 0–89°.`;
+        if (t.tooLarge) note += fr
+            ? ` ⚠ Cible trop lourde (> ${GRID_LIMITS.maxPoints} points) : augmentez le pas.`
+            : ` ⚠ Target too heavy (> ${GRID_LIMITS.maxPoints} points): increase the step.`;
+        return note;
     }
 
     function wireTargetButtons() {
@@ -2318,6 +2448,7 @@
         // des charges. La saisie se fait au clavier, ligne à ligne.
         document.getElementById('btnTargetClear')?.addEventListener('click', () => {
             appState.customTarget.segments = [];
+            invalidateForSpec();
             renderCustomTargetEditor(); updateMeritGridNote(); updateCharts();
         });
     }
@@ -2325,7 +2456,7 @@
     function wireCustomTargetEditor() {
         const tbody = document.getElementById('tbodyCustomTarget');
         if (!tbody) return;
-        const refresh = () => { renderCustomTargetEditor(); updateMeritGridNote(); updateAcceptanceUI(); updateCharts(); };
+        const refresh = () => { invalidateForSpec(); renderCustomTargetEditor(); updateMeritGridNote(); updateAcceptanceUI(); updateCharts(); };
 
         tbody.addEventListener('input', e => {
             const el = e.target, key = el.dataset.tg, i = Number(el.dataset.i);
@@ -2333,10 +2464,12 @@
             const seg = appState.customTarget.segments[i];
             if (!seg) return;
             seg[key] = (key === 'quantity' || key === 'pol') ? el.value : Number(el.value);
+            invalidateForSpec();
             const t = getCustomTarget(); const r = evaluateCustomTarget(null);
-            document.getElementById('txtCustomTargetNote').textContent = currentLang === 'fr'
+            document.getElementById('txtCustomTargetNote').textContent = (currentLang === 'fr'
                 ? `${r.points} points évalués. RMSE actuelle : ${Number.isFinite(r.rmse) ? r.rmse.toFixed(2) + ' %' : '—'}.`
-                : `${r.points} points evaluated. Current RMSE: ${Number.isFinite(r.rmse) ? r.rmse.toFixed(2) + '%' : '—'}.`;
+                : `${r.points} points evaluated. Current RMSE: ${Number.isFinite(r.rmse) ? r.rmse.toFixed(2) + '%' : '—'}.`)
+                + targetValidityNote(t);
             updateCharts();
         });
         tbody.addEventListener('change', e => { if (['quantity', 'pol'].includes(e.target.dataset.tg)) refresh(); });
@@ -2360,12 +2493,14 @@
                 const k = e.target.dataset.ar, i = Number(e.target.dataset.i);
                 if (!k || !Number.isFinite(i) || !appState.arWindows[i]) return;
                 appState.arWindows[i][k] = Number(e.target.value);
+                invalidateForSpec();
                 updateMeritGridNote();
             });
             arBox.addEventListener('click', e => {
                 const i = e.target.dataset.ardel;
                 if (i === undefined || appState.arWindows.length <= 1) return;
                 appState.arWindows.splice(Number(i), 1);
+                invalidateForSpec();
                 renderArWindows(); updateMeritGridNote();
             });
         }
@@ -2373,6 +2508,7 @@
             const last = appState.arWindows[appState.arWindows.length - 1];
             const start = last ? Math.min(1400, last.lmax + 50) : 400;
             appState.arWindows.push({ lmin: start, lmax: Math.min(1500, start + 100) });
+            invalidateForSpec();
             renderArWindows(); updateMeritGridNote();
         });
         ['inpArThreshold'].forEach(id =>
@@ -2380,14 +2516,10 @@
                 updateMeritGridNote();
                 // Le seuil fait partie des hypothèses de la qualification : la
                 // précédente ne vaut plus pour le nouveau critère.
-                appState.lastQualification = null;
-                renderDesignReview();
-                liveBi('txtMonteCarloResult',
-                    'Fenêtre ou seuil modifiés : relancez la qualification statistique.',
-                    'Window or threshold changed: rerun the statistical qualification.');
+                invalidateForSpec();
             }));
         ['inpTargetStep', 'inpTargetThreshold'].forEach(id =>
-            document.getElementById(id)?.addEventListener('input', () => { renderCustomTargetEditor(); updateMeritGridNote(); }));
+            document.getElementById(id)?.addEventListener('input', () => { invalidateForSpec(); renderCustomTargetEditor(); updateMeritGridNote(); }));
         document.getElementById('btnTargetPreset')?.addEventListener('click', () => {
             appState.customTarget.segments = DEFAULT_TARGET_SEGMENTS.map(s => ({ ...s }));
             refresh();
@@ -2409,16 +2541,22 @@
                 if (!f) return;
                 const rd = new FileReader();
                 rd.onload = () => {
-                    try {
-                        const o = JSON.parse(rd.result);
-                        if (Array.isArray(o.segments)) appState.customTarget.segments = o.segments;
-                        if (o.step) document.getElementById('inpTargetStep').value = o.step;
-                        if (o.threshold) document.getElementById('inpTargetThreshold').value = o.threshold;
-                        refresh();
-                    } catch (err) {
-                        alert(currentLang === 'fr' ? 'Fichier de cible illisible.' : 'Unreadable target file.');
+                    let parsed;
+                    try { parsed = parseCustomTargetFile(String(rd.result)); }
+                    catch (err) {
+                        alert(currentLang === 'fr'
+                            ? `Fichier de cible refusé : ${err.fr || err.message} La cible précédente est conservée.`
+                            : `Target file rejected: ${err.en || err.message} The previous target is kept.`);
+                        return;
                     }
+                    appState.customTarget.segments = parsed.segments;
+                    if (parsed.step !== null) document.getElementById('inpTargetStep').value = parsed.step;
+                    if (parsed.threshold !== null) document.getElementById('inpTargetThreshold').value = parsed.threshold;
+                    refresh();
                 };
+                rd.onerror = () => alert(currentLang === 'fr'
+                    ? 'Lecture du fichier impossible. La cible précédente est conservée.'
+                    : 'The file could not be read. The previous target is kept.');
                 rd.readAsText(f);
             };
             inp.click();
@@ -2953,7 +3091,7 @@
         const spanNm = Math.max(1, appState.lMax - appState.lMin);
         const spectralStep = Math.max(appState.lStep, spanNm / 400);
         const spectralGrid = [];
-        for (let l = appState.lMin; l <= appState.lMax + 1e-6; l += spectralStep) spectralGrid.push(l);
+        spectralGrid.push(...gridPoints(appState.lMin, appState.lMax, spectralStep));
         // On n'affiche plus une enveloppe de centiles mais une DIZAINE DE TIRAGES
         // INDIVIDUELS : l'étudiant voit des spectres réels, pas une statistique
         // lissée qui ne correspond à aucun composant existant. La fenêtre affichée
@@ -3128,6 +3266,7 @@
         liveText('txtMonteCarloResult', () => monteCarloResultText(record));
         renderDesignReview();
         applyUiMode();          // une qualification existe : le comparateur devient pertinent
+        renderFreeGuide();
         updateCharts();
         };
 
@@ -3139,11 +3278,47 @@
         mcEnCours = null;
         const bouton = document.getElementById('btnRunMonteCarlo');
         if (bouton) bouton.disabled = false;
-        const zone = document.getElementById('txtMonteCarloResult');
-        if (zone) zone.textContent = currentLang === 'fr'
-            ? 'Qualification interrompue : l’empilement a changé pendant le calcul. Relancez-la.'
-            : 'Qualification interrupted: the design changed during the run. Start it again.';
+        // liveBi et non textContent : sinon un changement de langue repeindrait
+        // l'ancien compte rendu à la place de ce message.
+        liveBi('txtMonteCarloResult',
+            'Qualification interrompue : le composant ou la spécification a changé pendant le calcul. Relancez-la.',
+            'Qualification interrupted: the design or the specification changed during the run. Start it again.');
     }
+
+    /* Point UNIQUE d'invalidation des résultats dérivés. Toute modification du
+       composant (couches, milieux, matériaux, domaine) ou de la spécification
+       (mérite, segments, fenêtres, seuils, hypothèses) passe ici :
+       - un Monte-Carlo en cours est interrompu : il ne mélange jamais deux cibles ;
+       - la qualification est supprimée : A/B ne peut plus capturer un état ancien ;
+       - l'ancien verdict est remplacé par un message de péremption, jamais laissé
+         affiché comme résultat courant ;
+       - le diagnostic et la recommandation d'aiguille sont retirés : ils portaient
+         sur un autre problème optique. L'annulation d'aiguille, qui restaure
+         seulement les couches, reste disponible.
+       Les archives A/B ne sont pas touchées : elles conservent un état identifié. */
+    function invalidateDerivedResults(frReason, enReason) {
+        const running = !!mcEnCours;
+        const hadQualification = !!appState.lastQualification;
+        interrompreMonteCarlo();
+        appState.monteCarloRuns = [];
+        appState.monteCarloSamples = [];
+        appState.lastQualification = null;
+        if (running || hadQualification) {
+            liveBi('txtMonteCarloResult',
+                `Résultat périmé — ${frReason} Relancez la qualification statistique.`,
+                `Outdated result — ${enReason} Run the statistical qualification again.`);
+        }
+        if (needleBestInfo || recommendedNeedleStack) {
+            needleBestInfo = null;
+            recommendedNeedleStack = null;
+            document.getElementById('divNeedleAdvice')?.classList.add('hidden');
+        }
+        renderDesignReview();
+        scheduleProjectSave();
+        renderFreeGuide();
+    }
+    const invalidateForSpec = () => invalidateDerivedResults(
+        'la spécification a changé.', 'the specification changed.');
 
     /* Compte rendu de qualification, rédigé dans la langue COURANTE à partir des
        valeurs mémorisées : le changement de langue le retraduit sans le perdre. */
@@ -3235,7 +3410,7 @@
                 const w = Math.max(0, Number(seg.weight) || 0);
                 if (w === 0) continue;
                 const ang = Number.isFinite(Number(seg.angle)) ? Number(seg.angle) : appState.incSpecDeg;
-                for (let l = seg.lmin; l <= seg.lmax + 1e-9; l += t.step) {
+                for (const l of gridPoints(seg.lmin, seg.lmax, t.step)) {
                     const pt = computeTMMPointCustom(l, ang, appState.superstrat, appState.substrat, stack);
                     const d = segQuantity(pt, seg.quantity, seg.pol) * 100 - seg.value;
                     sumSq += w * d * d; sumW += w; points++;
@@ -3253,7 +3428,7 @@
         const ar = getArConfig();
         let sumR = 0, count = 0;
         for (const w of ar.windows) {
-            for (let l = w.min; l <= w.max + 1e-9; l += w.step) {
+            for (const l of gridPoints(w.min, w.max, w.step)) {
                 sumR += computeTMMPointCustom(l, appState.incSpecDeg, appState.superstrat, appState.substrat, stack).R_avg * 100;
                 count++;
             }
@@ -3671,6 +3846,7 @@
          - après une optimisation : l'aiguille devient l'étape suggérée ;
          - après une insertion    : c'est l'optimisation qui reprend la main. */
     function updateSynthesisCycle(stage) {
+        if (typeof renderFreeGuide === 'function') renderFreeGuide();
         const fr = currentLang === 'fr';
         if (stage) appState.cycleStage = stage;
         else appState.cycleStage = 'needle';       // on vient d'optimiser
@@ -4334,15 +4510,15 @@
             tr.innerHTML = `
                 <td class="py-1.5 text-center font-bold text-slate-400">${idx + 1}</td>
                 <td class="py-1.5">
-                    <select class="selLayerMat bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs outline-none" data-idx="${idx}">
+                    <select title="${currentLang === 'fr' ? 'Matériau de cette couche' : 'Material of this layer'}" class="selLayerMat bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs outline-none" data-idx="${idx}">
                         ${layerMaterialOptions(lay.matId)}
                     </select>
                 </td>
                 <td class="py-1.5">
-                    <input type="number" step="0.1" min="0" value="${lay.val}" class="inpLayerVal w-20 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs text-center font-bold" data-idx="${idx}">
+                    <input type="text" inputmode="decimal" autocomplete="off" value="${escapeReviewText(lay.val)}" title="${currentLang === 'fr' ? `Épaisseur en ${lay.unit} (virgule ou point). 1 QWOT = λ0/(4n) : quart d’onde à λ0. Entrée pour valider.` : `Thickness in ${lay.unit} (comma or point). 1 QWOT = λ0/(4n): quarter wave at λ0. Press Enter to confirm.`}" class="inpLayerVal w-20 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs text-center font-bold" data-idx="${idx}">
                 </td>
                 <td class="py-1.5">
-                    <select class="selLayerUnit bg-white border border-slate-300 rounded px-1 py-0.5 text-[11px]" data-idx="${idx}">
+                    <select title="${currentLang === 'fr' ? 'Unité : QWOT (quart d’onde optique à λ0) ou nm (épaisseur physique)' : 'Unit: QWOT (optical quarter wave at λ0) or nm (physical thickness)'}" class="selLayerUnit bg-white border border-slate-300 rounded px-1 py-0.5 text-[11px]" data-idx="${idx}">
                         <option value="QWOT" ${lay.unit === 'QWOT' ? 'selected' : ''}>QWOT</option>
                         <option value="nm" ${lay.unit === 'nm' ? 'selected' : ''}>nm</option>
                     </select>
@@ -4370,6 +4546,15 @@
         document.getElementById('txtTotalThickness').textContent = auditRevealed
             ? `${currentLang === 'fr' ? 'Épaisseur totale' : 'Total thickness'} : ${totalThick.toFixed(1)} nm`
             : `${appState.layers.length} ${currentLang === 'fr' ? 'couche(s) déposée(s)' : 'deposited layer(s)'}`;
+
+        const evanescent = qwotEvanescentLayers();
+        const qwotWarn = document.getElementById('txtQwotWarning');
+        if (qwotWarn) {
+            qwotWarn.classList.toggle('hidden', evanescent.length === 0);
+            qwotWarn.textContent = !evanescent.length ? '' : currentLang === 'fr'
+                ? `⚠ Couche(s) ${evanescent.join(', ')} : à l'incidence de conception, l'onde y est évanescente et le QWOT n'a pas de sens. L'épaisseur affichée est convertie à incidence normale ; saisissez plutôt une épaisseur en nm.`
+                : `⚠ Layer(s) ${evanescent.join(', ')}: at the design incidence the wave is evanescent there and QWOT is meaningless. The displayed thickness is converted at normal incidence; enter a thickness in nm instead.`;
+        }
 
         updateFabricationSummary();
         renderVisualStackBar(totalThick);
@@ -4625,6 +4810,22 @@
         return confirm(messages[kind]);
     }
 
+    const LAYER_LIMITS = Object.freeze({ nm: 100000, qwot: 1000 });
+
+    /* Signale une saisie refusée sans boîte bloquante : bordure rouge, message
+       dans l'infobulle et, si le navigateur le permet, bulle de validation. */
+    function flashFieldError(el, message) {
+        if (!el) return;
+        el.title = message;
+        el.classList?.add('ring-2', 'ring-rose-500');
+        setTimeout(() => el.classList?.remove('ring-2', 'ring-rose-500'), 2500);
+        if (typeof el.setCustomValidity === 'function') {
+            el.setCustomValidity(message);
+            el.reportValidity?.();
+            setTimeout(() => el.setCustomValidity(''), 2500);
+        }
+    }
+
     function attachTableEvents() {
         document.querySelectorAll('.selLayerMat').forEach(el => {
             el.onchange = (e) => {
@@ -4639,10 +4840,22 @@
             };
         });
         document.querySelectorAll('.inpLayerVal').forEach(el => {
+            el.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur?.(); } };
             el.onchange = (e) => {
                 const idx = parseInt(e.target.dataset.idx);
-                appState.layers[idx].val = parseFloat(e.target.value) || 0;
-                    renderLayersTable();
+                const layer = appState.layers[idx];
+                const value = parseDecimalInput(e.target.value);
+                const max = layer.unit === 'nm' ? LAYER_LIMITS.nm : LAYER_LIMITS.qwot;
+                if (!Number.isFinite(value) || value < 0 || value > max) {
+                    // Valeur refusée : on restaure la précédente, et on dit pourquoi.
+                    e.target.value = layer.val;
+                    flashFieldError(e.target, currentLang === 'fr'
+                        ? `Épaisseur refusée : saisissez un nombre entre 0 et ${max} ${layer.unit}.`
+                        : `Thickness rejected: enter a number between 0 and ${max} ${layer.unit}.`);
+                    return;
+                }
+                layer.val = value;
+                renderLayersTable();
                 runFullSimulation();
             };
         });
@@ -4667,6 +4880,12 @@
                 syncOptimizationScopeFromLocks();
                 appState.monteCarloRuns = [];
                 appState.monteCarloSamples = [];
+                if (needleBestInfo || recommendedNeedleStack) {
+                    needleBestInfo = null;
+                    recommendedNeedleStack = null;
+                    document.getElementById('divNeedleAdvice')?.classList.add('hidden');
+                }
+                scheduleProjectSave();
                 updateCharts();
             };
         });
@@ -4863,10 +5082,30 @@
         const inside = (p, area) => p.x >= area.left && p.x <= area.right && p.y >= area.top && p.y <= area.bottom;
         const clampPixel = (value, lo, hi) => Math.max(lo, Math.min(hi, value));
 
+        // La molette seule fait défiler la PAGE, comme partout ailleurs : sinon
+        // un simple défilement au-dessus du graphique le zoome par surprise.
+        // Le zoom se fait avec Ctrl (ou Cmd) + molette, et on le rappelle.
+        let wheelHintTimer = null;
+        const showWheelHint = () => {
+            const host = canvas.parentElement;
+            if (!host) return;
+            let hint = document.getElementById('chartWheelHint');
+            if (!hint) {
+                hint = document.createElement('div');
+                hint.id = 'chartWheelHint';
+                hint.className = 'absolute inset-x-0 top-2 mx-auto w-max max-w-[90%] text-[11px] font-semibold bg-slate-900/85 text-white rounded px-2 py-1 pointer-events-none';
+                host.appendChild(hint);
+            }
+            hint.textContent = currentLang === 'fr' ? 'Ctrl + molette pour zoomer · « Vue initiale » pour revenir' : 'Ctrl + wheel to zoom · "Reset view" to go back';
+            hint.classList.remove('hidden');
+            clearTimeout(wheelHintTimer);
+            wheelHintTimer = setTimeout(() => hint.classList.add('hidden'), 1400);
+        };
         canvas.addEventListener('wheel', ev => {
             if (!mainChart || !mainChart.chartArea) return;
             const p = local(ev), area = mainChart.chartArea;
             if (!inside(p, area)) return;
+            if (!(ev.ctrlKey || ev.metaKey)) { showWheelHint(); return; }
             ev.preventDefault();
             const factor = ev.deltaY < 0 ? 0.78 : 1.28;
             const xs = mainChart.scales.x, ys = mainChart.scales.y;
@@ -4987,17 +5226,29 @@
 
         // Courbes mémorisées (pour comparaison de plusieurs empilements)
         const memoryColors = ['#94a3b8', '#64748b', '#475569', '#334155'];
+        const frMem = currentLang === 'fr';
+        let hiddenMemories = 0;
         appState.savedMemories.forEach((mem, i) => {
-            datasets.push({
-                label: mem.label,
-                data: mem.data,
-                borderColor: memoryColors[i % memoryColors.length],
-                borderWidth: 1.5,
-                borderDash: [5, 5],
-                pointRadius: 0,
-                fill: false
+            if (mem.mode !== appState.mode || !Array.isArray(mem.x)) { hiddenMemories++; return; }
+            const cond = mem.mode === 'spectral' ? `${formatStat(mem.condition, 1)}°` : `${formatStat(mem.condition, 0)} nm`;
+            [['R', appState.showR], ['T', appState.showT], ['A', appState.showA]].forEach(([q, shown]) => {
+                if (!shown) return;
+                datasets.push({
+                    label: `${frMem ? 'Mém.' : 'Saved'} ${mem.n} ${q} (${mem.layerCount} ${frMem ? 'couche(s)' : 'layer(s)'}, ${cond})`,
+                    data: mem.x.map((x, k) => ({ x, y: mem[q][k] })),
+                    borderColor: memoryColors[i % memoryColors.length],
+                    borderWidth: 1.5,
+                    borderDash: q === 'R' ? [5, 5] : q === 'T' ? [2, 3] : [8, 3, 2, 3],
+                    pointRadius: 0,
+                    fill: false
+                });
             });
         });
+        const memButton = document.getElementById('btnClearMemories');
+        if (memButton) memButton.title = hiddenMemories
+            ? (frMem ? `${hiddenMemories} mémoire(s) d'un autre type d'axe masquée(s). Cliquer pour tout effacer.`
+                     : `${hiddenMemories} memory curve(s) from another axis type hidden. Click to clear all.`)
+            : (frMem ? 'Effacer toutes les courbes mémorisées' : 'Clear all saved curves');
 
         // Courbes Monte Carlo en arrière-plan
         if (appState.monteCarloRuns.length > 0) {
@@ -5145,13 +5396,27 @@
         });
 
         if (appState.showA) {
-            datasets.push({
-                label: currentLang === 'fr' ? 'A (Absorption)' : 'A (Absorption)',
-                data: calc.x.map((x, i) => ({ x: x, y: calc.A_avg[i] })),
+            // A suit la même sélection de polarisation que R et T :
+            // A_s = 1 − R_s − T_s, A_p = 1 − R_p − T_p (mêmes points de calcul).
+            const absorb = pol => calc.x.map((x, i) => ({ x, y: pol === 's'
+                ? Math.max(0, 100 - calc.Rs[i] - calc.Ts[i])
+                : pol === 'p' ? Math.max(0, 100 - calc.Rp[i] - calc.Tp[i]) : calc.A_avg[i] }));
+            const frA = currentLang === 'fr';
+            const curves = spDegenerate
+                ? (anyPol ? [['moy', 'A (S = P)', []]] : [])
+                : [
+                    appState.showAvg ? ['moy', frA ? 'A (Moyenne)' : 'A (Average)', []] : null,
+                    appState.showS ? ['s', 'A (S)', [4, 2]] : null,
+                    appState.showP ? ['p', 'A (P)', [1, 2]] : null
+                ].filter(Boolean);
+            curves.forEach(([pol, label, dash]) => datasets.push({
+                label,
+                data: absorb(pol),
                 borderColor: '#ef4444',
                 borderWidth: 1.5,
+                borderDash: dash,
                 pointRadius: 0
-            });
+            }));
         }
 
         // Superposition de la cible libre : l'étudiant doit VOIR ce qu'il vise.
@@ -5519,13 +5784,13 @@
                 <tr class="hover:bg-slate-50 transition">
                     <td class="py-1 px-2 text-center text-slate-400 font-bold">${idx + 1}</td>
                     <td class="py-1 px-2">
-                        <input type="number" step="any" min="100" max="5000" value="${pt.l}" class="inpMatRowL w-24 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono font-semibold" data-idx="${idx}">
+                        <input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${pt.l}" title="${currentLang === 'fr' ? 'Longueur d’onde de ce point (nm, 100–5000). Virgule ou point ; Entrée pour valider.' : 'Wavelength of this point (nm, 100–5000). Comma or point; press Enter to confirm.'}" class="inpMatRowL w-24 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono font-semibold" data-idx="${idx}">
                     </td>
                     <td class="py-1 px-2">
-                        <input type="number" step="any" min="0.01" max="20" value="${pt.n}" class="inpMatRowN w-24 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono font-semibold" data-idx="${idx}">
+                        <input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${pt.n}" title="${currentLang === 'fr' ? 'Indice de réfraction n à cette longueur d’onde. Virgule ou point ; Entrée pour valider.' : 'Refractive index n at this wavelength. Comma or point; press Enter to confirm.'}" class="inpMatRowN w-24 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono font-semibold" data-idx="${idx}">
                     </td>
                     <td class="py-1 px-2">
-                        <input type="number" step="any" min="0" max="30" value="${pt.k || 0}" class="inpMatRowK w-24 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono font-semibold" data-idx="${idx}">
+                        <input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${pt.k || 0}" title="${currentLang === 'fr' ? 'Coefficient d’extinction k (0 = sans absorption). Virgule ou point ; Entrée pour valider.' : 'Extinction coefficient k (0 = no absorption). Comma or point; press Enter to confirm.'}" class="inpMatRowK w-24 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-mono font-semibold" data-idx="${idx}">
                     </td>
                     <td class="py-1 px-2 text-right">
                         <button type="button" class="btnDelMatRow text-red-500 hover:text-red-700 p-1 rounded font-bold" data-idx="${idx}" title="${fr ? 'Supprimer cette ligne' : 'Delete this row'}" ${(mat.table || []).length <= 1 ? 'disabled style="opacity:0.3;cursor:not-allowed;"' : ''}>
@@ -5558,6 +5823,11 @@
         }
     }
 
+    function parseDecimalInput(text) {
+        const s = String(text ?? '').trim().replace(/\s/g, '').replace(',', '.');
+        return s === '' || !/^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i.test(s) ? NaN : Number(s);
+    }
+
     function attachCustomMatRowEvents() {
         const mat = getActiveCustomMat();
         if (!mat) return;
@@ -5581,23 +5851,18 @@
             }
         };
 
-        document.querySelectorAll('.inpMatRowL').forEach(el => {
-            el.onchange = e => {
-                const idx = parseInt(e.target.dataset.idx, 10);
-                updateRow(idx, 'l', e.target.value === '' ? NaN : Number(e.target.value));
-            };
-        });
-        document.querySelectorAll('.inpMatRowN').forEach(el => {
-            el.onchange = e => {
-                const idx = parseInt(e.target.dataset.idx, 10);
-                updateRow(idx, 'n', e.target.value === '' ? NaN : Number(e.target.value));
-            };
-        });
-        document.querySelectorAll('.inpMatRowK').forEach(el => {
-            el.onchange = e => {
-                const idx = parseInt(e.target.dataset.idx, 10);
-                updateRow(idx, 'k', e.target.value === '' ? NaN : Number(e.target.value));
-            };
+        // Champs texte décimaux : « 2,05 » et « 2.05 » sont acceptés quel que
+        // soit le réglage du navigateur (un champ number français renvoie une
+        // valeur vide pour « 2.05 », et inversement). La valeur est validée à la
+        // sortie du champ ou à Entrée.
+        [['.inpMatRowL', 'l'], ['.inpMatRowN', 'n'], ['.inpMatRowK', 'k']].forEach(([sel, key]) => {
+            document.querySelectorAll(sel).forEach(el => {
+                el.onchange = e => {
+                    const idx = parseInt(e.target.dataset.idx, 10);
+                    updateRow(idx, key, parseDecimalInput(e.target.value));
+                };
+                el.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur?.(); } };
+            });
         });
         document.querySelectorAll('.btnDelMatRow').forEach(el => {
             el.onclick = e => {
@@ -6217,6 +6482,7 @@
             if (typeof updateMeritGridNote === 'function') updateMeritGridNote();
         }
 
+        renderFreeGuide();
         // Bandeau de consigne
         const banner = document.getElementById('exerciseBanner');
         if (banner) {
@@ -6250,12 +6516,14 @@
         appState.exercise = id;
         renderExerciseSelector();
         applyUiMode();
+        scheduleProjectSave();
     }
 
     function enterFreeMode() {
         appState.uiMode = 'libre';
         appState.exercise = null;
         applyUiMode();
+        scheduleProjectSave();
     }
 
     function loadPreset(presetKey) {
@@ -6345,22 +6613,23 @@
     function wireBandAnalyzer() {
         const tbody = document.getElementById('tbodyBands');
         if (!tbody) return;
-        const refresh = () => { renderBandAnalyzer(); };
+        const refresh = () => { renderBandAnalyzer(); scheduleProjectSave(); };
 
         tbody.addEventListener('input', e => {
             const key = e.target.dataset.bd, i = Number(e.target.dataset.i);
             if (!key || !Number.isFinite(i)) return;
             const b = appState.bands[i];
             if (!b) return;
+            // Mise à jour de l'état seulement : reconstruire le tableau à chaque
+            // frappe ferait perdre le curseur au milieu de la saisie.
             b[key] = key === 'qty' ? e.target.value : Number(e.target.value);
-            refresh();
         });
         tbody.addEventListener('change', e => {
             const key = e.target.dataset.bd, i = Number(e.target.dataset.i);
-            if (key === 'qty') {
-                appState.bands[Number(i)][key] = e.target.value;
-                refresh();
-            }
+            const b = appState.bands[i];
+            if (!key || !b) return;
+            b[key] = key === 'qty' ? e.target.value : Number(e.target.value);
+            refresh();
         });
         tbody.addEventListener('click', e => {
             const i = e.target.dataset.bddel;
@@ -6407,10 +6676,16 @@
         // Mémorisation de courbe pour superposition (Q15)
         document.getElementById('btnStoreMemory').addEventListener('click', () => {
             if (!appState.lastCalc) return;
-            const label = `${currentLang === 'fr' ? 'Mém.' : 'Saved'} (${appState.layers.length}${currentLang === 'fr' ? 'c' : 'L'} / ${appState.mode === 'spectral' ? 'R' : 'θ'})`;
+            // On mémorise des DONNÉES (axe, conditions, R/T/A), pas un libellé
+            // déjà traduit : la légende est rédigée à l'affichage, dans la langue
+            // courante, et seules les mémoires du même type d'axe sont tracées.
+            const c = appState.lastCalc;
             appState.savedMemories.push({
-                label: label,
-                data: appState.lastCalc.x.map((x, i) => ({ x: x, y: appState.lastCalc.R_avg[i] }))
+                n: appState.savedMemories.length + 1,
+                mode: appState.mode,
+                layerCount: appState.layers.length,
+                condition: appState.mode === 'spectral' ? appState.incSpecDeg : appState.lAngNm,
+                x: c.x.slice(), R: c.R_avg.slice(), T: c.T_avg.slice(), A: c.A_avg.slice()
             });
             document.getElementById('btnClearMemories').classList.remove('hidden');
             updateCharts();
@@ -6452,11 +6727,17 @@
             runFullSimulation();
         });
 
-        const bindNumericControl = (id, stateKey, { min = -Infinity, max = Infinity, rerender = false } = {}) => {
+        const bindNumericControl = (id, stateKey, { min = -Infinity, max = Infinity, rerender = false, check = null } = {}) => {
             document.getElementById(id)?.addEventListener('change', (e) => {
-                let value = parseFloat(e.target.value);
+                let value = parseFloat(String(e.target.value).replace(',', '.'));
                 if (!Number.isFinite(value)) value = appState[stateKey];
                 value = Math.min(max, Math.max(min, value));
+                const refusal = check ? check(value) : null;
+                if (refusal) {
+                    e.target.value = appState[stateKey];
+                    flashFieldError(e.target, currentLang === 'fr' ? refusal[0] : refusal[1]);
+                    return;
+                }
                 appState[stateKey] = value;
                 e.target.value = value;
                 if (rerender) renderLayersTable();
@@ -6465,10 +6746,14 @@
         };
         bindNumericControl('inpL0Design', 'designL0', { min: 200, max: 2000, rerender: true });
         bindNumericControl('inpIncDesign', 'designIncDeg', { min: 0, max: 89, rerender: true });
-        bindNumericControl('inpLMin', 'lMin', { min: 200, max: 2500 });
-        bindNumericControl('inpLMax', 'lMax', { min: 200, max: 2500 });
-        bindNumericControl('inpAMin', 'aMin', { min: 0, max: 89 });
-        bindNumericControl('inpAMax', 'aMax', { min: 0.05, max: 89.9 });
+        bindNumericControl('inpLMin', 'lMin', { min: 200, max: 2500, check: v => v <= appState.lMax - 1 ? null
+            : ['λmin doit rester inférieur à λmax d’au moins 1 nm.', 'λmin must stay at least 1 nm below λmax.'] });
+        bindNumericControl('inpLMax', 'lMax', { min: 200, max: 2500, check: v => v >= appState.lMin + 1 ? null
+            : ['λmax doit dépasser λmin d’au moins 1 nm.', 'λmax must exceed λmin by at least 1 nm.'] });
+        bindNumericControl('inpAMin', 'aMin', { min: 0, max: 89, check: v => v <= appState.aMax - 0.05 ? null
+            : ['θmin doit rester inférieur à θmax.', 'θmin must stay below θmax.'] });
+        bindNumericControl('inpAMax', 'aMax', { min: 0.05, max: 89.9, check: v => v >= appState.aMin + 0.05 ? null
+            : ['θmax doit dépasser θmin.', 'θmax must exceed θmin.'] });
 
         document.getElementById('inpCustomSuperN')?.addEventListener('change', (e) => {
             appState.customSuperN = Math.max(0.1, parseFloat(e.target.value) || 1);
@@ -6637,15 +6922,10 @@
 
         ['selMonteCarloSigma', 'selMonteCarloRuns', 'selMinimumThickness', 'inpRequiredYield', 'inpAcceptQr', 'inpAcceptTpass'].forEach(id => {
             document.getElementById(id)?.addEventListener('change', () => {
-                appState.monteCarloRuns = [];
-                appState.monteCarloSamples = [];
-                appState.lastQualification = null;
+                invalidateDerivedResults('les hypothèses de qualification ont changé.',
+                    'the qualification assumptions changed.');
                 updateFabricationSummary();
-                renderDesignReview();
                 updateCharts();
-                liveBi('txtMonteCarloResult',
-                    'Hypothèses modifiées : relancez la qualification statistique.',
-                    'Assumptions changed: rerun the statistical qualification.');
             });
         });
 
@@ -6702,9 +6982,7 @@
             applyOptimizationScope({ render: true, alertOnError: false });
         });
         document.getElementById('selMeritObjective')?.addEventListener('change', () => {
-            appState.monteCarloRuns = [];
-            appState.monteCarloSamples = [];
-            appState.lastQualification = null;
+            invalidateDerivedResults('le mérite a changé.', 'the merit function changed.');
             liveBi('txtOptiResult', '—', '—');
             liveBi('txtMonteCarloResult', '—', '—');
             updateMeritGridNote();
@@ -6788,6 +7066,9 @@
     /* Entrée directe dans le mode design libre : sélectionne le mérite, ouvre
        l'éditeur et l'amène à l'écran. */
     function enterFreeDesign() {
+        // La conception libre appartient au mode libre : y entrer réellement,
+        // sans jamais modifier le mérite d'un exercice en cours.
+        if (appState.uiMode !== 'libre') enterFreeMode();
         const sel = document.getElementById('selMeritObjective');
         if (sel && sel.value !== 'custom') {
             sel.value = 'custom';
@@ -6837,7 +7118,15 @@
     }
 
     function setupKeyboardShortcuts() {
-        const click = id => document.getElementById(id)?.click();
+        // Un raccourci n'active qu'une commande visible et disponible : il ne
+        // doit jamais ouvrir un outil que le parcours d'exercice a masqué.
+        const actionable = el => {
+            if (!el || el.disabled) return false;
+            if (typeof el.closest === 'function' && el.closest('.hidden')) return false;
+            if (typeof el.getClientRects === 'function' && el.getClientRects().length === 0) return false;
+            return true;
+        };
+        const click = id => { const el = document.getElementById(id); if (actionable(el)) el.click(); };
         window.addEventListener('keydown', ev => {
             if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
             if (isTypingTarget(document.activeElement)) return;
@@ -6849,7 +7138,12 @@
                 m: 'btnStoreMemory', e: 'btnChartCsv', o: 'btnRunOptimizer', n: 'btnAnalyzeNeedle'
             };
             const low = k.toLowerCase();
-            if (low === 'd') { ev.preventDefault(); enterFreeDesign(); return; }
+            if (low === 'd') {
+                ev.preventDefault();
+                // Conception libre : réservée au mode libre, comme son bouton.
+                if (appState.uiMode === 'libre') enterFreeDesign();
+                return;
+            }
             if (map[low]) { ev.preventDefault(); click(map[low]); return; }
             if (low === 'g') {
                 ev.preventDefault();
@@ -7008,6 +7302,332 @@
         el.setAttribute('aria-label', texte);
     }
 
+    /* =========================================================================
+       SAUVEGARDE DU TRAVAIL
+       Le composant complet (couches, verrous, milieux, face arrière, banc,
+       mérite, cible, fenêtres, bandes, exercice) est enregistré dans le
+       navigateur après chaque modification, et restauré à l'ouverture.
+       Un fichier exporté permet de le rendre ou de changer d'ordinateur.
+       Les résultats calculés ne sont pas sauvegardés : ils sont recalculés.
+       ========================================================================= */
+    const STORAGE_KEY_PROJECT = 'simulateur_cm_projet_v1';
+    const PROJECT_FIELDS = ['layers', 'backLayers', 'considerBackside', 'superstrat', 'substrat',
+        'customSuperN', 'customSubN', 'customSubK', 'backMedium', 'backCustomN', 'backCustomK',
+        'backDesignL0', 'designL0', 'designIncDeg', 'lMin', 'lMax', 'incSpecDeg', 'mode',
+        'aMin', 'aMax', 'lAngNm', 'arWindows', 'bands', 'fresnelPreset'];
+    let projectAutosaveReady = false;
+    let projectSaveTimer = null;
+
+    function captureProject() {
+        const state = {};
+        PROJECT_FIELDS.forEach(k => { state[k] = JSON.parse(JSON.stringify(appState[k] ?? null)); });
+        const val = id => document.getElementById(id)?.value;
+        return {
+            format: 'simulateur-couches-minces', version: 1, savedAt: new Date().toISOString(),
+            uiMode: appState.uiMode, exercise: appState.exercise, lang: currentLang,
+            objective: getObjectiveMode(), targetSegments: appState.customTarget.segments.map(s => ({ ...s })),
+            targetStep: val('inpTargetStep'), targetThreshold: val('inpTargetThreshold'), arThreshold: val('inpArThreshold'),
+            state
+        };
+    }
+
+    function scheduleProjectSave() {
+        if (!projectAutosaveReady) return;
+        clearTimeout(projectSaveTimer);
+        projectSaveTimer = setTimeout(saveProjectNow, 400);
+    }
+
+    function saveProjectNow() {
+        if (!projectAutosaveReady) return;
+        try {
+            localStorage.setItem(STORAGE_KEY_PROJECT, JSON.stringify(captureProject()));
+            setProjectStatus('saved');
+        } catch (_e) {
+            setProjectStatus('unavailable');
+        }
+    }
+
+    let projectStatus = { key: 'saved' };
+    function setProjectStatus(key, extra = {}) {
+        projectStatus = { key, ...extra };
+        const el = document.getElementById('txtProjectStatus');
+        if (!el) return;
+        const fr = currentLang === 'fr';
+        const when = projectStatus.savedAt ? new Date(projectStatus.savedAt).toLocaleString(fr ? 'fr-FR' : 'en-US') : '';
+        el.textContent = ({
+            saved: fr ? '💾 Votre travail est enregistré automatiquement dans ce navigateur.'
+                      : '💾 Your work is saved automatically in this browser.',
+            restored: fr ? `💾 Travail du ${when} restauré. Il continue d'être enregistré automatiquement.`
+                         : `💾 Work from ${when} restored. It keeps being saved automatically.`,
+            imported: fr ? '💾 Fichier de travail importé. Il est maintenant enregistré dans ce navigateur.'
+                         : '💾 Work file imported. It is now saved in this browser.',
+            reset: fr ? '💾 Nouveau départ : empilement vide. Vos matériaux personnels sont conservés.'
+                      : '💾 Fresh start: empty stack. Your custom materials are kept.',
+            invalid: fr ? '⚠ Le travail enregistré était illisible : départ à vide. Utilisez « Importer » si vous avez un fichier exporté.'
+                        : '⚠ The saved work was unreadable: starting empty. Use "Import" if you have an exported file.',
+            unavailable: fr ? '⚠ Enregistrement impossible dans ce navigateur (navigation privée ?). Exportez votre travail pour le conserver.'
+                            : '⚠ Saving is not possible in this browser (private browsing?). Export your work to keep it.'
+        })[projectStatus.key] || '';
+    }
+
+    /* Validation COMPLÈTE avant toute modification : un fichier ou un
+       enregistrement endommagé ne remplace jamais le travail en cours. */
+    function validateProject(o) {
+        const fail = (fr, en) => { const e = new Error(en); e.fr = fr; e.en = en; return e; };
+        if (!o || typeof o !== 'object' || o.format !== 'simulateur-couches-minces' || o.version !== 1 || !o.state || typeof o.state !== 'object')
+            throw fail('ce fichier n’est pas un travail du simulateur.', 'this file is not a simulator work file.');
+        const s = o.state;
+        const finite = (v, lo, hi) => typeof v === 'number' && Number.isFinite(v) && v >= lo && v <= hi;
+        const layerOk = l => l && typeof l === 'object' && Object.hasOwn(MATERIALS_DB, l.matId)
+            && ['QWOT', 'nm'].includes(l.unit)
+            && finite(l.val, 0, l.unit === 'nm' ? LAYER_LIMITS.nm : LAYER_LIMITS.qwot);
+        const mediumOk = id => id === 'Custom' || Object.hasOwn(MATERIALS_DB, id);
+        if (!Array.isArray(s.layers) || s.layers.length > 2000 || !s.layers.every(layerOk))
+            throw fail('couches invalides ou matériau inconnu (importez d’abord vos matériaux personnels).',
+                'invalid layers or unknown material (import your custom materials first).');
+        if (!Array.isArray(s.backLayers) || s.backLayers.length > 2000 || !s.backLayers.every(layerOk))
+            throw fail('couches de la face arrière invalides.', 'invalid rear-surface layers.');
+        if (!mediumOk(s.superstrat) || !mediumOk(s.substrat) || !mediumOk(s.backMedium))
+            throw fail('milieu inconnu.', 'unknown medium.');
+        const checks = [
+            ['customSuperN', 0.1, 20], ['customSubN', 0.1, 20], ['customSubK', 0, 30], ['backCustomN', 0.1, 20],
+            ['backCustomK', 0, 30], ['backDesignL0', 200, 2500], ['designL0', 200, 2000], ['designIncDeg', 0, 89],
+            ['lMin', 200, 2500], ['lMax', 200, 2500], ['incSpecDeg', 0, 89], ['aMin', 0, 89], ['aMax', 0.05, 89.9],
+            ['lAngNm', 200, 2500]
+        ];
+        const bad = checks.filter(([k, lo, hi]) => !finite(s[k], lo, hi)).map(([k]) => k);
+        if (bad.length || !(s.lMax > s.lMin) || !(s.aMax > s.aMin) || !['spectral', 'angular'].includes(s.mode))
+            throw fail(`réglages invalides (${bad.join(', ') || 'plages'}).`, `invalid settings (${bad.join(', ') || 'ranges'}).`);
+        if (!Array.isArray(s.arWindows) || s.arWindows.length > GRID_LIMITS.maxSegments
+            || !s.arWindows.every(w => w && finite(w.lmin, GRID_LIMITS.lMin, GRID_LIMITS.lMax) && finite(w.lmax, GRID_LIMITS.lMin, GRID_LIMITS.lMax)))
+            throw fail('fenêtres antireflet invalides.', 'invalid antireflection windows.');
+        if (!Array.isArray(s.bands) || s.bands.length > GRID_LIMITS.maxSegments
+            || !s.bands.every(b => b && finite(b.lmin, 100, 5000) && finite(b.lmax, 100, 5000) && finite(b.step, 0.05, 100) && ['T', 'R', 'A'].includes(b.qty)))
+            throw fail('bandes de mesure invalides.', 'invalid measurement bands.');
+        const segs = Array.isArray(o.targetSegments) ? o.targetSegments.map(cleanTargetSegment) : [];
+        if (segs.length > GRID_LIMITS.maxSegments || segs.some(x => !x))
+            throw fail('cible libre invalide.', 'invalid free target.');
+        if (!['etudiant', 'libre'].includes(o.uiMode)) throw fail('mode inconnu.', 'unknown mode.');
+        if (o.exercise !== null && !EXERCISES.some(e => e.id === o.exercise)) throw fail('exercice inconnu.', 'unknown exercise.');
+        if (!['ar', 'qr', 'custom'].includes(o.objective)) throw fail('mérite inconnu.', 'unknown merit.');
+        return { ...o, targetSegments: segs };
+    }
+
+    function applyProject(o) {
+        const s = o.state;
+        PROJECT_FIELDS.forEach(k => { if (k in s) appState[k] = JSON.parse(JSON.stringify(s[k])); });
+        appState.fresnelPreset = !!s.fresnelPreset;
+        appState.considerBackside = !!s.considerBackside;
+        appState.customTarget.segments = o.targetSegments.map(x => ({ ...x }));
+        const set = (id, v) => { const el = document.getElementById(id); if (el && v !== undefined && v !== null) el.value = v; };
+        set('selSuperstrat', appState.superstrat); set('selSubstrat', appState.substrat);
+        document.getElementById('divCustomSuper')?.classList.toggle('hidden', appState.superstrat !== 'Custom');
+        document.getElementById('divCustomSub')?.classList.toggle('hidden', appState.substrat !== 'Custom');
+        set('inpCustomSuperN', appState.customSuperN); set('inpCustomSubN', appState.customSubN); set('inpCustomSubK', appState.customSubK);
+        set('inpL0Design', appState.designL0); set('inpIncDesign', appState.designIncDeg);
+        set('inpLMin', appState.lMin); set('inpLMax', appState.lMax);
+        set('inpAMin', appState.aMin); set('inpAMax', appState.aMax);
+        set('rngIncSpec', appState.incSpecDeg); set('rngLAng', appState.lAngNm);
+        const inc = document.getElementById('txtIncSpecVal'); if (inc) inc.textContent = `${appState.incSpecDeg.toFixed(1)}°`;
+        const lang = document.getElementById('txtLAngVal'); if (lang) lang.textContent = `${appState.lAngNm} nm`;
+        set('selMeritObjective', o.objective);
+        const num = (v, lo, hi) => { const x = Number(v); return Number.isFinite(x) && x >= lo && x <= hi ? x : null; };
+        set('inpTargetStep', num(o.targetStep, 0.1, 50)); set('inpTargetThreshold', num(o.targetThreshold, 0.01, 100));
+        set('inpArThreshold', num(o.arThreshold, 0.001, 100));
+        const spectral = appState.mode === 'spectral';
+        document.getElementById('panelSpectralControls')?.classList.toggle('hidden', !spectral);
+        document.getElementById('panelAngularControls')?.classList.toggle('hidden', spectral);
+        document.getElementById('tabBtnSpectral')?.classList.toggle('bg-indigo-600', spectral);
+        document.getElementById('tabBtnAngular')?.classList.toggle('bg-indigo-600', !spectral);
+        invalidateMaterialAnalysis();
+        syncOptimizationScopeFromLocks();
+        appState.uiMode = o.uiMode;
+        appState.exercise = o.exercise;
+        renderExerciseSelector();
+        renderLayersTable();
+        renderBacksideEditor();
+        renderArWindows();
+        renderCustomTargetEditor();
+        renderBandAnalyzer();
+        updateMeritGridNote();
+        updateAcceptanceUI();
+        applyUiMode();
+        runFullSimulation();
+    }
+
+    function restoreSavedProjectAtStartup() {
+        let raw = null;
+        try { raw = localStorage.getItem(STORAGE_KEY_PROJECT); } catch (_e) { raw = null; }
+        if (raw) {
+            try {
+                const project = validateProject(JSON.parse(raw));
+                applyProject(project);
+                if (project.lang === 'en' || project.lang === 'fr') setAppLanguagePro(project.lang);
+                setProjectStatus('restored', { savedAt: project.savedAt });
+            } catch (_e) {
+                setProjectStatus('invalid');
+            }
+        }
+        projectAutosaveReady = true;
+    }
+
+    function wireProjectBar() {
+        document.getElementById('btnProjectExport')?.addEventListener('click', () => {
+            const blob = new Blob([JSON.stringify(captureProject(), null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            const day = new Date().toISOString().slice(0, 10);
+            a.download = currentLang === 'fr' ? `mon_travail_couches_minces_${day}.json` : `my_thin_film_work_${day}.json`;
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(a.href), 0);
+        });
+        document.getElementById('btnProjectImport')?.addEventListener('click', () => {
+            const inp = document.createElement('input');
+            inp.type = 'file'; inp.accept = 'application/json,.json';
+            inp.onchange = () => {
+                const f = inp.files && inp.files[0];
+                if (!f) return;
+                const rd = new FileReader();
+                rd.onload = () => {
+                    let project;
+                    try { project = validateProject(JSON.parse(String(rd.result))); }
+                    catch (err) {
+                        alert(currentLang === 'fr'
+                            ? `Fichier refusé : ${err.fr || 'JSON illisible.'} Votre travail actuel est conservé.`
+                            : `File rejected: ${err.en || 'unreadable JSON.'} Your current work is kept.`);
+                        return;
+                    }
+                    applyProject(project);
+                    setProjectStatus('imported');
+                    saveProjectNow();
+                };
+                rd.onerror = () => alert(currentLang === 'fr'
+                    ? 'Lecture du fichier impossible. Votre travail actuel est conservé.'
+                    : 'The file could not be read. Your current work is kept.');
+                rd.readAsText(f);
+            };
+            inp.click();
+        });
+        document.getElementById('btnProjectReset')?.addEventListener('click', () => {
+            const ok = confirm(currentLang === 'fr'
+                ? 'Vider l’empilement et revenir aux réglages de départ ?\nAstuce : « Exporter mon travail » le conserve dans un fichier.'
+                : 'Empty the stack and return to the initial settings?\nTip: "Export my work" keeps it in a file.');
+            if (!ok) return;
+            const mode = appState.uiMode, ex = appState.exercise;
+            appState.customTarget.segments = [];
+            loadPreset('empty');
+            appState.uiMode = mode; appState.exercise = ex;
+            applyUiMode();
+            renderCustomTargetEditor();
+            renderBandAnalyzer();
+            setProjectStatus('reset');
+            saveProjectNow();
+        });
+    }
+
+    /* =========================================================================
+       GUIDE DU MODE LIBRE
+       Cinq étapes, dans l'ordre où un concepteur travaille. Chaque étape a son
+       bouton et une coche qui suit l'état réel du composant : l'utilisateur
+       sait toujours ce qui est fait et ce qui reste à faire.
+       ========================================================================= */
+    const STORAGE_KEY_GUIDE = 'simulateur_cm_guide_libre_replie';
+    let freeGuideCollapsed = false;
+    try { freeGuideCollapsed = localStorage.getItem(STORAGE_KEY_GUIDE) === '1'; } catch (_e) { /* sans stockage */ }
+
+    function freeGuideSteps() {
+        const fr = currentLang === 'fr';
+        const target = getCustomTarget();
+        const hasTarget = target.segments.some(s => (Number(s.weight) || 0) > 0) && !target.tooLarge;
+        const optiText = LIVE_TEXT.get('txtOptiResult')?.render?.() || '—';
+        return [
+            { done: true, act: 'media',
+              title: fr ? 'Milieux' : 'Media',
+              text: fr ? 'Milieu d’incidence et substrat (modifiables à tout moment)' : 'Incident medium and substrate (can be changed at any time)',
+              btn: fr ? 'Voir' : 'Show' },
+            { done: appState.layers.length > 0, act: 'stack',
+              title: fr ? 'Empilement' : 'Stack',
+              text: fr ? '« + Couche » ou une formule comme (HL)^4 H' : '"+ Layer" or a formula such as (HL)^4 H',
+              btn: fr ? 'Ajouter une couche' : 'Add a layer' },
+            { done: hasTarget, act: 'target',
+              title: fr ? 'Cible' : 'Target',
+              text: fr ? 'Ce que vous voulez obtenir : bandes, R/T/A visés, angle, polarisation' : 'What you want: bands, target R/T/A, angle, polarisation',
+              btn: fr ? 'Définir ma cible' : 'Define my target' },
+            { done: optiText !== '—' && !/⚠/.test(optiText), act: 'optimize',
+              title: fr ? 'Optimiser' : 'Optimize',
+              text: fr ? 'BFGS ajuste les épaisseurs ; l’aiguille peut ajouter une couche' : 'BFGS adjusts thicknesses; the needle can add a layer',
+              btn: fr ? 'Optimiser' : 'Optimize', needs: [1, 2] },
+            { done: !!appState.lastQualification, act: 'robust',
+              title: fr ? 'Robustesse' : 'Robustness',
+              text: fr ? 'Monte-Carlo : le composant résiste-t-il aux erreurs de dépôt ?' : 'Monte-Carlo: does the design survive deposition errors?',
+              btn: fr ? 'Évaluer' : 'Evaluate', needs: [1, 2] }
+        ];
+    }
+
+    function renderFreeGuide() {
+        const box = document.getElementById('freeGuide');
+        if (!box) return;
+        const show = appState.uiMode === 'libre';
+        box.classList.toggle('hidden', !show);
+        if (!show) return;
+        const fr = currentLang === 'fr';
+        const steps = freeGuideSteps();
+        const next = steps.findIndex(s => !s.done);
+        const head = `<div class="flex items-center justify-between gap-2">
+              <span class="font-bold text-fuchsia-950">🧭 ${fr ? 'Guide de conception' : 'Design guide'}
+                <span class="font-normal text-fuchsia-800">— ${next < 0
+                    ? (fr ? 'toutes les étapes sont faites. Modifiez librement, puis comparez en A/B.' : 'all steps done. Change anything, then compare as A/B.')
+                    : (fr ? `prochaine étape : ${next + 1}. ${steps[next].title}` : `next step: ${next + 1}. ${steps[next].title}`)}</span></span>
+              <button type="button" data-guide="toggle" class="text-fuchsia-800 hover:text-fuchsia-950 font-bold px-1" title="${fr ? 'Replier ou déplier le guide' : 'Collapse or expand the guide'}">${freeGuideCollapsed ? (fr ? '▸ afficher' : '▸ show') : (fr ? '▾ replier' : '▾ collapse')}</button>
+            </div>`;
+        const body = freeGuideCollapsed ? '' : `<ol class="grid grid-cols-1 sm:grid-cols-5 gap-2 mt-2">${steps.map((s, i) => {
+            const blocked = (s.needs || []).some(k => !steps[k].done);
+            const state = s.done ? 'border-emerald-300 bg-emerald-50' : i === next ? 'border-fuchsia-400 bg-white ring-2 ring-fuchsia-200' : 'border-slate-200 bg-white';
+            const why = blocked ? (fr ? 'Faites d’abord les étapes 2 et 3.' : 'Do steps 2 and 3 first.') : s.text;
+            return `<li class="rounded-lg border ${state} p-2 flex flex-col gap-1">
+                <span class="font-bold text-slate-900">${s.done ? '✅' : `<span class="inline-flex w-4 h-4 items-center justify-center rounded-full bg-fuchsia-600 text-white text-[9px]">${i + 1}</span>`} ${s.title}</span>
+                <span class="text-[10px] text-slate-600 leading-tight flex-grow">${s.text}</span>
+                <button type="button" data-guide="${s.act}" ${blocked ? 'disabled' : ''} title="${why}"
+                  class="mt-1 text-[10px] font-bold rounded px-2 py-1 ${blocked ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-fuchsia-600 hover:bg-fuchsia-700 text-white'}">${s.btn}</button>
+              </li>`;
+        }).join('')}</ol>`;
+        box.innerHTML = `<div class="bg-fuchsia-50 border border-fuchsia-200 rounded-lg px-3 py-2 text-xs">${head}${body}</div>`;
+    }
+
+    function focusPanel(selector) {
+        const el = document.querySelector(selector);
+        if (!el) return;
+        el.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
+        el.classList?.add('ring-4', 'ring-fuchsia-300');
+        setTimeout(() => el.classList?.remove('ring-4', 'ring-fuchsia-300'), 1600);
+    }
+
+    function wireFreeGuide() {
+        document.getElementById('freeGuide')?.addEventListener('click', e => {
+            const btn = e.target.closest?.('[data-guide]');
+            if (!btn || btn.disabled) return;
+            const act = btn.dataset.guide;
+            if (act === 'toggle') {
+                freeGuideCollapsed = !freeGuideCollapsed;
+                try { localStorage.setItem(STORAGE_KEY_GUIDE, freeGuideCollapsed ? '1' : '0'); } catch (_e) { /* sans stockage */ }
+            } else if (act === 'media') focusPanel('[data-panel="media"]');
+            else if (act === 'stack') { document.getElementById('btnAddLayer')?.click(); focusPanel('[data-panel="stack"]'); }
+            else if (act === 'target') {
+                // Cible vide : une première ligne modifiable sert de point de départ
+                // (exemple de syntaxe, pas une solution) ; l'utilisateur l'ajuste.
+                if (!appState.customTarget.segments.length) {
+                    appState.customTarget.segments = DEFAULT_TARGET_SEGMENTS.map(x => ({ ...x }));
+                    invalidateForSpec();
+                }
+                enterFreeDesign();
+                updateCharts();
+            }
+            else if (act === 'optimize') { focusPanel('[data-panel="optimizer"]'); document.getElementById('btnRunOptimizer')?.click(); }
+            else if (act === 'robust') { focusPanel('[data-panel="mc"]'); document.getElementById('btnRunMonteCarlo')?.click(); }
+            renderFreeGuide();
+        });
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
         initInfoTips();
         autocontroleDemarrage();
@@ -7061,6 +7681,8 @@
             const sel = document.getElementById('selExercise');
             if (sel && !appState.exercise) sel.focus();
         });
+        wireProjectBar();
+        wireFreeGuide();
         loadPreset('empty');
         applyUiMode();
         renderCustomTargetEditor();
@@ -7068,6 +7690,7 @@
         renderDesignReview();
         renderBacksideEditor();
         setAppLanguagePro('fr');
+        restoreSavedProjectAtStartup();
     });
     
     /* =========================================================================
@@ -7189,7 +7812,6 @@
         ["Audit nominal en attente.", "Nominal audit pending."],
         ["Évaluer la robustesse", "Assess robustness"],
         ["Toutes les couches déposées sont perturbées. Le verrouillage ne concerne que BFGS.", "Every deposited layer is perturbed. Locking applies to BFGS only."],
-        ["Défaut TP", "Lab default"],
         ["Grandeurs :", "Quantities:"],
         ["Vue initiale", "Reset view"],
         ["Réflexion R (Moy)", "Reflectance R (avg)"],
@@ -7213,6 +7835,8 @@
         ["Conçu pour remplacer OpenFilters avec un environnement web direct et pédagogique.", "Designed as a direct, educational web environment replacing OpenFilters."],
         ["🎨 Cible libre (conception personnelle)", "🎨 Free target (custom design)"],
         ["Conception libre", "Free design"],
+        ["Ma cible", "My target"],
+        ["Bandes par défaut", "Default bands"],
         ["🎨 Votre cahier des charges", "🎨 Your specification"],
         ["Exemple", "Example"],
         ["Vider", "Clear"],
@@ -7282,8 +7906,8 @@
          "Verdict: qualified if the lower bound of the 95% Wilson CI exceeds this requirement; not qualified if the upper bound stays below it; inconclusive otherwise."],
         ["Tout ce qui n'est couvert par aucun segment est « indifférent » et n'entre pas dans le score. La note est une RMSE pondérée par les poids des segments.",
          "Anything not covered by a segment is a don't-care region and does not enter the score. The score is an RMSE weighted by the segment weights."],
-        ["Molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · clic droit (appui long sur mobile) : exporter les courbes en CSV.",
-         "Wheel: centered zoom · drag: box zoom · Shift + drag: pan · right-click (long press on mobile): export the curves as CSV."],
+        ["Ctrl + molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · « Vue initiale » : revenir au cadrage de départ · clic droit (appui long sur mobile) : exporter les courbes en CSV.",
+         "Ctrl + wheel: centered zoom · drag: box zoom · Shift + drag: pan · ‘Reset view’: back to the starting frame · right-click (long press on mobile): export the curves as CSV."],
         ["Ajouter une fenêtre spectrale à évaluer. Le mérite est la moyenne de R sur l'ensemble des fenêtres déclarées ; ce qui n'est couvert par aucune d'elles est indifférent.",
          "Add a spectral window to evaluate. The merit is the mean of R over all declared windows; anything outside them does not count."],
         ["Comparer deux empilements qualifiés sur des hypothèses strictement identiques",
@@ -7453,6 +8077,82 @@
             });
         });
     }
+
+    /* Infobulles bilingues des commandes : appliquées à chaque changement de
+       langue. Elles disent ce que fait la commande et ses limites, sans
+       jamais donner de réponse d’exercice. */
+    const CONTROL_TIPS = {
+        btnCloseShortcuts: ['Fermer la liste des raccourcis (Échap)', 'Close the shortcut list (Esc)'],
+        inpCustomSuperN: ["Indice réel n du milieu d'incidence personnalisé (transparent, k = 0). Validez par Entrée ou en quittant le champ.", 'Real index n of the custom incident medium (transparent, k = 0). Confirm with Enter or by leaving the field.'],
+        inpCustomSubN: ['Partie réelle n de l’indice du substrat personnalisé', 'Real part n of the custom substrate index'],
+        inpCustomSubK: ['Coefficient d’extinction k du substrat personnalisé (0 = transparent). Avec k > 0, la face arrière ne peut pas être incluse.', 'Extinction coefficient k of the custom substrate (0 = transparent). With k > 0, the rear surface cannot be included.'],
+        btnAddLayer: ['Ajouter une couche au-dessus de l’empilement (côté milieu d’incidence). Modifiez ensuite son matériau et son épaisseur dans le tableau.', 'Add a layer at the top of the stack (incident-medium side). Then edit its material and thickness in the table.'],
+        inpCleanThreshold: ['Épaisseur minimale admise (nm). Le nettoyage supprime les couches plus fines ; c’est aussi la borne basse de BFGS.', 'Minimum allowed thickness (nm). Cleaning removes thinner layers; it is also the BFGS lower bound.'],
+        btnDoClean: ['Supprimer les couches plus fines que le seuil et fusionner les couches voisines identiques', 'Remove layers thinner than the threshold and merge identical neighbouring layers'],
+        btnCancelClean: ['Fermer sans modifier l’empilement', 'Close without changing the stack'],
+        inpLMin: ['Début de la plage spectrale tracée (200–2500 nm). Doit rester inférieur à λmax.', 'Start of the plotted spectral range (200–2500 nm). Must stay below λmax.'],
+        inpLMax: ['Fin de la plage spectrale tracée (200–2500 nm). Doit dépasser λmin.', 'End of the plotted spectral range (200–2500 nm). Must exceed λmin.'],
+        rngIncSpec: ['Angle d’incidence du calcul spectral, mesuré dans le milieu d’incidence (0–89°). Au-delà de 0°, S et P diffèrent.', 'Angle of incidence for the spectral calculation, measured in the incident medium (0–89°). Above 0°, S and P differ.'],
+        inpAMin: ['Premier angle du balayage angulaire (degrés)', 'First angle of the angular scan (degrees)'],
+        inpAMax: ['Dernier angle du balayage angulaire (degrés)', 'Last angle of the angular scan (degrees)'],
+        rngLAng: ['Longueur d’onde fixe utilisée pour le balayage angulaire', 'Fixed wavelength used for the angular scan'],
+        selMeritObjective: ['Grandeur que l’optimiseur, l’aiguille et le Monte-Carlo cherchent à améliorer. Changer de mérite invalide les résultats précédents.', 'Quantity that the optimizer, needle and Monte-Carlo try to improve. Changing it invalidates previous results.'],
+        inpArThreshold: ['Seuil d’acceptation : R moyen maximal admis sur les fenêtres déclarées (%)', 'Acceptance threshold: maximum mean R allowed over the declared windows (%)'],
+        selOptimizeScope: ['Couches que BFGS a le droit de modifier : toutes, ou une liste choisie. Les couches verrouillées ne bougent jamais.', 'Layers BFGS may change: all, or a chosen list. Locked layers never move.'],
+        inpOptimizeLayers: ['Numéros des couches libres, par exemple « 16-18 » ou « 1,3,5 »', 'Numbers of the free layers, for example "16-18" or "1,3,5"'],
+        selNeedleMaterial: ['Matériau de la couche fine (aiguille) testée dans l’empilement', 'Material of the thin (needle) layer tested in the stack'],
+        inpAcceptQr: ['Valeur minimale de Qr exigée pour qu’un tirage soit conforme', 'Minimum Qr required for a draw to be compliant'],
+        inpAcceptTpass: ['Transmission moyenne minimale exigée dans la bande passante (%)', 'Minimum mean transmission required in the passband (%)'],
+        selMonteCarloSigma: ['Tolérance de fabrication Δd : chaque épaisseur reçoit une erreur gaussienne d’écart-type Δd/2', 'Manufacturing tolerance Δd: each thickness gets a Gaussian error with standard deviation Δd/2'],
+        selMonteCarloRuns: ['Nombre de composants simulés. Plus il est grand, plus l’intervalle de confiance est étroit, mais plus le calcul est long.', 'Number of simulated components. More runs give a narrower confidence interval but take longer.'],
+        inpRequiredYield: ['Rendement minimal visé (%) : part des composants qui doivent être conformes', 'Target minimum yield (%): share of components that must be compliant'],
+        btnRunMonteCarlo: ['Lancer la qualification statistique. Toute modification pendant le calcul l’interrompt.', 'Run the statistical qualification. Any change during the run stops it.'],
+        btnLoadReviewA: ['Charger l’empilement de référence Fresnel à 18 couches pour le qualifier', 'Load the 18-layer Fresnel reference stack to qualify it'],
+        inpReviewDesignName: ['Nom donné à l’empilement lors de sa capture en A ou en B', 'Name given to the stack when captured as A or B'],
+        btnCaptureReviewA: ['Archiver la dernière qualification comme empilement A. Disponible seulement si elle est à jour.', 'Archive the latest qualification as design A. Available only when it is up to date.'],
+        btnCaptureReviewB: ['Archiver la dernière qualification comme empilement B. Disponible seulement si elle est à jour.', 'Archive the latest qualification as design B. Available only when it is up to date.'],
+        chkReviewOverlay: ['Superposer les spectres archivés A et B au graphique', 'Overlay the archived A and B spectra on the chart'],
+        btnClearReview: ['Effacer les archives A et B', 'Clear archives A and B'],
+        btnAddTargetSeg: ['Ajouter un segment à la cible : bande, grandeur (T, R, A), angle, polarisation, valeur visée et poids', 'Add a target segment: band, quantity (T, R, A), angle, polarisation, target value and weight'],
+        inpTargetStep: ['Pas de calcul de la cible (0,1–50 nm). Un pas plus fin est plus précis mais plus lent.', 'Target computation step (0.1–50 nm). A finer step is more accurate but slower.'],
+        inpTargetThreshold: ['RMSE maximale admise pour qu’un tirage soit conforme (%)', 'Maximum RMSE allowed for a draw to be compliant (%)'],
+        selMatInspect: ['Matériau dont les courbes n(λ) et k(λ) sont affichées', 'Material whose n(λ) and k(λ) curves are shown'],
+        inpCustomMatName: ['Nom libre du matériau, affiché dans les listes de couches et de milieux', 'Free name of the material, shown in the layer and medium lists'],
+        btnAddMatRow: ['Ajouter une ligne (λ, n, k) à la table du matériau actif', 'Add a (λ, n, k) row to the active material table'],
+        inpImportMatFile: ['Fichier CSV ou texte : colonnes λ, n et éventuellement k ; virgule ou point décimal acceptés', 'CSV or text file: λ, n and optionally k columns; decimal comma or point accepted'],
+        btnImportMatFile: ['Importer une table depuis un fichier. En cas d’erreur, la table actuelle est conservée.', 'Import a table from a file. On error, the current table is kept.'],
+        btnCancelPasteMat: ['Fermer sans modifier la table', 'Close without changing the table'],
+        selMatImportUnit: ['Unité de la colonne λ : nm, µm, ou détection automatique', 'Unit of the λ column: nm, µm, or automatic detection'],
+        btnApplyPastedMat: ['Remplacer la table par les valeurs collées, après vérification complète', 'Replace the table with the pasted values, after full validation'],
+        btnCloseHelp: ['Fermer l’aide', 'Close help'],
+        btnCloseHelp2: ['Fermer l’aide', 'Close help'],
+        btnHideAudit: ['Masquer le bilan de fabrication', 'Hide the manufacturing summary'],
+        btnRevealAudit: ['Afficher le bilan de fabrication (épaisseur totale, couches fines…) après avoir fait vos propres calculs', 'Show the manufacturing summary (total thickness, thin layers…) after doing your own calculations'],
+        selBackMedium: ['Milieu situé derrière la face arrière (souvent l’air)', 'Medium behind the rear surface (usually air)'],
+        inpBackN: ['Indice réel n du milieu arrière personnalisé', 'Real index n of the custom rear medium'],
+        inpBackK: ['Coefficient d’extinction k du milieu arrière personnalisé', 'Extinction coefficient k of the custom rear medium'],
+        inpBackL0: ['Longueur d’onde de référence λ0 des épaisseurs QWOT de la face arrière', 'Reference wavelength λ0 for the rear-surface QWOT thicknesses']
+    };
+    function applyControlTips() {
+        const k = currentLang === 'fr' ? 0 : 1;
+        Object.entries(CONTROL_TIPS).forEach(([id, pair]) => {
+            const el = document.getElementById(id);
+            if (el) el.setAttribute('title', pair[k]);
+        });
+        ['btnProjectExport', 'btnProjectImport', 'btnProjectReset'].forEach(id => {
+            const el = document.getElementById(id);
+            const t = PROJECT_TIPS[id];
+            if (el && t) { el.setAttribute('title', t[k][1]); el.textContent = t[k][0]; }
+        });
+    }
+    const PROJECT_TIPS = {
+        btnProjectExport: [['⬇ Exporter mon travail', 'Télécharger tout votre travail (couches, milieux, face arrière, cible, bandes, exercice) dans un fichier .json, pour le rendre ou le reprendre sur un autre ordinateur'],
+                           ['⬇ Export my work', 'Download all your work (layers, media, rear surface, target, bands, exercise) as a .json file, to hand it in or continue on another computer']],
+        btnProjectImport: [['⬆ Importer', 'Recharger un fichier de travail exporté auparavant. Votre travail actuel n’est remplacé que si le fichier est entièrement valide'],
+                           ['⬆ Import', 'Reload a previously exported work file. Your current work is replaced only if the file is fully valid']],
+        btnProjectReset: [['↺ Repartir de zéro', 'Vider l’empilement et revenir aux réglages de départ. Vos matériaux personnels sont conservés'],
+                          ['↺ Start over', 'Empty the stack and return to the initial settings. Your custom materials are kept']]
+    };
 
     function setAppLanguagePro(lang) {
         currentLang = lang === 'en' ? 'en' : 'fr';
@@ -7626,6 +8326,15 @@
         updateCharts();
         updateMaterialInspection();
         // Diagnostic π(z) : re-rédigé, pas recalculé (aucun effet sur les verrous).
+        // Graduations des graphiques : séparateur décimal de la langue choisie,
+        // et non celui du navigateur (sinon « 1,5 » reste affiché en anglais).
+        setProjectStatus(projectStatus.key, projectStatus);
+        applyControlTips();
+        renderFreeGuide();
+        const chartLocale = currentLang === 'fr' ? 'fr-FR' : 'en-US';
+        [mainChart, matChart, matKChart, needlePiChart].forEach(c => {
+            if (c && c.options) { c.options.locale = chartLocale; c.update?.('none'); }
+        });
         if (!document.getElementById('divNeedleAdvice').classList.contains('hidden')) renderNeedleAdvice();
         if (typeof rafraichirBadgeGarde === 'function') rafraichirBadgeGarde();
         if (window.lucide) lucide.createIcons();

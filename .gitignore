@@ -29,6 +29,12 @@ REPONSES*.md
 COMPARAISON*.md
 A_LIRE*.md
 enseignant/
+# Rapports d'audit : ils décrivent des défauts exploitables et l'accès aux
+# anciens corrigés.
+audit*.md
+AUDIT*.md
+# Aide-mémoire local de reprise (Claude Code)
+CLAUDE.md
 
 # Outils locaux
 .claude/

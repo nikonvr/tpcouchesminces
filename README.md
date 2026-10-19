@@ -33,7 +33,15 @@ navigateur récent. Aucune installation. Hors ligne : ouvrir
 Le simulateur s'ouvre sur un **accueil étudiant** : choisir son exercice
 affiche les outils utiles et une consigne visible. Les mérites « R moyen »
 et « Maximiser Qr » deviennent disponibles dans les exercices concernés.
-Le bouton **🎛 Libre** ouvre la conception d'un composant personnel.
+Le bouton **🎛 Libre** ouvre la conception d'un composant personnel. Un
+**guide en cinq étapes** (milieux, empilement, cible, optimisation,
+robustesse) indique la prochaine action et coche ce qui est fait.
+
+Le travail est **enregistré automatiquement** dans le navigateur et restauré
+à la réouverture. **Exporter mon travail** produit un fichier `.json` à rendre
+ou à recharger sur un autre ordinateur avec **Importer**. Toute modification
+du composant ou de la cible marque les résultats précédents comme périmés.
+Sur le graphique, la molette fait défiler la page ; **Ctrl + molette** zoome.
 
 Les matériaux personnels se définissent dans **+ Matériau** par une table
 `λ, n, k`, saisie ou importée (CSV/TXT/TSV, deux colonnes si k = 0).
@@ -73,6 +81,7 @@ substrat ne sont pas modélisées.
 python tests/lancer.py           # recette complète, code de retour 0/1
 python tests/lancer.py materiaux # contrôles ciblés sur les matériaux personnels
 python tests/lancer.py arriere   # deux faces, référence indépendante et commandes
+python tests/lancer.py interactions # enchaînements de commandes, sauvegarde, guide, infobulles
 python .sync_offline.py          # régénère le paquet hors ligne et son manifeste
 ```
 

@@ -14,11 +14,12 @@ python tests/lancer.py
 |---|---|
 | `python tests/lancer.py` | tout, avec le détail contrôle par contrôle |
 | `python tests/lancer.py --court` | bilan seul |
-| `python tests/lancer.py physique` | un seul module (`physique`, `algorithmes`, `gardefous`, `materiaux`, `arriere`, `documents`) |
+| `python tests/lancer.py physique` | un seul module (`physique`, `algorithmes`, `gardefous`, `materiaux`, `arriere`, `interactions`, `documents`) |
 | `python tests/lancer.py --en-ligne` | ajoute `deploiement` : interroge le site et GitHub (réseau requis) |
 | `node tests/test_physique.js` | module physique isolé |
 | `node tests/test_materiaux.js` | imports, commandes, stockage, instantanés et cas opaques |
 | `node tests/test_arriere.js` | deux faces : calcul, épaisseurs fixes et éditeur bilingue |
+| `node tests/test_interactions.js` | enchaînements : résultats périmés, imports de cible, saisies, sauvegarde, guide, infobulles |
 | `python tests/test_documents.py` | module documents isolé |
 
 Code de retour : **0** si tout passe, **1** sinon.
@@ -61,6 +62,21 @@ Les vrais gestionnaires de l'éditeur sont exécutés pour vérifier la copie
 indépendante, les préréglages, la formule, les instantanés figés, le calcul
 auxiliaire de mérite et les libellés FR/EN. L'arrière reste fixe quand les
 épaisseurs et la référence QWOT de l'avant changent.
+
+### Enchaînements de commandes — `test_interactions.js`
+
+56 contrôles rejouent les défauts d'interaction de l'audit du 19 octobre
+2026 avec les vrais gestionnaires : une qualification, un verdict ou un
+diagnostic d'aiguille ne survivent à aucune modification du composant ou de
+la spécification ; l'import de cible est atomique, validé et échappé ; les
+grilles sont bornées ; les saisies invalides sont refusées sans corrompre
+l'état (virgule décimale acceptée) ; le travail se sauvegarde, s'exporte et
+se restaure après validation complète ; le guide du mode libre suit l'état
+réel ; chaque infobulle existe en français et en anglais. Exécutés sur la
+version précédente du simulateur, ces contrôles échouent.
+
+Le harnais commun (DOM et stockage simulés, code réel) est dans
+`tests/lib/harnais.js`.
 
 ## Principe
 
