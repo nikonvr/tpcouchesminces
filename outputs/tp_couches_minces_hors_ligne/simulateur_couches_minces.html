@@ -875,7 +875,6 @@
                             <span class="font-bold text-emerald-950 uppercase tracking-wide text-[11px] flex items-center gap-1">
                                 <i data-lucide="table" class="w-3.5 h-3.5 text-emerald-700"></i> Éditeur de Matériau Personnalisé — Mode Table (λ, n, k)
                             </span>
-                            <div id="divCustomMatChips" class="flex items-center gap-1 flex-wrap"></div>
                         </div>
                         <div class="flex items-center gap-1.5 flex-wrap">
                             <button id="btnUseCustomAsSub" type="button" class="bg-slate-700 hover:bg-slate-800 text-white text-[11px] px-2 py-1 rounded font-semibold transition" title="Appliquer immédiatement ce matériau comme Substrat de la simulation">
@@ -889,6 +888,15 @@
                             </button>
                             <button id="btnCloseCustomMatEditor" type="button" class="text-slate-500 hover:text-slate-800 px-1.5 py-0.5 rounded font-bold text-xs" title="Masquer l'éditeur de table">✕</button>
                         </div>
+                    </div>
+
+                    <div class="bg-white border border-emerald-200 rounded-lg p-2 space-y-1.5">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <span id="lblCustomMatList" class="font-bold text-emerald-950">Mes matériaux</span>
+                            <button id="btnNewCustomMatInEditor" type="button" class="bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 rounded-md font-bold transition">+ Nouveau matériau</button>
+                        </div>
+                        <div id="divCustomMatChips" class="flex items-center gap-1.5 flex-wrap"></div>
+                        <p id="txtCustomMatListHelp" class="text-[10px] text-slate-600">Chaque matériau a sa propre table. Cliquez sur son nom pour le modifier.</p>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-end">
@@ -5481,6 +5489,8 @@
         if (!mat || !editorBox) return;
 
         const fr = currentLang === 'fr';
+        const listTitle = document.getElementById('lblCustomMatList');
+        if (listTitle) listTitle.textContent = `${fr ? 'Mes matériaux' : 'My materials'} (${appState.customMaterials.length})`;
 
         // Chips
         const chipsContainer = document.getElementById('divCustomMatChips');
@@ -5490,7 +5500,7 @@
                 const cls = isActive
                     ? 'bg-emerald-700 text-white font-bold'
                     : 'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-medium';
-                return `<button type="button" class="btnSelectCustomChip text-[10px] px-2 py-0.5 rounded transition ${cls}" data-matid="${m.id}">`
+                return `<button type="button" class="btnSelectCustomChip text-[11px] px-3 py-1 rounded transition ${cls}" data-matid="${m.id}" aria-pressed="${isActive}" title="${fr ? 'Modifier' : 'Edit'} ${escapeReviewText(m.name || m.id)} (${escapeReviewText(m.sym)})">`
                      + `${escapeReviewText(m.name || m.id)}`
                      + `</button>`;
             }).join('');
@@ -5676,8 +5686,7 @@
             renderLayersTable();
         });
 
-        document.getElementById('btnNewCustomMat')?.addEventListener('click', () => {
-            const num = appState.customMaterials.length + 1;
+        const createCustomMaterial = () => {
             const newId = nextCustomMaterialId();
             const newMat = {
                 id: newId,
@@ -5697,7 +5706,9 @@
             refreshMaterialSelectors(true);
             renderLayersTable();
             openCustomMatEditorFromAnywhere(newId);
-        });
+        };
+        ['btnNewCustomMat', 'btnNewCustomMatInEditor'].forEach(id =>
+            document.getElementById(id)?.addEventListener('click', createCustomMaterial));
 
         document.getElementById('btnCloneInspectToCustom')?.addEventListener('click', () => {
             const selInspect = document.getElementById('selMatInspect');
@@ -7564,6 +7575,13 @@
         refreshChartCsvTooltips();
         if (!document.getElementById('divShortcuts').classList.contains('hidden')) toggleShortcutPanel(true);
         setText('btnNewCustomMat', '+ Nouveau matériau (table)', '+ New material (table)');
+        setText('btnNewCustomMatInEditor', '+ Nouveau matériau', '+ New material');
+        setTitle('btnNewCustomMatInEditor',
+            'Ajouter un autre matériau indépendant (M2, M3…) sans modifier les tables existantes',
+            'Add another independent material (M2, M3…) without changing existing tables');
+        setText('txtCustomMatListHelp',
+            'Chaque matériau a sa propre table. Cliquez sur son nom pour le modifier.',
+            'Each material has its own table. Click its name to edit it.');
         setTitle('btnNewCustomMat',
             'Créer un nouveau matériau personnalisé défini par une table (λ, n, k) utilisable comme couche ou comme substrat',
             'Create a new custom material defined by a (λ, n, k) table usable as layer or substrate');

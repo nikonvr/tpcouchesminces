@@ -37,6 +37,10 @@ Le bouton **🎛 Libre** ouvre la conception d'un composant personnel.
 
 Les matériaux personnels se définissent dans **+ Matériau** par une table
 `λ, n, k`, saisie ou importée (CSV/TXT/TSV, deux colonnes si k = 0).
+Dans l'éditeur, **Mes matériaux** liste M1, M2, M3… Le bouton
+**+ Nouveau matériau**, à côté de cette liste, crée une table indépendante.
+Cliquer sur le nom d'un matériau permet de retrouver sa table sans modifier
+les autres matériaux.
 Les décimales françaises sont acceptées avec tabulations, espaces ou
 points-virgules. Choisir explicitement nm ou µm en cas de doute ; le mode Auto
 utilise l'en-tête `lambda_nm`/`lambda_um`, sinon une plage entièrement ≤ 25
