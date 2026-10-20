@@ -249,6 +249,28 @@ V.groupe('Guide du mode libre — coches fidèles à l’état réel');
     V.verifie('qualification à jour : étape 5 cochée', JSON.parse(steps())[4] === true);
 }
 
+V.groupe('Mode libre épuré — structure et finition');
+{
+    const m = charge(null, { keepSimulation: true });
+    V.verifie('bandes Fresnel par défaut reconnues (vidées en mode libre)',
+        run(m, 'JSON.stringify(appState.bands) === DEFAULT_BANDS_JSON') === true);
+    const texts = JSON.parse(run(m, 'JSON.stringify(FREE_TEXT)'));
+    const bad = Object.entries(texts).filter(([, v]) => !v[0] || !v[1] || v[0] === v[1]).map(([k]) => k);
+    V.verifie('libellés du mode libre en français ET en anglais', bad.length === 0, bad.join(', '));
+    const src = run(m, 'prepareFreeLayout.toString() + applyFreeLayout.toString()');
+    const direct = [...src.matchAll(/byId\('([A-Za-z0-9_]+)'\)/g)].map(x => x[1]);
+    const listed = [...src.matchAll(/\[\s*('[A-Za-z0-9_]+'(?:\s*,\s*'[A-Za-z0-9_]+')+)\s*\]/g)]
+        .flatMap(x => x[1].split(',').map(t => t.trim().slice(1, -1)));
+    const ids = [...new Set(direct.concat(listed))];
+    const absent = ids.filter(id => !/^(sim|bands|materials|media|stack|target|optimizer|mc)$/.test(id)
+        && !html.includes(`id="${id}"`) && !src.includes(`.id = '${id}'`) && !src.includes(`id="${id}"`));
+    V.verifie(`${ids.length} éléments de la mise en page libre présents dans la page`, absent.length === 0, absent.join(', '));
+    run(m, "appState.lastCalc={x:[600],R_avg:[4.214],T_avg:[95.786],A_avg:[0]}; currentLang='fr'; updateCursorReadout(0);");
+    V.verifie('relevés en décimales françaises : 4,21 %', m.element('valCursorR').textContent === '4,21 %', m.element('valCursorR').textContent);
+    run(m, "currentLang='en'; updateCursorReadout(0);");
+    V.verifie('relevés en décimales anglaises : 4.21 %', m.element('valCursorR').textContent === '4.21 %');
+}
+
 V.groupe('Infobulles FR/EN');
 {
     const m = charge(null, { keepSimulation: true });

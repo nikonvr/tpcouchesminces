@@ -120,6 +120,40 @@
                      font-size: 11px; line-height: 1.45; font-weight: 400;
                      box-shadow: 0 6px 16px rgba(15, 23, 42, .28); pointer-events: none; }
         #tipBubble[hidden] { display: none; }
+
+        /* ===== Mode libre épuré =====================================
+           body.ui-libre est posé par applyFreeLayout(). Le mode étudiant
+           n'est pas concerné : ses panneaux restent ceux de l'exercice. */
+        body:not(.ui-libre) .free-only { display: none !important; }
+        body.ui-libre .free-hide { display: none !important; }
+        body.ui-libre .free-hide-dyn { display: none !important; }
+        /* « Plus d'options » : réglages avancés repliés bloc par bloc. */
+        body.ui-libre [data-adv]:not(.adv-open) { display: none !important; }
+        /* Blocs entiers repliés : seule la ligne de titre reste visible. */
+        body.ui-libre [data-fold]:not(.fold-open) > :not(:first-child) { display: none !important; }
+        /* Les commandes d'un bloc replié n'apparaissent qu'une fois déplié. */
+        body.ui-libre [data-fold]:not(.fold-open) [data-foldhide] { display: none !important; }
+        /* « Annuler l'aiguille » n'existe qu'après une insertion. */
+        body.ui-libre #btnUndoNeedle:disabled { display: none !important; }
+        /* Deux couleurs seulement : indigo pour l'action, blanc pour les blocs. */
+        body.ui-libre [data-panel="optimizer"], body.ui-libre [data-panel="mc"],
+        body.ui-libre [data-panel="review"], body.ui-libre [data-panel="bands"],
+        body.ui-libre #stepNeedle, body.ui-libre #stepOptimize {
+            background: #fff !important; border-color: #e2e8f0 !important;
+        }
+        body.ui-libre #btnAnalyzeNeedle, body.ui-libre #btnRunMonteCarlo,
+        body.ui-libre #btnApplyNeedleSplit { background: #4f46e5 !important; }
+        body.ui-libre #btnAnalyzeNeedle:hover, body.ui-libre #btnRunMonteCarlo:hover,
+        body.ui-libre #btnApplyNeedleSplit:hover { background: #4338ca !important; }
+        .free-title { font-size: 12px; font-weight: 700; color: #334155; letter-spacing: .05em; text-transform: uppercase; }
+        /* La cible est déjà dans son bloc titré : pas de second cadre ni de second titre. */
+        body.ui-libre #divCustomTarget { border: 0 !important; padding: 0 !important; box-shadow: none !important; }
+        body.ui-libre #lblCustomTargetTitle { display: none !important; }
+        body.ui-libre #lblCustomTargetTitle + .tip { display: none !important; }
+        .free-adv-btn { font-size: 10px; font-weight: 700; color: #4f46e5; }
+        .free-adv-btn:hover { text-decoration: underline; }
+        details.free-menu > summary { list-style: none; cursor: pointer; }
+        details.free-menu > summary::-webkit-details-marker { display: none; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
@@ -214,7 +248,7 @@
         </div>
     </div>
 
-    <!-- Guide de démarrage du mode libre -->
+    <!-- Guide de démarrage du mode libre : une seule ligne d'étapes -->
     <div id="freeGuide" class="hidden max-w-7xl mx-auto px-4 pt-3 w-full"></div>
 
     <!-- Corps Principal de l'Application -->
@@ -272,6 +306,14 @@
                     </div>
                 </div>
                 <div id="backsidePanel" class="hidden border-t border-emerald-200"></div>
+            </div>
+
+            <!-- Mode libre : la cible vient juste après l'empilement -->
+            <div id="freeTargetSlot" class="free-only bg-white rounded-xl shadow-sm border border-slate-200 p-3 space-y-2">
+                <div class="flex items-center justify-between">
+                    <span id="ttlFreeTarget" class="free-title">3 · Cible</span>
+                    <button type="button" data-advtoggle="target" class="free-adv-btn">Plus d'options ▾</button>
+                </div>
             </div>
 
             <!-- Carte 2 : Structure de l'Empilement -->
@@ -1952,7 +1994,7 @@
               <td><select data-bd="qty" data-i="${i}" class="border border-slate-300 rounded px-0.5 py-0.5">
                     ${['T', 'R', 'A'].map(q => `<option value="${q}" ${b.qty === q ? 'selected' : ''}>${q}</option>`).join('')}
                   </select></td>
-              <td class="text-right font-bold text-slate-800" title="${Number.isFinite(avg) ? '' : (fr ? 'Bande invalide : λmax doit dépasser λmin, pas ≥ 0,05 nm, au plus 20 000 points.' : 'Invalid band: λmax must exceed λmin, step ≥ 0.05 nm, at most 20,000 points.')}">${Number.isFinite(avg) ? avg.toFixed(3) + ' %' : (fr ? '⚠ invalide' : '⚠ invalid')}</td>
+              <td class="text-right font-bold text-slate-800" title="${Number.isFinite(avg) ? '' : (fr ? 'Bande invalide : λmax doit dépasser λmin, pas ≥ 0,05 nm, au plus 20 000 points.' : 'Invalid band: λmax must exceed λmin, step ≥ 0.05 nm, at most 20,000 points.')}">${Number.isFinite(avg) ? formatStat(avg, 3) + ' %' : (fr ? '⚠ invalide' : '⚠ invalid')}</td>
               <td><button data-bddel="${i}" class="text-rose-600 hover:text-rose-800 font-bold px-1" title="${fr ? 'Supprimer' : 'Delete'}">✕</button></td>
             </tr>`;
         }).join('');
@@ -2423,8 +2465,8 @@
         const r = evaluateCustomTarget(null);
         const covered = t.segments.reduce((a, s) => a + Math.max(0, s.lmax - s.lmin), 0);
         document.getElementById('txtCustomTargetNote').textContent = (fr
-            ? `${r.points} points évalués sur ${covered.toFixed(0)} nm spécifiés. RMSE actuelle : ${Number.isFinite(r.rmse) ? r.rmse.toFixed(2) + ' %' : '—'}.`
-            : `${r.points} points evaluated over ${covered.toFixed(0)} nm specified. Current RMSE: ${Number.isFinite(r.rmse) ? r.rmse.toFixed(2) + '%' : '—'}.`)
+            ? `${r.points} points évalués sur ${covered.toFixed(0)} nm spécifiés. RMSE actuelle : ${Number.isFinite(r.rmse) ? formatStat(r.rmse, 2) + ' %' : '—'}.`
+            : `${r.points} points evaluated over ${covered.toFixed(0)} nm specified. Current RMSE: ${Number.isFinite(r.rmse) ? formatStat(r.rmse, 2) + '%' : '—'}.`)
             + targetValidityNote(t);
     }
 
@@ -2467,8 +2509,8 @@
             invalidateForSpec();
             const t = getCustomTarget(); const r = evaluateCustomTarget(null);
             document.getElementById('txtCustomTargetNote').textContent = (currentLang === 'fr'
-                ? `${r.points} points évalués. RMSE actuelle : ${Number.isFinite(r.rmse) ? r.rmse.toFixed(2) + ' %' : '—'}.`
-                : `${r.points} points evaluated. Current RMSE: ${Number.isFinite(r.rmse) ? r.rmse.toFixed(2) + '%' : '—'}.`)
+                ? `${r.points} points évalués. RMSE actuelle : ${Number.isFinite(r.rmse) ? formatStat(r.rmse, 2) + ' %' : '—'}.`
+                : `${r.points} points evaluated. Current RMSE: ${Number.isFinite(r.rmse) ? formatStat(r.rmse, 2) + '%' : '—'}.`)
                 + targetValidityNote(t);
             updateCharts();
         });
@@ -4547,6 +4589,7 @@
             ? `${currentLang === 'fr' ? 'Épaisseur totale' : 'Total thickness'} : ${totalThick.toFixed(1)} nm`
             : `${appState.layers.length} ${currentLang === 'fr' ? 'couche(s) déposée(s)' : 'deposited layer(s)'}`;
 
+        if (typeof updateQwotReferenceRow === 'function') updateQwotReferenceRow();
         const evanescent = qwotEvanescentLayers();
         const qwotWarn = document.getElementById('txtQwotWarning');
         if (qwotWarn) {
@@ -4914,9 +4957,9 @@
         if (!calc || index < 0 || index >= calc.x.length) return;
         const unit = appState.mode === 'spectral' ? 'nm' : '°';
         document.getElementById('valCursorX').textContent = `${calc.x[index]} ${unit}`;
-        document.getElementById('valCursorR').textContent = `${calc.R_avg[index].toFixed(2)} %`;
-        document.getElementById('valCursorT').textContent = `${calc.T_avg[index].toFixed(2)} %`;
-        document.getElementById('valCursorA').textContent = `${calc.A_avg[index].toFixed(2)} %`;
+        document.getElementById('valCursorR').textContent = `${formatStat(calc.R_avg[index], 2)} %`;
+        document.getElementById('valCursorT').textContent = `${formatStat(calc.T_avg[index], 2)} %`;
+        document.getElementById('valCursorA').textContent = `${formatStat(calc.A_avg[index], 2)} %`;
     }
 
     function initCharts() {
@@ -4967,7 +5010,7 @@
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return `${context.dataset.label} : ${context.parsed.y.toFixed(2)} %`;
+                                return `${context.dataset.label} : ${formatStat(context.parsed.y, 2)} %`;
                             }
                         }
                     }
@@ -5196,7 +5239,7 @@
             : (currentLang === 'fr' ? 'Angle d\'incidence θ (°)' : 'Incidence angle θ (°)');
         mainChart.options.scales.y.title.text = currentLang === 'fr' ? 'Pourcentage (%)' : 'Percentage (%)';
         document.getElementById('chartTitle').textContent = isSpec 
-            ? `${currentLang === 'fr' ? 'Spectre optique' : 'Optical spectrum'} (${currentLang === 'fr' ? 'Incidence' : 'incidence'} ${appState.incSpecDeg.toFixed(1)}°)`
+            ? `${currentLang === 'fr' ? 'Spectre optique' : 'Optical spectrum'} (${currentLang === 'fr' ? 'Incidence' : 'incidence'} ${formatStat(appState.incSpecDeg, 1)}°)`
             : `${currentLang === 'fr' ? 'Profil angulaire' : 'Angular profile'} (λ = ${appState.lAngNm} nm)`;
         document.getElementById('lblCursorX').textContent = isSpec
             ? (currentLang === 'fr' ? 'λ sélectionné' : 'Selected λ')
@@ -6483,6 +6526,7 @@
         }
 
         renderFreeGuide();
+        applyFreeLayout();
         // Bandeau de consigne
         const banner = document.getElementById('exerciseBanner');
         if (banner) {
@@ -6596,7 +6640,7 @@
         document.getElementById('inpLMin').value = appState.lMin;
         document.getElementById('inpLMax').value = appState.lMax;
         document.getElementById('rngIncSpec').value = appState.incSpecDeg;
-        document.getElementById('txtIncSpecVal').textContent = `${appState.incSpecDeg.toFixed(1)}°`;
+        document.getElementById('txtIncSpecVal').textContent = `${formatStat(appState.incSpecDeg, 1)}°`;
         // Un préréglage ne doit jamais réinstaller un mérite d'exercice alors que
         // l'utilisateur travaille sur sa propre cible (cf. verrou du mode libre).
         if (presetObjective && appState.uiMode === 'etudiant') {
@@ -6717,7 +6761,7 @@
 
         document.getElementById('rngIncSpec').addEventListener('input', (e) => {
             appState.incSpecDeg = parseFloat(e.target.value);
-            document.getElementById('txtIncSpecVal').textContent = `${appState.incSpecDeg.toFixed(1)}°`;
+            document.getElementById('txtIncSpecVal').textContent = `${formatStat(appState.incSpecDeg, 1)}°`;
             runFullSimulation();
         });
 
@@ -7311,6 +7355,10 @@
        Les résultats calculés ne sont pas sauvegardés : ils sont recalculés.
        ========================================================================= */
     const STORAGE_KEY_PROJECT = 'simulateur_cm_projet_v1';
+    const DEFAULT_BANDS_JSON = JSON.stringify([
+        { lmin: 460, lmax: 500, step: 0.5, qty: 'T' },
+        { lmin: 535, lmax: 565, step: 0.5, qty: 'T' },
+        { lmin: 620, lmax: 680, step: 0.5, qty: 'T' }]);
     const PROJECT_FIELDS = ['layers', 'backLayers', 'considerBackside', 'superstrat', 'substrat',
         'customSuperN', 'customSubN', 'customSubK', 'backMedium', 'backCustomN', 'backCustomK',
         'backDesignL0', 'designL0', 'designIncDeg', 'lMin', 'lMax', 'incSpecDeg', 'mode',
@@ -7428,7 +7476,7 @@
         set('inpLMin', appState.lMin); set('inpLMax', appState.lMax);
         set('inpAMin', appState.aMin); set('inpAMax', appState.aMax);
         set('rngIncSpec', appState.incSpecDeg); set('rngLAng', appState.lAngNm);
-        const inc = document.getElementById('txtIncSpecVal'); if (inc) inc.textContent = `${appState.incSpecDeg.toFixed(1)}°`;
+        const inc = document.getElementById('txtIncSpecVal'); if (inc) inc.textContent = `${formatStat(appState.incSpecDeg, 1)}°`;
         const lang = document.getElementById('txtLAngVal'); if (lang) lang.textContent = `${appState.lAngNm} nm`;
         set('selMeritObjective', o.objective);
         const num = (v, lo, hi) => { const x = Number(v); return Number.isFinite(x) && x >= lo && x <= hi ? x : null; };
@@ -7531,9 +7579,6 @@
        bouton et une coche qui suit l'état réel du composant : l'utilisateur
        sait toujours ce qui est fait et ce qui reste à faire.
        ========================================================================= */
-    const STORAGE_KEY_GUIDE = 'simulateur_cm_guide_libre_replie';
-    let freeGuideCollapsed = false;
-    try { freeGuideCollapsed = localStorage.getItem(STORAGE_KEY_GUIDE) === '1'; } catch (_e) { /* sans stockage */ }
 
     function freeGuideSteps() {
         const fr = currentLang === 'fr';
@@ -7564,6 +7609,8 @@
         ];
     }
 
+    /* Une seule ligne : les cinq étapes, cliquables pour aller au bloc, et
+       l'action de l'étape suivante en bouton principal. */
     function renderFreeGuide() {
         const box = document.getElementById('freeGuide');
         if (!box) return;
@@ -7573,44 +7620,41 @@
         const fr = currentLang === 'fr';
         const steps = freeGuideSteps();
         const next = steps.findIndex(s => !s.done);
-        const head = `<div class="flex items-center justify-between gap-2">
-              <span class="font-bold text-fuchsia-950">🧭 ${fr ? 'Guide de conception' : 'Design guide'}
-                <span class="font-normal text-fuchsia-800">— ${next < 0
-                    ? (fr ? 'toutes les étapes sont faites. Modifiez librement, puis comparez en A/B.' : 'all steps done. Change anything, then compare as A/B.')
-                    : (fr ? `prochaine étape : ${next + 1}. ${steps[next].title}` : `next step: ${next + 1}. ${steps[next].title}`)}</span></span>
-              <button type="button" data-guide="toggle" class="text-fuchsia-800 hover:text-fuchsia-950 font-bold px-1" title="${fr ? 'Replier ou déplier le guide' : 'Collapse or expand the guide'}">${freeGuideCollapsed ? (fr ? '▸ afficher' : '▸ show') : (fr ? '▾ replier' : '▾ collapse')}</button>
-            </div>`;
-        const body = freeGuideCollapsed ? '' : `<ol class="grid grid-cols-1 sm:grid-cols-5 gap-2 mt-2">${steps.map((s, i) => {
-            const blocked = (s.needs || []).some(k => !steps[k].done);
-            const state = s.done ? 'border-emerald-300 bg-emerald-50' : i === next ? 'border-fuchsia-400 bg-white ring-2 ring-fuchsia-200' : 'border-slate-200 bg-white';
-            const why = blocked ? (fr ? 'Faites d’abord les étapes 2 et 3.' : 'Do steps 2 and 3 first.') : s.text;
-            return `<li class="rounded-lg border ${state} p-2 flex flex-col gap-1">
-                <span class="font-bold text-slate-900">${s.done ? '✅' : `<span class="inline-flex w-4 h-4 items-center justify-center rounded-full bg-fuchsia-600 text-white text-[9px]">${i + 1}</span>`} ${s.title}</span>
-                <span class="text-[10px] text-slate-600 leading-tight flex-grow">${s.text}</span>
-                <button type="button" data-guide="${s.act}" ${blocked ? 'disabled' : ''} title="${why}"
-                  class="mt-1 text-[10px] font-bold rounded px-2 py-1 ${blocked ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-fuchsia-600 hover:bg-fuchsia-700 text-white'}">${s.btn}</button>
-              </li>`;
-        }).join('')}</ol>`;
-        box.innerHTML = `<div class="bg-fuchsia-50 border border-fuchsia-200 rounded-lg px-3 py-2 text-xs">${head}${body}</div>`;
+        const pills = steps.map((s, i) => {
+            const cls = s.done ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                : i === next ? 'bg-indigo-600 text-white border-indigo-600'
+                : 'bg-white text-slate-500 border-slate-200';
+            return `<button type="button" data-guidego="${s.act}" title="${s.text}" class="flex items-center gap-1 rounded-full border px-2.5 py-1 font-semibold ${cls}">${s.done ? '✓' : i + 1} ${s.title}</button>`;
+        }).join('<span class="text-slate-300">›</span>');
+        const action = next < 0
+            ? `<span class="text-emerald-800 font-semibold">${fr ? 'Composant complet : modifiez librement ou comparez en A/B.' : 'Design complete: change anything or compare as A/B.'}</span>`
+            : (() => {
+                const s = steps[next];
+                const blocked = (s.needs || []).some(k => !steps[k].done);
+                return `<button type="button" data-guide="${s.act}" ${blocked ? 'disabled' : ''} title="${s.text}"
+                    class="ml-auto rounded-lg px-3 py-1 font-bold ${blocked ? 'bg-slate-100 text-slate-400' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}">→ ${s.btn}</button>`;
+            })();
+        box.innerHTML = `<div class="flex items-center flex-wrap gap-1.5 bg-white border border-slate-200 rounded-lg px-3 py-2 text-[11px]">${pills}<span class="flex-grow"></span>${action}</div>`;
     }
 
     function focusPanel(selector) {
         const el = document.querySelector(selector);
         if (!el) return;
         el.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
-        el.classList?.add('ring-4', 'ring-fuchsia-300');
-        setTimeout(() => el.classList?.remove('ring-4', 'ring-fuchsia-300'), 1600);
+        el.classList?.add('ring-4', 'ring-indigo-200');
+        setTimeout(() => el.classList?.remove('ring-4', 'ring-indigo-200'), 1200);
     }
 
+    const GUIDE_TARGETS = { media: '[data-panel="media"]', stack: '[data-panel="stack"]',
+        target: '#freeTargetSlot', optimize: '[data-panel="optimizer"]', robust: '[data-panel="mc"]' };
     function wireFreeGuide() {
         document.getElementById('freeGuide')?.addEventListener('click', e => {
+            const go = e.target.closest?.('[data-guidego]');
+            if (go) { focusPanel(GUIDE_TARGETS[go.dataset.guidego]); return; }
             const btn = e.target.closest?.('[data-guide]');
             if (!btn || btn.disabled) return;
             const act = btn.dataset.guide;
-            if (act === 'toggle') {
-                freeGuideCollapsed = !freeGuideCollapsed;
-                try { localStorage.setItem(STORAGE_KEY_GUIDE, freeGuideCollapsed ? '1' : '0'); } catch (_e) { /* sans stockage */ }
-            } else if (act === 'media') focusPanel('[data-panel="media"]');
+            if (act === 'media') focusPanel('[data-panel="media"]');
             else if (act === 'stack') { document.getElementById('btnAddLayer')?.click(); focusPanel('[data-panel="stack"]'); }
             else if (act === 'target') {
                 // Cible vide : une première ligne modifiable sert de point de départ
@@ -7620,12 +7664,245 @@
                     invalidateForSpec();
                 }
                 enterFreeDesign();
+                focusPanel('#freeTargetSlot');
                 updateCharts();
             }
             else if (act === 'optimize') { focusPanel('[data-panel="optimizer"]'); document.getElementById('btnRunOptimizer')?.click(); }
             else if (act === 'robust') { focusPanel('[data-panel="mc"]'); document.getElementById('btnRunMonteCarlo')?.click(); }
             renderFreeGuide();
         });
+    }
+
+    /* =========================================================================
+       MISE EN PAGE DU MODE LIBRE
+       Principe : l'écran suit le travail. Cinq blocs numérotés comme le guide
+       (milieux, empilement, cible, optimiser, robustesse) ; les réglages
+       avancés sont repliés (« Plus d'options ») ; les outils de mesure et la
+       base matériaux sont repliés ; rien d'inerte n'est affiché.
+       Les éléments déplacés retrouvent leur place exacte en mode étudiant :
+       les énoncés décrivent l'écran étudiant, qui ne change pas.
+       ========================================================================= */
+    const FREE_TEXT = {
+        media: ['1 · Milieux', '1 · Media'],
+        stack: ['2 · Empilement', '2 · Stack'],
+        target: ['3 · Cible — ce que vous voulez obtenir', '3 · Target — what you want to obtain'],
+        optimizer: ['4 · Optimiser', '4 · Optimize'],
+        mc: ['5 · Robustesse', '5 · Robustness'],
+        sim: ['Réglages du calcul (plage, angle, polarisation)', 'Calculation settings (range, angle, polarisation)'],
+        bands: ['Outils de mesure : moyennes sur bandes', 'Measurement tools: band averages'],
+        materials: ['Base matériaux : courbes n et k', 'Materials database: n and k curves'],
+        more: ['Plus d’options ▾', 'More options ▾'],
+        less: ['Moins d’options ▴', 'Fewer options ▴'],
+        show: ['▸ Afficher', '▸ Show'],
+        hide: ['▾ Masquer', '▾ Hide'],
+        work: ['💾 Mon travail ▾', '💾 My work ▾'],
+        exportMenu: ['⬇ Exporter ▾', '⬇ Export ▾']
+    };
+    const freeT = key => FREE_TEXT[key][currentLang === 'fr' ? 0 : 1];
+    const freeOpen = new Set();          // groupes « Plus d'options » ouverts
+    const freeHomes = new Map();         // élément déplacé → repère d'origine
+    let freeLayoutReady = false;
+
+    function freeMove(el, parent, before = null) {
+        if (!el || !parent) return;
+        if (!freeHomes.has(el)) {
+            const mark = document.createComment('place:' + (el.id || 'bloc'));
+            el.parentNode?.insertBefore(mark, el);
+            freeHomes.set(el, mark);
+        }
+        if (before) parent.insertBefore(el, before); else parent.appendChild(el);
+    }
+    function freeRestoreAll() {
+        freeHomes.forEach((mark, el) => mark.parentNode?.insertBefore(el, mark));
+    }
+    const byId = id => document.getElementById(id);
+    const panel = name => document.querySelector(`[data-panel="${name}"]`);
+
+    /* Marquage, fait une fois : quels éléments sont masqués, repliés ou
+       avancés en mode libre. */
+    function prepareFreeLayout() {
+        if (freeLayoutReady || !document.body?.classList) return;
+        freeLayoutReady = true;
+        const mark = (el, cls) => el?.classList?.add(cls);
+        const adv = (el, group) => { if (el?.dataset) el.dataset.adv = group; };
+        // En-tête : export, mémoire et recommencer passent dans des menus ;
+        // la cible et l'empilement de départ sont portés par les blocs.
+        ['wrapPreset', 'headerResults', 'btnFreeDesign', 'btnShortcuts', 'txtAudienceBadge', 'projectBar']
+            .forEach(id => mark(byId(id), 'free-hide'));
+        // Doublon d'accès aux matériaux personnels : une seule entrée, « + Matériau ».
+        mark(byId('btnOpenMatFromMedia'), 'free-hide');
+        // Commandes inertes : pas figés, mérite verrouillé, numérotation du cycle.
+        mark(byId('txtLStepFixed')?.parentElement, 'free-hide');
+        mark(byId('txtAStepFixed')?.parentElement, 'free-hide');
+        mark(byId('selMeritObjective')?.parentElement, 'free-hide');
+        mark(byId('meritLockNote'), 'free-hide');
+        mark(byId('icoOptiHelp')?.closest?.('.font-bold'), 'free-hide');
+        mark(byId('lblCycleTitle')?.parentElement, 'free-hide');
+        mark(byId('lblStepOptimize')?.previousElementSibling, 'free-hide');
+        mark(byId('lblSynthesisTitle')?.previousElementSibling, 'free-hide');
+        mark(byId('tagStepOptimize'), 'free-hide');
+        mark(byId('tagStepNeedle'), 'free-hide');
+        mark(panel('tools')?.firstElementChild, 'free-hide');
+        mark(byId('tipMcModel')?.closest?.('.font-bold'), 'free-hide');
+        // Réglages avancés, groupe par groupe.
+        adv(byId('btnCleanStack'), 'stack');
+        adv(byId('selOptimizeScope')?.parentElement, 'optimizer');
+        adv(byId('txtBfgsBounds')?.parentElement, 'optimizer');
+        adv(byId('txtMeritGridNote'), 'optimizer');
+        adv(byId('lblNeedleMaterial'), 'optimizer');
+        adv(byId('divAcceptance'), 'mc');
+        adv(byId('selMinimumThickness')?.closest?.('label') || byId('selMinimumThickness')?.parentElement, 'mc');
+        adv(byId('inpRequiredYield')?.closest?.('label'), 'mc');
+        adv(byId('txtFabricationSummary'), 'mc');
+        ['lblTgStep', 'inpTargetStep', 'lblTgThr', 'inpTargetThreshold', 'btnTargetExport', 'btnTargetImport']
+            .forEach(id => adv(byId(id), 'target'));
+        // Blocs repliés : seule leur ligne de titre reste visible.
+        ['sim', 'bands', 'materials'].forEach(name => { const el = panel(name); if (el?.dataset) el.dataset.fold = name; });
+        [byId('tabBtnSpectral')?.parentElement, byId('btnAddBand')?.parentElement, byId('btnNewCustomMat')?.parentElement]
+            .forEach(el => { if (el?.dataset) el.dataset.foldhide = '1'; });
+
+        // Titres et boutons propres au mode libre (masqués en mode étudiant).
+        const addTitle = (host, key, advGroup) => {
+            if (!host) return;
+            const bar = document.createElement('div');
+            bar.className = 'free-only flex items-center justify-between mb-1';
+            bar.innerHTML = `<span class="free-title" data-free-title="${key}"></span>`
+                + (advGroup ? `<button type="button" data-advtoggle="${advGroup}" class="free-adv-btn"></button>` : '');
+            host.insertBefore(bar, host.firstChild);
+        };
+        addTitle(panel('optimizer'), 'optimizer', 'optimizer');
+        addTitle(panel('mc'), 'mc', 'mc');
+        // Bouton « Plus d'options » dans les en-têtes existants.
+        const addAdvButton = (host, group) => {
+            if (!host) return;
+            const b = document.createElement('button');
+            b.type = 'button'; b.className = 'free-only free-adv-btn ml-2';
+            b.dataset.advtoggle = group;
+            host.appendChild(b);
+        };
+        addAdvButton(byId('btnAddLayer')?.parentElement, 'stack');
+        // Bouton de dépliage des blocs repliés.
+        ['sim', 'bands', 'materials'].forEach(name => {
+            const head = panel(name)?.firstElementChild;
+            if (!head) return;
+            const b = document.createElement('button');
+            b.type = 'button'; b.className = 'free-only free-adv-btn ml-2';
+            b.dataset.foldtoggle = name;
+            head.appendChild(b);
+        });
+
+        // Menus d'en-tête et du graphique (mode libre).
+        const header = byId('btnHelp')?.parentElement;
+        if (header) {
+            const work = document.createElement('details');
+            work.id = 'menuWork';
+            work.className = 'free-only free-menu relative';
+            work.innerHTML = `<summary id="sumWork" class="flex items-center gap-1 bg-indigo-800 hover:bg-indigo-700 text-indigo-100 px-2.5 py-1.5 rounded-lg border border-indigo-600 font-medium"></summary>
+                <div id="menuWorkBody" class="absolute right-0 mt-1 z-50 w-72 bg-white text-slate-800 rounded-lg shadow-xl border border-slate-200 p-2 space-y-1.5 text-[11px]"></div>`;
+            header.insertBefore(work, byId('btnHelp'));
+        }
+        const chartBar = byId('btnChartCsv')?.parentElement;
+        if (chartBar) {
+            const exp = document.createElement('details');
+            exp.id = 'menuChartExport';
+            exp.className = 'free-only free-menu relative';
+            exp.innerHTML = `<summary id="sumChartExport" class="px-2 py-1 rounded font-semibold bg-slate-100 text-slate-600 border border-slate-200"></summary>
+                <div id="menuChartExportBody" class="absolute right-0 mt-1 z-40 w-56 bg-indigo-900 rounded-lg shadow-xl p-2 flex flex-col gap-1.5 text-xs"></div>`;
+            chartBar.insertBefore(exp, byId('btnChartCsv'));
+        }
+
+        document.addEventListener('click', e => {
+            const advBtn = e.target.closest?.('[data-advtoggle]');
+            if (advBtn) {
+                const g = advBtn.dataset.advtoggle;
+                if (freeOpen.has(g)) freeOpen.delete(g); else freeOpen.add(g);
+                renderFreeLayoutState();
+                return;
+            }
+            const foldBtn = e.target.closest?.('[data-foldtoggle]');
+            if (foldBtn) {
+                const g = 'fold:' + foldBtn.dataset.foldtoggle;
+                if (freeOpen.has(g)) freeOpen.delete(g); else freeOpen.add(g);
+                renderFreeLayoutState();
+            }
+        });
+    }
+
+    /* Ouvre/ferme les groupes et rédige les libellés dans la langue courante. */
+    function renderFreeLayoutState() {
+        document.querySelectorAll('[data-adv]').forEach(el =>
+            el.classList.toggle('adv-open', freeOpen.has(el.dataset.adv)));
+        document.querySelectorAll('[data-advtoggle]').forEach(b => {
+            b.textContent = freeOpen.has(b.dataset.advtoggle) ? freeT('less') : freeT('more');
+        });
+        document.querySelectorAll('[data-fold]').forEach(el =>
+            el.classList.toggle('fold-open', freeOpen.has('fold:' + el.dataset.fold)));
+        document.querySelectorAll('[data-foldtoggle]').forEach(b => {
+            b.textContent = freeOpen.has('fold:' + b.dataset.foldtoggle) ? freeT('hide') : freeT('show');
+        });
+        document.querySelectorAll('[data-free-title]').forEach(el => { el.textContent = freeT(el.dataset.freeTitle); });
+        const tgt = byId('ttlFreeTarget'); if (tgt) tgt.textContent = freeT('target');
+        const sw = byId('sumWork'); if (sw) sw.textContent = freeT('work');
+        const se = byId('sumChartExport'); if (se) se.textContent = freeT('exportMenu');
+    }
+
+    /* Retitre les en-têtes des panneaux existants (dernier nœud texte). */
+    function setPanelHeading(name, text) {
+        const span = panel(name)?.firstElementChild?.querySelector?.('span');
+        if (!span) return;
+        const node = [...span.childNodes].reverse().find(n => n.nodeType === 3 && n.nodeValue.trim());
+        if (!node) return;
+        if (node.__orig === undefined) node.__orig = node.nodeValue;
+        node.nodeValue = text === null ? node.__orig : ' ' + text;
+    }
+
+    function applyFreeLayout() {
+        if (!document.body?.classList) return;
+        prepareFreeLayout();
+        const free = appState.uiMode === 'libre';
+        document.body.classList.toggle('ui-libre', free);
+        const left = byId('colLeft');
+        if (free) {
+            // Ordre du travail : milieux, empilement, cible, optimiser/robustesse,
+            // puis réglages du calcul ; les outils de mesure ferment la colonne.
+            const stack = panel('stack'), slot = byId('freeTargetSlot');
+            if (stack && slot) stack.after(slot);
+            freeMove(byId('divCustomTarget'), slot);
+            freeMove(panel('sim'), left);
+            const workBody = byId('menuWorkBody');
+            ['txtProjectStatus', 'btnProjectExport', 'btnProjectImport', 'btnProjectReset']
+                .forEach(id => freeMove(byId(id), workBody));
+            const expBody = byId('menuChartExportBody');
+            ['btnStoreMemory', 'btnClearMemories', 'btnExportCSV', 'btnChartCsv', 'btnExportPNG']
+                .forEach(id => freeMove(byId(id), expBody));
+            ['media', 'stack', 'sim'].forEach(n => setPanelHeading(n, freeT(n)));
+            ['bands', 'materials'].forEach(n => {
+                const t = panel(n)?.firstElementChild?.querySelector?.('#lblBandAnalyzer, .free-fold-title');
+                if (t && n === 'bands') t.textContent = freeT('bands');
+            });
+            const matHead = panel('materials')?.firstElementChild?.querySelector?.('span');
+            if (matHead) { if (matHead.__orig === undefined) matHead.__orig = matHead.innerHTML; matHead.textContent = freeT('materials'); }
+            // Bandes de référence du projet Fresnel : sans objet en conception libre.
+            if (JSON.stringify(appState.bands) === DEFAULT_BANDS_JSON) { appState.bands = []; renderBandAnalyzer?.(); }
+        } else {
+            freeRestoreAll();
+            ['media', 'stack', 'sim'].forEach(n => setPanelHeading(n, null));
+            const matHead = panel('materials')?.firstElementChild?.querySelector?.('span');
+            if (matHead && matHead.__orig !== undefined) matHead.innerHTML = matHead.__orig;
+            const band = byId('lblBandAnalyzer');
+            if (band) band.textContent = currentLang === 'fr' ? 'Analyseur de bandes spectrales' : 'Spectral band analyzer';
+        }
+        updateQwotReferenceRow();
+        renderFreeLayoutState();
+    }
+
+    /* λ0 et θ0 de référence ne servent qu'aux couches en QWOT : en mode libre,
+       la ligne n'apparaît que lorsqu'une telle couche existe. */
+    function updateQwotReferenceRow() {
+        const row = byId('inpL0Design')?.parentElement?.parentElement;
+        if (!row?.classList) return;
+        const needed = appState.layers.some(l => l.unit === 'QWOT') || (appState.backLayers || []).some(l => l.unit === 'QWOT');
+        row.classList.toggle('free-hide-dyn', !needed);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -8331,6 +8608,7 @@
         setProjectStatus(projectStatus.key, projectStatus);
         applyControlTips();
         renderFreeGuide();
+        if (appState.uiMode === 'libre') applyFreeLayout();
         const chartLocale = currentLang === 'fr' ? 'fr-FR' : 'en-US';
         [mainChart, matChart, matKChart, needlePiChart].forEach(c => {
             if (c && c.options) { c.options.locale = chartLocale; c.update?.('none'); }
