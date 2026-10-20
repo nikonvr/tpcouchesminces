@@ -154,6 +154,44 @@
         .free-adv-btn:hover { text-decoration: underline; }
         details.free-menu > summary { list-style: none; cursor: pointer; }
         details.free-menu > summary::-webkit-details-marker { display: none; }
+        /* Cases de résultat vides : rien à lire avant le premier calcul. */
+        body.ui-libre [data-empty="true"] { display: none !important; }
+        /* Lisibilité : pas de texte sous 10 px en mode libre. */
+        body.ui-libre .text-\[9px\], body.ui-libre .text-\[8\.5px\], body.ui-libre .text-\[8px\] { font-size: 10px !important; }
+        .free-sub { font-size: 11px; color: #64748b; line-height: 1.35; }
+        /* Contour de focus toujours visible au clavier. */
+        button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible, textarea:focus-visible {
+            outline: 2px solid #6366f1 !important; outline-offset: 2px;
+        }
+        /* Messages non bloquants. */
+        #appToast { max-width: min(92vw, 34rem); }
+        /* Écran étroit : le spectre passe en tête et reste visible pendant les réglages. */
+        @media (max-width: 1023px) {
+            body.ui-libre #colRight { order: -1; position: sticky; top: 0; z-index: 30; }
+            body.ui-libre [data-panel="chart"] { padding: .5rem .75rem; box-shadow: 0 6px 12px -8px rgba(15,23,42,.35); }
+            body.ui-libre #mainChartWrap { min-height: 0 !important; height: 30vh; }
+            body.ui-libre .free-narrow-hide { display: none !important; }
+        }
+        /* Téléphone : en-tête compact, couches présentées en cartes. */
+        @media (max-width: 639px) {
+            header > div { padding-top: .4rem !important; padding-bottom: .4rem !important; gap: .4rem !important; }
+            header h1 { font-size: 15px !important; }
+            header h1 + p, header .p-2.bg-indigo-700 { display: none !important; }
+            #btnHelp { font-size: 0 !important; gap: 0 !important; }
+            #btnHelp svg { width: 16px; height: 16px; }
+            body.ui-libre #layersTableBody { display: block; }
+            body.ui-libre [data-panel="stack"] table { min-width: 0 !important; }
+            body.ui-libre [data-panel="stack"] thead { display: none; }
+            body.ui-libre #layersTableBody tr { display: grid; grid-template-columns: 26px 1fr 1fr 40px; gap: 4px 6px; align-items: center; padding: 6px 2px; }
+            body.ui-libre #layersTableBody td:nth-child(1) { grid-row: 1; grid-column: 1; }
+            body.ui-libre #layersTableBody td:nth-child(2) { grid-row: 1; grid-column: 2 / 4; }
+            body.ui-libre #layersTableBody td:nth-child(7) { grid-row: 1; grid-column: 4; }
+            body.ui-libre #layersTableBody td:nth-child(5) { grid-row: 2; grid-column: 1; font-size: 10px; }
+            body.ui-libre #layersTableBody td:nth-child(3) { grid-row: 2; grid-column: 2; }
+            body.ui-libre #layersTableBody td:nth-child(4) { grid-row: 2; grid-column: 3; }
+            body.ui-libre #layersTableBody td:nth-child(6) { grid-row: 2; grid-column: 4; }
+            body.ui-libre #layersTableBody td select, body.ui-libre #layersTableBody td input[type="text"] { width: 100%; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
@@ -251,6 +289,9 @@
             <button id="btnProjectReset" type="button" class="bg-white hover:bg-rose-50 border border-rose-300 rounded px-2 py-0.5 font-semibold text-rose-700" title="Vider l'empilement et revenir aux réglages de départ. Vos matériaux personnels sont conservés">↺ Repartir de zéro</button>
         </div>
     </div>
+
+    <!-- Messages non bloquants (remplacent les boîtes de dialogue) -->
+    <div id="appToast" role="status" aria-live="polite" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xl px-4 py-2.5 cursor-pointer"></div>
 
     <!-- Guide de démarrage du mode libre : une seule ligne d'étapes -->
     <div id="freeGuide" class="hidden max-w-7xl mx-auto px-4 pt-3 w-full"></div>
@@ -588,7 +629,7 @@
                                     <button id="btnRunOptimizer" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1 px-1.5 rounded transition shadow-sm flex items-center justify-center gap-1 text-[10px]" title="BFGS ajuste les épaisseurs des couches libres, puis l'empilement est nettoyé (couches trop fines retirées, voisines identiques fusionnées) et réoptimisé.">
                                         <i data-lucide="sparkles" class="w-3 h-3"></i> Optimiser les épaisseurs
                                     </button>
-                                    <p id="txtOptiResult" class="mt-1 text-[9px] text-indigo-900 bg-white border border-indigo-200 rounded px-1.5 py-1">—</p>
+                                    <p id="txtOptiResult" data-empty="true" class="mt-1 text-[9px] text-indigo-900 bg-white border border-indigo-200 rounded px-1.5 py-1">—</p>
                                 </div>
 
                                 <div class="flex items-center gap-1 px-1">
@@ -697,7 +738,7 @@
                         <button id="btnRunMonteCarlo" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-1 px-2 rounded transition shadow-sm flex items-center justify-center gap-1">
                             <i data-lucide="shield-check" class="w-3 h-3"></i> Évaluer la robustesse
                         </button>
-                        <p id="txtMonteCarloResult" class="text-[9px] leading-relaxed text-amber-950 bg-white/80 border border-amber-200 rounded px-1.5 py-1" style="white-space: pre-line;">—</p>
+                        <p id="txtMonteCarloResult" data-empty="true" class="text-[9px] leading-relaxed text-amber-950 bg-white/80 border border-amber-200 rounded px-1.5 py-1" style="white-space: pre-line;">—</p>
                     </div>
 
                     <!-- Comparateur A/B de revue de conception -->
@@ -1278,9 +1319,21 @@
         const text = entry.render();
         if (entry.html) el.innerHTML = text;
         else el.textContent = text;
+        if (el.dataset) el.dataset.empty = String(String(text).trim() === '—');
     }
 
     /** Écrit un texte rédigé par `render()` et le rend re-traduisible. */
+    /* Message non bloquant, lu par les lecteurs d'écran ; disparaît seul. */
+    let toastTimer = null;
+    function notify(text) {
+        const el = document.getElementById('appToast');
+        if (!el) return;
+        el.textContent = text;
+        el.classList.remove('hidden');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.add('hidden'), 7000);
+    }
+
     function liveText(id, render, html = false) {
         LIVE_TEXT.set(id, { render, html });
         paintLiveText(id);
@@ -2590,7 +2643,7 @@
                     let parsed;
                     try { parsed = parseCustomTargetFile(String(rd.result)); }
                     catch (err) {
-                        alert(currentLang === 'fr'
+                        notify(currentLang === 'fr'
                             ? `Fichier de cible refusé : ${err.fr || err.message} La cible précédente est conservée.`
                             : `Target file rejected: ${err.en || err.message} The previous target is kept.`);
                         return;
@@ -2600,7 +2653,7 @@
                     if (parsed.threshold !== null) document.getElementById('inpTargetThreshold').value = parsed.threshold;
                     refresh();
                 };
-                rd.onerror = () => alert(currentLang === 'fr'
+                rd.onerror = () => notify(currentLang === 'fr'
                     ? 'Lecture du fichier impossible. La cible précédente est conservée.'
                     : 'The file could not be read. The previous target is kept.');
                 rd.readAsText(f);
@@ -3657,7 +3710,7 @@
 
     function analyzeNeedlePosition() {
         if (appState.layers.length === 0) {
-            alert(currentLang === 'fr' ? "Déposez au moins une couche avant d'analyser l'insertion d'une aiguille." : "Deposit at least one layer before analyzing needle insertion.");
+            notify(currentLang === 'fr' ? "Déposez au moins une couche avant d'analyser l'insertion d'une aiguille." : "Deposit at least one layer before analyzing needle insertion.");
             return;
         }
         if (!applyOptimizationScope({ render: true, alertOnError: true })) return;
@@ -4775,7 +4828,7 @@
                 try {
                     const layers = parseStackFormula(document.getElementById('inpBackFormula').value);
                     appState.backLayers = layers.map(l => ({matId:l.matId,unit:'nm',val:getPhysicalThicknessNm(l,appState.backDesignL0,0,1)}));
-                } catch (err) { alert(err.message); return; }
+                } catch (err) { notify(err.message); return; }
             } else return;
             commit();
         });
@@ -5040,7 +5093,10 @@
                 plugins: {
                     legend: {
                         position: 'top',
-                        labels: { boxWidth: 12, font: { size: 11, weight: 'bold' } }
+                        // Les tirages Monte-Carlo n'ont qu'une entrée de légende : les
+                        // suivants portent un libellé vide ou « _mc… » et sont masqués.
+                        labels: { boxWidth: 12, font: { size: 11, weight: 'bold' },
+                                  filter: item => !!item.text && !item.text.startsWith('_') }
                     },
                     tooltip: {
                         callbacks: {
@@ -6948,7 +7004,7 @@
             if (formula) {
                 let layers;
                 try { layers = parseStackFormula(formula); }
-                catch (err) { alert(err.message); return; }
+                catch (err) { notify(err.message); document.getElementById('inpFormulaStr')?.focus?.(); return; }
                 appState.layers = layers;
                 // Empilement saisi librement : ni préréglage Fresnel actif, ni
                 // aiguille à annuler sur l'ancien empilement.
@@ -7610,6 +7666,8 @@
 
     function wireProjectBar() {
         document.getElementById('btnProjectExport')?.addEventListener('click', () => {
+            workExported = true;
+            if (typeof renderFreeGuide === 'function') setTimeout(renderFreeGuide, 0);
             const blob = new Blob([JSON.stringify(captureProject(), null, 2)], { type: 'application/json' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
@@ -7629,7 +7687,7 @@
                     let project;
                     try { project = validateProject(JSON.parse(String(rd.result))); }
                     catch (err) {
-                        alert(currentLang === 'fr'
+                        notify(currentLang === 'fr'
                             ? `Fichier refusé : ${err.fr || 'JSON illisible.'} Votre travail actuel est conservé.`
                             : `File rejected: ${err.en || 'unreadable JSON.'} Your current work is kept.`);
                         return;
@@ -7638,7 +7696,7 @@
                     setProjectStatus('imported');
                     saveProjectNow();
                 };
-                rd.onerror = () => alert(currentLang === 'fr'
+                rd.onerror = () => notify(currentLang === 'fr'
                     ? 'Lecture du fichier impossible. Votre travail actuel est conservé.'
                     : 'The file could not be read. Your current work is kept.');
                 rd.readAsText(f);
@@ -7669,20 +7727,23 @@
        sait toujours ce qui est fait et ce qui reste à faire.
        ========================================================================= */
 
+    let mediaConfirmed = false;   // milieux vérifiés ou modifiés pendant la session
+    let workExported = false;     // travail exporté pendant la session
     function freeGuideSteps() {
         const fr = currentLang === 'fr';
         const target = getCustomTarget();
         const hasTarget = target.segments.some(s => (Number(s.weight) || 0) > 0) && !target.tooLarge;
         const optiText = LIVE_TEXT.get('txtOptiResult')?.render?.() || '—';
         return [
-            { done: true, act: 'media',
+            // Coche gagnée : milieux vérifiés ou modifiés, ou travail déjà commencé.
+            { done: mediaConfirmed || appState.layers.length > 0, act: 'media',
               title: fr ? 'Milieux' : 'Media',
-              text: fr ? 'Milieu d’incidence et substrat (modifiables à tout moment)' : 'Incident medium and substrate (can be changed at any time)',
-              btn: fr ? 'Voir' : 'Show' },
+              text: fr ? 'Vérifiez le milieu d’incidence et le substrat (BK7 par défaut)' : 'Check the incident medium and the substrate (BK7 by default)',
+              btn: fr ? 'Vérifier les milieux' : 'Check the media' },
             { done: appState.layers.length > 0, act: 'stack',
               title: fr ? 'Empilement' : 'Stack',
               text: fr ? '« + Couche » ou une formule comme (HL)^4 H' : '"+ Layer" or a formula such as (HL)^4 H',
-              btn: fr ? 'Ajouter une couche' : 'Add a layer' },
+              btn: fr ? '+ Couche' : '+ Layer' },
             { done: hasTarget, act: 'target',
               title: fr ? 'Cible' : 'Target',
               text: fr ? 'Ce que vous voulez obtenir : bandes, R/T/A visés, angle, polarisation' : 'What you want: bands, target R/T/A, angle, polarisation',
@@ -7691,23 +7752,30 @@
                 // Optimiser ne suffit pas : l'étape n'est faite que si la cible est
                 // atteinte. Sinon, le guide propose le geste suivant — une couche
                 // de plus — au lieu de laisser croire que le composant est prêt.
+                // Faite = cible atteinte, que l'optimisation date de cette session
+                // ou d'avant un rechargement. Si l'optimisation n'y suffit pas, le
+                // geste suivant est une couche de plus.
                 const optimized = optiText !== '—' && !/⚠/.test(optiText);
-                const r = optimized && hasTarget ? evaluateCustomTarget(null) : null;
+                const r = hasTarget && appState.layers.length ? evaluateCustomTarget(null) : null;
                 const reached = !!r && Number.isFinite(r.rmse) && r.rmse <= target.threshold;
                 const short = optimized && hasTarget && !reached && Number.isFinite(r?.rmse);
-                return { done: optimized && reached, act: short ? 'needle' : 'optimize',
+                return { done: reached, act: short ? 'needle' : 'optimize',
                   title: fr ? 'Optimiser' : 'Optimize',
                   text: short
                     ? (fr ? `Cible pas encore atteinte : RMSE ${formatStat(r.rmse, 2)} % > seuil ${formatStat(target.threshold, 1)} %. Une couche de plus peut aider.`
                           : `Target not reached yet: RMSE ${formatStat(r.rmse, 2)}% > threshold ${formatStat(target.threshold, 1)}%. One more layer may help.`)
                     : (fr ? 'BFGS ajuste les épaisseurs ; l’aiguille peut ajouter une couche' : 'BFGS adjusts thicknesses; the needle can add a layer'),
-                  btn: short ? (fr ? 'Ajouter une couche utile' : 'Add a useful layer') : (fr ? 'Optimiser' : 'Optimize'),
+                  btn: short ? (fr ? '+ Couche utile (aiguille)' : '+ Useful layer (needle)') : (fr ? 'Optimiser' : 'Optimize'),
                   needs: [1, 2] };
             })(),
             { done: !!appState.lastQualification, act: 'robust',
               title: fr ? 'Robustesse' : 'Robustness',
               text: fr ? 'Monte-Carlo : le composant résiste-t-il aux erreurs de dépôt ?' : 'Monte-Carlo: does the design survive deposition errors?',
-              btn: fr ? 'Évaluer' : 'Evaluate', needs: [1, 2] }
+              btn: fr ? 'Évaluer' : 'Evaluate', needs: [1, 2] },
+            { done: workExported, act: 'export',
+              title: fr ? 'Exporter' : 'Export',
+              text: fr ? 'Téléchargez votre travail (.json) pour le rendre ou le reprendre ailleurs' : 'Download your work (.json) to hand it in or continue elsewhere',
+              btn: fr ? 'Exporter mon travail' : 'Export my work', needs: [1, 2] }
         ];
     }
 
@@ -7761,15 +7829,18 @@
     }
 
     const GUIDE_TARGETS = { media: '[data-panel="media"]', stack: '[data-panel="stack"]',
-        target: '#freeTargetSlot', optimize: '[data-panel="optimizer"]', robust: '[data-panel="mc"]' };
+        target: '#freeTargetSlot', optimize: '[data-panel="optimizer"]', robust: '[data-panel="mc"]', export: '#menuWork' };
     function wireFreeGuide() {
+        ['selSuperstrat', 'selSubstrat', 'chkBackside'].forEach(id =>
+            document.getElementById(id)?.addEventListener('change', () => { mediaConfirmed = true; renderFreeGuide(); }));
         document.getElementById('freeGuide')?.addEventListener('click', e => {
             const go = e.target.closest?.('[data-guidego]');
             if (go) { focusPanel(GUIDE_TARGETS[go.dataset.guidego]); return; }
             const btn = e.target.closest?.('[data-guide]');
             if (!btn || btn.disabled) return;
             const act = btn.dataset.guide;
-            if (act === 'media') focusPanel('[data-panel="media"]');
+            if (act === 'media') { mediaConfirmed = true; focusPanel('[data-panel="media"]'); }
+            else if (act === 'export') document.getElementById('btnProjectExport')?.click();
             else if (act === 'stack') { document.getElementById('btnAddLayer')?.click(); focusPanel('[data-panel="stack"]'); }
             else if (act === 'target') {
                 // Cible vide : une première ligne modifiable sert de point de départ
@@ -7812,6 +7883,22 @@
         show: ['▸ Afficher', '▸ Show'],
         hide: ['▾ Masquer', '▾ Hide'],
         work: ['💾 Mon travail ▾', '💾 My work ▾'],
+        workShort: ['💾 ▾', '💾 ▾'],
+        undoShort: ['↶', '↶'],
+        undo: ['↶ Annuler', '↶ Undo'],
+        useful: ['+ Couche utile (aiguille)', '+ Useful layer (needle)'],
+        usefulTip: ['Cherche où une couche fine améliore le plus le mérite, l’insère, puis réoptimise les épaisseurs (BFGS). Un seul geste, annulable.',
+                    'Finds where a thin layer improves the merit most, inserts it, then re-optimizes the thicknesses (BFGS). One step, undoable.'],
+        subMedia: ['Superstrat : milieu d’où vient la lumière. Substrat : support sur lequel les couches sont déposées.',
+                   'Superstrate: medium the light comes from. Substrate: support the layers are deposited on.'],
+        subTarget: ['RMSE = écart moyen, en %, entre votre spectre et la cible. Le composant est conforme si RMSE ≤ seuil.',
+                    'RMSE = mean deviation, in %, between your spectrum and the target. The design complies if RMSE ≤ threshold.'],
+        subQwot: ['QWOT : épaisseur en quarts d’onde optiques à λ0 (1 QWOT = λ0 / 4n). θ0 : angle de conception.',
+                  'QWOT: thickness in optical quarter waves at λ0 (1 QWOT = λ0 / 4n). θ0: design angle.'],
+        subMc: ['On simule N composants dont chaque épaisseur reçoit une erreur aléatoire (écart-type Δd/2), et l’on compte ceux qui restent conformes.',
+                'N components are simulated, each thickness getting a random error (standard deviation Δd/2), and those still compliant are counted.'],
+        formulaEx: ['Exemple : (HL)^4 H. H = ZnS (haut indice), L = YF3 (bas indice), M1, M2… = vos matériaux ; 2H = deux QWOT de H.',
+                    'Example: (HL)^4 H. H = ZnS (high index), L = YF3 (low index), M1, M2… = your materials; 2H = two QWOT of H.'],
         exportMenu: ['⬇ Exporter ▾', '⬇ Export ▾']
     };
     const freeT = key => FREE_TEXT[key][currentLang === 'fr' ? 0 : 1];
@@ -7870,8 +7957,43 @@
         adv(byId('selMinimumThickness')?.closest?.('label') || byId('selMinimumThickness')?.parentElement, 'mc');
         adv(byId('inpRequiredYield')?.closest?.('label'), 'mc');
         adv(byId('txtFabricationSummary'), 'mc');
-        ['lblTgStep', 'inpTargetStep', 'lblTgThr', 'inpTargetThreshold', 'btnTargetExport', 'btnTargetImport']
+        // Le seuil reste visible : le guide et le verdict s'y réfèrent.
+        ['lblTgStep', 'inpTargetStep', 'btnTargetExport', 'btnTargetImport']
             .forEach(id => adv(byId(id), 'target'));
+        // Restes du projet Fresnel, sans objet en conception libre.
+        mark(byId('btnLoadFresnel18'), 'free-hide');
+        mark(byId('btnLoadReviewA'), 'free-hide');
+        // Aiguille : un seul geste, comme dans le guide ; l'analyse π(z) et
+        // l'insertion manuelle restent dans « Plus d'options ».
+        mark(byId('txtCycleArrow')?.parentElement, 'free-hide');
+        mark(byId('lblSynthesisTitle')?.parentElement, 'free-hide');
+        adv(byId('btnAnalyzeNeedle'), 'optimizer');
+        const needleBox = byId('stepNeedle');
+        if (needleBox) {
+            const b = document.createElement('button');
+            b.id = 'btnUsefulLayer'; b.type = 'button';
+            b.className = 'free-only w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1 px-1.5 rounded transition shadow-sm text-[11px] mb-1';
+            b.addEventListener('click', () => { addUsefulLayer(); renderFreeGuide(); });
+            needleBox.insertBefore(b, needleBox.firstChild);
+        }
+        // Graphique sur écran étroit : sans le titre ni les relevés du curseur.
+        mark(byId('valCursorX')?.closest?.('.grid'), 'free-narrow-hide');
+        mark(byId('chartTitle'), 'free-narrow-hide');
+        // Sous-titres courts sous les termes clés.
+        const sub = (anchor, key, where = 'after', id = null) => {
+            if (!anchor) return null;
+            const el = document.createElement('p');
+            el.className = 'free-only free-sub';
+            el.dataset.freeSub = key;
+            if (id) el.id = id;
+            if (where === 'after') anchor.after(el); else anchor.appendChild(el);
+            return el;
+        };
+        sub(byId('selSuperstrat')?.closest?.('.grid'), 'subMedia');
+        sub(byId('ttlFreeTarget')?.parentElement, 'subTarget');
+        sub(byId('inpL0Design')?.parentElement?.parentElement, 'subQwot', 'after', 'freeQwotHint');
+        sub(panel('mc')?.firstElementChild, 'subMc');
+        sub(byId('inpFormulaStr')?.parentElement, 'formulaEx', 'append');
         // Blocs repliés : seule leur ligne de titre reste visible.
         ['sim', 'bands', 'materials'].forEach(name => { const el = panel(name); if (el?.dataset) el.dataset.fold = name; });
         [byId('tabBtnSpectral')?.parentElement, byId('btnAddBand')?.parentElement, byId('btnNewCustomMat')?.parentElement]
@@ -7927,6 +8049,16 @@
             chartBar.insertBefore(exp, byId('btnChartCsv'));
         }
 
+        // Menus : fermés par un clic ailleurs, par Échap ou après un choix.
+        document.addEventListener('click', e => {
+            document.querySelectorAll('details.free-menu[open]').forEach(d => {
+                if (!d.contains(e.target) || (e.target.closest?.('button') && d.contains(e.target))) d.open = false;
+            });
+        });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') document.querySelectorAll('details.free-menu[open]').forEach(d => { d.open = false; });
+        });
+        window.addEventListener('resize', () => renderFreeLayoutState());
         document.addEventListener('click', e => {
             const advBtn = e.target.closest?.('[data-advtoggle]');
             if (advBtn) {
@@ -7957,8 +8089,13 @@
             b.textContent = freeOpen.has('fold:' + b.dataset.foldtoggle) ? freeT('hide') : freeT('show');
         });
         document.querySelectorAll('[data-free-title]').forEach(el => { el.textContent = freeT(el.dataset.freeTitle); });
+        document.querySelectorAll('[data-free-sub]').forEach(el => { el.textContent = freeT(el.dataset.freeSub); });
+        const narrow = typeof matchMedia === 'function' && matchMedia('(max-width: 639px)').matches;
+        const useful = byId('btnUsefulLayer');
+        if (useful) { useful.textContent = freeT('useful'); useful.title = freeT('usefulTip'); }
+        const undo = byId('btnUndoWork'); if (undo) undo.textContent = narrow ? freeT('undoShort') : freeT('undo');
         const tgt = byId('ttlFreeTarget'); if (tgt) tgt.textContent = freeT('target');
-        const sw = byId('sumWork'); if (sw) sw.textContent = freeT('work');
+        const sw = byId('sumWork'); if (sw) sw.textContent = narrow ? freeT('workShort') : freeT('work');
         const se = byId('sumChartExport'); if (se) se.textContent = freeT('exportMenu');
     }
 
@@ -7985,6 +8122,7 @@
             if (stack && slot) stack.after(slot);
             freeMove(byId('divCustomTarget'), slot);
             freeMove(panel('sim'), left);
+            freeMove(panel('materials'), left);
             const workBody = byId('menuWorkBody');
             ['txtProjectStatus', 'btnProjectExport', 'btnProjectImport', 'btnProjectReset']
                 .forEach(id => freeMove(byId(id), workBody));
@@ -8020,6 +8158,7 @@
         if (!row?.classList) return;
         const needed = appState.layers.some(l => l.unit === 'QWOT') || (appState.backLayers || []).some(l => l.unit === 'QWOT');
         row.classList.toggle('free-hide-dyn', !needed);
+        byId('freeQwotHint')?.classList?.toggle('free-hide-dyn', !needed);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -8077,6 +8216,7 @@
         });
         wireProjectBar();
         wireFreeGuide();
+        document.getElementById('appToast')?.addEventListener('click', e => e.currentTarget.classList.add('hidden'));
         document.getElementById('btnUndoWork')?.addEventListener('click', () => stepHistory(-1));
         document.getElementById('btnRedoWork')?.addEventListener('click', () => stepHistory(1));
         loadPreset('empty');

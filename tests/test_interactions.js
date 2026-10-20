@@ -85,7 +85,7 @@ const importe = (m, text) => {
     const before = JSON.stringify(m.appState.customTarget.segments);
     importe(m, '{"segments":[null]}');
     V.verifie('segment nul : cible précédente intacte', JSON.stringify(m.appState.customTarget.segments) === before);
-    V.verifie('segment nul : refus annoncé avec conservation', /conservée/.test(m.alerts.at(-1) || ''), m.alerts.at(-1));
+    V.verifie('segment nul : refus annoncé sans boîte bloquante, cible conservée', /conservée/.test(m.element('appToast').textContent), m.element('appToast').textContent);
     importe(m, '{"segments":[{"lmin":500,"lmax":550,"quantity":"T","value":"1\\" data-x=\\"injected","weight":1}]}');
     V.verifie('valeur non numérique : refusée', JSON.stringify(m.appState.customTarget.segments) === before);
     importe(m, '{"segments":[{"lmin":500,"lmax":550,"quantity":"<img>","value":50}]}');
@@ -239,10 +239,12 @@ V.groupe('Guide du mode libre — coches fidèles à l’état réel');
 {
     const m = charge(null, { keepSimulation: true });
     const steps = () => run(m, 'JSON.stringify(freeGuideSteps().map(s => s.done))');
-    V.verifie('départ : seule l’étape « milieux » est faite', steps() === '[true,false,false,false,false]', steps());
+    V.verifie('départ : aucune coche d’office, même pour les milieux', steps() === '[false,false,false,false,false,false]', steps());
     run(m, "appState.layers=[{matId:'TiO2',unit:'QWOT',val:1,locked:false}];"
         + "appState.customTarget.segments=[{lmin:450,lmax:650,quantity:'T',value:100,weight:1,angle:0,pol:'moy'}];");
-    V.verifie('couche et cible déclarées : étapes 2 et 3 cochées', steps() === '[true,true,true,false,false]', steps());
+    V.verifie('couche et cible déclarées : étapes 1 à 3 cochées', steps() === '[true,true,true,false,false,false]', steps());
+    run(m, 'workExported = true;');
+    V.verifie('travail exporté : étape 6 cochée', JSON.parse(steps())[5] === true);
     run(m, "appState.customTarget.segments[0].weight = 0;");
     V.verifie('cible de poids nul : étape 3 non cochée', JSON.parse(steps())[2] === false);
     run(m, "appState.lastQualification = {};");
@@ -255,7 +257,7 @@ V.groupe('Mode libre épuré — structure et finition');
     V.verifie('bandes Fresnel par défaut reconnues (vidées en mode libre)',
         run(m, 'JSON.stringify(appState.bands) === DEFAULT_BANDS_JSON') === true);
     const texts = JSON.parse(run(m, 'JSON.stringify(FREE_TEXT)'));
-    const bad = Object.entries(texts).filter(([, v]) => !v[0] || !v[1] || v[0] === v[1]).map(([k]) => k);
+    const bad = Object.entries(texts).filter(([k, v]) => !v[0] || !v[1] || (v[0] === v[1] && !/Short$/.test(k))).map(([k]) => k);
     V.verifie('libellés du mode libre en français ET en anglais', bad.length === 0, bad.join(', '));
     const src = run(m, 'prepareFreeLayout.toString() + applyFreeLayout.toString()');
     const direct = [...src.matchAll(/byId\('([A-Za-z0-9_]+)'\)/g)].map(x => x[1]);
@@ -321,6 +323,20 @@ V.groupe('Guide : optimiser ne suffit pas si la cible n’est pas atteinte');
     m.element('inpTargetThreshold').value = '50';
     const s4b = JSON.parse(run(m, 'JSON.stringify(freeGuideSteps()[3])'));
     V.verifie('seuil atteint : étape 4 cochée', s4b.done === true);
+}
+
+V.groupe('Contre-audit — messages, cases vides, formule');
+{
+    const m = charge(null, { keepSimulation: true });
+    run(m, "liveBi('txtOptiResult', '—', '—');");
+    V.verifie('case de résultat vide marquée (masquée en mode libre)', m.element('txtOptiResult').dataset.empty === 'true');
+    run(m, "liveBi('txtOptiResult', 'RMSE : 3 → 1', 'RMSE: 3 → 1');");
+    V.verifie('case de résultat remplie : affichée', m.element('txtOptiResult').dataset.empty === 'false');
+    run(m, "notify('essai');");
+    V.verifie('message non bloquant affiché', m.element('appToast').textContent === 'essai');
+    V.verifie('aucune boîte bloquante dans les chemins du mode libre (formule, aiguille)',
+        html.includes("catch (err) { notify(err.message); document.getElementById('inpFormulaStr')")
+        && !html.includes('alert(currentLang === \'fr\' ? "Déposez au moins une couche'));
 }
 
 V.groupe('Infobulles FR/EN');

@@ -65,7 +65,7 @@ auxiliaire de mérite et les libellés FR/EN. L'arrière reste fixe quand les
 
 ### Enchaînements de commandes — `test_interactions.js`
 
-76 contrôles rejouent les défauts d'interaction de l'audit du 19 octobre
+81 contrôles rejouent les défauts d'interaction de l'audit du 19 octobre
 2026 avec les vrais gestionnaires : une qualification, un verdict ou un
 diagnostic d'aiguille ne survivent à aucune modification du composant ou de
 la spécification ; l'import de cible est atomique, validé et échappé ; les
