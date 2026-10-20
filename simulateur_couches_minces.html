@@ -222,6 +222,10 @@
                 <button id="btnShortcuts" title="Raccourcis clavier (touche ?)" class="hidden sm:flex items-center gap-1 bg-indigo-800 hover:bg-indigo-700 text-indigo-100 px-2 py-1.5 rounded-lg border border-indigo-600 transition font-mono font-bold">
                     ?
                 </button>
+                <div class="flex items-center bg-indigo-950/80 rounded-lg p-0.5 border border-indigo-700/50">
+                    <button id="btnUndoWork" type="button" disabled class="px-2 py-1 rounded-md text-xs font-bold text-indigo-100 hover:bg-indigo-700 disabled:opacity-40 disabled:hover:bg-transparent">↶ Annuler</button>
+                    <button id="btnRedoWork" type="button" disabled class="px-2 py-1 rounded-md text-xs font-bold text-indigo-100 hover:bg-indigo-700 disabled:opacity-40 disabled:hover:bg-transparent">↷</button>
+                </div>
                 <button id="btnHelp" title="Afficher les formules matricielles et le guide — raccourci : H" class="flex items-center gap-1 bg-indigo-700 hover:bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg transition font-medium">
                     <i data-lucide="help-circle" class="w-3.5 h-3.5"></i> Aide & Théorie
                 </button>
@@ -3305,7 +3309,9 @@
             stack: appState.layers.map((l, i) => ({ matId: l.matId, locked: l.locked, unit: 'nm', val: baseThicknesses[i] }))
         };
         appState.lastQualification = record;
-        liveText('txtMonteCarloResult', () => monteCarloResultText(record));
+        liveText('txtMonteCarloResult', () => (appState.uiMode === 'libre'
+            ? monteCarloResultHtml(record)
+            : escapeReviewText(monteCarloResultText(record))), true);
         renderDesignReview();
         applyUiMode();          // une qualification existe : le comparateur devient pertinent
         renderFreeGuide();
@@ -3361,6 +3367,35 @@
     }
     const invalidateForSpec = () => invalidateDerivedResults(
         'la spécification a changé.', 'the specification changed.');
+
+    /* Mode libre : une phrase de décision d'abord, avec la piste à suivre ;
+       le compte rendu statistique complet reste disponible, replié. */
+    function monteCarloHeadline(q) {
+        const fr = currentLang === 'fr';
+        const y = formatStat(q.yieldPct, 1), req = formatStat(q.requiredYieldPct, 1);
+        const nominalOk = q.objective === 'custom' ? q.nominalMerit <= q.acceptance?.rmseMax
+            : q.objective === 'ar' ? q.nominalMerit <= q.acceptance?.meanRMax : null;
+        if (q.decisionKey === 'qualified') return fr
+            ? `✅ Qualifié : ${y} % des ${q.numRuns} composants simulés sont conformes (exigé : ${req} %).`
+            : `✅ Qualified: ${y}% of the ${q.numRuns} simulated components comply (required: ${req}%).`;
+        if (q.decisionKey === 'inconclusive') return fr
+            ? `⚖ Inconclusif : ${y} % conformes, trop près des ${req} % exigés pour trancher. Augmentez N pour conclure.`
+            : `⚖ Inconclusive: ${y}% compliant, too close to the required ${req}% to decide. Increase N to conclude.`;
+        const why = nominalOk === false
+            ? (fr ? 'Le composant nominal ne respecte déjà pas le critère : améliorez d’abord la conception (étape 4), ou assouplissez le seuil.'
+                  : 'The nominal design already fails the criterion: improve the design first (step 4), or relax the threshold.')
+            : (fr ? 'Le composant est trop sensible aux erreurs de dépôt : cherchez une solution plus tolérante, ou réduisez Δd.'
+                  : 'The design is too sensitive to deposition errors: look for a more tolerant solution, or reduce Δd.');
+        return fr
+            ? `❌ Non qualifié : ${y} % conformes pour ${req} % exigés. ${why}`
+            : `❌ Not qualified: ${y}% compliant for ${req}% required. ${why}`;
+    }
+    function monteCarloResultHtml(q) {
+        const fr = currentLang === 'fr';
+        return `<span class="block text-[11px] font-bold text-slate-900">${escapeReviewText(monteCarloHeadline(q))}</span>`
+            + `<details class="mt-1"><summary class="cursor-pointer text-indigo-700 font-semibold">${fr ? 'Détail statistique' : 'Statistical details'}</summary>`
+            + `<span class="block mt-1">${escapeReviewText(monteCarloResultText(q))}</span></details>`;
+    }
 
     /* Compte rendu de qualification, rédigé dans la langue COURANTE à partir des
        valeurs mémorisées : le changement de langue le retraduit sans le perdre. */
@@ -7172,6 +7207,11 @@
         };
         const click = id => { const el = document.getElementById(id); if (actionable(el)) el.click(); };
         window.addEventListener('keydown', ev => {
+            if ((ev.ctrlKey || ev.metaKey) && !ev.altKey && !isTypingTarget(document.activeElement)) {
+                const k = ev.key.toLowerCase();
+                if (k === 'z' && !ev.shiftKey) { ev.preventDefault(); stepHistory(-1); return; }
+                if (k === 'y' || (k === 'z' && ev.shiftKey)) { ev.preventDefault(); stepHistory(1); return; }
+            }
             if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
             if (isTypingTarget(document.activeElement)) return;
             const k = ev.key;
@@ -7379,6 +7419,52 @@
         };
     }
 
+    /* Historique du travail : chaque état enregistré est mémorisé (50 au plus).
+       Annuler revient à l'état précédent — couches, milieux, cible, réglages —
+       sans changer de mode ni d'exercice. Les résultats sont recalculés. */
+    const workHistory = { past: [], future: [], restoring: false };
+    const historyKey = proj => JSON.stringify({ s: proj.state, t: proj.targetSegments, o: proj.objective,
+        st: proj.targetStep, th: proj.targetThreshold, ar: proj.arThreshold });
+    function recordHistory() {
+        if (workHistory.restoring) return;
+        const snap = captureProject();
+        const key = historyKey(snap);
+        const last = workHistory.past[workHistory.past.length - 1];
+        if (last && last.key === key) return;
+        workHistory.past.push({ key, snap });
+        if (workHistory.past.length > 50) workHistory.past.shift();
+        workHistory.future = [];
+        updateUndoButtons();
+    }
+    function stepHistory(direction) {
+        // Un enregistrement en attente est d'abord pris en compte : sinon,
+        // annuler juste après une optimisation sauterait cette optimisation.
+        if (projectSaveTimer) { clearTimeout(projectSaveTimer); projectSaveTimer = null; saveProjectNow(); }
+        const from = direction < 0 ? workHistory.past : workHistory.future;
+        const to = direction < 0 ? workHistory.future : workHistory.past;
+        if (direction < 0 && workHistory.past.length < 2) return;
+        if (direction > 0 && !workHistory.future.length) return;
+        if (direction < 0) to.push(from.pop()); else to.push(from.pop());
+        const target = workHistory.past[workHistory.past.length - 1];
+        const project = { ...target.snap, uiMode: appState.uiMode, exercise: appState.exercise };
+        workHistory.restoring = true;
+        try {
+            applyProject(validateProject(project));
+            // L'état relu après restauration peut différer de l'instantané par
+            // de simples normalisations : il remplace l'entrée au lieu de
+            // s'empiler comme une nouvelle modification.
+            const snap = captureProject();
+            workHistory.past[workHistory.past.length - 1] = { key: historyKey(snap), snap };
+            saveProjectNow();
+        } finally { workHistory.restoring = false; }
+        updateUndoButtons();
+    }
+    function updateUndoButtons() {
+        const u = document.getElementById('btnUndoWork'), r = document.getElementById('btnRedoWork');
+        if (u) u.disabled = workHistory.past.length < 2;
+        if (r) r.disabled = !workHistory.future.length;
+    }
+
     function scheduleProjectSave() {
         if (!projectAutosaveReady) return;
         clearTimeout(projectSaveTimer);
@@ -7386,7 +7472,9 @@
     }
 
     function saveProjectNow() {
+        projectSaveTimer = null;
         if (!projectAutosaveReady) return;
+        recordHistory();
         try {
             localStorage.setItem(STORAGE_KEY_PROJECT, JSON.stringify(captureProject()));
             setProjectStatus('saved');
@@ -7517,6 +7605,7 @@
             }
         }
         projectAutosaveReady = true;
+        recordHistory();
     }
 
     function wireProjectBar() {
@@ -7598,10 +7687,23 @@
               title: fr ? 'Cible' : 'Target',
               text: fr ? 'Ce que vous voulez obtenir : bandes, R/T/A visés, angle, polarisation' : 'What you want: bands, target R/T/A, angle, polarisation',
               btn: fr ? 'Définir ma cible' : 'Define my target' },
-            { done: optiText !== '—' && !/⚠/.test(optiText), act: 'optimize',
-              title: fr ? 'Optimiser' : 'Optimize',
-              text: fr ? 'BFGS ajuste les épaisseurs ; l’aiguille peut ajouter une couche' : 'BFGS adjusts thicknesses; the needle can add a layer',
-              btn: fr ? 'Optimiser' : 'Optimize', needs: [1, 2] },
+            (() => {
+                // Optimiser ne suffit pas : l'étape n'est faite que si la cible est
+                // atteinte. Sinon, le guide propose le geste suivant — une couche
+                // de plus — au lieu de laisser croire que le composant est prêt.
+                const optimized = optiText !== '—' && !/⚠/.test(optiText);
+                const r = optimized && hasTarget ? evaluateCustomTarget(null) : null;
+                const reached = !!r && Number.isFinite(r.rmse) && r.rmse <= target.threshold;
+                const short = optimized && hasTarget && !reached && Number.isFinite(r?.rmse);
+                return { done: optimized && reached, act: short ? 'needle' : 'optimize',
+                  title: fr ? 'Optimiser' : 'Optimize',
+                  text: short
+                    ? (fr ? `Cible pas encore atteinte : RMSE ${formatStat(r.rmse, 2)} % > seuil ${formatStat(target.threshold, 1)} %. Une couche de plus peut aider.`
+                          : `Target not reached yet: RMSE ${formatStat(r.rmse, 2)}% > threshold ${formatStat(target.threshold, 1)}%. One more layer may help.`)
+                    : (fr ? 'BFGS ajuste les épaisseurs ; l’aiguille peut ajouter une couche' : 'BFGS adjusts thicknesses; the needle can add a layer'),
+                  btn: short ? (fr ? 'Ajouter une couche utile' : 'Add a useful layer') : (fr ? 'Optimiser' : 'Optimize'),
+                  needs: [1, 2] };
+            })(),
             { done: !!appState.lastQualification, act: 'robust',
               title: fr ? 'Robustesse' : 'Robustness',
               text: fr ? 'Monte-Carlo : le composant résiste-t-il aux erreurs de dépôt ?' : 'Monte-Carlo: does the design survive deposition errors?',
@@ -7631,10 +7733,23 @@
             : (() => {
                 const s = steps[next];
                 const blocked = (s.needs || []).some(k => !steps[k].done);
-                return `<button type="button" data-guide="${s.act}" ${blocked ? 'disabled' : ''} title="${s.text}"
+                const hint = s.act === 'needle' ? `<span class="text-slate-600">${s.text}</span>` : '';
+                return `${hint}<button type="button" data-guide="${s.act}" ${blocked ? 'disabled' : ''} title="${s.text}"
                     class="ml-auto rounded-lg px-3 py-1 font-bold ${blocked ? 'bg-slate-100 text-slate-400' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}">→ ${s.btn}</button>`;
             })();
         box.innerHTML = `<div class="flex items-center flex-wrap gap-1.5 bg-white border border-slate-200 rounded-lg px-3 py-2 text-[11px]">${pills}<span class="flex-grow"></span>${action}</div>`;
+    }
+
+    /* Aiguille en un geste : diagnostic π(z), insertion à la meilleure position
+       puis BFGS. Si aucune position n'améliore le mérite, on le dit. */
+    function addUsefulLayer() {
+        if (!appState.layers.length) return;
+        analyzeNeedlePosition();
+        if (recommendedNeedleStack && !fresnelPresetActive()) { applyRecommendedNeedle(); return; }
+        liveBi('txtOptiResult',
+            'Aucune couche supplémentaire n’améliore le mérite à cet endroit. Essayez un autre matériau d’aiguille (Plus d’options), une autre cible ou un seuil moins strict.',
+            'No extra layer improves the merit here. Try another needle material (More options), another target or a less strict threshold.');
+        renderFreeGuide();
     }
 
     function focusPanel(selector) {
@@ -7668,6 +7783,7 @@
                 updateCharts();
             }
             else if (act === 'optimize') { focusPanel('[data-panel="optimizer"]'); document.getElementById('btnRunOptimizer')?.click(); }
+            else if (act === 'needle') { focusPanel('[data-panel="optimizer"]'); addUsefulLayer(); }
             else if (act === 'robust') { focusPanel('[data-panel="mc"]'); document.getElementById('btnRunMonteCarlo')?.click(); }
             renderFreeGuide();
         });
@@ -7894,6 +8010,7 @@
         }
         updateQwotReferenceRow();
         renderFreeLayoutState();
+        refreshLiveTexts();
     }
 
     /* λ0 et θ0 de référence ne servent qu'aux couches en QWOT : en mode libre,
@@ -7960,6 +8077,8 @@
         });
         wireProjectBar();
         wireFreeGuide();
+        document.getElementById('btnUndoWork')?.addEventListener('click', () => stepHistory(-1));
+        document.getElementById('btnRedoWork')?.addEventListener('click', () => stepHistory(1));
         loadPreset('empty');
         applyUiMode();
         renderCustomTargetEditor();
@@ -8113,6 +8232,7 @@
         ["🎨 Cible libre (conception personnelle)", "🎨 Free target (custom design)"],
         ["Conception libre", "Free design"],
         ["Ma cible", "My target"],
+        ["↶ Annuler", "↶ Undo"],
         ["Bandes par défaut", "Default bands"],
         ["🎨 Votre cahier des charges", "🎨 Your specification"],
         ["Exemple", "Example"],
@@ -8360,6 +8480,8 @@
        jamais donner de réponse d’exercice. */
     const CONTROL_TIPS = {
         btnCloseShortcuts: ['Fermer la liste des raccourcis (Échap)', 'Close the shortcut list (Esc)'],
+        btnUndoWork: ['Annuler la dernière modification du travail : couches, milieux, cible, réglages (Ctrl + Z)', 'Undo the last change to your work: layers, media, target, settings (Ctrl + Z)'],
+        btnRedoWork: ['Rétablir la modification annulée (Ctrl + Y)', 'Redo the undone change (Ctrl + Y)'],
         inpCustomSuperN: ["Indice réel n du milieu d'incidence personnalisé (transparent, k = 0). Validez par Entrée ou en quittant le champ.", 'Real index n of the custom incident medium (transparent, k = 0). Confirm with Enter or by leaving the field.'],
         inpCustomSubN: ['Partie réelle n de l’indice du substrat personnalisé', 'Real part n of the custom substrate index'],
         inpCustomSubK: ['Coefficient d’extinction k du substrat personnalisé (0 = transparent). Avec k > 0, la face arrière ne peut pas être incluse.', 'Extinction coefficient k of the custom substrate (0 = transparent). With k > 0, the rear surface cannot be included.'],

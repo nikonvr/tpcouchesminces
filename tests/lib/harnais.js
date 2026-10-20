@@ -64,7 +64,7 @@ function charge(saved = null, options = {}) {
         },
         FileReader: class { constructor() { readers.push(this); } readAsText() {} },
         alert: text => alerts.push(text), confirm: () => true,
-        setTimeout: () => 0, performance: { now: () => 0 },
+        setTimeout: () => 0, clearTimeout: () => {}, performance: { now: () => 0 },
         console, counters,
     });
     vm.runInContext(scriptsDe(html), context, { filename: 'simulateur-reel.js' });

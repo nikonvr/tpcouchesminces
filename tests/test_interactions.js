@@ -271,6 +271,58 @@ V.groupe('Mode libre épuré — structure et finition');
     V.verifie('relevés en décimales anglaises : 4.21 %', m.element('valCursorR').textContent === '4.21 %');
 }
 
+V.groupe('Annuler / Rétablir — tout le travail, sans changer de mode');
+{
+    const m = charge(null, { keepSimulation: true });
+    run(m, STUBS + 'applyUiMode=()=>{}; renderExerciseSelector=()=>{}; renderBacksideEditor=()=>{}; renderBandAnalyzer=()=>{};'
+        + "projectAutosaveReady = true; appState.uiMode='libre'; recordHistory();"
+        + "appState.layers=[{matId:'TiO2',unit:'nm',val:60,locked:false}]; saveProjectNow();"
+        + "appState.layers=[{matId:'TiO2',unit:'nm',val:60,locked:false},{matId:'FusedSilica',unit:'nm',val:90,locked:false}]; saveProjectNow();");
+    V.verifie('trois états mémorisés', run(m, 'workHistory.past.length') === 3);
+    run(m, 'stepHistory(-1);');
+    V.verifie('annuler : retour à une couche', m.appState.layers.length === 1 && m.appState.layers[0].val === 60);
+    run(m, 'stepHistory(-1);');
+    V.verifie('annuler encore : empilement vide', m.appState.layers.length === 0);
+    run(m, 'stepHistory(-1);');
+    V.verifie('rien avant le premier état : sans effet', m.appState.layers.length === 0);
+    run(m, 'stepHistory(1); stepHistory(1);');
+    V.verifie('rétablir deux fois : deux couches', m.appState.layers.length === 2);
+    V.verifie('le mode ne change pas', m.appState.uiMode === 'libre');
+    run(m, 'stepHistory(-1);' + "appState.layers=[{matId:'Al2O3',unit:'nm',val:80,locked:false}]; saveProjectNow();");
+    V.verifie('nouvelle modification après annulation : rétablir est vidé', run(m, 'workHistory.future.length') === 0);
+}
+
+V.groupe('Verdict Monte-Carlo en une phrase (mode libre)');
+{
+    const m = charge(null, { keepSimulation: true });
+    const base = "{objective:'custom', acceptance:{rmseMax:5}, numRuns:500, requiredYieldPct:90, yieldPct:0, nominalMerit:10.6, decisionKey:'rejected'}";
+    run(m, "currentLang='fr';");
+    const h1 = run(m, `monteCarloHeadline(${base})`);
+    V.verifie('nominal hors critère : le verdict dit d’améliorer la conception', /Non qualifié/.test(h1) && /nominal/.test(h1), h1);
+    const h2 = run(m, `monteCarloHeadline({...${base}, nominalMerit: 2, yieldPct: 40})`);
+    V.verifie('nominal conforme mais fragile : le verdict parle de sensibilité', /sensible/.test(h2), h2);
+    const h3 = run(m, `monteCarloHeadline({...${base}, decisionKey:'qualified', yieldPct: 97})`);
+    V.verifie('qualifié : phrase positive avec le rendement', /^✅ Qualifié : 97,0 %/.test(h3), h3);
+    run(m, "currentLang='en';");
+    V.verifie('verdict traduit en anglais', /^❌ Not qualified/.test(run(m, `monteCarloHeadline(${base})`)));
+    const html = run(m, `monteCarloResultHtml({...${base}, nominalMinimum:0, nominalMaximum:0, feasibleCount:500, feasibilityPct:100, minimumThicknessNm:1, meanMerit:10, stdMerit:1, meritMin:9, meritMax:11, p05:9, p50:10, p95:11, toleranceNm:2, seed:42, perturbedCount:1, accepted:0, yieldLowPct:0, yieldHighPct:1, opticalState:{}})`);
+    V.verifie('détail statistique replié sous le verdict', /<details/.test(html) && /Statistical details/.test(html));
+}
+
+V.groupe('Guide : optimiser ne suffit pas si la cible n’est pas atteinte');
+{
+    const m = charge(null, { keepSimulation: true });
+    run(m, "appState.layers=[{matId:'ZnS_fresnel',unit:'QWOT',val:1,locked:false}];"
+        + "appState.customTarget.segments=[{lmin:450,lmax:650,quantity:'T',value:100,weight:1,angle:0,pol:'moy'}];"
+        + "liveBi('txtOptiResult','RMSE cible : 32 → 10','Target RMSE: 32 → 10');");
+    const s4 = JSON.parse(run(m, 'JSON.stringify(freeGuideSteps()[3])'));
+    V.verifie('cible non atteinte : étape 4 non cochée', s4.done === false);
+    V.verifie('cible non atteinte : le guide propose une couche utile', s4.act === 'needle' && /RMSE/.test(s4.text), s4.text);
+    m.element('inpTargetThreshold').value = '50';
+    const s4b = JSON.parse(run(m, 'JSON.stringify(freeGuideSteps()[3])'));
+    V.verifie('seuil atteint : étape 4 cochée', s4b.done === true);
+}
+
 V.groupe('Infobulles FR/EN');
 {
     const m = charge(null, { keepSimulation: true });

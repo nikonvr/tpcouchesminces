@@ -42,6 +42,8 @@ Le travail est **enregistré automatiquement** dans le navigateur et restauré
 ou à recharger sur un autre ordinateur avec **Importer**. Toute modification
 du composant ou de la cible marque les résultats précédents comme périmés.
 Sur le graphique, la molette fait défiler la page ; **Ctrl + molette** zoome.
+**↶ Annuler** / **↷** (Ctrl + Z / Ctrl + Y) reviennent sur toute modification
+du travail : couches, milieux, cible, réglages.
 
 Les matériaux personnels se définissent dans **+ Matériau** par une table
 `λ, n, k`, saisie ou importée (CSV/TXT/TSV, deux colonnes si k = 0).

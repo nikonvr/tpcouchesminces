@@ -65,14 +65,16 @@ auxiliaire de mérite et les libellés FR/EN. L'arrière reste fixe quand les
 
 ### Enchaînements de commandes — `test_interactions.js`
 
-61 contrôles rejouent les défauts d'interaction de l'audit du 19 octobre
+76 contrôles rejouent les défauts d'interaction de l'audit du 19 octobre
 2026 avec les vrais gestionnaires : une qualification, un verdict ou un
 diagnostic d'aiguille ne survivent à aucune modification du composant ou de
 la spécification ; l'import de cible est atomique, validé et échappé ; les
 grilles sont bornées ; les saisies invalides sont refusées sans corrompre
 l'état (virgule décimale acceptée) ; le travail se sauvegarde, s'exporte et
 se restaure après validation complète ; le guide du mode libre suit l'état
-réel ; chaque infobulle existe en français et en anglais. Exécutés sur la
+réel ; chaque infobulle existe en français et en anglais ; annuler/rétablir
+parcourt l'historique sans changer de mode ; le verdict Monte-Carlo du mode
+libre tient en une phrase qui dit quoi faire. Exécutés sur la
 version précédente du simulateur, ces contrôles échouent.
 
 Le harnais commun (DOM et stockage simulés, code réel) est dans
