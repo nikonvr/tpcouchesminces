@@ -26,6 +26,7 @@ SIMULATEUR = "simulateur_couches_minces.html"
 ENONCE_FR = "tp_couches_minces_fr.html"
 ENONCE_EN = "tp_couches_minces_en.html"
 COURS = "theorie en francais.html"
+COURS_EN = "theorie en anglais.html"
 HORS_LIGNE = os.path.join("outputs", "tp_couches_minces_hors_ligne")
 
 FORMULE_FRESNEL = "H L 2H L H L H L 2H L H L H L 2H L H L"
@@ -83,7 +84,7 @@ DOCS = {}
 titre("TESTS DES DOCUMENTS — énoncés, simulateur, cours, paquet hors ligne")
 
 groupe("1. Présence et lisibilité des fichiers du corpus")
-for nom in (SIMULATEUR, ENONCE_FR, ENONCE_EN, COURS, "index.html"):
+for nom in (SIMULATEUR, ENONCE_FR, ENONCE_EN, COURS, COURS_EN, "index.html"):
     chemin = os.path.join(RACINE, nom)
     existe = os.path.isfile(chemin)
     verifie(f"« {nom} » est présent", existe)
@@ -395,7 +396,7 @@ else:
     verifie("le dossier hors ligne existe", True)
 
     # Aucune dépendance d'exécution distante : ni script ni feuille de style CDN.
-    for nom in (SIMULATEUR, ENONCE_FR, ENONCE_EN, COURS):
+    for nom in (SIMULATEUR, ENONCE_FR, ENONCE_EN, COURS, COURS_EN):
         chemin = os.path.join(dossier, nom)
         if not os.path.isfile(chemin):
             verifie(f"hors ligne : « {nom} » présent", False)
@@ -431,7 +432,7 @@ else:
             t = t.replace(phrase, " ")
         return re.sub(r"\s+", " ", t).strip()
 
-    for nom in (SIMULATEUR, ENONCE_FR, ENONCE_EN, COURS):
+    for nom in (SIMULATEUR, ENONCE_FR, ENONCE_EN, COURS, COURS_EN):
         chemin = os.path.join(dossier, nom)
         if not os.path.isfile(chemin) or nom not in DOCS:
             continue
@@ -597,7 +598,7 @@ else:
                 garde = neg
         return garde
 
-    doivent_partir = [SIMULATEUR, ENONCE_FR, ENONCE_EN, COURS, "index.html",
+    doivent_partir = [SIMULATEUR, ENONCE_FR, ENONCE_EN, COURS, COURS_EN, "index.html",
                       "outputs/tp_couches_minces/squelette_excel_couches_minces.xlsx",
                       "outputs/tp_couches_minces_hors_ligne/index.html"]
     ne_doivent_pas = ["CORRIGE_REPONSES.md", "COMPARAISON_IA.md", "A_LIRE_INDEX_ET_LIENS.md",

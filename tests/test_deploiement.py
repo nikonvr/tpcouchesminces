@@ -89,6 +89,7 @@ PAGES = [
     ("tp_couches_minces_fr.html", "/tp_couches_minces_fr"),
     ("tp_couches_minces_en.html", "/tp_couches_minces_en"),
     ("theorie en francais.html", "/theorie%20en%20francais"),
+    ("theorie en anglais.html", "/theorie%20en%20anglais"),
     ("outputs/tp_couches_minces/squelette_excel_couches_minces.xlsx",
      "/outputs/tp_couches_minces/squelette_excel_couches_minces.xlsx"),
     ("outputs/tp_couches_minces_hors_ligne/index.html", "/outputs/tp_couches_minces_hors_ligne"),

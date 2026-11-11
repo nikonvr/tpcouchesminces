@@ -1990,10 +1990,10 @@
         if (appState.mode === "spectral") {
             // Le simulateur affiche des MESURES (moyennes sur bande) et non des
             // grandeurs dérivées : le facteur de réjection reste à calculer par
-            // l'étudiant à partir de ces moyennes (Q25).
+            // l'étudiant à partir de ces moyennes (Q26).
             renderBandAnalyzer();
 
-            // La FWHM n'est volontairement pas calculée ici : Q22 impose une mesure
+            // La FWHM n'est volontairement pas calculée ici : Q23 impose une mesure
             // manuelle au curseur, avec un pas spectral choisi par l'étudiant.
         }
     }
@@ -2112,7 +2112,7 @@
                 if (lo < GRID_LIMITS.lMin || hi > GRID_LIMITS.lMax) return null;
                 // Pas adaptatif : une fenêtre étroite doit être échantillonnée
                 // finement, sinon la moyenne repose sur une poignée de points.
-                // Reste à 10 nm sur 400–750 nm, pour ne pas changer Q16.
+                // Reste à 10 nm sur 400–750 nm, pour ne pas changer Q17.
                 const step = Math.max(0.5, Math.min(MERIT_GRIDS.ar.step,
                     Math.round(((hi - lo) / 35) * 2) / 2));
                 return { min: lo, max: hi, step };
@@ -6495,39 +6495,39 @@
           taskEn: 'Deposit a quarter-wave layer and measure its reflectance. You will redo this calculation by hand in Excel.' },
 
         { id: 4, num: 'IV', fr: 'Antireflet bicouche et robustesse', en: 'Two-layer antireflection and robustness',
-          qFr: 'Q13 – Q15', panels: ['media', 'stack', 'sim', 'tools', 'optimizer', 'mc', 'chart'], allowedMerits: ['ar'],
+          qFr: 'Q13 – Q16', panels: ['media', 'stack', 'sim', 'tools', 'optimizer', 'mc', 'chart'], allowedMerits: ['ar'],
           taskFr: 'Ajustez les deux épaisseurs à la main, cartographiez R, puis qualifiez la robustesse. Attention à la fenêtre du mérite.',
           taskEn: 'Adjust both thicknesses by hand, map R, then qualify robustness. Mind the merit window.' },
 
         { id: 5, num: 'V', fr: 'Optimisation et méthode de l’aiguille', en: 'Optimization and the needle method',
-          qFr: 'Q16 – Q17', panels: ['media', 'stack', 'sim', 'tools', 'optimizer', 'chart'], allowedMerits: ['ar'],
+          qFr: 'Q17 – Q18', panels: ['media', 'stack', 'sim', 'tools', 'optimizer', 'chart'], allowedMerits: ['ar'],
           taskFr: 'Étudiez la convergence locale de BFGS depuis plusieurs départs, puis enrichissez la structure par insertion d’aiguilles.',
           taskEn: 'Study local BFGS convergence from several starts, then enrich the structure by needle insertion.' },
 
         { id: 6, num: 'VI', fr: 'Miroirs de Bragg', en: 'Bragg mirrors',
-          qFr: 'Q18 – Q20', panels: ['media', 'stack', 'sim', 'chart'],
+          qFr: 'Q19 – Q21', panels: ['media', 'stack', 'sim', 'chart'],
           taskFr: 'Saisissez les empilements par formule symbolique et mesurez R max et les bornes de la bande interdite.',
           taskEn: 'Enter stacks by symbolic formula and measure R max and the stopband edges.' },
 
         { id: 7, num: 'VII', fr: 'Filtre passe-bande Fabry-Pérot', en: 'Fabry–Pérot bandpass filter',
-          qFr: 'Q21 – Q22', panels: ['media', 'stack', 'sim', 'chart'],
+          qFr: 'Q22 – Q23', panels: ['media', 'stack', 'sim', 'chart'],
           taskFr: 'Mesurez la largeur à mi-hauteur au curseur, au pas de 0,1 nm. Le simulateur ne la calcule pas pour vous.',
           taskEn: 'Measure the full width at half maximum with the cursor, at a 0.1 nm step. The simulator will not compute it for you.' },
 
         { id: 8, num: 'VIII', fr: 'Pré-fabrication salle blanche', en: 'Cleanroom pre-fabrication',
-          qFr: 'Q23 – Q25', panels: ['stack', 'sim', 'tools', 'optimizer', 'mc', 'bands', 'chart'], allowedMerits: ['qr'],
+          qFr: 'Q24 – Q26', panels: ['stack', 'sim', 'tools', 'optimizer', 'mc', 'bands', 'chart'], allowedMerits: ['qr'],
           taskFr: 'Relevez les moyennes de bandes et construisez vous-même le facteur de réjection, puis qualifiez la prescription.',
           taskEn: 'Read the band averages, build the rejection factor yourself, then qualify the prescription.' },
 
-        { id: 9, num: 'IX', fr: 'Rétro-ingénierie et diagnostic', en: 'Reverse engineering and diagnosis',
-          qFr: 'Q26 – Q27', panels: ['stack', 'sim', 'chart'],
-          taskFr: 'Reproduisez les scénarios de défaut et comparez leur signature spectrale au spectre nominal mémorisé.',
-          taskEn: 'Reproduce the defect scenarios and compare their spectral signature with the memorized nominal spectrum.' },
-
-        { id: 10, num: 'X', fr: 'Revue de conception', en: 'Design review',
-          qFr: 'Q28 – Q32', panels: ['media', 'stack', 'sim', 'tools', 'optimizer', 'mc', 'review', 'bands', 'chart'], allowedMerits: ['qr', 'custom'],
+        { id: 9, num: 'IX', fr: 'Revue de conception', en: 'Design review',
+          qFr: 'Q27 – Q30', panels: ['media', 'stack', 'sim', 'tools', 'optimizer', 'mc', 'review', 'bands', 'chart'], allowedMerits: ['qr', 'custom'],
           taskFr: 'Comparez deux empilements sur les mêmes réalisations et prononcez une décision de qualification argumentée.',
           taskEn: 'Compare two designs on the same realizations and issue a reasoned qualification decision.' },
+
+        { id: 10, num: 'X', fr: 'Rétro-ingénierie et diagnostic', en: 'Reverse engineering and diagnosis',
+          qFr: 'Q31 – Q32', panels: ['stack', 'sim', 'chart'],
+          taskFr: 'Reproduisez les scénarios de défaut et comparez leur signature spectrale au spectre nominal mémorisé.',
+          taskEn: 'Reproduce the defect scenarios and compare their spectral signature with the memorized nominal spectrum.' },
 
         { id: 11, num: 'XI', fr: 'Filtre linéairement variable', en: 'Linear variable filter',
           qFr: 'V1 – V7', panels: ['media', 'stack', 'sim', 'chart', 'materials'],

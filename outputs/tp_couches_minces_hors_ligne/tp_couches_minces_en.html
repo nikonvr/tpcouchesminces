@@ -16,6 +16,7 @@
         .font-mono { font-family: 'Fira Code', monospace; }
         .equation { overflow-x: auto; padding: 0.75rem 0; }
         .qbox { scroll-margin-top: 5rem; }
+        .hint { margin: 6px 0 0 44px; font-size: 12px; } .hint > summary { cursor: pointer; color: #b45309; font-weight: 600; list-style: none; } .hint > summary::-webkit-details-marker { display: none; } .hint[open] > summary { margin-bottom: 4px; } .hint > p { background: #fffbeb; border-left: 4px solid #fcd34d; padding: 6px 10px; border-radius: 0 6px 6px 0; color: #334155; } @media print { .hint { display: none; } }
         .navlink.active { background-color: #4f46e5; color: #fff; }
     </style>
 </head>
@@ -65,8 +66,8 @@
             <a href="#ex6" class="navlink px-2 py-1 rounded text-slate-600 hover:bg-indigo-50">VI</a>
             <a href="#ex7" class="navlink px-2 py-1 rounded text-emerald-700 hover:bg-emerald-50">VII 🎯</a>
             <a href="#ex8" class="navlink px-2 py-1 rounded text-emerald-700 hover:bg-emerald-50">VIII 🎯</a>
-            <a href="#ex9" class="navlink px-2 py-1 rounded text-emerald-700 hover:bg-emerald-50">IX 🎯</a>
-            <a href="#ex10" class="navlink px-2 py-1 rounded text-emerald-700 hover:bg-emerald-50">X</a>
+            <a href="#ex9" class="navlink px-2 py-1 rounded text-emerald-700 hover:bg-emerald-50">IX</a>
+            <a href="#ex10" class="navlink px-2 py-1 rounded text-emerald-700 hover:bg-emerald-50">X 🎯</a>
             <a href="#ex11" class="navlink px-2 py-1 rounded text-fuchsia-700 hover:bg-fuchsia-50">XI 🔬</a>
             <a href="#atelier" class="navlink px-2 py-1 rounded text-fuchsia-700 hover:bg-fuchsia-50">🎨 Free workshop</a>
             <span class="ml-auto text-slate-400 font-normal hidden sm:inline">🎯 = cleanroom thread</span>
@@ -86,7 +87,7 @@
             <p class="mt-3 text-sm text-indigo-100 leading-relaxed">
                 <strong>The simulator is not an oracle: it is a measurement bench.</strong> It will give you neither the full width at half maximum,
                 nor the right merit function, nor the conclusion. You will enter your layers, take your readings with the cursor,
-                export your data and conclude yourself. An answer that copies a displayed number without understanding it is worth nothing.
+                export your data and conclude yourself. What counts is your reasoning: a number copied without explanation earns little, a sound but unfinished approach earns points. If you are stuck, open the <strong>💡 Hint</strong> below the question: it puts you back on track without giving the answer.
             </p>
         </section>
 
@@ -96,7 +97,7 @@
             <div class="grid md:grid-cols-3 gap-3 text-xs">
                 <div class="border border-emerald-200 bg-emerald-50 rounded-lg p-3">
                     <div class="text-emerald-600 font-bold text-sm tracking-tight">★☆☆ &nbsp;Application</div>
-                    <p class="text-emerald-950 mt-1">Reading, curve inspection, direct formula. No question at this level should block you: if one does, review the theoretical reminder before continuing.</p>
+                    <p class="text-emerald-950 mt-1">Reading, curve inspection, direct formula. If one of them blocks you, that is normal early in the lab: open its hint or reread the theoretical reminder, then carry on.</p>
                     <p class="mt-1.5 font-mono text-[10px] text-emerald-700">7 questions — 22 %</p>
                 </div>
                 <div class="border border-amber-200 bg-amber-50 rounded-lg p-3">
@@ -111,8 +112,9 @@
                 </div>
             </div>
             <p class="mt-3 text-[11px] text-slate-600 bg-slate-50 border-l-4 border-slate-300 p-2 rounded-r">
-                <strong>How to use this:</strong> the ★★★ questions are not "for the best students". They are the point of the module — the ★ and ★★ exist to get you there. If you are short of time, complete one ★★★ fully rather than three ★: that is where the assessment lies.
+                <strong>How to use this:</strong> the ★★★ questions are not "for the best students". They are the point of the module — the ★ and ★★ exist to get you there. If you are short of time, one ★★★ done thoroughly earns as much as three ★, and teaches you more. Work at your own pace: each question's hint is there for that.
             </p>
+            <div id="cadreTravail" class="mt-3 grid md:grid-cols-3 gap-3 text-[11px]"><div class="border border-slate-200 bg-white rounded-lg p-3"><p class="font-bold text-slate-800 mb-1">📏 Indicative marking scheme</p><p class="text-slate-600 leading-snug">Each question is worth as many points as it has stars: ★ = 1, ★★ = 2, ★★★ = 3, i.e. 67 points for the 32 questions. The mark is scaled to 20 over the questions of your path only. A partial but reasoned answer earns points: always write down your approach, even if unfinished. The open workshop and exercise XI are not graded.</p></div><div class="border border-slate-200 bg-white rounded-lg p-3"><p class="font-bold text-slate-800 mb-1">🧭 Suggested paths</p><p class="text-slate-600 leading-snug"><strong>L2</strong>: I, II, III and VI. <strong>BUT 3 and L3</strong>: I to VIII, then X. <strong>M1 and M2</strong>: everything, including IX, the open workshop and exercise XI. Your teacher may adapt this path.</p></div><div class="border border-slate-200 bg-white rounded-lg p-3"><p class="font-bold text-slate-800 mb-1">📦 What you hand in</p><p class="text-slate-600 leading-snug"><strong>Session 1</strong> (I–III): answers Q1–Q12 and the Q12 workbook tab. <strong>Session 2</strong> (IV–V): Q14 tab, tables of Q15–Q16, Q17 log. <strong>Session 3</strong> (VI–VII, start of VIII): tables of Q19–Q22, CSV and image of the Q23 spectrum, Q24 calculation. <strong>Session 4</strong> (VIII to X): Q25–Q26 with the yield plot, decision sheet for IX, diagnosis Q31–Q32. At every session, attach the .json file from “⬇ Export my work”.</p></div></div>
         </section>
 
         <!-- Objectives & Guide -->
@@ -123,7 +125,7 @@
             This modular path covers the design, optimization, <strong>manufacturability</strong>, and reverse engineering of optical thin-film coatings (AR coatings, Bragg mirrors and resonant filters). A nominal minimum is never accepted as a completed design until process robustness has been demonstrated. Displayed durations are working estimates, not imposed limits; instructors may compose their own path.
                     <br><br>
                     <div class="bg-emerald-50 border-l-4 border-emerald-500 p-2.5 rounded text-xs text-emerald-950 font-medium">
-                        🎯 <strong>Cleanroom deposition:</strong> only the <strong>interference bandpass filter</strong> designed in Exercises VII and VIII, then diagnosed in IX, will be physically deposited under vacuum at <strong>Institut Fresnel</strong>, with the cleanroom deposition team.
+                        🎯 <strong>Cleanroom deposition:</strong> only the <strong>interference bandpass filter</strong> designed in Exercises VII and VIII, then diagnosed in X, will be physically deposited under vacuum at <strong>Institut Fresnel</strong>, with the cleanroom deposition team.
                     </div>
                 </div>
             </section>
@@ -180,22 +182,22 @@
                     <strong>💡 Physical Principle:</strong> Coatings rely on <strong>multiple beam interference</strong>. Optical path differences govern reflection and transmission. The core metric is the <strong>Optical Thickness</strong> ($n \times d$).
                 </div>
                 <p>
-                    For each layer $i$ with thickness $d_i$ and complex index $N_i = n_i - ik_i$, the optical phase shift is:
+                    For each layer $i$ with thickness $d_i$ and complex index $\hat{n}_i = n_i - i\kappa_i$, the optical phase shift is:
                 </p>
                 <div class="equation text-center font-mono text-indigo-900">
-                    $$\phi_i = \frac{2\pi d_i}{\lambda} \sqrt{N_i^2 - N_0^2 \sin^2\theta_0}$$
+                    $$\delta_i = \frac{2\pi d_i}{\lambda} \sqrt{\hat{n}_i^2 - n_0^2 \sin^2\theta_0}$$
                 </div>
                 <p>
                     The characteristic transfer matrix of layer $i$, which is unimodular ($\det M_i = 1$), is:
                 </p>
                 <div class="equation text-center font-mono text-indigo-900">
-                    $$M_i = \begin{pmatrix} \cos \phi_i & \frac{i}{\eta_i} \sin \phi_i \\ i\eta_i \sin \phi_i & \cos \phi_i \end{pmatrix}$$
+                    $$M_i = \begin{pmatrix} \cos \delta_i & \frac{i}{\eta_i} \sin \delta_i \\ i\eta_i \sin \delta_i & \cos \delta_i \end{pmatrix}$$
                 </div>
                 <div class="bg-slate-100 p-3 rounded-lg border border-slate-200 text-xs space-y-1.5 text-slate-800">
                     <div class="font-bold text-indigo-900">⚡ Polarization States (Incidence $\theta > 0$):</div>
                     <ul class="list-disc list-inside space-y-1">
-                        <li><strong>S-Polarization (TE):</strong> $\vec{E} \perp$ plane of incidence $\implies \eta_i = \gamma_i = \sqrt{N_i^2 - N_0^2\sin^2\theta_0}$.</li>
-                        <li><strong>P-Polarization (TM):</strong> $\vec{E} \parallel$ plane of incidence $\implies \eta_i = N_i^2 / \gamma_i$.</li>
+                        <li><strong>S-Polarization (TE):</strong> $\vec{E} \perp$ plane of incidence $\implies \eta_i = \gamma_i = \sqrt{\hat{n}_i^2 - n_0^2\sin^2\theta_0}$.</li>
+                        <li><strong>P-Polarization (TM):</strong> $\vec{E} \parallel$ plane of incidence $\implies \eta_i = \hat{n}_i^2 / \gamma_i$.</li>
                         <li><strong>Unpolarized light:</strong> $R_{avg} = \frac{R_s + R_p}{2}$ and $T_{avg} = \frac{T_s + T_p}{2}$.</li>
                     </ul>
                 </div>
@@ -257,7 +259,7 @@
             <div class="bg-slate-100 border-b px-8 py-4">
                 <h2 class="text-xl font-bold text-slate-900 flex flex-wrap items-center justify-between gap-2">I. Thin-film materials & complex index <span class="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">⏱ 35 min indicative</span></h2>
             </div>
-            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Direct entry — prerequisites:</strong> no previous exercise. Be able to read a graph and handle a complex number written as $N=n-i\kappa$.</div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Direct entry — prerequisites:</strong> no previous exercise. Be able to read a graph and handle a complex number written as $\hat{n}=n-i\kappa$.</div>
             <div class="p-6 space-y-4">
                 <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
@@ -267,6 +269,7 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Look at k first: a transparent material has k much smaller than 1. Then compare the order of magnitude of k between families: dielectrics, semiconductors, metals. Course §2.2.</p></details>
 
                 <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
@@ -279,6 +282,7 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Hover over the k(λ) curve to read values and build a small material × wavelength table before ranking. For the threshold, look for the largest k over 400–750 nm, not its value at 550 nm.</p></details>
 
                 <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
@@ -288,6 +292,7 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>What absorbs light: free electrons (metal) or transitions above the gap (semiconductor)? Convert λ to energy: E (eV) ≈ 1240 / λ (nm).</p></details>
 
                 <div class="qbox">
                     <div class="flex items-start gap-3">
@@ -295,11 +300,12 @@
                         <div class="text-sm text-slate-800 space-y-2">
                             <p>Examine <strong>ZnS (High index H)</strong> and <strong>YF3 (Low index L)</strong> used at the Institut Fresnel cleanroom. Record their indices at $550\,\text{nm}$ and compute the contrast $(n_H-n_L)/(n_H+n_L)$.</p>
                             <div class="bg-amber-50 border-l-4 border-amber-400 p-2 rounded-r text-xs text-amber-900">
-                                🔑 <strong>Keep this number:</strong> it sets the mirror stopband width, $\Delta\lambda \simeq \frac{4\lambda_0}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L}$, which you will need from Exercise VI onwards and above all in VIII (Q23) to assess where the measurement bands are placed. Beware: this width is symmetric in wavenumber, not in wavelength — the edges lie at $\lambda_0/(1 \pm \frac{2}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L})$, so the band extends further on the red side than on the blue side.
+                                🔑 <strong>Keep this number:</strong> it sets the mirror stopband width, $\Delta\lambda \simeq \frac{4\lambda_0}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L}$, which you will need from Exercise VI onwards and above all in VIII (Q24) to assess where the measurement bands are placed. Beware: this width is symmetric in wavenumber, not in wavelength — the edges lie at $\lambda_0/(1 \pm \frac{2}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L})$, so the band extends further on the red side than on the blue side.
                             </div>
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Read n at 550 nm for ZnS and YF3 in the materials database, then apply the formula: it is a simple ratio.</p></details>
             </div>
         </section>
 
@@ -342,7 +348,7 @@
   <line x1="196" y1="228" x2="240" y2="228" stroke="#7c3aed" stroke-width="1" stroke-dasharray="2 2"/>
 </svg>
                     </div>
-                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">In S (TE) the electric field is <strong>perpendicular to the plane of incidence</strong> (⊙ symbol). In P (TM) it <strong>lies in that plane</strong> (double arrow). The two see different admittances, η<sub>s</sub> = γ and η<sub>p</sub> = N²/γ: this is the whole origin of the Brewster angle, where R<sub>p</sub> vanishes while R<sub>s</sub> never does.</p>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">In S (TE) the electric field is <strong>perpendicular to the plane of incidence</strong> (⊙ symbol). In P (TM) it <strong>lies in that plane</strong> (double arrow). The two see different admittances, η<sub>s</sub> = γ and η<sub>p</sub> = n̂²/γ: this is the whole origin of the Brewster angle, where R<sub>p</sub> vanishes while R<sub>s</sub> never does.</p>
                 </figure>
 
                 <div class="border-b border-slate-100 pb-4 qbox">
@@ -354,6 +360,7 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>At normal incidence, r = (n₀ − n₁)/(n₀ + n₁) and R = |r|². Without absorption, T = 1 − R.</p></details>
 
                 <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
@@ -364,6 +371,7 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Follow one ray: it reflects on the front face, or goes through and bounces back and forth in the glass. Add the intensities: it is a geometric series of ratio R².</p></details>
 
                 <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
@@ -373,6 +381,7 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Angle θ mode, then tick S, P and the average. The cursor or the CSV export let you read the values every 10°.</p></details>
 
                 <figure id="fig-brewster" class="mb-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                         <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Reflectance versus angle: S, P and Brewster</figcaption>
@@ -408,6 +417,7 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Find where the Rp curve touches zero and zoom around that point. Then compare arctan(n) with the angle you read.</p></details>
 
                 <div class="qbox">
                     <div class="flex items-start gap-3">
@@ -417,6 +427,7 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>After swapping the media, find the angle beyond which R equals 100%. Snell's law: n₁ sin θ₁ = n₂ sin θ₂, with θ₂ = 90°.</p></details>
             </div>
         </section>
 
@@ -474,6 +485,7 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>A quarter-wave layer satisfies n·d = λ₀/4: compute d = λ₀/(4n). For the R < 0.5% range, read both edges with the cursor.</p></details>
 
                 <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
@@ -493,6 +505,7 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Record the position of the minimum before and after changing the substrate, with the cursor and the same step. The hint at the end of the question tells you what you should find.</p></details>
 
                 <div class="qbox">
                     <div class="flex items-start gap-3">
@@ -500,7 +513,7 @@
                         <div class="text-sm text-slate-800 space-y-2">
                             <p><strong>Demystifying the Black Box in Excel:</strong> Compute reflection $R$ of this layer at $550\,\text{nm}$ in Excel.</p>
                             <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
-                                <li>Compute the optical phase $\phi_1$.</li>
+                                <li>Compute the optical phase $\delta_1$.</li>
                                 <li>Build matrix $M_1$ using <code>=COMPLEX(real, imag)</code> and <code>=IMPRODUCT(z1, z2)</code>.</li>
                                 <li>Compute the equivalent admittance $Y=\frac{m_{10}+\eta_{sub} m_{11}}{m_{00}+\eta_{sub} m_{01}}$ then $R=\left|\frac{\eta_0-Y}{\eta_0+Y}\right|^2$.</li>
                                 <li>Check that you recover the simulator value.</li>
@@ -509,13 +522,14 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Go cell by cell and check each number: δ₁ first (a quarter-wave layer gives π/2), then the four matrix terms, then Y. Course §4.1 and §12.</p></details>
             </div>
         </section>
 
         <!-- PART -->
         <section id="ex4" class="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
             <div class="bg-slate-100 border-b px-8 py-4">
-                <h2 class="text-xl font-bold text-slate-900 flex flex-wrap items-center justify-between gap-2">IV. Double-layer antireflection: BK7 / H / L / Air <span class="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">⏱ 70 min indicative</span></h2>
+                <h2 class="text-xl font-bold text-slate-900 flex flex-wrap items-center justify-between gap-2">IV. Double-layer antireflection: BK7 / H / L / Air <span class="text-xs font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">⏱ 85 min indicative</span></h2>
             </div>
             <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Direct entry — prerequisites:</strong> QWOT, substrate-to-superstrate order, matrix products and reflectance reading. Exercise III, especially Q10–Q12, is strongly recommended.</div>
             <div class="p-6 space-y-4">
@@ -531,6 +545,7 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Start from two quarter-wave layers, then change only one thickness at a time, in 10 nm steps; when R rises again, step back and reduce the step.</p></details>
 
                 <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
@@ -546,6 +561,7 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Fill the grid row by row, changing only one thickness at a time. In Excel, the Surface or Contour chart is built from the table and its two headers.</p></details>
 
                 <div class="qbox">
                     <div class="flex items-start gap-3">
@@ -564,12 +580,15 @@
                                     <li>Compare P95 at $\pm5\,\text{nm}$ with the threshold. Depending on your valley, it stays below or exceeds it while the mean respects it: in the latter case, what does that gap mean concretely for a production batch? Compare with a pair who kept another valley: which one is more robust, and why?</li>
                                     <li><strong>Isolate the critical layer — by hand, not with Monte-Carlo.</strong> The draw <em>always</em> perturbs both layers: locking applies to BFGS only, never to manufacturing. So work by sensitivity instead: from the nominal design, add $+3\,\text{nm}$ to ZnS alone and record the merit; return to nominal, add $+3\,\text{nm}$ to YF₃ alone and record. Which one degrades it more? Relate your answer to the index and the optical thickness $n\cdot d$ of each layer.</li>
                                 </ul>
-                                <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">🔍 <strong>Self-check:</strong> with the right window, the yield at $\Delta d=5$ nm must be <strong>lower than or equal to</strong> the one at $\Delta d=3$ nm — that is the expected ordering, even though it is not mathematically guaranteed. If you get 0% everywhere, check that the window is 520–580 nm and that your nominal design meets the threshold: if it does not, the yield may even grow with $\Delta d$ — explain why. If you get 100% in both cases, your nominal margin is too comfortable for the test to discriminate: tighten the threshold (try 0.3% instead of 0.8%) and rerun both. A protocol that separates nothing is not a protocol.</div>
-                                <p class="text-xs text-slate-500">A standard deviation without an acceptance criterion is not a robustness conclusion.</p>
+                                <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">🔍 <strong>Self-check:</strong> with the right window, the yield at $\Delta d=5$ nm must be <strong>lower than or equal to</strong> the one at $\Delta d=3$ nm — that is the expected ordering, even though it is not mathematically guaranteed. If you get 0% everywhere, check that the window is 520–580 nm and that your nominal design meets the threshold: if it does not, the yield may even grow with $\Delta d$ — explain why. If you get 100% in both cases, your nominal margin is too comfortable for the test to discriminate: tighten the threshold (try 0.3% instead of 0.8%) and rerun both. A test that separates nothing does not allow a conclusion: tightening it is how you learn something.</div>
+                                <p class="text-xs text-slate-500">Keep the idea in mind: a standard deviation alone is not enough to conclude on robustness; you need an acceptance criterion.</p>
                             </div>
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Follow the bullets in order. Read the merit shown below the selector before and after changing the window. The Monte-Carlo result directly gives yield, interval and P95. Course §11.</p></details>
+                <div class="border-t border-slate-100 pt-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q16</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Statistical convergence.</strong> Since the seed is fixed, the draws are strictly identical from one run to the next. Take your Q15 design in a setting where the yield is intermediate — for example the tightened threshold of 0.3% and $\Delta d=5$ nm — and run $N=100$, 500 then 1000. Tabulate the yield and the bounds of the 95% Wilson CI, and measure the interval width in all three cases: by what factor does it narrow when $N$ is multiplied by 10? Does that match the $1/\sqrt{N}$ law? Repeat the test in a setting where the yield is close to 100% (threshold 0.8%, $\Delta d=3$ nm): why does the law no longer apply? Conclude: why are 100 runs enough to explore, but not to qualify?</div></div></div>
+                <details class="hint"><summary>💡 Hint</summary><p>Change only N from one run to the next. Interval width = upper bound − lower bound; divide the width obtained at N = 100 by the one obtained at N = 1000.</p></details>
             </div>
         </section>
 
@@ -601,7 +620,7 @@
   <text x="360" y="150" font-size="9.5" fill="#64748b" font-family="Inter,system-ui,sans-serif">π < 0: unfavourable insertion</text>
 </svg>
                     </div>
-                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">π(z) measures the merit gain an infinitely thin needle would bring at depth z. Where π &gt; 0, inserting improves; where π &lt; 0, inserting degrades. You insert at the <strong>maximum</strong>, then refine with BFGS. Careful: the scan is discrete (5 nm) and never evaluates the interfaces — Q17 asks you to work out the consequences.</p>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">π(z) measures the merit gain an infinitely thin needle would bring at depth z. Where π &gt; 0, inserting improves; where π &lt; 0, inserting degrades. You insert at the <strong>maximum</strong>, then refine with BFGS. Careful: the scan is discrete (5 nm) and never evaluates the interfaces — Q18 asks you to work out the consequences.</p>
                 </figure>
 
                 <figure id="fig-paysage" class="mb-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
@@ -634,7 +653,7 @@
                     </figure>
                     <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
-                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q16</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q17</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
                         <div class="text-sm text-slate-800 space-y-2">
                             <p><strong>BFGS local-convergence study.</strong> In <strong>🎓 Student</strong> mode, exercise V, activate the <code>Mean R</code> merit over <strong>400–750 nm</strong> with a <strong>0.5%</strong> threshold. Goal: a <em>broadband</em> antireflection coating on BK7 using ZnS/YF₃.</p>
                             <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
@@ -650,10 +669,11 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>For bare glass, empty the stack and read the merit. As a thin, asymmetric start, try for example 20 nm and 40 nm. Record everything in a table: start, initial merit, final merit, number of layers. Course §10.</p></details>
 
                 <div class="qbox">
                     <div class="flex items-start gap-3">
-                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q17</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q18</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
                         <div class="text-sm text-slate-800 space-y-2">
                             <p><strong>Guided Synthesis via the Needle Method:</strong></p>
                             <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
@@ -669,6 +689,7 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>The π(z) curve appears after “Analyze the needle”; its positive maximum is the recommended place. Record the merit just before clicking “⚡ Insert + optimize with BFGS”. Course §10.</p></details>
             </div>
         </section>
 
@@ -685,37 +706,39 @@
 
                 <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
-                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q18</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q19</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
                         <div class="text-sm text-slate-800 space-y-2">
                             <p>Enter formula <code>(HL)^3 H</code> at $\lambda_0 = 550\,\text{nm}$. Measure peak reflectance $R_{max}$ and record <strong>both edges</strong> of the <strong>stopband</strong> — the wavelength range over which the mirror reflects strongly, also called the photonic band gap — using $R \ge 90\%$ as the convention. Note the width you obtain.</p>
                             <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
-                                🧠 <strong>Do not rush to the formula.</strong> Compare your measured width with the prediction $\Delta\lambda = \frac{4\lambda_0}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L}$ computed in Q4: <strong>the gap is large, of order one third.</strong> This is not a measurement error. Look at $R_{max}$: by how much does it exceed your 90% threshold? What happens to the measured width if $R_{max}$ barely clears the threshold? Formulate a hypothesis — you will test it in Q19.
+                                🧠 <strong>Do not rush to the formula.</strong> Compare your measured width with the prediction $\Delta\lambda = \frac{4\lambda_0}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L}$ computed in Q4: <strong>the gap is large, of order one third.</strong> This is not a measurement error. Look at $R_{max}$: by how much does it exceed your 90% threshold? What happens to the measured width if $R_{max}$ barely clears the threshold? Formulate a hypothesis — you will test it in Q20.
                             </div>
                             <div class="bg-amber-50 border-l-4 border-amber-400 p-2 rounded-r text-xs text-amber-900">
-                                🔑 <strong>Result to keep:</strong> <strong>you will use the stopband edges in VIII (Q23)</strong> to assess where the measurement bands are placed: a rejection band placed where the stack no longer blocks does not measure the filter, it measures a leak. You will refine them in Q19 on a thicker mirror.
+                                🔑 <strong>Result to keep:</strong> <strong>you will use the stopband edges in VIII (Q24)</strong> to assess where the measurement bands are placed: a rejection band placed where the stack no longer blocks does not measure the filter, it measures a leak. You will refine them in Q20 on a thicker mirror.
                             </div>
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>For the edges, find with the cursor the two wavelengths where R crosses 90% again. The Q4 formula is explained in course §9.</p></details>
 
                 <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
-                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q19</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q20</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
                         <div class="text-sm text-slate-800">
                             <div class="space-y-2">
                                 <p>Compare <code>(HL)^3 H</code> (7 layers), <code>(HL)^4 H</code> (9), <code>(HL)^5 H</code> (11) and <code>(HL)^6 H</code> (13) using <strong>Save curve</strong> overlays. For each, record <strong>$R_{max}$ and the width at $R \ge 90\%$</strong>. Build the table of the four pairs.</p>
                                 <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
-                                    🧠 <strong>The central result of this exercise.</strong> Both quantities saturate, but not in the same way. Now confront your four widths with the Q4 prediction: it describes <em>none</em> of your four mirrors exactly, yet it describes very well the one they converge towards. <strong>So what does that formula physically represent</strong> — the width of a real mirror, or a limit? Is your Q18 hypothesis confirmed?
+                                    🧠 <strong>The central result of this exercise.</strong> Both quantities saturate, but not in the same way. Now confront your four widths with the Q4 prediction: it describes <em>none</em> of your four mirrors exactly, yet it describes very well the one they converge towards. <strong>So what does that formula physically represent</strong> — the width of a real mirror, or a limit? Is your Q19 hypothesis confirmed?
                                 </div>
-                                <p class="text-xs text-slate-600">Conclude: from how many periods onwards can the formula be used as an acceptable approximation? That is the value you will use in Q23 to place your measurement bands.</p>
+                                <p class="text-xs text-slate-600">Conclude: from how many periods onwards can the formula be used as an acceptable approximation? That is the value you will use in Q24 to place your measurement bands.</p>
                             </div>
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Click “Save curve” after each stack to overlay them, and fill in a table: periods, R max, width.</p></details>
 
                 <div class="qbox">
                     <div class="flex items-start gap-3">
-                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q20</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q21</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
                         <div class="text-sm text-slate-800">
                             <div class="space-y-2">
                                 <p><strong>The outermost layers: a setting, not an improvement.</strong> On the 13-layer mirror, widen the display to $360-800\,\text{nm}$ so you can see the ripples on both sides of the stopband.</p>
@@ -733,6 +756,7 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Change only layers 1 and 13 in the layer table (thickness in QWOT). Always record the same three numbers before comparing.</p></details>
             </div>
         </section>
 
@@ -770,11 +794,11 @@
   <text x="30" y="220" font-size="10.5" fill="#b45309" font-family="Inter,system-ui,sans-serif">q ↑: thicker cavity → narrower peak, but spurious orders</text>
 </svg>
                         </div>
-                        <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">The half-wave <strong>2H</strong> spacer is a cavity: at resonance a standing wave builds up inside it and light passes almost entirely through the stack, while it is blocked everywhere else in the stopband. Two independent levers narrow the peak — increasing <strong>n</strong> (more reflective mirrors) or increasing <strong>q</strong> (thicker cavity). Q21 asks you to determine which acts more strongly.</p>
+                        <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">The half-wave <strong>2H</strong> spacer is a cavity: at resonance a standing wave builds up inside it and light passes almost entirely through the stack, while it is blocked everywhere else in the stopband. Two independent levers narrow the peak — increasing <strong>n</strong> (more reflective mirrors) or increasing <strong>q</strong> (thicker cavity). Q22 asks you to determine which acts more strongly.</p>
                     </figure>
                     <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
-                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q21</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q22</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
                         <div class="text-sm text-slate-800 space-y-2">
                             <p>At $\lambda_0=550\,\text{nm}$, enter <code>(HL)^2 2H (LH)^2</code>, then <code>(HL)^3 2H (LH)^3</code>, then <code>(HL)^4 2H (LH)^4</code>. Measure the full width at half maximum of each.</p>
                             <p>Then test the cavity order: replace the <code>2H</code> spacer with <code>4H</code> (order $q=2$) then <code>6H</code> ($q=3$). <em>Notation: the prefix is the QWOT multiple, so <code>4H</code> = 4 quarter-waves = 2 half-waves.</em></p>
@@ -782,14 +806,15 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>For each filter: T max, then T max / 2, then the two wavelengths where T equals T max / 2. Box zoom (drag on the chart) helps a lot. Course §9.</p></details>
 
                 <div class="qbox">
                     <div class="flex items-start gap-3">
-                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q22</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q23</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div>
                         <div class="text-sm text-slate-800 space-y-2">
                             <p><strong>Fresnel prescription that will actually be deposited:</strong> load <code>BK7 / H L 2H L H L H L 2H L H L H L 2H L H L / Air</code> at $\lambda_0=550\,\text{nm}$ (<strong>Symbolic formula</strong> button, then <strong>Load the Fresnel reference</strong>). Verify yourself that it contains exactly <strong>18 layers</strong>, in substrate-to-air order. This architecture is mandatory: it must neither be shortened nor replaced by a symmetric cavity.</p>
                             <p><strong>Mandatory manual measurement.</strong> With a $0.1\,\text{nm}$ spectral step, read from the cursor: (a) the maximum $T_{max}$ and its wavelength, (b) the $T_{max}/2$ level, (c) the <strong>two</strong> intersections $\lambda_1$ and $\lambda_2$, (d) the width $\lambda_2-\lambda_1$, (e) the <strong>half-maximum centre</strong> $(\lambda_1+\lambda_2)/2$. Use box zoom to refine each intersection, then <code>Reset view</code> to return to the full spectrum.</p>
-                            <p class="mt-1.5">This prescription contains <strong>three $2H$ spacers</strong>, hence three coupled cavities: that is what makes it a <em>multicavity</em> filter. Its passband is far wider than the single-cavity filters of Q21 — do not transfer their expected scale — and above all its top is <strong>flat and rippled</strong>. You will find several near-equal maxima there, and the highest one can jump from one to another after a tiny change in the stack. <strong>So it is the half-maximum centre (e), not the position of the maximum, that locates the passband reliably</strong>; that is the figure you will reuse in Exercises IX and X.</p>
+                            <p class="mt-1.5">This prescription contains <strong>three $2H$ spacers</strong>, hence three coupled cavities: that is what makes it a <em>multicavity</em> filter. Its passband is far wider than the single-cavity filters of Q22 — do not transfer their expected scale — and above all its top is <strong>flat and rippled</strong>. You will find several near-equal maxima there, and the highest one can jump from one to another after a tiny change in the stack. <strong>So it is the half-maximum centre (e), not the position of the maximum, that locates the passband reliably</strong>; that is the figure you will reuse in Exercises IX and X.</p>
                             <div class="bg-sky-50 border-l-4 border-sky-400 p-2 rounded-r text-xs text-sky-900">
                                 🔍 <strong>Method self-check:</strong> measure at half the <em>window</em> height ($T_{max}/2$), never at 50% of the scale. This filter has three cavities: its top is flat and rippled — it is not a peak. The simulator's display step is fixed at 0.1 nm: to quantify the effect of the step, export the CSV and, in Excel, keep only one row in 5 (0.5 nm step) and then one row in 20 (2 nm step). Read $T_{max}$, $\lambda_1$ and $\lambda_2$ again on each grid and quantify the reading uncertainty caused by the step.
                             </div>
@@ -799,6 +824,7 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>“Symbolic formula” button, then “Load the Fresnel reference”. Measure at half of T max, not at 50%. For the step effect, the CSV export and a row filter in Excel are enough.</p></details>
             </div>
         </section>
 
@@ -806,10 +832,10 @@
         <!-- PART -->
         <section id="ex8" class="bg-white rounded-3xl shadow-lg border-2 border-emerald-300 overflow-hidden">
             <div class="bg-emerald-50 border-b border-emerald-200 px-8 py-4 flex justify-between items-center flex-wrap gap-2">
-                <h2 class="text-xl font-bold text-emerald-950 flex flex-wrap items-center justify-between gap-2">VIII. Cleanroom pre-fabrication project <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">⏱ 75 min indicative</span></h2>
+                <h2 class="text-xl font-bold text-emerald-950 flex flex-wrap items-center justify-between gap-2">VIII. Cleanroom pre-fabrication project <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">⏱ 100 min indicative</span></h2>
                 <span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">🎯 Deposited at Fresnel</span>
             </div>
-            <div class="mx-6 mt-5 bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r-lg text-xs text-amber-950"><strong>Direct entry — prerequisites:</strong> retain the nominal Q22 file and understand a cavity passband, a merit function and parameter locking. Exercises VI and VII are required; V is useful for Q24.</div>
+            <div class="mx-6 mt-5 bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r-lg text-xs text-amber-950"><strong>Direct entry — prerequisites:</strong> retain the nominal Q23 file and understand a cavity passband, a merit function and parameter locking. Exercises VI and VII are required; V is useful for Q25.</div>
             <div class="p-6 space-y-4">
 
                 <div class="bg-slate-800 text-slate-100 p-4 rounded-lg text-xs space-y-2">
@@ -823,7 +849,7 @@
                         <div>• Required passband transmission: <strong>$\overline{T}_{pass} \ge 85\%$</strong></div>
                     </div>
                     <div class="text-amber-200 border-t border-slate-600 pt-2 mt-1">
-                        ⚠ <strong>Why these bands?</strong> The passband frames the cavity resonance; the two rejection bands are placed where the complete 18-layer stack blocks. Yet they extend beyond the stopband of the simple mirror measured in Q18–Q19: check this, then verify on the Q22 spectrum that $T$ stays low over their whole extent. This is an engineering decision, not a natural given: in Q23 you will have to show what happens if it is made at random.
+                        ⚠ <strong>Why these bands?</strong> The passband frames the cavity resonance; the two rejection bands are placed where the complete 18-layer stack blocks. Yet they extend beyond the stopband of the simple mirror measured in Q19–Q20: check this, then verify on the Q23 spectrum that $T$ stays low over their whole extent. This is an engineering decision, not a natural given: in Q24 you will have to show what happens if it is made at random.
                     </div>
                     <div class="font-mono text-emerald-300 border-t border-slate-600 pt-2">
                         $Q_r=\dfrac{2\,\overline{T}_{535-565}}{\overline{T}_{460-500}+\overline{T}_{620-680}}$
@@ -832,9 +858,9 @@
 
                 <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
-                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q23</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q24</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
                         <div class="text-sm text-slate-800 space-y-2">
-                            <p><strong>Nominal audit and manual $Q_r$ calculation:</strong> reopen the Q22 filter, in the same substrate-to-superstrate deposition order.</p>
+                            <p><strong>Nominal audit and manual $Q_r$ calculation:</strong> reopen the Q23 filter, in the same substrate-to-superstrate deposition order.</p>
                             <div class="bg-slate-800 text-slate-100 p-2.5 rounded text-xs mb-2">
                                 <strong class="text-white">⚠️ The analyzer does not compute $Q_r$.</strong> It only gives you <strong>measurements</strong>: the average of R, T, or A over a band you define, at a step you choose. It affects neither the optimizer nor Monte-Carlo. The rejection factor is a <em>derived</em> quantity: first build it yourself; the BFGS merit will then use it with fixed bands.
                             </div>
@@ -852,13 +878,14 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Add three bands in the analyzer, quantity T, 0.5 nm step. Then Q_r = 2 × T̄(pass) / (T̄(reject 1) + T̄(reject 2)): check the brackets.</p></details>
 
                 <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
-                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q24</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q25</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
                         <div class="text-sm text-slate-800 space-y-2">
                             <p><strong>Is there really anything to optimize?</strong></p>
-                            <p class="text-xs text-slate-600 mb-1.5">The question is not rhetorical. Start by measuring $Q_r$ and $\overline{T}_{pass}$ <em>before</em> any optimization and compare them with the two requirements of the specification. <strong>If the deposited prescription already meets them, and by a wide margin, say so: that is a result, not a failure on your part.</strong> You then have to answer a more interesting question: what is the point of optimizing a component that already passes? Look at the margin — by how much does the nominal exceed the threshold, and does that margin survive the deposition errors of Q25? That, rather than the nominal value, is where the three free layers earn their keep.</p>
+                            <p class="text-xs text-slate-600 mb-1.5">The question is not rhetorical. Start by measuring $Q_r$ and $\overline{T}_{pass}$ <em>before</em> any optimization and compare them with the two requirements of the specification. <strong>If the deposited prescription already meets them, and by a wide margin, say so: that is a result, not a failure on your part.</strong> You then have to answer a more interesting question: what is the point of optimizing a component that already passes? Look at the margin — by how much does the nominal exceed the threshold, and does that margin survive the deposition errors of Q26? That, rather than the nominal value, is where the three free layers earn their keep.</p>
                             <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
                                 <li>Switch to <strong>🎓 Student</strong> mode, exercise VIII: the <code>Maximize Qr</code> merit is selected automatically there. Its formula already uses exactly the 460–500, 535–565, and 620–680 nm bands; the band analyzer remains an independent measurement instrument.</li>
                                 <li>Set the cleanup threshold to <strong>2 nm</strong>: it is also BFGS's lower bound. Record this constraint in the design dossier; a numerical optimum below it is not admissible.</li>
@@ -870,36 +897,73 @@
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>First check that the “Maximize Qr” merit is selected and that only layers 16–18 are free. Record Q_r and T̄pass before running BFGS, then after.</p></details>
 <div class="qbox">
                     <div class="flex items-start gap-3">
-                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q25</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q26</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
                         <div class="text-sm text-slate-800 space-y-2">
                             <p><strong>Pre-manufacturing review — robust qualification without supplied results.</strong></p>
                             <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
-                                <li><strong>(a)</strong> Keep the Q24 optimized prescription: 18 layers, the first fifteen unchanged, the final three produced by BFGS. Set $d_{min}=1$ nm and write, before any simulation, the acceptance criteria for one draw — at least the two specification requirements, $Q_r \ge 30$ AND $\overline{T}_{pass} \ge 85\%$; any tightening must be justified — together with the <strong>minimum required yield</strong> of the batch, entered in the <code>Required yield</code> field: this is the value used in (d).
-                                <br><span class="text-[11px]">Two different thresholds, not to be confused: the <strong>2 nm</strong> of Q24 is a lower bound on what <em>the optimizer</em> may propose; the <strong>$d_{min}=1$ nm</strong> here is the thinnest layer one accepts to <em>deposit</em>, and it is used to sort the Monte-Carlo draws. The first constrains a calculation, the second judges a fabrication. Justify both values in your dossier.</span></li>
-                                <li><strong>(b)</strong> For $\Delta d=1$, 2, and 5 nm, first run $N=100$ to check the protocol, then $N=1000$ for the decision. Keep the seed unchanged.</li>
+                                <li><strong>(a)</strong> Keep the Q25 optimized prescription: 18 layers, the first fifteen unchanged, the final three produced by BFGS. Set $d_{min}=1$ nm and write, before any simulation, the acceptance criteria for one draw — at least the two specification requirements, $Q_r \ge 30$ AND $\overline{T}_{pass} \ge 85\%$; any tightening must be justified — together with the <strong>minimum required yield</strong> of the batch, entered in the <code>Required yield</code> field: this is the value used in (d).
+                                <br><span class="text-[11px]">Two different thresholds, not to be confused: the <strong>2 nm</strong> of Q25 is a lower bound on what <em>the optimizer</em> may propose; the <strong>$d_{min}=1$ nm</strong> here is the thinnest layer one accepts to <em>deposit</em>, and it is used to sort the Monte-Carlo draws. The first constrains a calculation, the second judges a fabrication. Justify both values in your dossier.</span></li>
+                                <li><strong>(b)</strong> First check the protocol with a single $N=100$ run at $\Delta d=2$ nm, then run $N=1000$ for $\Delta d=1$, 2 and 5 nm. Keep the seed unchanged.</li>
                                 <li><strong>(c)</strong> For each severity, report yield, 95% Wilson CI, P05($Q_r$), P05($\overline{T}_{pass}$), manufacturability rate, and number of perturbed layers. Monte-Carlo perturbs the <strong>18 deposited layers</strong>: locking the first fifteen applied to BFGS only.</li>
                                 <li><strong>(d)</strong> Plot yield and both adverse percentiles against $\Delta d$. By cautious interpolation, determine the largest $\Delta d$ compatible with the minimum required yield; if the data do not decide, give an interval and propose the additional run needed.</li>
                                 <li><strong>(e)</strong> Clearly distinguish nominal performance, statistical robustness, and manufacturability. Base the deposition recommendation on confidence bounds, without treating $\Delta d$ as an absolute bound: here $\sigma=\Delta d/2$.</li>
-                                <li><strong>(f)</strong> Reload the nominal Q22 prescription and qualify it with exactly the same settings, at $\Delta d=2$ then 5 nm, $N=1000$. Which of the two prescriptions do you send to the cleanroom? Justify with the yields and their intervals, not with the nominal $Q_r$.</li>
+                                <li><strong>(f)</strong> Reload the nominal Q23 prescription and qualify it with exactly the same settings, at $\Delta d=2$ then 5 nm, $N=1000$. Which of the two prescriptions do you send to the cleanroom? Justify with the yields and their intervals, not with the nominal $Q_r$.</li>
                             </ul>
                             <div class="bg-rose-50 border-l-4 border-rose-400 p-3 rounded-r text-xs text-rose-900">
-                                🔬 <strong>Evidence requirement:</strong> no yield curve or expected value is supplied. Your plot must show the 1, 2, and 5 nm points, 95% CI bars, seed, $N$, thresholds, and error model. A conclusion without a confidence interval or obtained with mismatched settings is inadmissible.
+                                🔬 <strong>Evidence requirement:</strong> no yield curve or expected value is supplied. Your plot must show the 1, 2, and 5 nm points, 95% CI bars, seed, $N$, thresholds, and error model. Without a confidence interval, or with settings that change between runs, the conclusion cannot be checked: remember to record them.
                             </div>
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Set the criteria, d_min and the required yield once and for all, then change only Δd. The Monte-Carlo result gives yield, interval, P05 and manufacturability. Course §11.</p></details>
             </div>
         </section>
 
         <!-- PART -->
-        <section id="ex9" class="bg-white rounded-3xl shadow-lg border-2 border-emerald-300 overflow-hidden">
+        <section id="ex9" class="bg-white rounded-3xl shadow-lg border-2 border-emerald-400 overflow-hidden">
+            <div class="bg-emerald-50 border-b border-emerald-200 px-8 py-4">
+                <h2 class="text-xl font-bold text-emerald-950 flex flex-wrap items-center justify-between gap-2">IX. Design review — industrial qualification dossier <span class="text-xs font-bold text-emerald-900 bg-emerald-200 px-3 py-1 rounded-full">⏱ 75 min indicative</span> <span class="text-xs font-bold text-violet-900 bg-violet-100 px-3 py-1 rounded-full">M1 · M2 — optional for BUT 3 / L3</span></h2>
+            </div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Audience:</strong> exercise intended for M1/M2, optional for BUT 3 and L3 — the choice between nominal and optimized prescription is already made in Q26 (f). <strong>Direct entry — prerequisites:</strong> complete Q15 and at least one full qualification among Q26 or a personal extension; distinguish independent error, systematic bias, percentile, and confidence interval. The other filter families may be skipped.</div>
+            <div class="p-6 space-y-4">
+                <div class="bg-emerald-50 border-l-4 border-emerald-500 p-3 text-xs text-emerald-950 rounded-r-lg"><strong>Deliverable:</strong> a one-page decision sheet detailed enough for another team to reproduce the simulation and challenge the conclusion.</div>
+
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q27</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Qualification contract:</strong> work on the Q25 optimized Fresnel prescription (layers 16 to 18), or on a previously approved custom extension whose yield is not close to 100%. Switch the simulator to <code>Student → IX. Design review</code>. Check the external media, then state before any calculation the window, incidence, polarization, metric, <strong>the exact bands</strong>, calculation grid, optical threshold, $d_{min}$, resolution, seed, and minimum required yield. Enter the latter in the <em>Required yield</em> field. Distinguish requirements from improvement goals.</div></div></div>
+                <details class="hint"><summary>💡 Hint</summary><p>This is about writing, not computing: list every setting that changes the result, with its value.</p></details>
+
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q28</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Nominal manufacturability audit:</strong> produce the material/thickness/order table, then <strong>establish yourself</strong> the number of layers and materials, $d_{min}$, $d_{max}$, and total thickness — the simulator does not display them; the <em>"check my audit"</em> button is only there to verify your result once you have written it down. Identify layers below the threshold, thicknesses incompatible with the resolution, and any complexity not justified by optical gain. <em>Point to discuss:</em> on a quarter-wave stack at 550 nm, the thinnest layer exceeds 55 nm, i.e. more than fifty times the $d_{min}=1$ nm threshold. Is this guard therefore inactive? Under what circumstances does it become binding again?</div></div></div>
+                <details class="hint"><summary>💡 Hint</summary><p>The layer table gives thicknesses in nm: count the rows, find the smallest and the largest, add them up. “check my audit” is only for checking.</p></details>
+
+
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q29</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div><div class="text-sm text-slate-800"><strong>Why three verdicts and not two?</strong> At $N=1000$ and $\Delta d=2$ nm, record the yield $\hat p$ and the $p_{low}$, $p_{high}$ bounds of its 95% CI. Then choose three values for <em>Required yield</em>: one strictly below $p_{low}$, one between $p_{low}$ and $\hat p$, and one strictly above $p_{high}$. Record and explain the three verdicts. <em>Why can a design whose point estimate exceeds the requirement remain inconclusive?</em> What would be needed to lift that verdict — and why does increasing $N$ not guarantee qualification?</div></div></div>
+                <details class="hint"><summary>💡 Hint</summary><p>Read p̂ and the interval at N = 1000, then change only the “Required yield” field. Compare each requirement with both bounds. Course §11.</p></details>
+<div class="qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q30</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div><div class="text-sm text-slate-800 space-y-2">
+                    <p><strong>A/B review of the prescription that will actually be manufactured.</strong> Compare two states of the <em>same 18-layer architecture</em>:</p>
+                    <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
+                        <li><strong>Design A — reference:</strong> reload <code>H L 2H L H L H L 2H L H L H L 2H L H L</code>, without optimization;</li>
+                        <li><strong>Design B — candidate:</strong> start from A exactly, fix layers 1 to 15, and optimize layers 16 to 18 only with BFGS.</li>
+                    </ul>
+                    <p>Before calculation, write a falsifiable hypothesis: will B improve only the nominal result, or also the robust bound? Qualify A and B with the <em>same</em> bands, thresholds, $d_{min}$, $\Delta d$, $N=1000$, seed, and required yield. Capture A and B in the comparator and require its green valid-paired-comparison indicator.</p>
+                    <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
+                        🧠 <strong>Expected analysis, with no precomputed answer:</strong> compare nominal merit, $\overline T_{pass}$, yield with 95% CI, P05($Q_r$), P05($\overline T_{pass}$), manufacturability, and the paired yield difference with its interval. Identify which indicators move in the same direction and which expose a trade-off.
+                    </div>
+                    <p>Give a reasoned decision for B: <em>adopt</em>, <em>reject</em>, or <em>extend the study</em>. A nominal improvement without a statistically defensible robust gain is insufficient. Your conclusion must also confirm that all 18 layers and the first fifteen thicknesses were preserved, and cite at least two limitations of the manufacturing model.</p>
+                </div></div></div>
+                <details class="hint"><summary>💡 Hint</summary><p>Capture A then B in the comparator with exactly the same settings: the green light confirms it. Fill in an A | B table, indicator by indicator, before concluding.</p></details>
+            </div>
+        </section>
+
+        <!-- PART -->
+        <!-- PART -->
+        <section id="ex10" class="bg-white rounded-3xl shadow-lg border-2 border-emerald-300 overflow-hidden">
             <div class="bg-emerald-50 border-b border-emerald-200 px-8 py-4 flex justify-between items-center flex-wrap gap-2">
-                <h2 class="text-xl font-bold text-emerald-950 flex flex-wrap items-center justify-between gap-2">IX. Cleanroom reverse engineering & defect diagnosis <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">⏱ 45 min indicative</span></h2>
+                <h2 class="text-xl font-bold text-emerald-950 flex flex-wrap items-center justify-between gap-2">X. Cleanroom reverse engineering & defect diagnosis <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">⏱ 45 min indicative</span></h2>
                 <span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">🎯 After deposition</span>
             </div>
-            <div class="mx-6 mt-5 bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r-lg text-xs text-amber-950"><strong>Direct entry — prerequisites:</strong> have the Q22 nominal spectrum and, if possible, the measured filter spectrum; distinguish spectral shift, shape distortion and transmission loss. Exercises VII and VIII are required for full reverse engineering.</div>
+            <div class="mx-6 mt-5 bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r-lg text-xs text-amber-950"><strong>Direct entry — prerequisites:</strong> have the Q23 nominal spectrum and, if possible, the measured filter spectrum; distinguish spectral shift, shape distortion and transmission loss. Exercises VII and VIII are required for full reverse engineering.</div>
             <div class="p-6 space-y-4">
                 <figure id="fig-erreurs" class="my-4 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                     <figcaption class="bg-slate-50 border-b border-slate-200 px-3 py-1.5 text-[11px] font-bold text-slate-700">Two process defects, two spectral signatures</figcaption>
@@ -959,16 +1023,16 @@
   <text x="14" y="243" font-size="8.5" fill="#64748b" font-family="Inter,system-ui,sans-serif">Curves computed with the simulator — two-cavity filter BK7 / H L H L 2H L H L H L H L 2H L H L H L / Air, λ₀ = 550 nm, normal incidence, 0.5 nm step; reproducible random draw (seed 7).</text>
 </svg>
                     </div>
-                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">A <strong>uniform error</strong> multiplies every thickness by the same factor: the stack stays self-similar, so the spectrum translates without distorting. <strong>Independent noise</strong> detunes the layers relative to one another: the centre barely moves but the peak collapses and broadens. Reading this difference is what lets you diagnose a deposition run (Q26). <strong>What matters is not the shift in nanometres but its ratio to the passband width:</strong> the same 5 nm is nearly the whole band on the narrow Q21 filter, and only a tenth of the band on the much wider Fresnel prescription. Always compare the two.</p>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">A <strong>uniform error</strong> multiplies every thickness by the same factor: the stack stays self-similar, so the spectrum translates without distorting. <strong>Independent noise</strong> detunes the layers relative to one another: the centre barely moves but the peak collapses and broadens. Reading this difference is what lets you diagnose a deposition run (Q31). <strong>What matters is not the shift in nanometres but its ratio to the passband width:</strong> the same 5 nm is nearly the whole band on the narrow Q22 filter, and only a tenth of the band on the much wider Fresnel prescription. Always compare the two.</p>
                 </figure>
 
                 <div class="bg-amber-50 border-l-4 border-amber-400 p-3 text-xs text-amber-900 rounded-r-lg mb-2">
-                    <strong>Real cleanroom scenario:</strong> the Institut Fresnel deposition team has manufactured your bandpass filter. The spectrophotometer readout shows a <strong>shift of about $8\,\text{nm}$ towards the red</strong> and a drop of the mean transmission measured over 535–565 nm. It is the nominal Q22 prescription that was deposited. Your reference is not the $\lambda_0 = 550\,\text{nm}$ setting, but <strong>the half-maximum centre you measured yourself in Q22</strong>: that is what the discrepancy is measured against. So start by retrieving that reading.
+                    <strong>Real cleanroom scenario:</strong> the Institut Fresnel deposition team has manufactured your bandpass filter. The spectrophotometer readout shows a <strong>shift of about $8\,\text{nm}$ towards the red</strong> and a drop of the mean transmission measured over 535–565 nm. It is the nominal Q23 prescription that was deposited. Your reference is not the $\lambda_0 = 550\,\text{nm}$ setting, but <strong>the half-maximum centre you measured yourself in Q23</strong>: that is what the discrepancy is measured against. So start by retrieving that reading.
                 </div>
 
                 <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
-                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q26</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q31</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
                         <div class="text-sm text-slate-800 space-y-2">
                             <p><strong>Shifted-window diagnosis.</strong> Reproduce three defect scenarios in the simulator and compare their spectral signatures:</p>
                             <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
@@ -976,52 +1040,22 @@
                                 <li><strong>(b)</strong> an error on the central $2H$ spacer alone (layer 9);</li>
                                 <li><strong>(c)</strong> an error on a single mirror layer — use <strong>layer 5</strong>, so that every pair compares the same thing.</li>
                             </ul>
-                            <p>Which one produces a global shift <em>with the least distortion of the window shape</em>? What multiplicative factor is needed to reproduce the observed $8\,\text{nm}$? Convert it into a thickness deviation on the thickest layer, then compare this systematic deviation with the $\Delta d$ severity studied in Q25. Explain why the independent Gaussian model of Q25 cannot, by itself, declare this common bias covered.</p>
+                            <p>Which one produces a global shift <em>with the least distortion of the window shape</em>? What multiplicative factor is needed to reproduce the observed $8\,\text{nm}$? Convert it into a thickness deviation on the thickest layer, then compare this systematic deviation with the $\Delta d$ severity studied in Q26. Explain why the independent Gaussian model of Q26 cannot, by itself, declare this common bias covered.</p>
                             <p>Finally, explain why <em>transmission loss</em> alone does not identify a unique layer.</p>
                         </div>
                     </div>
                 </div>
+                <details class="hint"><summary>💡 Hint</summary><p>Change one factor at a time and memorize each curve to overlay it on the nominal one. For (a), multiply every formula coefficient by the same number.</p></details>
 
                 <div class="qbox">
                     <div class="flex items-start gap-3">
-                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q27</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
+                        <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q32</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div>
                         <div class="text-sm text-slate-800">
                             <strong>Metrology and traceability:</strong> relate the layer-to-layer random error, set by $\Delta d$, to the spread seen across the plotted draws. Derive an optical-thickness tolerance and a resolution requirement from adverse percentiles, not from the nominal result alone. Then translate them into a quartz-monitor recommendation while explicitly listing the missing process data: tooling factor, density, Z-ratio, rate stability, calibration history, and material-specific validation. <strong>No quantified instrument setting may be issued without these data</strong> — state this explicitly in your conclusion.
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- PART -->
-        <!-- PART -->
-        <section id="ex10" class="bg-white rounded-3xl shadow-lg border-2 border-emerald-400 overflow-hidden">
-            <div class="bg-emerald-50 border-b border-emerald-200 px-8 py-4">
-                <h2 class="text-xl font-bold text-emerald-950 flex flex-wrap items-center justify-between gap-2">X. Design review — industrial qualification dossier <span class="text-xs font-bold text-emerald-900 bg-emerald-200 px-3 py-1 rounded-full">⏱ 75 min indicative</span></h2>
-            </div>
-            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Direct entry — prerequisites:</strong> complete Q15 and at least one full qualification among Q25 or a personal extension; distinguish independent error, systematic bias, percentile, and confidence interval. The other filter families may be skipped.</div>
-            <div class="p-6 space-y-4">
-                <div class="bg-emerald-50 border-l-4 border-emerald-500 p-3 text-xs text-emerald-950 rounded-r-lg"><strong>Deliverable:</strong> a one-page decision sheet detailed enough for another team to reproduce the simulation and challenge the conclusion.</div>
-
-                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q28</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Qualification contract:</strong> work on the Q24 optimized Fresnel prescription (layers 16 to 18), or on a previously approved custom extension whose yield is not close to 100%. Switch the simulator to <code>Student → X. Design review</code>. Check the external media, then state before any calculation the window, incidence, polarization, metric, <strong>the exact bands</strong>, calculation grid, optical threshold, $d_{min}$, resolution, seed, and minimum required yield. Enter the latter in the <em>Required yield</em> field. Distinguish requirements from improvement goals.</div></div></div>
-
-                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q29</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Nominal manufacturability audit:</strong> produce the material/thickness/order table, then <strong>establish yourself</strong> the number of layers and materials, $d_{min}$, $d_{max}$, and total thickness — the simulator does not display them; the <em>"check my audit"</em> button is only there to verify your result once you have written it down. Identify layers below the threshold, thicknesses incompatible with the resolution, and any complexity not justified by optical gain. <em>Point to discuss:</em> on a quarter-wave stack at 550 nm, the thinnest layer exceeds 55 nm, i.e. more than fifty times the $d_{min}=1$ nm threshold. Is this guard therefore inactive? Under what circumstances does it become binding again?</div></div></div>
-
-                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q30</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Statistical convergence:</strong> since the seed is fixed, the draws are strictly identical from one run to the next: run $N=100$, 500, and 1000. Plot or tabulate yield and the bounds of the 95% Wilson CI. Measure the interval width in all three cases: by what factor does it narrow when $N$ is multiplied by 10, and does that match the $1/\sqrt{N}$ law? Explain why the first 100 runs are useful for exploration but insufficient for a qualification decision. Repeat the test on the nominal prescription, whose yield is close to 100%: why does the law no longer apply?</div></div></div>
-
-                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q31</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div><div class="text-sm text-slate-800"><strong>Why three verdicts and not two?</strong> At $N=1000$ and $\Delta d=2$ nm, record the yield $\hat p$ and the $p_{low}$, $p_{high}$ bounds of its 95% CI. Then choose three values for <em>Required yield</em>: one strictly below $p_{low}$, one between $p_{low}$ and $\hat p$, and one strictly above $p_{high}$. Record and explain the three verdicts. <em>Why can a design whose point estimate exceeds the requirement remain inconclusive?</em> What would be needed to lift that verdict — and why does increasing $N$ not guarantee qualification?</div></div></div>
-<div class="qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q32</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div><div class="text-sm text-slate-800 space-y-2">
-                    <p><strong>A/B review of the prescription that will actually be manufactured.</strong> Compare two states of the <em>same 18-layer architecture</em>:</p>
-                    <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
-                        <li><strong>Design A — reference:</strong> reload <code>H L 2H L H L H L 2H L H L H L 2H L H L</code>, without optimization;</li>
-                        <li><strong>Design B — candidate:</strong> start from A exactly, fix layers 1 to 15, and optimize layers 16 to 18 only with BFGS.</li>
-                    </ul>
-                    <p>Before calculation, write a falsifiable hypothesis: will B improve only the nominal result, or also the robust bound? Qualify A and B with the <em>same</em> bands, thresholds, $d_{min}$, $\Delta d$, $N=1000$, seed, and required yield. Capture A and B in the comparator and require its green valid-paired-comparison indicator.</p>
-                    <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
-                        🧠 <strong>Expected analysis, with no precomputed answer:</strong> compare nominal merit, $\overline T_{pass}$, yield with 95% CI, P05($Q_r$), P05($\overline T_{pass}$), manufacturability, and the paired yield difference with its interval. Identify which indicators move in the same direction and which expose a trade-off.
-                    </div>
-                    <p>Give a reasoned decision for B: <em>adopt</em>, <em>reject</em>, or <em>extend the study</em>. A nominal improvement without a statistically defensible robust gain is insufficient. Your conclusion must also confirm that all 18 layers and the first fifteen thicknesses were preserved, and cite at least two limitations of the manufacturing model.</p>
-                </div></div></div>
+                <details class="hint"><summary>💡 Hint</summary><p>Start from the Q26 percentiles and the shift found in Q31. List what the Monte-Carlo model does not contain before writing your recommendation.</p></details>
             </div>
         </section>
 
@@ -1031,16 +1065,23 @@
             <div class="bg-fuchsia-50 border-b border-fuchsia-200 px-8 py-4">
                 <h2 class="text-xl font-bold text-fuchsia-950 flex flex-wrap items-center justify-between gap-2">XI. Linear variable filter — research extension <span class="text-xs font-bold text-fuchsia-900 bg-fuchsia-200 px-3 py-1 rounded-full">🔬 Not graded · ⏱ 90 min indicative</span></h2>
             </div>
-            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Direct entry — prerequisites:</strong> exercises VI and VII (Bragg mirror, Fabry–Pérot cavity, measuring a full width at half maximum). Questions Q4, Q11 and Q26 are useful. In the simulator, choose exercise <strong>XI</strong>.</div>
+            <div class="mx-6 mt-5 bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-lg text-xs text-sky-950"><strong>Direct entry — prerequisites:</strong> exercises VI and VII (Bragg mirror, Fabry–Pérot cavity, measuring a full width at half maximum). Questions Q4, Q11 and Q31 are useful. In the simulator, choose exercise <strong>XI</strong>.</div>
             <div class="p-6 space-y-4">
                 <div class="bg-emerald-50 border-l-4 border-emerald-500 p-3 text-xs text-emerald-950 rounded-r-lg"><strong>💡 Principle:</strong> on a linear variable filter, the transmitted wavelength changes along the component: $\lambda_c(x)=\lambda_c(0)+g\,x$. This is obtained by varying the deposited thickness with position. On a Helios 800-type magnetron sputtering machine, a mask in front of each target modulates the amount of material received along $x$: one mask for Nb<sub>2</sub>O<sub>5</sub> (H), another for SiO<sub>2</sub> (L). At position $x$, every H layer is therefore multiplied by a factor $s_H(x)$ and every L layer by $s_L(x)$. <strong>Each position is a stack in its own right</strong>: simulate it by applying these factors to the formula coefficients (decimal point), without changing $\lambda_0$.</div>
                 <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">V1</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Level 1 — Application">&#9733;&#9734;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Machine materials.</strong> In <strong>+ Material</strong>, create Nb<sub>2</sub>O<sub>5</sub> and SiO<sub>2</sub> from the $n(\lambda)$, $k(\lambda)$ tables measured on the Institut Fresnel Helios 800 and published (F. Lemarchand and J. Lumeau, <em>Optics Continuum</em>, 2026): download <a class="text-indigo-700 underline" href="outputs/tp_couches_minces/indices_Nb2O5_H800_OpticsContinuum.csv" download>Nb<sub>2</sub>O<sub>5</sub></a> and <a class="text-indigo-700 underline" href="outputs/tp_couches_minces/indices_SiO2_H800_OpticsContinuum.csv" download>SiO<sub>2</sub></a>, then import each file choosing the nm unit. Read the indices at $550\,\text{nm}$, compute the contrast $(n_H-n_L)/(n_H+n_L)$ and compare it with the ZnS/YF<sub>3</sub> pair of Q4. In which part of the spectrum does Nb<sub>2</sub>O<sub>5</sub> stop being transparent?</div></div></div>
+                <details class="hint"><summary>💡 Hint</summary><p>“+ Material” button, then import the CSV file choosing nm. The table appears: read n and k at 550 nm, then find where k increases.</p></details>
                 <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">V2</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Reference cavity.</strong> On BK7, at $\lambda_0=550\,\text{nm}$, enter <code>(HL)^n 2H (LH)^n</code>, replacing H and L with the formula codes of your two materials (shown in the editor, for example <code>(M1 M2)^3 2M1 (M2 M1)^3</code>), for $n=2$, 3 then 4. For each, measure the half-maximum centre, the full width at half maximum and $T_{max}$. Choose the number of periods giving a resolving power $\lambda/\Delta\lambda$ close to 60 and keep it for what follows.</div></div></div>
-                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">V3</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>The $\lambda_c(s)$ law.</strong> Apply the same factor $s$ to every layer ($s_H=s_L=s$) for $s=0.82$, 1, 1.2, 1.4 and 1.55. Each time, record the centre and the full width at half maximum, then plot $\lambda_c$ and $\lambda/\Delta\lambda$ against $s$. Does the centre follow $s\times550\,\text{nm}$ exactly? On which side of the spectrum is the deviation largest, and which phenomenon already met in Q11 and Q26 explains it? What happens to the width along the component?</div></div></div>
+                <details class="hint"><summary>💡 Hint</summary><p>The formula code of each imported material is shown in the editor (M1, M2…). Measure the width exactly as in Q22.</p></details>
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">V3</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>The $\lambda_c(s)$ law.</strong> Apply the same factor $s$ to every layer ($s_H=s_L=s$) for $s=0.82$, 1, 1.2, 1.4 and 1.55. Each time, record the centre and the full width at half maximum, then plot $\lambda_c$ and $\lambda/\Delta\lambda$ against $s$. Does the centre follow $s\times550\,\text{nm}$ exactly? On which side of the spectrum is the deviation largest, and which phenomenon already met in Q11 and Q31 explains it? What happens to the width along the component?</div></div></div>
+                <details class="hint"><summary>💡 Hint</summary><p>Multiply every formula coefficient by s, for example 1.2M1 1.2M2 for s = 1.2. Build a table: s, centre, width.</p></details>
                 <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">V4</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div><div class="text-sm text-slate-800"><strong>Profile to deposit.</strong> Specification: $\lambda_c$ from 450 to $850\,\text{nm}$ over $40\,\text{mm}$, i.e. $g=10\,\text{nm/mm}$, linearity held within $\pm1\,\text{nm}$. From your V3 curve, determine the factor $s(x)$ that must actually be deposited at five positions or more. Is this thickness profile linear? Quantify the wavelength error made by a mask cut for a thickness that is linear in $x$.</div></div></div>
+                <details class="hint"><summary>💡 Hint</summary><p>Read your V3 curve backwards: for each target λ, find the s that gives it, by interpolation in Excel.</p></details>
                 <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">V5</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div><div class="text-sm text-slate-800"><strong>Two masks, two profiles.</strong> At $s=1$, increase by 1% the H layers only, then the L layers only. Record the relative shift of the centre in each case: these are the weights $p_H$ and $p_L$. Do they add up to 1? Why does the cavity material weigh the most? Deduce the largest admissible gap between $s_H(x)$ and $s_L(x)$ to hold $\pm1\,\text{nm}$. Finally check on one trial ($s_H=1.05$, $s_L=0.95$) what happens to the peak shape: does a mismatch between masks show on the width, on $T_{max}$, or only on the position?</div></div></div>
+                <details class="hint"><summary>💡 Hint</summary><p>Increase the coefficients of one material only, by 1%. The weight is the relative shift of the centre divided by 1%.</p></details>
                 <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">V6</span><span class="text-[9px] leading-none tracking-tight text-rose-600" title="Level 3 — Expertise: methodology, reasoned decision, critical thinking">&#9733;&#9733;&#9733;</span></div><div class="text-sm text-slate-800"><strong>Resolution actually measured.</strong> A beam of width $w$ illuminates a zone where $\lambda_c$ varies by $g\,w$. For $w=0.5$, 1 then $2\,\text{mm}$, export as CSV the spectra of five positions spread over the beam width, average them in Excel and measure the full width at half maximum of the mean spectrum. Compare it with that of V2. Beyond which beam size does adding periods no longer improve the resolution? Propose a rule linking $g$, $w$ and the intrinsic width.</div></div></div>
+                <details class="hint"><summary>💡 Hint</summary><p>Five positions = five values of s around s = 1, spaced to cover g·w. Export the five spectra and average the T columns in Excel.</p></details>
                 <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">V7</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Out-of-band blocking.</strong> At $s=1$, widen the display to $350-900\,\text{nm}$ and record the interval where $T<5\%$ on either side of the peak. Compare it with the useful 450–$850\,\text{nm}$ range: which wavelengths pass through the filter at this position although they should not? Relate the width of the blocked zone to the contrast of V1 and propose two solutions for a real instrument.</div></div></div>
+                <details class="hint"><summary>💡 Hint</summary><p>Widen λ min and λ max, then find on each side of the peak where T rises above 5% again.</p></details>
             </div>
         </section>
 
@@ -1059,7 +1100,7 @@
   <rect x="24" y="52" width="92" height="52" rx="8" fill="#4f46e5"/><text x="70.0" y="68" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">Physical</text><text x="70.0" y="81" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">start</text><circle cx="36" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="36" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">1</text><line x1="116" y1="78" x2="128" y2="78" stroke="#64748b" stroke-width="2"/><polygon points="128,78 121,74 121,82" fill="#64748b"/><rect x="128" y="52" width="92" height="52" rx="8" fill="#4f46e5"/><text x="174.0" y="74" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">BFGS</text><circle cx="140" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="140" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">2</text><line x1="220" y1="78" x2="232" y2="78" stroke="#64748b" stroke-width="2"/><polygon points="232,78 225,74 225,82" fill="#64748b"/><rect x="232" y="52" width="92" height="52" rx="8" fill="#f59e0b"/><text x="278.0" y="74" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">Needle</text><circle cx="244" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="244" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">3</text><line x1="324" y1="78" x2="336" y2="78" stroke="#64748b" stroke-width="2"/><polygon points="336,78 329,74 329,82" fill="#64748b"/><rect x="336" y="52" width="92" height="52" rx="8" fill="#ef4444"/><text x="382.0" y="74" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">Cleanup</text><circle cx="348" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="348" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">4</text><line x1="428" y1="78" x2="440" y2="78" stroke="#64748b" stroke-width="2"/><polygon points="440,78 433,74 433,82" fill="#64748b"/><rect x="440" y="52" width="92" height="52" rx="8" fill="#10b981"/><text x="486.0" y="74" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">Arbitration</text><circle cx="452" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="452" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">5</text><line x1="532" y1="78" x2="544" y2="78" stroke="#64748b" stroke-width="2"/><polygon points="544,78 537,74 537,82" fill="#64748b"/><rect x="544" y="52" width="92" height="52" rx="8" fill="#0f172a"/><text x="590.0" y="74" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="600" font-family="Inter,system-ui,sans-serif">Feasibility</text><circle cx="556" cy="64" r="8" fill="#ffffff" opacity="0.25"/><text x="556" y="68" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" font-family="Inter,system-ui,sans-serif">6</text>
   <path d="M 278 110 Q 226.0 156 174 110" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5 3"/><polygon points="174,110 168,122 182,120" fill="#f59e0b"/><text x="164.4" y="150" font-size="10" fill="#b45309" font-weight="600" font-family="Inter,system-ui,sans-serif">repeat while the merit drops</text>
   <text x="24" y="34" font-size="11" fill="#0f172a" font-weight="700" font-family="Inter,system-ui,sans-serif">The design cycle — record the merit at every step</text>
-  <text x="24" y="178" font-size="10" fill="#475569" font-family="Inter,system-ui,sans-serif">A design without step 6 is not a deliverable: it is a draft.</text>
+  <text x="24" y="178" font-size="10" fill="#475569" font-family="Inter,system-ui,sans-serif">Without step 6, the design is still work in progress, not yet a component.</text>
 </svg>
                     </div>
                     <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">Steps 2 and 3 alternate: BFGS exploits the existing layers, the needle creates a new one when BFGS saturates. Step 4 is the one people forget, and it decides manufacturability. Step 5 arbitrates between performance and simplicity. Step 6 is the only one that turns a calculation into a component.</p>
@@ -1157,7 +1198,7 @@
                                     <li><strong>Sensitivity to $\Delta d$</strong>: determine the deposition accuracy to require from the process to hold the target yield.</li>
                                     <li><strong>Decision</strong>: <em>qualified</em>, <em>inconclusive</em> (study to be extended) or <em>not qualified</em>, with your assumptions and at least two model limitations.</li>
                                 </ul>
-                                <p class="text-slate-700 mt-1">An "optimized" design without a feasibility study is not a deliverable: it is a draft.</p>
+                                <p class="text-slate-700 mt-1">An "optimized" design without a feasibility study is still work in progress: feasibility is what turns it into a component.</p>
                             </div>
                         </div>
 
@@ -1172,7 +1213,7 @@
                     <ul class="list-disc list-inside mt-1 space-y-0.5">
                         <li><strong>Do not specify what physics forbids.</strong> A T = 100% target over 400–1000 nm on an absorbing substrate is unreachable: the optimizer will converge to a poor compromise without warning you.</li>
                         <li><strong>Leave don't-care zones.</strong> A sharp transition needs room: if you specify 100% at 550 nm and 0% at 555 nm, no finite stack will achieve it.</li>
-                        <li><strong>A good nominal score alone is worth nothing.</strong> Always run the statistical qualification before declaring a design good.</li>
+                        <li><strong>A good nominal score is not enough on its own.</strong> Always run the statistical qualification before declaring a design good.</li>
                     </ul>
                 </div>
 
@@ -1180,10 +1221,10 @@
                     <h3 class="font-bold text-slate-900 text-sm">🎯 Six challenges, from simplest to most demanding</h3>
                     <div class="grid md:grid-cols-2 gap-2 text-xs">
                         <div class="border border-emerald-200 bg-emerald-50/60 rounded p-2"><span class="text-emerald-600 font-bold">★☆☆</span> <strong>Hot mirror.</strong> $R \ge 95\%$ <em>at every point</em> of $700-850$ nm, and $\overline{T} \ge 85\%$ over $420-650$ nm: it reflects the near infrared and transmits the visible — the opposite of a cold mirror. How many layers do you need? <em>Hint: a quarter-wave stack centred at 775 nm gets there; find the minimum count.</em></div>
-                        <div class="border border-emerald-200 bg-emerald-50/60 rounded p-2"><span class="text-emerald-600 font-bold">★☆☆</span> <strong>Single-colour antireflection.</strong> Aim for $\overline{R} \le 0.2\%$ over $530-570$ nm only, with ZnS/YF₃ on BK7. <em>A single YF₃ layer cannot get there: compare $n_L=1.469$ with the ideal index $\sqrt{n_{BK7}}=1.232$ from Q10. Show that a second material removes this limit (think of Q13), then compare the width of your $R < 0.2\%$ zone with that of the broadband design of Q16: that is the price of bandwidth.</em></div>
+                        <div class="border border-emerald-200 bg-emerald-50/60 rounded p-2"><span class="text-emerald-600 font-bold">★☆☆</span> <strong>Single-colour antireflection.</strong> Aim for $\overline{R} \le 0.2\%$ over $530-570$ nm only, with ZnS/YF₃ on BK7. <em>A single YF₃ layer cannot get there: compare $n_L=1.469$ with the ideal index $\sqrt{n_{BK7}}=1.232$ from Q10. Show that a second material removes this limit (think of Q13), then compare the width of your $R < 0.2\%$ zone with that of the broadband design of Q17: that is the price of bandwidth.</em></div>
                         <div class="border border-amber-200 bg-amber-50/60 rounded p-2"><span class="text-amber-600 font-bold">★★☆</span> <strong>Notch filter.</strong> Try to block $T \le 1\%$ over $525-545$ nm while keeping $\overline{T} \ge 80\%$ everywhere else in the visible. <em>With a quarter-wave stack $(HL)^{n}H$, measure the width obtained below 10% transmission: once the rejection reaches 1%, it exceeds 150 nm whatever $n$. Relate that limit to the index contrast of Q4. Then try three-quarter-wave layers, $(3H\,3L)^n\,3H$: what happens to the width, and why? For a 20 nm notch, which levers remain — higher order, another material pair?</em></div>
                         <div class="border border-amber-200 bg-amber-50/60 rounded p-2"><span class="text-amber-600 font-bold">★★☆</span> <strong>50/50 beamsplitter.</strong> $R=T=50\%$ over $450-650$ nm, target RMSE $\le 1$ point. <em>A single ZnS layer tops out at about one third reflectance: several layers must be combined to reach 50%, then the response must be flattened over 200 nm. Plot the best RMSE you obtain against the number of layers, from 1 to 7: beyond how many layers does the gain become marginal? Why does one more layer not always help, and what does this curve reveal about the local nature of BFGS?</em></div>
-                        <div class="border border-rose-200 bg-rose-50/60 rounded p-2"><span class="text-rose-600 font-bold">★★★</span> <strong>Your own, qualified.</strong> Write a full specification, meet it, then qualify it ($N=1000$). Submit the Q28–Q32 decision sheet on <em>your</em> component.</div>
+                        <div class="border border-rose-200 bg-rose-50/60 rounded p-2"><span class="text-rose-600 font-bold">★★★</span> <strong>Your own, qualified.</strong> Write a full specification, meet it, then qualify it ($N=1000$). Submit the Q27–Q30 decision sheet on <em>your</em> component.</div>
                         <div class="border border-rose-200 bg-rose-50/60 rounded p-2"><span class="text-rose-600 font-bold">★★★</span> <strong>The duel.</strong> Have another team design a target, swap JSON files, and qualify each other's design. Defend or refute their conclusion.</div>
                     </div>
                 </div>
@@ -1203,7 +1244,7 @@
             </div>
             <div class="p-6 space-y-4 text-sm text-slate-300">
                 <ul class="list-disc list-inside space-y-3">
-                    <li><strong>Course Document:</strong> <a href="theorie en francais.html" target="_blank" rel="noopener" class="text-indigo-400 hover:text-indigo-300 hover:underline font-bold">Theory of Optical Thin Films</a>.</li>
+                    <li><strong>Course Document:</strong> <a href="theorie en anglais.html" target="_blank" rel="noopener" class="text-indigo-400 hover:text-indigo-300 hover:underline font-bold">Theory of Optical Thin Films</a>.</li>
                     <li><strong>The Optical Coating Bible:</strong> H.A. Macleod, <i>"Thin-Film Optical Filters"</i> (CRC Press).</li>
                     <li><strong>Global Dispersion Database:</strong> <a href="https://refractiveindex.info" target="_blank" rel="noopener" class="text-indigo-400 hover:text-indigo-300 hover:underline">refractiveindex.info</a>.</li>
                     <li><strong>Theoretical Foundations:</strong> Max Born & Emil Wolf, <i>"Principles of Optics"</i>.</li>

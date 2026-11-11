@@ -126,13 +126,16 @@ Les durées sont indicatives. Chaque exercice liste ses prérequis afin qu’un 
 | I | Q1–Q4 | matériaux, dispersion, absorption | 35 min | nombres complexes, indice optique |
 | II | Q5–Q9 | dioptre, Brewster, réflexion totale, S/P | 50 min | I, lois de Fresnel |
 | III | Q10–Q12 | monocouche antireflet et matrice Excel | 60 min | I, phase optique, produit matriciel |
-| IV | Q13–Q15 | antireflet multicouche, carte 2D, Monte-Carlo | 70 min | III ; statistiques descriptives pour Q15 |
-| V | Q16–Q17 | convergence locale BFGS et aiguille | 90 min | III, fonction de mérite, dérivée finie |
-| VI | Q18–Q20 | miroirs de Bragg | 55 min | III, QWOT, interférence constructive |
-| VII | Q21–Q22 | cavités et prescription Fresnel à 18 couches | 75 min | VI, FWHM, curseur spectral |
-| VIII | Q23–Q25 | pré-fabrication, optimisation des trois dernières couches, robustesse | 75 min | VII, moyenne de bande, BFGS, Wilson |
-| IX | Q26–Q27 | diagnostic post-dépôt et métrologie quartz | 45 min | VII–VIII, décalage versus déformation |
-| X | Q28–Q32 | revue de conception et comparaison A/B | 75 min | une qualification complète, centiles, IC95 % |
+| IV | Q13–Q16 | antireflet bicouche, carte 2D, Monte-Carlo, convergence statistique | 85 min | III ; statistiques descriptives pour Q15–Q16 |
+| V | Q17–Q18 | convergence locale BFGS et aiguille | 90 min | III, fonction de mérite, dérivée finie |
+| VI | Q19–Q21 | miroirs de Bragg | 55 min | III, QWOT, interférence constructive |
+| VII | Q22–Q23 | cavités et prescription Fresnel à 18 couches | 75 min | VI, FWHM, curseur spectral |
+| VIII | Q24–Q26 | pré-fabrication, optimisation des trois dernières couches, robustesse, choix A/B | 100 min | VII, moyenne de bande, BFGS, Wilson |
+| IX | Q27–Q30 | revue de conception et comparaison A/B (M1/M2, facultatif en BUT 3 / L3) | 75 min | une qualification complète, centiles, IC95 % |
+| X | Q31–Q32 | diagnostic post-dépôt et métrologie quartz | 45 min | VII–VIII, décalage versus déformation |
+| XI | V1–V7 | filtre linéairement variable (extension recherche, hors barème) | 90 min | VI–VII, dispersion |
+
+Barème indicatif affiché dans l'énoncé : une question vaut autant de points que d'étoiles (67 points), ramené sur 20 selon le parcours (L2 : I, II, III, VI ; BUT 3 et L3 : I à VIII puis X ; M1/M2 : tout). Chaque question porte un « 💡 Coup de pouce » repliable qui oriente sans donner la réponse.
 
 L’atelier libre est hors barème. Il impose **Cible libre** et ne propose que les mérites pertinents à ce mode.
 
@@ -301,7 +304,7 @@ La graine fixe permet une comparaison appariée. Le tableau affiche notamment :
 - épaisseur totale, $d_{min}$, $d_{max}$ et nombre de couches ;
 - conservation ou non de l’architecture imposée.
 
-Pour Q32 : A est la prescription Fresnel non optimisée ; B est cette même prescription après BFGS sur 16–18 seulement. Aucun verdict attendu n’est imprimé dans l’énoncé.
+Pour Q30 : A est la prescription Fresnel non optimisée ; B est cette même prescription après BFGS sur 16–18 seulement. Aucun verdict attendu n’est imprimé dans l’énoncé.
 
 ---
 
@@ -332,7 +335,7 @@ Excel est réservé à deux apprentissages qui justifient un calcul externe :
 1. **Q12 — matrice d’une couche.** Construction explicite avec `COMPLEXE()` et `IMPRODUIT()` pour rompre la boîte noire TMM.
 2. **Q14 — cartographie $R(d_1,d_2)$.** Grille 5 × 5, $d_{ZnS}$ et $d_{YF_3}$ de 20 à 140 nm au pas de 30 nm, identique dans les deux énoncés et dans le classeur ; lecture des vallées, plateaux et minima locaux.
 
-La cible libre et la RMSE sont construites directement dans le simulateur. Aucun onglet Q29 ou résultat prérempli ne doit subsister dans le classeur.
+La cible libre et la RMSE sont construites directement dans le simulateur. Aucun onglet Q28 ou résultat prérempli ne doit subsister dans le classeur.
 
 ---
 
@@ -422,7 +425,7 @@ La matrice Excel, la cartographie 2D, la mesure manuelle de FWHM, la constructio
 
 ### 14.2 Progression et gestion du temps — **8,8 / 10**
 
-Le parcours est progressif et les prérequis permettent un usage modulaire. Les goulots sont Q12, Q17 et Q23–Q25 ; leurs durées doivent rester indicatives. Le périmètre resserré recentre utilement le module sur la chaîne couches minces → dépôt.
+Le parcours est progressif et les prérequis permettent un usage modulaire. Les goulots sont Q12, Q18 et Q24–Q26 ; leurs durées doivent rester indicatives. Le périmètre resserré recentre utilement le module sur la chaîne couches minces → dépôt.
 
 ### 14.3 Pertinence physique et apports industriels — **9,4 / 10**
 
@@ -441,7 +444,7 @@ La prescription à 18 couches est désormais un invariant commun au simulateur, 
 ### 14.6 Ajustements ciblés à maintenir
 
 1. Conserver une fiche de remise par exercice avec les hypothèses minimales à reporter ; elle réduit les comptes rendus impossibles à reproduire.
-2. Réserver en séance encadrée un court point d’arrêt avant Q25 afin de valider collectivement la différence entre couche figée en optimisation et couche perturbée en fabrication.
+2. Réserver en séance encadrée un court point d’arrêt avant Q26 afin de valider collectivement la différence entre couche figée en optimisation et couche perturbée en fabrication.
 
 ### 14.7 Avis global
 

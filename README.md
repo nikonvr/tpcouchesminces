@@ -15,11 +15,14 @@ Portail en ligne : <https://tpcouchesminces.vercel.app>
 | `tp_couches_minces_fr.html` | Énoncé français — 10 exercices, 32 questions, durées indicatives ; exercice XI de recherche (filtre linéairement variable, hors barème) |
 | `tp_couches_minces_en.html` | Énoncé anglais, homologue strict du français |
 | `theorie en francais.html` | Cours et rappels théoriques |
+| `theorie en anglais.html` | Cours en anglais, homologue du français |
 | `outputs/tp_couches_minces/squelette_excel_couches_minces.xlsx` | Classeur étudiant pour Q12 (matrice d'une couche) et Q14 (cartographie 2D) |
 | `outputs/tp_couches_minces/indices_*_H800_OpticsContinuum.csv` | Indices Nb₂O₅ et SiO₂ publiés (Helios 800), à importer dans l’exercice XI |
 | `outputs/tp_couches_minces_hors_ligne/` | Paquet autonome pour les salles sans réseau, avec manifeste SHA-256 |
 | `GUIDE_MIGRATION_ET_ACTIONS_TP.md` | Référentiel enseignant : invariants, conventions, recette |
 | `tests/` | Recette automatisée (voir `tests/README.md`) |
+
+Chaque question de l'énoncé porte un **💡 Coup de pouce** repliable, qui oriente sans donner la réponse ; un barème indicatif (une étoile = un point) et des parcours conseillés par public figurent en tête d'énoncé.
 
 Le simulateur ne contient qu'**un seul** algorithme d'optimisation, BFGS.
 La méthode de l'aiguille n'optimise pas : elle crée une couche, que BFGS

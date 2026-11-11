@@ -348,8 +348,11 @@
         <a href="#coeffs">6. Coefficients de Fresnel (R, T) et vecteur de Poynting <span class="badge-l2">Niveau 2</span></a>
         <a href="#finite_sub">7. Substrat d'épaisseur finie (réflexions incohérentes) <span class="badge-l2">Niveau 2</span></a>
         <a href="#efield">8. [Avancé] Profil du champ électrique $|E(z)|^2$ <span class="badge-l3">Niveau 3</span></a>
-        <a href="#examples">9. Exemples d'application (Couche AR et Filtre multicouche) <span class="badge-l1">Niveau 1 &amp; 2</span></a>
-        <a href="#code_example">10. Implémentation numérique (Code Python) <span class="badge-l2">Niveau 2</span></a>
+        <a href="#bragg">9. Empilements périodiques : miroirs de Bragg et filtres Fabry-Pérot <span class="badge-l2">Niveau 1 &amp; 2</span></a>
+        <a href="#optimisation">10. Conception par optimisation : mérite, BFGS, méthode de l'aiguille <span class="badge-l2">Niveau 2</span></a>
+        <a href="#qualification">11. Qualification statistique et fabricabilité <span class="badge-l2">Niveau 2</span></a>
+        <a href="#examples">12. Exemples d'application (Couche AR et Filtre multicouche) <span class="badge-l1">Niveau 1 &amp; 2</span></a>
+        <a href="#code_example">13. Implémentation numérique (Code Python) <span class="badge-l2">Niveau 2</span></a>
     </div>
 
     <!-- 1. INTRODUCTION -->
@@ -419,15 +422,15 @@
     <h3>2.2 Milieux, matériaux et empilement de couches</h3>
     <table>
         <tr><th>Symbole</th><th>Nom</th><th>Unité</th><th>Définition &amp; Signification physique</th></tr>
-        <tr><td>$n$</td><td>Indice de réfraction (réel)</td><td>sans dim.</td><td>Ralentissement de la vitesse de phase ($v_\phi = c/n$) dans le matériau. Pour un diélectrique transparent, $n \ge 1$ ; un métal peut avoir $n < 1$ (argent du § 9 : $n = 0.12$).</td></tr>
+        <tr><td>$n$</td><td>Indice de réfraction (réel)</td><td>sans dim.</td><td>Ralentissement de la vitesse de phase ($v_\phi = c/n$) dans le matériau. Pour un diélectrique transparent, $n \ge 1$ ; un métal peut avoir $n < 1$ (argent du § 12 : $n = 0.12$).</td></tr>
         <tr><td>$\kappa$</td><td>Coefficient d'extinction</td><td>sans dim.</td><td>Atténuation de l'onde par absorption diélectrique/ohmique ($\kappa \ge 0$).</td></tr>
         <tr><td>$\hat{n}$</td><td>Indice de réfraction complexe</td><td>sans dim.</td><td>$\hat{n} = n - i\kappa$ (convention Macleod $e^{+i\omega t}$ imposant $\mathrm{Im}(\hat{n}) \le 0$).</td></tr>
-        <tr><td>$n_0, \eta_0$</td><td>Indice &amp; Admittance de l'air</td><td>sans dim. / $\mathcal{Y}_0$</td><td>Milieu incident semi-infini au sommet ($z \ge z_N$, avec $n_0 = 1.0$).</td></tr>
+        <tr><td>$n_0, \eta_0$</td><td>Indice &amp; Admittance de l'air</td><td>sans dim. / $\mathcal{Y}_0$</td><td>Milieu incident semi-infini au sommet ($z \ge z_m$, avec $n_0 = 1.0$).</td></tr>
         <tr><td>$n_{sub}, \eta_{sub}$</td><td>Indice &amp; Admittance du substrat</td><td>sans dim. / $\mathcal{Y}_0$</td><td>Milieu émergent semi-infini à la base de l'empilement ($z \le 0$).</td></tr>
         <tr><td>$d$ ou $d_j$</td><td>Épaisseur physique (géométrique)</td><td>$\text{nm}$</td><td>Épaisseur métrique de la couche ($d_j = z_j - z_{j-1}$).</td></tr>
         <tr><td>$nd$ ou $n_j d_j$</td><td>Épaisseur optique</td><td>$\text{nm}$</td><td>Chemin optique effectif traversé par la lumière ($n \times d$).</td></tr>
         <tr><td>$\delta$ ou $\delta_j$</td><td>Déphasage optique de couche</td><td>$\text{rad}$</td><td>$\delta_j = k_{z,j} d_j = \frac{2\pi}{\lambda} \hat{n}_j d_j \cos\theta_j$.</td></tr>
-        <tr><td>$N$</td><td>Nombre total de couches</td><td>entier</td><td>Nombre de couches du multicouche (numérotées de $j=1$ à la base à $j=N$ au sommet).</td></tr>
+        <tr><td>$m$</td><td>Nombre total de couches</td><td>entier</td><td>Nombre de couches du multicouche (numérotées de $j=1$ à la base à $j=m$ au sommet).</td></tr>
     </table>
 
     <h3>2.3 Électromagnétisme, champs et formalisme matriciel (Macleod)</h3>
@@ -440,8 +443,8 @@
         <tr><td>$\eta_{j,s}$</td><td>Admittance en polarisation TE (s)</td><td>sans dim.</td><td>$\eta_{j,s} = \hat{n}_j \cos\theta_j$ ($\vec{E}$ perpendiculaire au plan d'incidence).</td></tr>
         <tr><td>$\eta_{j,p}$</td><td>Admittance en polarisation TM (p)</td><td>sans dim.</td><td>$\eta_{j,p} = \hat{n}_j / \cos\theta_j$ ($\vec{H}$ perpendiculaire au plan d'incidence).</td></tr>
         <tr><td>$M_j$</td><td>Matrice de transfert de couche</td><td>matrice $2\times 2$</td><td>Relie $[E(z_j), H(z_j)]^T = M_j [E(z_{j-1}), H(z_{j-1})]^T$ ($\det M_j = 1$).</td></tr>
-        <tr><td>$M$</td><td>Matrice caractéristique globale</td><td>matrice $2\times 2$</td><td>Produit ordonné de bas en haut : $M = M_N M_{N-1} \cdots M_1$.</td></tr>
-        <tr><td>$B, C$</td><td>Vecteur de champ équivalent</td><td>sans dim. / admittance</td><td>$\begin{pmatrix} B \\ C \end{pmatrix} = M \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$, champ total normalisé au sommet ($z=z_N$).</td></tr>
+        <tr><td>$M$</td><td>Matrice caractéristique globale</td><td>matrice $2\times 2$</td><td>Produit ordonné de bas en haut : $M = M_m M_{m-1} \cdots M_1$.</td></tr>
+        <tr><td>$B, C$</td><td>Vecteur de champ équivalent</td><td>sans dim. / admittance</td><td>$\begin{pmatrix} B \\ C \end{pmatrix} = M \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$, champ total normalisé au sommet ($z=z_m$).</td></tr>
     </table>
 
     <h3>2.4 Coefficients optiques, bilans énergétiques &amp; photométrie</h3>
@@ -470,7 +473,7 @@
     </div>
 
     <p style="font-size: 14.5px; color: var(--text-secondary); margin-bottom: 20px;">
-        <em>Convention de repère et de numérotation : l'axe $z$ est orienté <strong>vers le haut</strong> ($\uparrow$), dans le sens de croissance physique du dépôt. Le plan $z=0$ correspond à la surface du substrat, la couche 1 est collée au substrat ($0 \le z \le d_1$), et la couche $N$ est la dernière couche déposée, en contact avec l'air à $z = z_N = \sum_{j=1}^N d_j$.</em>
+        <em>Convention de repère et de numérotation : l'axe $z$ est orienté <strong>vers le haut</strong> ($\uparrow$), dans le sens de croissance physique du dépôt. Le plan $z=0$ correspond à la surface du substrat, la couche 1 est collée au substrat ($0 \le z \le d_1$), et la couche $m$ est la dernière couche déposée, en contact avec l'air à $z = z_m = \sum_{j=1}^m d_j$.</em>
     </p>
 
     <div class="pedagogy-box">
@@ -478,8 +481,8 @@
         Ce choix correspond exactement à la <strong>réalité expérimentale du dépôt en laboratoire</strong> (PVD, ALD, évaporation) :
         <ul>
             <li><strong>Croissance physique :</strong> Le substrat nu sert de socle de référence ($z=0$). L'épaisseur s'accumule vers le haut au fur et à mesure du dépôt des couches ($j=1, 2, \dots, N$).</li>
-            <li><strong>Harmonie avec le formalisme matriciel de Macleod :</strong> Les conditions aux limites s'initialisent sur le substrat à la base ($z=0$) : $\begin{pmatrix} E(0) \\ H(0) \end{pmatrix} = \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$. En remontant couche par couche vers le haut, on multiplie successivement par $M_1$, $M_2$, ..., jusqu'à $M_N$. Au sommet de l'empilement ($z=z_N$), le champ total en contact avec l'air incident est directement donné par le vecteur caractéristique $\begin{pmatrix} B \\ C \end{pmatrix} = M_N \cdots M_1 \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$.</li>
-            <li><strong>Sens d'éclairement :</strong> La lumière incidente arrive depuis l'air ($z \ge z_N$) et se propage vers le bas (vers les $z$ décroissants, en direction du substrat).</li>
+            <li><strong>Harmonie avec le formalisme matriciel de Macleod :</strong> Les conditions aux limites s'initialisent sur le substrat à la base ($z=0$) : $\begin{pmatrix} E(0) \\ H(0) \end{pmatrix} = \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$. En remontant couche par couche vers le haut, on multiplie successivement par $M_1$, $M_2$, ..., jusqu'à $M_m$. Au sommet de l'empilement ($z=z_m$), le champ total en contact avec l'air incident est directement donné par le vecteur caractéristique $\begin{pmatrix} B \\ C \end{pmatrix} = M_m \cdots M_1 \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$.</li>
+            <li><strong>Sens d'éclairement :</strong> La lumière incidente arrive depuis l'air ($z \ge z_m$) et se propage vers le bas (vers les $z$ décroissants, en direction du substrat).</li>
         </ul>
     </div>
 
@@ -628,7 +631,7 @@
             <!-- 1. Milieu incident (Air) - En haut -->
             <rect x="30" y="20" width="520" height="80" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" rx="4"/>
             <text x="45" y="45" font-family="sans-serif" font-weight="bold" font-size="13" fill="#334155">Milieu incident (Air, n₀)</text>
-            <text x="45" y="62" font-family="sans-serif" font-size="11" fill="#64748b">z ≥ z_N</text>
+            <text x="45" y="62" font-family="sans-serif" font-size="11" fill="#64748b">z ≥ z_m</text>
 
             <!-- Onde incidente E0- (descendante) -->
             <path d="M 160 35 L 240 95" stroke="#f59e0b" stroke-width="2.5" fill="none" marker-end="url(#arr-orange-vert)"/>
@@ -638,14 +641,14 @@
             <path d="M 255 95 L 335 35" stroke="#dc2626" stroke-width="2.5" fill="none" marker-end="url(#arr-red-vert)"/>
             <text x="345" y="35" font-family="sans-serif" font-size="11" font-weight="bold" fill="#dc2626">E₀⁺ = r · E₀⁻ (Réfléchie)</text>
 
-            <!-- Interface Air / Empilement (z = z_N) -->
+            <!-- Interface Air / Empilement (z = z_m) -->
             <line x1="30" y1="100" x2="550" y2="100" stroke="#0f172a" stroke-width="2" />
 
             <!-- 2. Empilement de couches minces (croissance de bas en haut) -->
             <!-- Couche N (Sommet) -->
             <rect x="30" y="100" width="520" height="50" fill="#e0f2fe" opacity="0.4" stroke="#cbd5e1" stroke-width="1"/>
             <text x="45" y="130" font-family="sans-serif" font-weight="bold" font-size="12" fill="#0369a1">Couche N (Sommet)</text>
-            <text x="190" y="130" font-family="sans-serif" font-size="11" fill="#0284c7">(Indice n̂_N, Épaisseur d_N = z_N - z_{N-1})</text>
+            <text x="190" y="130" font-family="sans-serif" font-size="11" fill="#0284c7">(Indice n̂_N, Épaisseur d_m = z_m - z_{m-1})</text>
             <line x1="30" y1="150" x2="550" y2="150" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3" />
 
             <!-- Couche j (détaillée) -->
@@ -695,10 +698,10 @@
 
             <!-- Repères z -->
             <line x1="585" y1="100" x2="595" y2="100" stroke="#334155" stroke-width="1.5"/>
-            <text x="605" y="104" font-family="sans-serif" font-size="11" fill="#475569">z = z_N</text>
+            <text x="605" y="104" font-family="sans-serif" font-size="11" fill="#475569">z = z_m</text>
 
             <line x1="585" y1="150" x2="595" y2="150" stroke="#94a3b8" stroke-width="1"/>
-            <text x="605" y="154" font-family="sans-serif" font-size="10" fill="#94a3b8">z_{N-1}</text>
+            <text x="605" y="154" font-family="sans-serif" font-size="10" fill="#94a3b8">z_{m-1}</text>
 
             <line x1="585" y1="240" x2="595" y2="240" stroke="#94a3b8" stroke-width="1"/>
             <text x="605" y="244" font-family="sans-serif" font-size="10" fill="#94a3b8">z₁ = d₁</text>
@@ -879,17 +882,17 @@
             
             <p>Le véritable problème survient lors d'une <strong>Réflexion Totale Interne</strong> dans un diélectrique (ex: lumière passant du verre $n=1.5$ à l'air $n=1.0$ à $45^\circ$). On a alors $S_0 = 1.06$ et $z = n^2 - S_0^2 = -0.125$ (pur réel négatif). Dans ce cas précis, <code>np.sqrt(-0.125 + 0j)</code> renvoie <code>+0.353j</code>. <strong>La partie imaginaire est positive !</strong> L'onde simulée va croître exponentiellement au lieu de s'évanouir.</p>
 
-            <p>Il est donc crucial de forcer manuellement le bon signe dans le code pour les ondes évanescentes (voir Section 10) :</p>
+            <p>Il est donc crucial de forcer manuellement le bon signe dans le code pour les ondes évanescentes (voir Section 13) :</p>
             <pre style="margin: 10px 0; padding: 10px;"><code>if n_cos_th.imag > 0: 
     n_cos_th = -n_cos_th  # Force l'atténuation physique</code></pre>
         </div>
     </details>
 
     <h3>4.2 Matrice globale de l'empilement</h3>
-    <p>La matrice globale $M$ du système est le produit matriciel des matrices de chaque couche. On multiplie en partant de la base sur le substrat ($z=0$, couche 1) vers le sommet en contact avec l'air ($z=z_N$, couche $N$) :</p>
+    <p>La matrice globale $M$ du système est le produit matriciel des matrices de chaque couche. On multiplie en partant de la base sur le substrat ($z=0$, couche 1) vers le sommet en contact avec l'air ($z=z_m$, couche $m$) :</p>
     <div class="formula-box">
-        $$\begin{pmatrix} E(z_N) \\ H(z_N) \end{pmatrix} = M_N \cdot M_{N-1} \cdots M_1 \begin{pmatrix} E(0) \\ H(0) \end{pmatrix} = M \begin{pmatrix} E(0) \\ H(0) \end{pmatrix}$$
-        $$\text{avec} \quad M = \begin{pmatrix} m_{11} & m_{12} \\ m_{21} & m_{22} \end{pmatrix} = M_N \cdot M_{N-1} \cdots M_1$$
+        $$\begin{pmatrix} E(z_m) \\ H(z_m) \end{pmatrix} = M_m \cdot M_{m-1} \cdots M_1 \begin{pmatrix} E(0) \\ H(0) \end{pmatrix} = M \begin{pmatrix} E(0) \\ H(0) \end{pmatrix}$$
+        $$\text{avec} \quad M = \begin{pmatrix} m_{11} & m_{12} \\ m_{21} & m_{22} \end{pmatrix} = M_m \cdot M_{m-1} \cdots M_1$$
     </div>
 
     <!-- 5. POLARISATION -->
@@ -965,10 +968,15 @@
     <div class="takeaway-box">
         <span class="box-title">⚡ L'Essentiel de la Section 6 en 3 formules indispensables</span>
         <ul>
-            <li><strong>Vecteur caractéristique :</strong> $\begin{pmatrix} B \\ C \end{pmatrix} = M_{sys} \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix} = M_N \cdot M_{N-1} \cdots M_1 \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$</li>
+            <li><strong>Vecteur caractéristique :</strong> $\begin{pmatrix} B \\ C \end{pmatrix} = M_{sys} \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix} = M_m \cdot M_{m-1} \cdots M_1 \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$</li>
             <li><strong>Réflectance &amp; Transmittance :</strong> $R = |r|^2 = \left|\frac{\eta_0 B - C}{\eta_0 B + C}\right|^2 \qquad \text{et} \qquad T = \frac{\mathrm{Re}(\eta_{sub})}{\mathrm{Re}(\eta_0)} |t|^2 = \frac{\mathrm{Re}(\eta_{sub})}{\mathrm{Re}(\eta_0)} \left|\frac{2\eta_0}{\eta_0 B + C}\right|^2$</li>
             <li><strong>Bilan de conservation :</strong> $R + T + A = 1$ (où $A = 1 - R - T$ quantifie l'absorption thermique nette dans les couches).</li>
         </ul>
+    </div>
+
+    <div class="pedagogy-box">
+        <span class="box-title">Angle de Brewster</span>
+        <p>Pour un dioptre entre deux diélectriques d'indices $n_0$ et $n_1$, $r_s$ ne s'annule jamais. En revanche $r_p$ s'annule lorsque les admittances obliques $\eta_{0,p}=n_0/\cos\theta_0$ et $\eta_{1,p}=n_1/\cos\theta_1$ sont égales ; avec la loi de Snell-Descartes, cette condition donne $\tan\theta_B = n_1/n_0$. À cet angle, la lumière réfléchie est entièrement polarisée S : c'est le principe des fenêtres de Brewster et des polariseurs par réflexion.</p>
     </div>
 
     <!-- 7. BACKSIDE CORRECTION -->
@@ -1000,7 +1008,7 @@
     
     <p>Calculer le profil d'intensité à l'intérieur de l'empilement est fondamental, notamment pour évaluer les seuils de dommage laser (LIDT) ou optimiser l'absorption dans des cellules solaires.</p>
     
-    <p><strong>Méthode :</strong> On connaît le champ transmis dans le substrat à $z=0$ (qui vaut l'amplitude transmise $t$). On peut remonter mathématiquement le long de l'axe $z$ (dans le sens de croissance des couches, de $z=0$ jusqu'au sommet $z=z_N$) couche après couche. Dans la couche $j$ ($z_{j-1} \le z \le z_j$), on part des champs à sa base, obtenus en appliquant successivement $M_1, \dots, M_{j-1}$ au vecteur de départ $t\,(1, \eta_{sub})^T$ :</p>
+    <p><strong>Méthode :</strong> On connaît le champ transmis dans le substrat à $z=0$ (qui vaut l'amplitude transmise $t$). On peut remonter mathématiquement le long de l'axe $z$ (dans le sens de croissance des couches, de $z=0$ jusqu'au sommet $z=z_m$) couche après couche. Dans la couche $j$ ($z_{j-1} \le z \le z_j$), on part des champs à sa base, obtenus en appliquant successivement $M_1, \dots, M_{j-1}$ au vecteur de départ $t\,(1, \eta_{sub})^T$ :</p>
     <div class="formula-box">
         $$\begin{pmatrix} E(z) \\ H(z) \end{pmatrix} = \begin{pmatrix} \cos \delta_j(z) & \frac{i}{\eta_j} \sin \delta_j(z) \\ i \eta_j \sin \delta_j(z) & \cos \delta_j(z) \end{pmatrix} \begin{pmatrix} E(z_{j-1}) \\ H(z_{j-1}) \end{pmatrix}$$
     </div>
@@ -1068,48 +1076,57 @@
         </p>
     </div>
 
-    <!-- 9. EXEMPLES -->
-    <h2 id="examples">9. Exemples d'application numérique <span class="badge-l1">Niveau 1 &amp; 2</span></h2>
-    
-    <h3>Cas 1 : Couche Anti-Reflet (AR) quart-d'onde ($\lambda/4$)</h3>
-    <p>L'objectif est d'annuler les $\sim 4\%$ de réflexion parasite du verre. On dépose une épaisseur telle que le déphasage aller-retour soit de $\pi$ (interférence totalement destructive). L'épaisseur optique requise est $nd = \lambda / 4$.</p>
-    
-    <div class="diagram-container">
-        <svg width="480" height="250" viewBox="0 0 480 250" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
-            <!-- Axes -->
-            <line x1="50" y1="190" x2="400" y2="190" stroke="#334155" stroke-width="1.5" />
-            <line x1="50" y1="190" x2="50" y2="30" stroke="#334155" stroke-width="1.5" />
-            
-            <text x="405" y="194" font-family="sans-serif" font-weight="bold" font-size="11" fill="#334155">λ (nm)</text>
-            <text x="30" y="30" font-family="sans-serif" font-weight="bold" font-size="12" fill="#0f172a">R (%)</text>
-            
-            <!-- Ticks X -->
-            <text x="60" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">300</text>
-            <line x1="60" y1="190" x2="60" y2="195" stroke="#334155" stroke-width="1.5"/>
-            <text x="225" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">550</text>
-            <line x1="225" y1="190" x2="225" y2="195" stroke="#334155" stroke-width="1.5"/>
-            <text x="390" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">800</text>
-            <line x1="390" y1="190" x2="390" y2="195" stroke="#334155" stroke-width="1.5"/>
-            
-            <!-- Ticks Y -->
-            <text x="40" y="194" text-anchor="end" font-family="sans-serif" font-size="10" fill="#64748b">0</text>
-            <text x="40" y="84" text-anchor="end" font-family="sans-serif" font-size="10" fill="#64748b">4</text>
-            <line x1="46" y1="80" x2="50" y2="80" stroke="#334155" stroke-width="1.5"/>
-            
-            <!-- Bare glass (R = 4%) -->
-            <line x1="50" y1="80" x2="390" y2="80" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5"/>
-            <text x="330" y="70" font-family="sans-serif" font-size="11" fill="#64748b">Verre nu (4%)</text>
-            
-            <!-- AR Curve -->
-            <path d="M 60 100 Q 140 190 225 190 T 390 100" fill="none" stroke="#d97706" stroke-width="3" />
-            <text x="225" y="175" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#d97706" font-weight="bold">Verre + AR (MgF₂)</text>
-        </svg>
+    <!-- 9. EMPILEMENTS PÉRIODIQUES -->
+    <h2 id="bragg">9. Empilements périodiques : miroirs de Bragg et filtres Fabry-Pérot <span class="badge-l1">Niveau 1</span> <span class="badge-l2">Niveau 2</span></h2>
+
+    <h3>9.1 Couche quart d'onde et notation QWOT</h3>
+    <p>Une couche dont l'épaisseur optique vaut $n d = \lambda_0/4$ est dite <strong>quart d'onde</strong> à $\lambda_0$ : son déphasage vaut $\delta = \pi/2$. On note $H$ une couche quart d'onde de haut indice $n_H$ et $L$ une couche quart d'onde de bas indice $n_L$ ; $2H$ désigne deux quarts d'onde, soit une demi-onde. On dit aussi que l'épaisseur s'exprime en <strong>QWOT</strong> (<em>quarter-wave optical thickness</em>). Avec $\delta=\pi/2$, la matrice d'une couche se réduit à $\begin{pmatrix}0 & i/\eta\\ i\eta & 0\end{pmatrix}$ : elle transforme l'admittance $Y$ de ce qui est en dessous en $\eta^2/Y$. Une demi-onde ($\delta=\pi$) donne $-I$ : à $\lambda_0$, elle est optiquement « absente ».</p>
+
+    <h3>9.2 Miroir de Bragg</h3>
+    <p>Empilons $(HL)^p H$ sur un substrat d'indice $n_s$ (ordre de dépôt : la première couche $H$ touche le substrat). En appliquant $p$ fois la règle $Y \to \eta^2/Y$, l'admittance équivalente au sommet vaut, à $\lambda_0$ et en incidence normale :</p>
+    <div class="formula-box">
+        $$Y = \left(\frac{n_H}{n_L}\right)^{2p}\frac{n_H^2}{n_s},\qquad R_{max} = \left(\frac{n_0 - Y}{n_0 + Y}\right)^2 .$$
     </div>
-    
-    <p>La réflexion s'annule complètement si l'indice de la couche vérifie $n_{couche} = \sqrt{n_{air} \cdot n_{verre}}$. Pour un verre standard, on voudrait $n \approx 1.22$. Le Fluorure de Magnésium (MgF₂, $n=1.38$) est le matériau approchant le plus couramment utilisé en optique classique pour s'approcher de cet idéal.</p>
+    <p>$Y$ croît géométriquement avec le nombre de périodes : $R_{max}$ tend vers 1, d'autant plus vite que le contraste $n_H/n_L$ est grand. Toutes les réflexions partielles sont en phase à $\lambda_0$ : c'est une interférence <em>constructive</em> en réflexion.</p>
+    <p><strong>Bande d'arrêt.</strong> Autour de $\lambda_0$, la réflexion reste forte sur un intervalle dont la largeur, exprimée en nombre d'onde relatif $g=\lambda_0/\lambda$, vaut pour un miroir infini :</p>
+    <div class="formula-box">
+        $$\Delta g = \frac{4}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L},\qquad \lambda_{bords} = \frac{\lambda_0}{1 \pm \frac{2}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L}},\qquad \Delta\lambda \simeq \frac{4\lambda_0}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L}.$$
+    </div>
+    <p>La bande est symétrique en nombre d'onde, donc dissymétrique en longueur d'onde : elle s'étend plus loin vers le rouge. Ces formules décrivent la <strong>limite</strong> d'un miroir à très grand nombre de périodes ; un miroir réel de quelques périodes a des bords moins raides, et sa largeur mesurée dépend du seuil de réflexion choisi. Hors de la bande, des lobes secondaires apparaissent ; l'épaisseur des couches extrêmes règle leur répartition de part et d'autre de la bande.</p>
 
+    <h3>9.3 Cavité Fabry-Pérot et filtres passe-bande</h3>
+    <p>Un filtre passe-bande à une cavité s'écrit $(HL)^p\,2qH\,(LH)^p$ : deux miroirs de Bragg séparés par un <strong>espaceur</strong> de $q$ demi-ondes. À $\lambda_0$, l'espaceur est optiquement absent et les deux miroirs, symétriques, se compensent : la transmission remonte près de 1 (en l'absence d'absorption). Un peu à côté de $\lambda_0$, le déphasage dans l'espaceur détruit cette compensation et le miroir bloque.</p>
+    <p>La largeur à mi-hauteur de la résonance se comprend comme celle d'un interféromètre de Fabry-Pérot : si $R$ est la réflectivité de chaque miroir, la finesse vaut $\mathcal{F}=\pi\sqrt{R}/(1-R)$ et la largeur relative diminue quand $R$ augmente ou quand l'ordre $q$ augmente. Chaque période ajoutée aux miroirs multiplie leur admittance par $(n_H/n_L)^2$ : la largeur diminue donc à peu près de ce facteur par période. Augmenter $q$ ne la réduit que proportionnellement à l'ordre.</p>
+    <p><strong>Filtres multi-cavités.</strong> En couplant plusieurs cavités par des couches $L$, on obtient une bande passante plus large, à <em>sommet plat et ondulé</em> et à flancs plus raides. Le maximum de transmission n'est plus un repère fiable de la bande : on utilise le <strong>centre à mi-hauteur</strong>, milieu des deux longueurs d'onde où $T = T_{max}/2$.</p>
+    <p><strong>Dispersion et échelle.</strong> Multiplier toutes les épaisseurs par $s$ déplace le spectre d'un facteur $s$ <em>si les indices ne dépendaient pas de $\lambda$</em>. En réalité $n(\lambda)$ varie : le déplacement mesuré s'écarte de $s\,\lambda_0$, et l'écart grandit loin de $\lambda_0$.</p>
 
-    <div class="pedagogy-box" style="margin-top: 24px;">
+    <!-- 10. OPTIMISATION -->
+    <h2 id="optimisation">10. Conception par optimisation : mérite, BFGS, méthode de l'aiguille <span class="badge-l2">Niveau 2</span></h2>
+
+    <h3>10.1 Fonction de mérite</h3>
+    <p>Concevoir, c'est traduire un cahier des charges en un nombre à minimiser. Pour une cible $C_i$ en des points $\lambda_i$ et une réponse calculée $X_i$ ($R$, $T$ ou $A$ en %), on utilise un écart quadratique pondéré :</p>
+    <div class="formula-box">
+        $$J(\mathbf{d}) = \sqrt{\frac{\sum_i w_i\,\big(X_i(\mathbf{d}) - C_i\big)^2}{\sum_i w_i}},\qquad \mathbf{d}=(d_1,\dots,d_m).$$
+    </div>
+    <p>D'autres mérites sont des moyennes sur une fenêtre ($\overline R$ pour un antireflet) ou des rapports ($Q_r$ pour un passe-bande). Un mérite n'a de sens qu'avec sa <strong>grille de calcul</strong> (bornes et pas) : deux grilles différentes donnent deux nombres différents.</p>
+
+    <h3>10.2 Paysage du mérite et minima locaux</h3>
+    <p>$J$ est une fonction très ondulée des épaisseurs : les phases $\delta_j$ sont périodiques, et le paysage contient de nombreuses vallées. Une méthode <strong>locale</strong> descend vers le fond de la vallée où on la pose. Deux points de départ différents peuvent donc donner deux résultats différents, sans qu'aucun ne soit « l'optimum ». Une méthode déterministe relancée depuis le même départ redonne exactement le même résultat.</p>
+
+    <h3>10.3 Méthode quasi-Newton BFGS</h3>
+    <p>BFGS (Broyden–Fletcher–Goldfarb–Shanno) itère $\mathbf{d}_{k+1} = \mathbf{d}_k - \alpha_k\,\mathbf{B}_k\,\nabla J(\mathbf{d}_k)$, où $\mathbf{B}_k$ approche l'inverse de la matrice des dérivées secondes et se corrige à chaque pas à partir des variations du gradient, et où $\alpha_k$ est choisi par une recherche linéaire. Le gradient est estimé par différences finies. Les épaisseurs restent dans des bornes : la borne basse est l'épaisseur minimale que l'on accepte de déposer. BFGS ajuste les épaisseurs d'une structure donnée ; il ne crée jamais de couche.</p>
+
+    <h3>10.4 Méthode de l'aiguille</h3>
+    <p>Quand BFGS ne progresse plus, la structure est limitante. On teste l'insertion d'une couche infiniment fine (« aiguille ») d'épaisseur $\delta$ à la profondeur $z$ et on calcule :</p>
+    <div class="formula-box">
+        $$\pi(z) = \frac{J_0 - J_\delta(z)}{\delta}.$$
+    </div>
+    <p>Là où $\pi(z) > 0$, insérer améliore le mérite. On insère au maximum de $\pi$, puis on raffine par BFGS : la nouvelle couche ajoute une dimension au paysage, et une barrière infranchissable en dimension $m$ peut se contourner en dimension $m+1$. Le cycle « aiguille puis BFGS » se répète tant qu'il fait baisser le mérite ; on nettoie ensuite les couches trop fines et on réoptimise. Le calcul de $\pi(z)$ est discret : il est échantillonné en $z$ et utilise un $\delta$ fini.</p>
+
+    <!-- 11. QUALIFICATION -->
+    <h2 id="qualification">11. Qualification statistique et fabricabilité <span class="badge-l2">Niveau 2</span></h2>
+    <p>Un minimum nominal n'est pas encore un composant. Cette section décrit comment le TP juge la fabricabilité et la robustesse d'une prescription.</p>
+    <div class="pedagogy-box">
         <span class="box-title">Encart ingénierie — un optimum nominal n'est pas encore un design</span>
         <p>Une épaisseur calculée à six décimales n'est pas une prescription industrielle. La fabrication introduit une résolution finie, des erreurs aléatoires couche par couche et des erreurs corrélées, par exemple un biais de calibration du quartz. La décision doit donc suivre la chaîne complète ci-dessous.</p>
 
@@ -1165,6 +1182,49 @@
         </div>
     </div>
 
+
+
+    <!-- 12. EXEMPLES -->
+    <h2 id="examples">12. Exemples d'application numérique <span class="badge-l1">Niveau 1 &amp; 2</span></h2>
+    
+    <h3>Cas 1 : Couche Anti-Reflet (AR) quart-d'onde ($\lambda/4$)</h3>
+    <p>L'objectif est d'annuler les $\sim 4\%$ de réflexion parasite du verre. On dépose une épaisseur telle que le déphasage aller-retour soit de $\pi$ (interférence totalement destructive). L'épaisseur optique requise est $nd = \lambda / 4$.</p>
+    
+    <div class="diagram-container">
+        <svg width="480" height="250" viewBox="0 0 480 250" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <!-- Axes -->
+            <line x1="50" y1="190" x2="400" y2="190" stroke="#334155" stroke-width="1.5" />
+            <line x1="50" y1="190" x2="50" y2="30" stroke="#334155" stroke-width="1.5" />
+            
+            <text x="405" y="194" font-family="sans-serif" font-weight="bold" font-size="11" fill="#334155">λ (nm)</text>
+            <text x="30" y="30" font-family="sans-serif" font-weight="bold" font-size="12" fill="#0f172a">R (%)</text>
+            
+            <!-- Ticks X -->
+            <text x="60" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">300</text>
+            <line x1="60" y1="190" x2="60" y2="195" stroke="#334155" stroke-width="1.5"/>
+            <text x="225" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">550</text>
+            <line x1="225" y1="190" x2="225" y2="195" stroke="#334155" stroke-width="1.5"/>
+            <text x="390" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">800</text>
+            <line x1="390" y1="190" x2="390" y2="195" stroke="#334155" stroke-width="1.5"/>
+            
+            <!-- Ticks Y -->
+            <text x="40" y="194" text-anchor="end" font-family="sans-serif" font-size="10" fill="#64748b">0</text>
+            <text x="40" y="84" text-anchor="end" font-family="sans-serif" font-size="10" fill="#64748b">4</text>
+            <line x1="46" y1="80" x2="50" y2="80" stroke="#334155" stroke-width="1.5"/>
+            
+            <!-- Bare glass (R = 4%) -->
+            <line x1="50" y1="80" x2="390" y2="80" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5"/>
+            <text x="330" y="70" font-family="sans-serif" font-size="11" fill="#64748b">Verre nu (4%)</text>
+            
+            <!-- AR Curve -->
+            <path d="M 60 100 Q 140 190 225 190 T 390 100" fill="none" stroke="#d97706" stroke-width="3" />
+            <text x="225" y="175" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#d97706" font-weight="bold">Verre + AR (MgF₂)</text>
+        </svg>
+    </div>
+    
+    <p>La réflexion s'annule complètement si l'indice de la couche vérifie $n_{couche} = \sqrt{n_{air} \cdot n_{verre}}$. Pour un verre standard, on voudrait $n \approx 1.22$. Le Fluorure de Magnésium (MgF₂, $n=1.38$) est le matériau approchant le plus couramment utilisé en optique classique pour s'approcher de cet idéal.</p>
+
+
     <h3>Cas 2 : Filtre de validation à 5 couches (avec métal absorbant)</h3>
     <p>Ce cas de test complexe permet de valider le code Python, car il inclut des angles obliques, de la polarisation et de l'absorption. Il sert surtout à vérifier deux choses :</p>
     <ul>
@@ -1201,8 +1261,8 @@
         <tr><td><strong>45° (Polarisation p / TM)</strong></td><td>0.482173</td><td>0.446639</td><td>0.071187</td><td>0.484049</td><td>0.444613</td></tr>
     </table>
 
-    <!-- 10. CODE PYTHON -->
-    <h2 id="code_example">10. Implémentation Numérique (Python) <span class="badge-l2">Niveau 2</span></h2>
+    <!-- 13. CODE PYTHON -->
+    <h2 id="code_example">13. Implémentation Numérique (Python) <span class="badge-l2">Niveau 2</span></h2>
     <p>Le code ci-dessous résume mathématiquement la théorie exposée. Il prend en compte l'absorption, l'angle d'incidence, les polarisations et corrige le problème de la racine complexe pour les ondes évanescentes (voir § 4.1).</p>
 
     <details class="advanced-box" open>

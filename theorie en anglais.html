@@ -349,8 +349,11 @@
         <a href="#coeffs">6. Fresnel coefficients (R, T) and the Poynting vector <span class="badge-l2">Level 2</span></a>
         <a href="#finite_sub">7. Substrate of finite thickness (incoherent reflections) <span class="badge-l2">Level 2</span></a>
         <a href="#efield">8. [Advanced] Electric-field profile $|E(z)|^2$ <span class="badge-l3">Level 3</span></a>
-        <a href="#examples">9. Worked examples (AR coating and multilayer filter) <span class="badge-l1">Levels 1 &amp; 2</span></a>
-        <a href="#code_example">10. Numerical implementation (Python code) <span class="badge-l2">Level 2</span></a>
+        <a href="#bragg">9. Periodic stacks: Bragg mirrors and Fabry–Pérot filters <span class="badge-l2">Levels 1 &amp; 2</span></a>
+        <a href="#optimisation">10. Design by optimisation: merit, BFGS, needle method <span class="badge-l2">Level 2</span></a>
+        <a href="#qualification">11. Statistical qualification and manufacturability <span class="badge-l2">Level 2</span></a>
+        <a href="#examples">12. Worked examples (AR coating and multilayer filter) <span class="badge-l1">Levels 1 &amp; 2</span></a>
+        <a href="#code_example">13. Numerical implementation (Python code) <span class="badge-l2">Level 2</span></a>
     </div>
 
     <!-- 1. INTRODUCTION -->
@@ -423,12 +426,12 @@
         <tr><td>$n$</td><td>Refractive index (real)</td><td>dimensionless</td><td>Slowing of the phase velocity ($v_\phi = c/n$) inside the material ($n \ge 1$).</td></tr>
         <tr><td>$\kappa$</td><td>Extinction coefficient</td><td>dimensionless</td><td>Attenuation of the wave by dielectric/ohmic absorption ($\kappa \ge 0$).</td></tr>
         <tr><td>$\hat{n}$</td><td>Complex refractive index</td><td>dimensionless</td><td>$\hat{n} = n - i\kappa$ (Macleod convention $e^{+i\omega t}$, which imposes $\mathrm{Im}(\hat{n}) \le 0$).</td></tr>
-        <tr><td>$n_0, \eta_0$</td><td>Index &amp; admittance of air</td><td>dimensionless / $\mathcal{Y}_0$</td><td>Semi-infinite incident medium at the top ($z \ge z_N$, with $n_0 = 1.0$).</td></tr>
+        <tr><td>$n_0, \eta_0$</td><td>Index &amp; admittance of air</td><td>dimensionless / $\mathcal{Y}_0$</td><td>Semi-infinite incident medium at the top ($z \ge z_m$, with $n_0 = 1.0$).</td></tr>
         <tr><td>$n_{sub}, \eta_{sub}$</td><td>Index &amp; admittance of the substrate</td><td>dimensionless / $\mathcal{Y}_0$</td><td>Semi-infinite exit medium at the base of the stack ($z \le 0$).</td></tr>
         <tr><td>$d$ or $d_j$</td><td>Physical (geometrical) thickness</td><td>$\text{nm}$</td><td>Metric thickness of the layer ($d_j = z_j - z_{j-1}$).</td></tr>
         <tr><td>$nd$ or $n_j d_j$</td><td>Optical thickness</td><td>$\text{nm}$</td><td>Effective optical path travelled by the light ($n \times d$).</td></tr>
         <tr><td>$\delta$ or $\delta_j$</td><td>Optical phase thickness of a layer</td><td>$\text{rad}$</td><td>$\delta_j = k_{z,j} d_j = \frac{2\pi}{\lambda} \hat{n}_j d_j \cos\theta_j$.</td></tr>
-        <tr><td>$N$</td><td>Total number of layers</td><td>integer</td><td>Number of layers in the multilayer (numbered from $j=1$ at the base to $j=N$ at the top).</td></tr>
+        <tr><td>$m$</td><td>Total number of layers</td><td>integer</td><td>Number of layers in the multilayer (numbered from $j=1$ at the base to $j=m$ at the top).</td></tr>
     </table>
 
     <h3>2.3 Electromagnetism, fields and matrix formalism (Macleod)</h3>
@@ -441,8 +444,8 @@
         <tr><td>$\eta_{j,s}$</td><td>Admittance in TE (s) polarisation</td><td>dimensionless</td><td>$\eta_{j,s} = \hat{n}_j \cos\theta_j$ ($\vec{E}$ perpendicular to the plane of incidence).</td></tr>
         <tr><td>$\eta_{j,p}$</td><td>Admittance in TM (p) polarisation</td><td>dimensionless</td><td>$\eta_{j,p} = \hat{n}_j / \cos\theta_j$ ($\vec{H}$ perpendicular to the plane of incidence).</td></tr>
         <tr><td>$M_j$</td><td>Layer transfer matrix</td><td>$2\times 2$ matrix</td><td>Relates $[E(z_j), H(z_j)]^T = M_j [E(z_{j-1}), H(z_{j-1})]^T$ ($\det M_j = 1$).</td></tr>
-        <tr><td>$M$</td><td>Overall characteristic matrix</td><td>$2\times 2$ matrix</td><td>Ordered product from bottom to top: $M = M_N M_{N-1} \cdots M_1$.</td></tr>
-        <tr><td>$B, C$</td><td>Equivalent field vector</td><td>dimensionless / admittance</td><td>$\begin{pmatrix} B \\ C \end{pmatrix} = M \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$, total field normalised at the top ($z=z_N$).</td></tr>
+        <tr><td>$M$</td><td>Overall characteristic matrix</td><td>$2\times 2$ matrix</td><td>Ordered product from bottom to top: $M = M_m M_{m-1} \cdots M_1$.</td></tr>
+        <tr><td>$B, C$</td><td>Equivalent field vector</td><td>dimensionless / admittance</td><td>$\begin{pmatrix} B \\ C \end{pmatrix} = M \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$, total field normalised at the top ($z=z_m$).</td></tr>
     </table>
 
     <h3>2.4 Optical coefficients, energy balances &amp; photometry</h3>
@@ -471,7 +474,7 @@
     </div>
 
     <p style="font-size: 14.5px; color: var(--text-secondary); margin-bottom: 20px;">
-        <em>Frame and numbering convention: the $z$ axis points <strong>upwards</strong> ($\uparrow$), in the direction of physical growth during deposition. The plane $z=0$ is the substrate surface, layer 1 sits directly on the substrate ($0 \le z \le d_1$), and layer $N$ is the last layer deposited, in contact with air at $z = z_N = \sum_{j=1}^N d_j$.</em>
+        <em>Frame and numbering convention: the $z$ axis points <strong>upwards</strong> ($\uparrow$), in the direction of physical growth during deposition. The plane $z=0$ is the substrate surface, layer 1 sits directly on the substrate ($0 \le z \le d_1$), and layer $m$ is the last layer deposited, in contact with air at $z = z_m = \sum_{j=1}^m d_j$.</em>
     </p>
 
     <div class="pedagogy-box">
@@ -479,8 +482,8 @@
         This choice matches exactly the <strong>experimental reality of laboratory deposition</strong> (PVD, ALD, evaporation):
         <ul>
             <li><strong>Physical growth:</strong> The bare substrate acts as the reference base ($z=0$). Thickness accumulates upwards as the layers are deposited ($j=1, 2, \dots, N$).</li>
-            <li><strong>Consistency with Macleod's matrix formalism:</strong> The boundary conditions are initialised on the substrate at the base ($z=0$): $\begin{pmatrix} E(0) \\ H(0) \end{pmatrix} = \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$. Working upwards layer by layer, one multiplies successively by $M_1$, $M_2$, ..., up to $M_N$. At the top of the stack ($z=z_N$), the total field in contact with the incident air is given directly by the characteristic vector $\begin{pmatrix} B \\ C \end{pmatrix} = M_N \cdots M_1 \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$.</li>
-            <li><strong>Direction of illumination:</strong> The incident light arrives from the air ($z \ge z_N$) and propagates downwards (towards decreasing $z$, i.e. towards the substrate).</li>
+            <li><strong>Consistency with Macleod's matrix formalism:</strong> The boundary conditions are initialised on the substrate at the base ($z=0$): $\begin{pmatrix} E(0) \\ H(0) \end{pmatrix} = \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$. Working upwards layer by layer, one multiplies successively by $M_1$, $M_2$, ..., up to $M_m$. At the top of the stack ($z=z_m$), the total field in contact with the incident air is given directly by the characteristic vector $\begin{pmatrix} B \\ C \end{pmatrix} = M_m \cdots M_1 \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$.</li>
+            <li><strong>Direction of illumination:</strong> The incident light arrives from the air ($z \ge z_m$) and propagates downwards (towards decreasing $z$, i.e. towards the substrate).</li>
         </ul>
     </div>
 
@@ -629,7 +632,7 @@
             <!-- 1. Incident medium (air) - at the top -->
             <rect x="30" y="20" width="520" height="80" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" rx="4"/>
             <text x="45" y="45" font-family="sans-serif" font-weight="bold" font-size="13" fill="#334155">Incident medium (air, n₀)</text>
-            <text x="45" y="62" font-family="sans-serif" font-size="11" fill="#64748b">z ≥ z_N</text>
+            <text x="45" y="62" font-family="sans-serif" font-size="11" fill="#64748b">z ≥ z_m</text>
 
             <!-- Incident wave E0- (downward) -->
             <path d="M 160 35 L 240 95" stroke="#f59e0b" stroke-width="2.5" fill="none" marker-end="url(#arr-orange-vert)"/>
@@ -639,14 +642,14 @@
             <path d="M 255 95 L 335 35" stroke="#dc2626" stroke-width="2.5" fill="none" marker-end="url(#arr-red-vert)"/>
             <text x="345" y="35" font-family="sans-serif" font-size="11" font-weight="bold" fill="#dc2626">E₀⁺ = r · E₀⁻ (reflected)</text>
 
-            <!-- Air / stack interface (z = z_N) -->
+            <!-- Air / stack interface (z = z_m) -->
             <line x1="30" y1="100" x2="550" y2="100" stroke="#0f172a" stroke-width="2" />
 
             <!-- 2. Thin-film stack (growth from bottom to top) -->
             <!-- Layer N (top) -->
             <rect x="30" y="100" width="520" height="50" fill="#e0f2fe" opacity="0.4" stroke="#cbd5e1" stroke-width="1"/>
             <text x="45" y="130" font-family="sans-serif" font-weight="bold" font-size="12" fill="#0369a1">Layer N (top)</text>
-            <text x="190" y="130" font-family="sans-serif" font-size="11" fill="#0284c7">(index n̂_N, thickness d_N = z_N - z_{N-1})</text>
+            <text x="190" y="130" font-family="sans-serif" font-size="11" fill="#0284c7">(index n̂_N, thickness d_m = z_m - z_{m-1})</text>
             <line x1="30" y1="150" x2="550" y2="150" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3" />
 
             <!-- Layer j (detailed) -->
@@ -696,10 +699,10 @@
 
             <!-- z markers -->
             <line x1="585" y1="100" x2="595" y2="100" stroke="#334155" stroke-width="1.5"/>
-            <text x="605" y="104" font-family="sans-serif" font-size="11" fill="#475569">z = z_N</text>
+            <text x="605" y="104" font-family="sans-serif" font-size="11" fill="#475569">z = z_m</text>
 
             <line x1="585" y1="150" x2="595" y2="150" stroke="#94a3b8" stroke-width="1"/>
-            <text x="605" y="154" font-family="sans-serif" font-size="10" fill="#94a3b8">z_{N-1}</text>
+            <text x="605" y="154" font-family="sans-serif" font-size="10" fill="#94a3b8">z_{m-1}</text>
 
             <line x1="585" y1="240" x2="595" y2="240" stroke="#94a3b8" stroke-width="1"/>
             <text x="605" y="244" font-family="sans-serif" font-size="10" fill="#94a3b8">z₁ = d₁</text>
@@ -879,17 +882,17 @@
 
             <p>The real problem arises during <strong>total internal reflection</strong> in a dielectric (e.g. light passing from glass $n=1.5$ into air $n=1.0$ at $45^\circ$). One then has $S_0 = 1.06$ and $z = n^2 - S_0^2 = -0.125$ (purely real and negative). In this specific case, <code>np.sqrt(-0.125 + 0j)</code> returns <code>+0.353j</code>. <strong>The imaginary part is positive!</strong> The simulated wave will grow exponentially instead of decaying.</p>
 
-            <p>It is therefore crucial to force the correct sign manually in the code for evanescent waves (see Section 10):</p>
+            <p>It is therefore crucial to force the correct sign manually in the code for evanescent waves (see Section 13):</p>
             <pre style="margin: 10px 0; padding: 10px;"><code>if n_cos_th.imag > 0:
     n_cos_th = -n_cos_th  # Force physical attenuation</code></pre>
         </div>
     </details>
 
     <h3>4.2 Overall matrix of the stack</h3>
-    <p>The overall system matrix $M$ is the matrix product of the matrices of each layer. The multiplication runs from the base on the substrate ($z=0$, layer 1) up to the top in contact with the air ($z=z_N$, layer $N$):</p>
+    <p>The overall system matrix $M$ is the matrix product of the matrices of each layer. The multiplication runs from the base on the substrate ($z=0$, layer 1) up to the top in contact with the air ($z=z_m$, layer $m$):</p>
     <div class="formula-box">
-        $$\begin{pmatrix} E(z_N) \\ H(z_N) \end{pmatrix} = M_N \cdot M_{N-1} \cdots M_1 \begin{pmatrix} E(0) \\ H(0) \end{pmatrix} = M \begin{pmatrix} E(0) \\ H(0) \end{pmatrix}$$
-        $$\text{with} \quad M = \begin{pmatrix} m_{11} & m_{12} \\ m_{21} & m_{22} \end{pmatrix} = M_N \cdot M_{N-1} \cdots M_1$$
+        $$\begin{pmatrix} E(z_m) \\ H(z_m) \end{pmatrix} = M_m \cdot M_{m-1} \cdots M_1 \begin{pmatrix} E(0) \\ H(0) \end{pmatrix} = M \begin{pmatrix} E(0) \\ H(0) \end{pmatrix}$$
+        $$\text{with} \quad M = \begin{pmatrix} m_{11} & m_{12} \\ m_{21} & m_{22} \end{pmatrix} = M_m \cdot M_{m-1} \cdots M_1$$
     </div>
 
     <!-- 5. POLARISATION -->
@@ -965,27 +968,33 @@
     <div class="takeaway-box">
         <span class="box-title">⚡ Section 6 in a nutshell — 3 essential formulas</span>
         <ul>
-            <li><strong>Characteristic vector:</strong> $\begin{pmatrix} B \\ C \end{pmatrix} = M_{sys} \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix} = M_N \cdot M_{N-1} \cdots M_1 \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$</li>
+            <li><strong>Characteristic vector:</strong> $\begin{pmatrix} B \\ C \end{pmatrix} = M_{sys} \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix} = M_m \cdot M_{m-1} \cdots M_1 \begin{pmatrix} 1 \\ \eta_{sub} \end{pmatrix}$</li>
             <li><strong>Reflectance &amp; transmittance:</strong> $R = |r|^2 = \left|\frac{\eta_0 B - C}{\eta_0 B + C}\right|^2 \qquad \text{and} \qquad T = \frac{\mathrm{Re}(\eta_{sub})}{\mathrm{Re}(\eta_0)} |t|^2 = \frac{\mathrm{Re}(\eta_{sub})}{\mathrm{Re}(\eta_0)} \left|\frac{2\eta_0}{\eta_0 B + C}\right|^2$</li>
             <li><strong>Conservation balance:</strong> $R + T + A = 1$ (where $A = 1 - R - T$ quantifies the net thermal absorption within the layers).</li>
         </ul>
     </div>
 
+    <div class="pedagogy-box">
+        <span class="box-title">Brewster angle</span>
+        <p>For an interface between two dielectrics of indices $n_0$ and $n_1$, $r_s$ never vanishes. However $r_p$ vanishes when the tilted admittances $\eta_{0,p}=n_0/\cos\theta_0$ and $\eta_{1,p}=n_1/\cos\theta_1$ are equal; with Snell's law this condition gives $\tan\theta_B = n_1/n_0$. At this angle the reflected light is entirely S-polarised: this is the principle of Brewster windows and reflection polarisers.</p>
+    </div>
+
     <!-- 7. BACKSIDE CORRECTION -->
     <h2 id="finite_sub">7. Substrate of finite thickness <span class="badge-l2">Level 2</span></h2>
-    <p>The preceding equations assume a semi-infinite exit substrate. In reality a glass plate has a back surface. Because of the large substrate thickness (millimetric, $\gg \lambda$), spatial optical coherence is lost. We therefore no longer sum complex amplitudes (interference), but the <strong>intensities</strong> of the multiple incoherent bounces inside the glass.</p>
+    <p>The preceding equations assume a semi-infinite exit substrate. In reality a glass plate has a back surface. For a thick substrate (often millimetric), when the illumination conditions or the spectral resolution average the phase between the two faces, an incoherent model is adopted for these paths. We therefore no longer sum complex amplitudes (interference), but the <strong>intensities</strong> of the multiple incoherent bounces inside the glass.</p>
 
     <div class="formula-box">
         <strong>General formula for a plate with an incoherent back surface</strong>
         <ol style="text-align: left;">
             <li>First compute the coated surface illuminated from the air: $R_{front}$ and $T_{front}$.</li>
             <li>Then compute the same surface seen from inside the substrate: $R'_{front}$ and $T'_{front}$.</li>
-            <li>Finally take the bare back surface: $R_{back}$ and $T_{back}$.</li>
+            <li>Compute the back surface seen from the substrate, bare or coated with a known stack: $R_{back}$ and $T_{back}$.</li>
         </ol>
         We then obtain:
         $$R_{total} = R_{front} + \frac{T_{front} \cdot T'_{front} \cdot R_{back}}{1 - R'_{front} \cdot R_{back}}$$
         $$T_{total} = \frac{T_{front} \cdot T_{back}}{1 - R'_{front} \cdot R_{back}}$$
     </div>
+    <p>These formulas apply separately in S and P polarisation, before computing an unpolarised average. In the simulator, the substrate must be transparent ($k=0$); the layers of both faces may absorb. The rear coating, entered as physical thicknesses, stays fixed during optimisation and tolerance studies of the front face. A plate whose fringes are resolved requires a coherent calculation of the whole component.</p>
     <p><em>Worth remembering: in passive linear optics, power transmittance is reciprocal. In other words, provided it is properly defined and properly normalised, $T'_{front} = T_{front}$. What can change with the direction of illumination is mainly $R$ and $A$.</em></p>
     <p><em>Important: for a finite substrate, $T_{total}$ is not the same thing as $T_{front}$. The complete formula above must be applied; otherwise a physics error is committed.</em></p>
     <p><em>Quick example: bare glass reflects about 4% per surface ($R_{front} = R'_{front} = R_{back} \approx 0.04$). The total reflectance of a single pane is then about $7.7\%$. The total transmittance must likewise be recomputed with the finite-substrate formula.</em></p>
@@ -999,7 +1008,7 @@
 
     <p>Computing the intensity profile inside the stack is fundamental, in particular for assessing laser-induced damage thresholds (LIDT) or optimising absorption in solar cells.</p>
 
-    <p><strong>Method:</strong> The field transmitted into the substrate at $z=0$ is known (it equals the transmitted amplitude $t$). One can then work mathematically upwards along the $z$ axis (in the direction of layer growth, from $z=0$ to the top $z=z_N$) by multiplying by the local partial matrices evaluated at height $z$:</p>
+    <p><strong>Method:</strong> The field transmitted into the substrate at $z=0$ is known (it equals the transmitted amplitude $t$). One can then work mathematically upwards along the $z$ axis (in the direction of layer growth, from $z=0$ to the top $z=z_m$) by multiplying by the local partial matrices evaluated at height $z$:</p>
     <div class="formula-box">
         $$\begin{pmatrix} E(z) \\ H(z) \end{pmatrix} = \begin{pmatrix} \cos \delta(z) & \frac{i}{\eta_j} \sin \delta(z) \\ i \eta_j \sin \delta(z) & \cos \delta(z) \end{pmatrix} \begin{pmatrix} E(0) \\ H(0) \end{pmatrix}$$
     </div>
@@ -1067,48 +1076,57 @@
         </p>
     </div>
 
-    <!-- 9. EXAMPLES -->
-    <h2 id="examples">9. Worked numerical examples <span class="badge-l1">Levels 1 &amp; 2</span></h2>
+    <!-- 9. PERIODIC STACKS -->
+    <h2 id="bragg">9. Periodic stacks: Bragg mirrors and Fabry–Pérot filters <span class="badge-l1">Level 1</span> <span class="badge-l2">Level 2</span></h2>
 
-    <h3>Case 1: quarter-wave anti-reflection (AR) coating ($\lambda/4$)</h3>
-    <p>The goal is to cancel the $\sim 4\%$ of stray reflection from the glass. A thickness is deposited such that the round-trip phase shift is $\pi$ (fully destructive interference). The required optical thickness is $nd = \lambda / 4$.</p>
-    
-    <div class="diagram-container">
-        <svg width="480" height="250" viewBox="0 0 480 250" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
-            <!-- Axes -->
-            <line x1="50" y1="190" x2="400" y2="190" stroke="#334155" stroke-width="1.5" />
-            <line x1="50" y1="190" x2="50" y2="30" stroke="#334155" stroke-width="1.5" />
-            
-            <text x="405" y="194" font-family="sans-serif" font-weight="bold" font-size="11" fill="#334155">λ (nm)</text>
-            <text x="30" y="30" font-family="sans-serif" font-weight="bold" font-size="12" fill="#0f172a">R (%)</text>
-            
-            <!-- Ticks X -->
-            <text x="60" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">300</text>
-            <line x1="60" y1="190" x2="60" y2="195" stroke="#334155" stroke-width="1.5"/>
-            <text x="225" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">550</text>
-            <line x1="225" y1="190" x2="225" y2="195" stroke="#334155" stroke-width="1.5"/>
-            <text x="390" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">800</text>
-            <line x1="390" y1="190" x2="390" y2="195" stroke="#334155" stroke-width="1.5"/>
-            
-            <!-- Ticks Y -->
-            <text x="40" y="194" text-anchor="end" font-family="sans-serif" font-size="10" fill="#64748b">0</text>
-            <text x="40" y="84" text-anchor="end" font-family="sans-serif" font-size="10" fill="#64748b">4</text>
-            <line x1="46" y1="80" x2="50" y2="80" stroke="#334155" stroke-width="1.5"/>
-            
-            <!-- Bare glass (R = 4%) -->
-            <line x1="50" y1="80" x2="390" y2="80" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5"/>
-            <text x="330" y="70" font-family="sans-serif" font-size="11" fill="#64748b">Bare glass (4%)</text>
+    <h3>9.1 Quarter-wave layer and QWOT notation</h3>
+    <p>A layer whose optical thickness is $n d = \lambda_0/4$ is a <strong>quarter-wave</strong> layer at $\lambda_0$: its phase is $\delta = \pi/2$. $H$ denotes a quarter-wave layer of high index $n_H$ and $L$ a quarter-wave layer of low index $n_L$; $2H$ means two quarter waves, i.e. a half wave. Thickness is then said to be expressed in <strong>QWOT</strong> (quarter-wave optical thickness). With $\delta=\pi/2$ the layer matrix reduces to $\begin{pmatrix}0 & i/\eta\\ i\eta & 0\end{pmatrix}$: it turns the admittance $Y$ of what lies below into $\eta^2/Y$. A half wave ($\delta=\pi$) gives $-I$: at $\lambda_0$ it is optically “absent”.</p>
 
-            <!-- AR Curve -->
-            <path d="M 60 100 Q 140 190 225 190 T 390 100" fill="none" stroke="#d97706" stroke-width="3" />
-            <text x="225" y="175" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#d97706" font-weight="bold">Glass + AR (MgF₂)</text>
-        </svg>
+    <h3>9.2 Bragg mirror</h3>
+    <p>Stack $(HL)^p H$ on a substrate of index $n_s$ (deposition order: the first $H$ layer touches the substrate). Applying the rule $Y \to \eta^2/Y$ $p$ times, the equivalent admittance at the top is, at $\lambda_0$ and normal incidence:</p>
+    <div class="formula-box">
+        $$Y = \left(\frac{n_H}{n_L}\right)^{2p}\frac{n_H^2}{n_s},\qquad R_{max} = \left(\frac{n_0 - Y}{n_0 + Y}\right)^2 .$$
     </div>
+    <p>$Y$ grows geometrically with the number of periods: $R_{max}$ tends to 1, all the faster as the contrast $n_H/n_L$ is large. All partial reflections are in phase at $\lambda_0$: this is <em>constructive</em> interference in reflection.</p>
+    <p><strong>Stop band.</strong> Around $\lambda_0$, reflection stays high over an interval whose width, in relative wavenumber $g=\lambda_0/\lambda$, is for an infinite mirror:</p>
+    <div class="formula-box">
+        $$\Delta g = \frac{4}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L},\qquad \lambda_{edges} = \frac{\lambda_0}{1 \pm \frac{2}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L}},\qquad \Delta\lambda \simeq \frac{4\lambda_0}{\pi}\arcsin\frac{n_H-n_L}{n_H+n_L}.$$
+    </div>
+    <p>The band is symmetric in wavenumber, hence asymmetric in wavelength: it extends further towards the red. These formulas describe the <strong>limit</strong> of a mirror with a very large number of periods; a real mirror of a few periods has softer edges, and its measured width depends on the chosen reflectance threshold. Outside the band, side lobes appear; the thickness of the outermost layers sets how they are shared between both sides of the band.</p>
 
-    <p>The reflection vanishes completely if the film index satisfies $n_{film} = \sqrt{n_{air} \cdot n_{glass}}$. For standard glass one would want $n \approx 1.22$. Magnesium fluoride (MgF₂, $n=1.38$) is the closest material commonly used in classical optics to approach this ideal.</p>
+    <h3>9.3 Fabry–Pérot cavity and bandpass filters</h3>
+    <p>A single-cavity bandpass filter reads $(HL)^p\,2qH\,(LH)^p$: two Bragg mirrors separated by a <strong>spacer</strong> of $q$ half waves. At $\lambda_0$ the spacer is optically absent and the two symmetric mirrors cancel out: transmission rises close to 1 (in the absence of absorption). Slightly away from $\lambda_0$, the phase in the spacer destroys this cancellation and the mirror blocks.</p>
+    <p>The full width at half maximum of the resonance is understood as that of a Fabry–Pérot interferometer: if $R$ is the reflectance of each mirror, the finesse is $\mathcal{F}=\pi\sqrt{R}/(1-R)$, and the relative width decreases when $R$ or the order $q$ increases. Each period added to the mirrors multiplies their admittance by $(n_H/n_L)^2$: the width therefore decreases roughly by that factor per period. Increasing $q$ reduces it only in proportion to the order.</p>
+    <p><strong>Multi-cavity filters.</strong> Coupling several cavities through $L$ layers gives a wider passband with a <em>flat, rippled top</em> and steeper edges. The transmission maximum is no longer a reliable marker of the band: use the <strong>half-maximum centre</strong>, midway between the two wavelengths where $T = T_{max}/2$.</p>
+    <p><strong>Dispersion and scaling.</strong> Multiplying every thickness by $s$ would shift the spectrum by a factor $s$ <em>if indices did not depend on $\lambda$</em>. In reality $n(\lambda)$ varies: the measured shift departs from $s\,\lambda_0$, and the deviation grows far from $\lambda_0$.</p>
 
+    <!-- 10. OPTIMISATION -->
+    <h2 id="optimisation">10. Design by optimisation: merit, BFGS, needle method <span class="badge-l2">Level 2</span></h2>
 
-    <div class="pedagogy-box" style="margin-top: 24px;">
+    <h3>10.1 Merit function</h3>
+    <p>Designing means turning a specification into a number to minimise. For a target $C_i$ at points $\lambda_i$ and a computed response $X_i$ ($R$, $T$ or $A$ in %), a weighted quadratic deviation is used:</p>
+    <div class="formula-box">
+        $$J(\mathbf{d}) = \sqrt{\frac{\sum_i w_i\,\big(X_i(\mathbf{d}) - C_i\big)^2}{\sum_i w_i}},\qquad \mathbf{d}=(d_1,\dots,d_m).$$
+    </div>
+    <p>Other merits are averages over a window ($\overline R$ for an antireflection coating) or ratios ($Q_r$ for a bandpass filter). A merit only makes sense with its <strong>computation grid</strong> (bounds and step): two different grids give two different numbers.</p>
+
+    <h3>10.2 Merit landscape and local minima</h3>
+    <p>$J$ is a highly oscillating function of the thicknesses: the phases $\delta_j$ are periodic, and the landscape contains many valleys. A <strong>local</strong> method goes down to the bottom of the valley where it starts. Two different starting points may therefore give two different results, neither of which is “the optimum”. A deterministic method restarted from the same point gives exactly the same result.</p>
+
+    <h3>10.3 Quasi-Newton BFGS method</h3>
+    <p>BFGS (Broyden–Fletcher–Goldfarb–Shanno) iterates $\mathbf{d}_{k+1} = \mathbf{d}_k - \alpha_k\,\mathbf{B}_k\,\nabla J(\mathbf{d}_k)$, where $\mathbf{B}_k$ approximates the inverse of the second-derivative matrix and is corrected at each step from the change in gradient, and $\alpha_k$ is chosen by a line search. The gradient is estimated by finite differences. Thicknesses stay within bounds: the lower bound is the minimum thickness one accepts to deposit. BFGS adjusts the thicknesses of a given structure; it never creates a layer.</p>
+
+    <h3>10.4 Needle method</h3>
+    <p>When BFGS stops progressing, the structure is the limit. One tests the insertion of an infinitely thin layer (a “needle”) of thickness $\delta$ at depth $z$ and computes:</p>
+    <div class="formula-box">
+        $$\pi(z) = \frac{J_0 - J_\delta(z)}{\delta}.$$
+    </div>
+    <p>Where $\pi(z) > 0$, inserting improves the merit. One inserts at the maximum of $\pi$, then refines with BFGS: the new layer adds a dimension to the landscape, and a barrier that cannot be crossed in dimension $m$ can be bypassed in dimension $m+1$. The “needle then BFGS” cycle is repeated as long as it lowers the merit; too-thin layers are then cleaned up and the design re-optimised. The computation of $\pi(z)$ is discrete: it is sampled in $z$ and uses a finite $\delta$.</p>
+
+    <!-- 11. QUALIFICATION -->
+    <h2 id="qualification">11. Statistical qualification and manufacturability <span class="badge-l2">Level 2</span></h2>
+    <p>A nominal minimum is not yet a component. This section describes how the lab judges the manufacturability and robustness of a prescription.</p>
+    <div class="pedagogy-box">
         <span class="box-title">Engineering aside — a nominal optimum is not yet a design</span>
         <p>A thickness computed to six decimal places is not an industrial prescription. Manufacturing introduces finite resolution, random layer-by-layer errors and correlated errors, for instance a calibration bias of the quartz monitor. The decision must therefore follow the complete chain set out below.</p>
 
@@ -1164,6 +1182,49 @@
         </div>
     </div>
 
+
+
+    <!-- 12. EXAMPLES -->
+    <h2 id="examples">12. Worked numerical examples <span class="badge-l1">Levels 1 &amp; 2</span></h2>
+
+    <h3>Case 1: quarter-wave anti-reflection (AR) coating ($\lambda/4$)</h3>
+    <p>The goal is to cancel the $\sim 4\%$ of stray reflection from the glass. A thickness is deposited such that the round-trip phase shift is $\pi$ (fully destructive interference). The required optical thickness is $nd = \lambda / 4$.</p>
+    
+    <div class="diagram-container">
+        <svg width="480" height="250" viewBox="0 0 480 250" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <!-- Axes -->
+            <line x1="50" y1="190" x2="400" y2="190" stroke="#334155" stroke-width="1.5" />
+            <line x1="50" y1="190" x2="50" y2="30" stroke="#334155" stroke-width="1.5" />
+            
+            <text x="405" y="194" font-family="sans-serif" font-weight="bold" font-size="11" fill="#334155">λ (nm)</text>
+            <text x="30" y="30" font-family="sans-serif" font-weight="bold" font-size="12" fill="#0f172a">R (%)</text>
+            
+            <!-- Ticks X -->
+            <text x="60" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">300</text>
+            <line x1="60" y1="190" x2="60" y2="195" stroke="#334155" stroke-width="1.5"/>
+            <text x="225" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">550</text>
+            <line x1="225" y1="190" x2="225" y2="195" stroke="#334155" stroke-width="1.5"/>
+            <text x="390" y="210" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#64748b">800</text>
+            <line x1="390" y1="190" x2="390" y2="195" stroke="#334155" stroke-width="1.5"/>
+            
+            <!-- Ticks Y -->
+            <text x="40" y="194" text-anchor="end" font-family="sans-serif" font-size="10" fill="#64748b">0</text>
+            <text x="40" y="84" text-anchor="end" font-family="sans-serif" font-size="10" fill="#64748b">4</text>
+            <line x1="46" y1="80" x2="50" y2="80" stroke="#334155" stroke-width="1.5"/>
+            
+            <!-- Bare glass (R = 4%) -->
+            <line x1="50" y1="80" x2="390" y2="80" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5"/>
+            <text x="330" y="70" font-family="sans-serif" font-size="11" fill="#64748b">Bare glass (4%)</text>
+
+            <!-- AR Curve -->
+            <path d="M 60 100 Q 140 190 225 190 T 390 100" fill="none" stroke="#d97706" stroke-width="3" />
+            <text x="225" y="175" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#d97706" font-weight="bold">Glass + AR (MgF₂)</text>
+        </svg>
+    </div>
+
+    <p>The reflection vanishes completely if the film index satisfies $n_{film} = \sqrt{n_{air} \cdot n_{glass}}$. For standard glass one would want $n \approx 1.22$. Magnesium fluoride (MgF₂, $n=1.38$) is the closest material commonly used in classical optics to approach this ideal.</p>
+
+
     <h3>Case 2: five-layer validation filter (with absorbing metal)</h3>
     <p>This demanding test case validates the Python code, since it includes oblique angles, polarisation and absorption. Above all it serves to check two things:</p>
     <ul>
@@ -1200,8 +1261,8 @@
         <tr><td><strong>45° (p / TM polarisation)</strong></td><td>0.482173</td><td>0.446639</td><td>0.071187</td><td>0.484049</td><td>0.444613</td></tr>
     </table>
 
-    <!-- 10. PYTHON CODE -->
-    <h2 id="code_example">10. Numerical implementation (Python) <span class="badge-l2">Level 2</span></h2>
+    <!-- 13. PYTHON CODE -->
+    <h2 id="code_example">13. Numerical implementation (Python) <span class="badge-l2">Level 2</span></h2>
     <p>The code below is the mathematical summary of the theory presented here. It accounts for absorption, angle of incidence and polarisations, and corrects the complex square-root problem for evanescent waves (see § 4.1).</p>
 
     <details class="advanced-box" open>

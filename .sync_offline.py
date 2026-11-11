@@ -6,7 +6,7 @@ import io, os, re, hashlib, shutil
 SRC = '.'
 DST = os.path.join('outputs', 'tp_couches_minces_hors_ligne')
 FILES = ['simulateur_couches_minces.html', 'tp_couches_minces_fr.html', 'tp_couches_minces_en.html',
-         'theorie en francais.html']
+         'theorie en francais.html', 'theorie en anglais.html']
 
 SUBS = [
     # La théorie emploie ses propres balises de polices.
