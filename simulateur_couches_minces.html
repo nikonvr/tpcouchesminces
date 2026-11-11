@@ -374,6 +374,7 @@
                         <button id="btnCleanStack" class="bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded border border-amber-300 transition font-medium flex items-center gap-1" title="Nettoyer l'empilement : supprimer les couches trop fines et fusionner les couches voisines de même matériau (indispensable après plusieurs cycles d'aiguille)">
                             <i data-lucide="eraser" class="w-3.5 h-3.5"></i> Nettoyer
                         </button>
+                        <button id="btnScaleStack" type="button" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs px-2 py-1 rounded border border-indigo-200 transition font-medium">× Échelle</button>
                         <button id="btnParseFormula" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs px-2 py-1 rounded border border-indigo-200 transition font-medium" title="Générer les couches depuis une formule symbolique">
                             Formule symbolique
                         </button>
@@ -423,6 +424,16 @@
                     <button id="btnLoadFresnel18" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 rounded font-bold transition" title="Charger la prescription de fabrication Fresnel : 18 couches, les 15 premières figées pour BFGS, les 3 dernières libres.">
                         Charger la référence Fresnel
                     </button>
+                </div>
+
+                <div id="scaleBox" class="hidden p-3 bg-indigo-50/70 border-b border-indigo-100 space-y-2 text-xs">
+                    <label class="font-bold text-indigo-900" for="inpScaleFactor">Multiplier les épaisseurs :</label>
+                    <div class="flex gap-2 items-center flex-wrap">
+                        <input type="text" id="inpScaleFactor" inputmode="decimal" value="1,01" class="w-24 bg-white border border-indigo-300 rounded px-2 py-1.5 font-mono">
+                        <select id="selScaleMaterial" class="bg-white border border-indigo-300 rounded px-2 py-1.5"></select>
+                        <button id="btnApplyScale" type="button" class="bg-indigo-600 text-white px-3 py-1.5 rounded font-bold hover:bg-indigo-700 transition">Multiplier</button>
+                    </div>
+                    <p class="text-[10px] text-indigo-900/80">Les épaisseurs choisies sont multipliées par ce facteur ; « ↶ Annuler » revient en arrière.</p>
                 </div>
 
                 <!-- Tableau interactif des couches -->
@@ -589,6 +600,7 @@
                                 <div id="arWindowList" class="space-y-0.5"></div>
                             </div>
                             <p id="txtMeritGridNote" class="text-[9px] text-indigo-700/80 mt-1 leading-tight"></p>
+                            <p id="txtMeritNow" class="text-[10px] font-semibold text-indigo-900 mt-1 leading-tight"></p>
                             <p id="txtMeritIncidenceWarning" class="hidden text-[9px] font-bold text-red-700 bg-red-50 border border-red-200 rounded px-1.5 py-0.5 mt-1 leading-tight"></p>
 
                             
@@ -867,7 +879,7 @@
                 <!-- Barre d'outils du graphique -->
                 <div class="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b border-slate-100">
                     <div class="flex items-center gap-2">
-                        <span class="text-xs font-bold text-slate-800 uppercase tracking-wider" id="chartTitle">
+                        <span class="text-xs font-bold text-slate-800 tracking-wide" id="chartTitle">
                             Réflexion $R(\lambda)$ et Transmission $T(\lambda)$
                         </span>
                     </div>
@@ -884,7 +896,7 @@
                         <button id="btnResetChartView" class="px-2 py-1 rounded font-semibold bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 transition flex items-center gap-1" title="Rétablir les échelles initiales du graphique">
                             <i data-lucide="scan" class="w-3 h-3"></i><span id="lblResetChartView">Vue initiale</span>
                         </button>
-                        <span id="tipChartHelp" class="tip" tabindex="0" role="button" data-tip="Ctrl + molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · « Vue initiale » : revenir au cadrage de départ · clic droit (appui long sur mobile) : exporter les courbes en CSV." aria-label="Ctrl + molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · « Vue initiale » : revenir au cadrage de départ · clic droit (appui long sur mobile) : exporter les courbes en CSV.">i</span>
+                        <span id="tipChartHelp" class="tip" tabindex="0" role="button" data-tip="Ctrl + molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · clic puis ← → : avancer pas à pas (Maj : ×10) · « Vue initiale » : revenir au cadrage de départ · clic droit (appui long sur mobile) : exporter les courbes en CSV." aria-label="Ctrl + molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · clic puis ← → : avancer pas à pas (Maj : ×10) · « Vue initiale » : revenir au cadrage de départ · clic droit (appui long sur mobile) : exporter les courbes en CSV.">i</span>
                     </div>
                 </div>
 
@@ -901,15 +913,15 @@
                         <div class="font-extrabold text-slate-800" id="valCursorX">550.0 nm</div>
                     </div>
                     <div>
-                        <div class="text-[10px] text-indigo-600 font-semibold">Réflexion R (Moy)</div>
+                        <div class="text-[10px] text-indigo-600 font-semibold" id="lblCursorR">Réflexion R (Moy)</div>
                         <div class="font-extrabold text-indigo-700" id="valCursorR">-- %</div>
                     </div>
                     <div>
-                        <div class="text-[10px] text-emerald-600 font-semibold">Transmission T (Moy)</div>
+                        <div class="text-[10px] text-emerald-600 font-semibold" id="lblCursorT">Transmission T (Moy)</div>
                         <div class="font-extrabold text-emerald-700" id="valCursorT">-- %</div>
                     </div>
                     <div>
-                        <div class="text-[10px] text-purple-600 font-semibold" title="Absorption calculée : A = 100 - R - T">Absorption A (Moy)</div>
+                        <div class="text-[10px] text-purple-600 font-semibold" id="lblCursorA" title="Absorption calculée : A = 100 - R - T">Absorption A (Moy)</div>
                         <div class="font-extrabold text-purple-700" id="valCursorA">-- %</div>
                     </div>
                 </div>
@@ -1931,6 +1943,7 @@
         // qualification et un diagnostic d'aiguille précédents.
         invalidateDerivedResults('le composant ou le domaine de calcul a changé.',
             'the design or the computation range changed.');
+        updateMeritNow();
         const res = {
             x: [],
             R_avg: [], Rs: [], Rp: [],
@@ -2664,9 +2677,36 @@
 
     /* Publie la grille de calcul du mérite actif : l'étudiant doit pouvoir
        refaire exactement les calculs structurants sous Excel (Q12, Q14). */
+    /* Mérite actuel, recalculé à chaque modification : l'étudiant peut le relever
+       avant toute optimisation (verre nu, fenêtre mal choisie…). Jamais pour Qr :
+       le facteur de réjection est construit à la main en Q24. */
+    function updateMeritNow() {
+        if (!document.getElementById('txtMeritNow')) return;
+        liveText('txtMeritNow', () => {
+            const fr = currentLang === 'fr';
+            const o = getObjectiveMode();
+            if (o === 'qr') return '';
+            if (o === 'custom' && !getCustomTarget().segments.length) return '';
+            let m;
+            try {
+                const nSup = getMediumIndex(appState.superstrat, appState.designL0, appState.customSuperN).r;
+                const stack = appState.layers.map(l => ({ ...l, unit: 'nm',
+                    val: getPhysicalThicknessNm(l, appState.designL0, appState.designIncDeg, nSup) }));
+                m = evaluateNeedleStack(stack, o);
+            } catch (_err) { return ''; }
+            if (!m || !Number.isFinite(m.value)) return '';
+            const seuil = o === 'ar' ? getArConfig().threshold : getCustomTarget().threshold;
+            const ok = m.value <= seuil;
+            return fr
+                ? `Mérite actuel : ${m.label} = ${formatStat(m.value, 3)} — critère ≤ ${formatStat(seuil, 2)} % ${ok ? '✓ respecté' : '✗ non respecté'}`
+                : `Current merit: ${m.label} = ${formatStat(m.value, 3)} — criterion ≤ ${formatStat(seuil, 2)}% ${ok ? '✓ met' : '✗ not met'}`;
+        });
+    }
+
     function updateMeritGridNote() {
         const el = document.getElementById('txtMeritGridNote');
         if (!el) return;
+        updateMeritNow();
         document.getElementById('divArWindow')?.classList.toggle('hidden', getObjectiveMode() !== 'ar');
         renderArWindows();
         const o = getObjectiveMode();
@@ -4918,6 +4958,45 @@
     /* Garde-fou Fresnel : tout geste qui modifierait l'architecture imposée
        (matériau, suppression) ou libérerait une couche 1–15 est d'abord annoncé
        et doit être confirmé ; il n'est jamais silencieux. */
+    /* Échelle des épaisseurs : erreur de dépôt uniforme (exercice X) ou position
+       sur un filtre linéairement variable (exercice XI). */
+    function renderScaleMaterials() {
+        const sel = document.getElementById('selScaleMaterial');
+        if (!sel) return;
+        const fr = currentLang === 'fr';
+        const cur = sel.value;
+        const ids = [...new Set(appState.layers.map(l => l.matId))];
+        sel.innerHTML = `<option value="*">${fr ? 'Toutes les couches' : 'All layers'}</option>`
+            + ids.map(id => `<option value="${escapeReviewText(id)}">${escapeReviewText(needleMaterialLabel(id))}</option>`).join('');
+        sel.value = [...sel.options].some(o => o.value === cur) ? cur : '*';
+    }
+
+    function applyStackScale() {
+        const fr = currentLang === 'fr';
+        const f = parseDecimalInput(document.getElementById('inpScaleFactor')?.value);
+        if (!(f >= 0.2 && f <= 5)) {
+            notify(fr ? 'Facteur invalide : entrez un nombre entre 0,2 et 5 (par exemple 1,016).'
+                      : 'Invalid factor: enter a number between 0.2 and 5 (for example 1.016).');
+            return;
+        }
+        if (!appState.layers.length) { notify(fr ? 'Ajoutez d’abord des couches.' : 'Add layers first.'); return; }
+        if (!confirmFresnelChange('scale', '')) return;
+        const which = document.getElementById('selScaleMaterial')?.value || '*';
+        // L'état d'avant doit figurer dans l'historique, même s'il vient d'être saisi.
+        clearTimeout(projectSaveTimer);
+        saveProjectNow();
+        let n = 0;
+        appState.layers.forEach(l => {
+            if (which === '*' || l.matId === which) { l.val = Math.round(l.val * f * 1e6) / 1e6; n++; }
+        });
+        renderLayersTable();
+        runFullSimulation();
+        // Enregistrement immédiat : « ↶ Annuler » doit revenir juste avant l'échelle.
+        clearTimeout(projectSaveTimer);
+        saveProjectNow();
+        notify(fr ? `${n} couche(s) multipliée(s) par ${formatStat(f, 4)}.` : `${n} layer(s) multiplied by ${formatStat(f, 4)}.`);
+    }
+
     function confirmFresnelChange(kind, layerNumber) {
         if (!fresnelPresetActive()) return true;
         const fr = currentLang === 'fr';
@@ -4934,6 +5013,9 @@
             add: fr
                 ? `Prescription Fresnel : ajouter une couche (n° ${layerNumber}) casse l'invariant des 18 couches. Continuer ?`
                 : `Fresnel prescription: adding a layer (no. ${layerNumber}) breaks the 18-layer invariant. Continue?`,
+            scale: fr
+                ? `Prescription Fresnel : multiplier les épaisseurs modifie aussi les couches 1–15 figées par le protocole. C'est le bon geste pour simuler une erreur de dépôt (exercice X), pas pour optimiser. Continuer ?`
+                : `Fresnel prescription: multiplying thicknesses also changes layers 1–15, fixed by the protocol. This is the right move to simulate a deposition error (exercise X), not to optimize. Continue?`,
             clean: fr
                 ? `Prescription Fresnel : avec ce seuil, le nettoyage supprimerait ou fusionnerait des couches et casserait l'invariant des 18 couches. Continuer ?`
                 : `Fresnel prescription: with this threshold, cleanup would remove or merge layers and break the 18-layer invariant. Continue?`
@@ -5040,14 +5122,29 @@
     let matChart = null;
     let matKChart = null;
 
+    /* La boîte de lecture suit la polarisation tracée : si seule P est affichée,
+       elle donne Rp (et non la moyenne, qui ne s'annule jamais à Brewster). */
+    let cursorIndex = -1;
     function updateCursorReadout(index) {
         const calc = appState.lastCalc;
         if (!calc || index < 0 || index >= calc.x.length) return;
+        cursorIndex = index;
+        const fr = currentLang === 'fr';
         const unit = appState.mode === 'spectral' ? 'nm' : '°';
-        document.getElementById('valCursorX').textContent = `${calc.x[index]} ${unit}`;
-        document.getElementById('valCursorR').textContent = `${formatStat(calc.R_avg[index], 2)} %`;
-        document.getElementById('valCursorT').textContent = `${formatStat(calc.T_avg[index], 2)} %`;
-        document.getElementById('valCursorA').textContent = `${formatStat(calc.A_avg[index], 2)} %`;
+        const shown = [appState.showAvg && 'avg', appState.showS && 's', appState.showP && 'p'].filter(Boolean);
+        const pol = shown.length === 1 ? shown[0] : 'avg';
+        const R = pol === 's' ? calc.Rs : pol === 'p' ? calc.Rp : calc.R_avg;
+        const T = pol === 's' ? calc.Ts : pol === 'p' ? calc.Tp : calc.T_avg;
+        const A = pol === 'avg' ? calc.A_avg[index] : Math.max(0, 100 - R[index] - T[index]);
+        const tag = pol === 's' ? 'S' : pol === 'p' ? 'P' : (fr ? 'Moy' : 'avg');
+        document.getElementById('valCursorX').textContent = `${formatStat(calc.x[index], 1)} ${unit}`;
+        document.getElementById('valCursorR').textContent = `${formatStat(R[index], 2)} %`;
+        document.getElementById('valCursorT').textContent = `${formatStat(T[index], 2)} %`;
+        document.getElementById('valCursorA').textContent = `${formatStat(A, 2)} %`;
+        const set = (id, frT, enT) => { const el = document.getElementById(id); if (el) el.textContent = fr ? frT : enT; };
+        set('lblCursorR', `Réflexion R (${tag})`, `Reflectance R (${tag})`);
+        set('lblCursorT', `Transmission T (${tag})`, `Transmittance T (${tag})`);
+        set('lblCursorA', `Absorption A (${tag})`, `Absorption A (${tag})`);
     }
 
     function initCharts() {
@@ -5316,6 +5413,19 @@
         canvas.addEventListener('pointerup', finish);
         canvas.addEventListener('pointercancel', finish);
         canvas.addEventListener('dblclick', resetMainChartView);
+        // Lecture pas à pas : un clic sur le graphique, puis ← → (Maj : ×10).
+        canvas.tabIndex = 0;
+        canvas.addEventListener('pointerdown', () => canvas.focus({ preventScroll: true }));
+        canvas.addEventListener('keydown', e => {
+            if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+            const calc = appState.lastCalc;
+            if (!calc || !calc.x.length) return;
+            e.preventDefault();
+            e.stopPropagation();
+            const step = (e.shiftKey ? 10 : 1) * (e.key === 'ArrowRight' ? 1 : -1);
+            const start = cursorIndex < 0 ? Math.floor(calc.x.length / 2) : cursorIndex;
+            updateCursorReadout(Math.max(0, Math.min(calc.x.length - 1, start + step)));
+        });
         document.getElementById('btnResetChartView')?.addEventListener('click', resetMainChartView);
     }
 
@@ -5335,6 +5445,7 @@
         document.getElementById('lblCursorX').textContent = isSpec
             ? (currentLang === 'fr' ? 'λ sélectionné' : 'Selected λ')
             : (currentLang === 'fr' ? 'θ sélectionné' : 'Selected θ');
+        if (cursorIndex >= 0) setTimeout(() => updateCursorReadout(Math.min(cursorIndex, (appState.lastCalc?.x.length || 1) - 1)), 0);
 
         // Spectres archivés du comparateur A/B : la décision se prend en regardant
         // les deux composants, pas seulement leurs statistiques.
@@ -5746,7 +5857,7 @@
             loaded = [
                 {
                     id: 'custom_mat_1',
-                    name: 'M1',
+                    name: 'Exemple de verre',
                     sym: 'M1',
                     type: 'custom_table',
                     description: 'Table dispersive (λ, n, k) personnalisée, utilisable comme substrat ou couche',
@@ -7002,6 +7113,13 @@
             return ok;
         }
 
+        document.getElementById('btnScaleStack')?.addEventListener('click', () => {
+            const box = document.getElementById('scaleBox');
+            box?.classList.toggle('hidden');
+            if (box && !box.classList.contains('hidden')) renderScaleMaterials();
+        });
+        document.getElementById('btnApplyScale')?.addEventListener('click', applyStackScale);
+
         document.getElementById('btnParseFormula').addEventListener('click', () => {
             document.getElementById('formulaBox').classList.toggle('hidden');
         });
@@ -7956,6 +8074,7 @@
         mark(byId('tipMcModel')?.closest?.('.font-bold'), 'free-hide');
         // Réglages avancés, groupe par groupe.
         adv(byId('btnCleanStack'), 'stack');
+        adv(byId('btnScaleStack'), 'stack');
         adv(byId('selOptimizeScope')?.parentElement, 'optimizer');
         adv(byId('txtBfgsBounds')?.parentElement, 'optimizer');
         adv(byId('txtMeritGridNote'), 'optimizer');
@@ -8242,6 +8361,10 @@
     let currentLang = 'fr';
 
     const UI_TEXT_PAIRS = [
+        ["× Échelle", "× Scale"],
+        ["Multiplier les épaisseurs :", "Multiply thicknesses:"],
+        ["Multiplier", "Multiply"],
+        ["Les épaisseurs choisies sont multipliées par ce facteur ; « ↶ Annuler » revient en arrière.", "The selected thicknesses are multiplied by this factor; “↶ Undo” goes back."],
         ["réf. :", "ref.:"],
         ["Empilement A", "Design A"],
         ["Empilement B", "Design B"],
@@ -8450,8 +8573,8 @@
          "Verdict: qualified if the lower bound of the 95% Wilson CI exceeds this requirement; not qualified if the upper bound stays below it; inconclusive otherwise."],
         ["Tout ce qui n'est couvert par aucun segment est « indifférent » et n'entre pas dans le score. La note est une RMSE pondérée par les poids des segments.",
          "Anything not covered by a segment is a don't-care region and does not enter the score. The score is an RMSE weighted by the segment weights."],
-        ["Ctrl + molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · « Vue initiale » : revenir au cadrage de départ · clic droit (appui long sur mobile) : exporter les courbes en CSV.",
-         "Ctrl + wheel: centered zoom · drag: box zoom · Shift + drag: pan · ‘Reset view’: back to the starting frame · right-click (long press on mobile): export the curves as CSV."],
+        ["Ctrl + molette : zoom centré · glisser : zoom par zone · Maj + glisser : déplacer · clic puis ← → : avancer pas à pas (Maj : ×10) · « Vue initiale » : revenir au cadrage de départ · clic droit (appui long sur mobile) : exporter les courbes en CSV.",
+         "Ctrl + wheel: centered zoom · drag: box zoom · Shift + drag: pan · click then ← →: step by step (Shift: ×10) · ‘Reset view’: back to the starting frame · right-click (long press on mobile): export the curves as CSV."],
         ["Ajouter une fenêtre spectrale à évaluer. Le mérite est la moyenne de R sur l'ensemble des fenêtres déclarées ; ce qui n'est couvert par aucune d'elles est indifférent.",
          "Add a spectral window to evaluate. The merit is the mean of R over all declared windows; anything outside them does not count."],
         ["Comparer deux empilements qualifiés sur des hypothèses strictement identiques",
@@ -8626,6 +8749,10 @@
        langue. Elles disent ce que fait la commande et ses limites, sans
        jamais donner de réponse d’exercice. */
     const CONTROL_TIPS = {
+        btnScaleStack: ['Multiplier toutes les épaisseurs, ou celles d’un seul matériau, par un même facteur : erreur de dépôt uniforme, filtre variable', 'Multiply all thicknesses, or those of one material, by the same factor: uniform deposition error, variable filter'],
+        inpScaleFactor: ['Facteur multiplicatif (virgule ou point décimal), par exemple 1,016', 'Multiplying factor (decimal comma or point), for example 1.016'],
+        selScaleMaterial: ['Couches concernées : toutes, ou un seul matériau', 'Layers concerned: all, or a single material'],
+        btnApplyScale: ['Appliquer le facteur aux couches choisies', 'Apply the factor to the selected layers'],
         btnCloseShortcuts: ['Fermer la liste des raccourcis (Échap)', 'Close the shortcut list (Esc)'],
         btnUndoWork: ['Annuler la dernière modification du travail : couches, milieux, cible, réglages (Ctrl + Z)', 'Undo the last change to your work: layers, media, target, settings (Ctrl + Z)'],
         btnRedoWork: ['Rétablir la modification annulée (Ctrl + Y)', 'Redo the undone change (Ctrl + Y)'],
