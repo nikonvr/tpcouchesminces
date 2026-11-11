@@ -6490,7 +6490,7 @@
           taskEn: 'A single interface, no layer. Switch to Angle θ mode and compare S and P polarizations.' },
 
         { id: 3, num: 'III', fr: 'Monocouche antireflet', en: 'Single-layer antireflection',
-          qFr: 'Q10 – Q12', panels: ['media', 'stack', 'sim', 'chart'],
+          qFr: 'Q10 – Q12', panels: ['media', 'stack', 'sim', 'chart', 'materials'],
           taskFr: 'Déposez une couche quart d’onde et mesurez sa réflectivité. Vous referez ce calcul à la main sous Excel.',
           taskEn: 'Deposit a quarter-wave layer and measure its reflectance. You will redo this calculation by hand in Excel.' },
 
@@ -6527,7 +6527,12 @@
         { id: 10, num: 'X', fr: 'Revue de conception', en: 'Design review',
           qFr: 'Q28 – Q32', panels: ['media', 'stack', 'sim', 'tools', 'optimizer', 'mc', 'review', 'bands', 'chart'], allowedMerits: ['qr', 'custom'],
           taskFr: 'Comparez deux empilements sur les mêmes réalisations et prononcez une décision de qualification argumentée.',
-          taskEn: 'Compare two designs on the same realizations and issue a reasoned qualification decision.' }
+          taskEn: 'Compare two designs on the same realizations and issue a reasoned qualification decision.' },
+
+        { id: 11, num: 'XI', fr: 'Filtre linéairement variable', en: 'Linear variable filter',
+          qFr: 'V1 – V7', panels: ['media', 'stack', 'sim', 'chart', 'materials'],
+          taskFr: 'Chaque position du filtre est un empilement : appliquez le facteur d’épaisseur aux coefficients de la formule et mesurez le centre et la largeur à mi-hauteur.',
+          taskEn: 'Each position on the filter is a stack: apply the thickness factor to the formula coefficients and measure the half-maximum centre and width.' }
     ];
 
     function renderExerciseSelector() {
@@ -6636,7 +6641,8 @@
                     + `<span class="ml-2 opacity-80">${ex.qFr}</span>`
                     + `<p class="mt-1">${fr ? ex.taskFr : ex.taskEn}</p>`
                     + (ex.id === 2
-                        ? `<button type="button" data-single-interface class="mt-2 font-bold underline underline-offset-2" title="${fr ? 'Retirer les couches et désactiver la face arrière, en conservant les deux milieux choisis.' : 'Remove layers and disable the rear surface, keeping the two selected media.'}">${fr ? 'Revenir à une seule interface' : 'Return to a single interface'}</button>` : '');
+                        ? `<button type="button" data-single-interface class="mt-2 font-bold underline underline-offset-2" title="${fr ? 'Retirer les couches et désactiver la face arrière, en conservant les deux milieux choisis.' : 'Remove layers and disable the rear surface, keeping the two selected media.'}">${fr ? 'Revenir à une seule interface' : 'Return to a single interface'}</button>` : '')
+                    + `<p id="bannerBacksideNote" class="mt-2 font-bold text-amber-800${appState.considerBackside && ex.id !== 2 ? '' : ' hidden'}">${fr ? '⚠ La face arrière est incluse : décochez « Inclure la face arrière » si l’énoncé porte sur la face traitée seule.' : '⚠ The rear surface is included: untick “Include rear surface” if the handout deals with the coated face alone.'}</p>`;
             }
         }
         if (window.lucide) lucide.createIcons();
@@ -6926,6 +6932,7 @@
 
         document.getElementById('chkBackside').addEventListener('change', (e) => {
             appState.considerBackside = e.target.checked;
+            document.getElementById('bannerBacksideNote')?.classList.toggle('hidden', !(appState.considerBackside && appState.exercise !== 2));
             invalidateMaterialAnalysis();
             renderBacksideEditor();
             runFullSimulation();

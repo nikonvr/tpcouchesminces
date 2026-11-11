@@ -34,8 +34,8 @@ Le simulateur s'ouvre sur un **accueil étudiant** : choisir son exercice
 affiche les outils utiles et une consigne visible. Les mérites « R moyen »
 et « Maximiser Qr » deviennent disponibles dans les exercices concernés.
 Le bouton **🎛 Libre** ouvre la conception d'un composant personnel. Un
-**guide en cinq étapes** (milieux, empilement, cible, optimisation,
-robustesse) indique la prochaine action et coche ce qui est fait.
+**guide en six étapes** (milieux, empilement, cible, optimisation,
+robustesse, export) indique la prochaine action et coche ce qui est fait.
 
 Le travail est **enregistré automatiquement** dans le navigateur et restauré
 à la réouverture. **Exporter mon travail** produit un fichier `.json` à rendre
