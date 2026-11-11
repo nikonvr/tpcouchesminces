@@ -44,11 +44,18 @@ MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août
         "septembre", "octobre", "novembre", "décembre"]
 MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August",
           "September", "October", "November", "December"]
-_J = datetime.date.today()
+_J = datetime.datetime.now()
+_HEURE = f"{_J.hour} h {_J.minute:02d}"
+_TIME = f"{_J.hour}:{_J.minute:02d}"
 # La version imprimable est datée ; la version en ligne reste la référence.
 MENTION_PORTAIL = {
-    "fr": f"Version imprimable du {_J.day} {MOIS[_J.month - 1]} {_J.year} — la version en ligne fait foi : {URL_PORTAIL}",
-    "en": f"Printable version of {_J.day} {MONTHS[_J.month - 1]} {_J.year} — the online version prevails: {URL_PORTAIL}",
+    "fr": f"PDF régénéré le {_J.day} {MOIS[_J.month - 1]} {_J.year} à {_HEURE} · la version en ligne fait foi : {URL_PORTAIL}",
+    "en": f"PDF regenerated on {_J.day} {MONTHS[_J.month - 1]} {_J.year} at {_TIME} · the online version prevails: {URL_PORTAIL}",
+}
+# Rappel en tête de la première page, bien visible.
+TITRE_DATE = {
+    "fr": f"PDF régénéré le {_J.day} {MOIS[_J.month - 1]} {_J.year} à {_HEURE}",
+    "en": f"PDF regenerated on {_J.day} {MONTHS[_J.month - 1]} {_J.year} at {_TIME}",
 }
 
 # document source -> langue du pied de page
@@ -165,6 +172,11 @@ def paginer(pdf: Path, langue: str, empreinte: str = "") -> int:
     for numero in range(1, total + 1):
         page = document[numero - 1]
         piedbanniere(page, mention)
+        if numero == 1:
+            texte = TITRE_DATE[langue]
+            largeur = pymupdf.get_text_length(texte, fontname=POLICE_PIED, fontsize=TAILLE_PIED)
+            page.insert_text((page.rect.width - MARGE_GAUCHE - largeur, 24), texte,
+                             fontname=POLICE_PIED, fontsize=TAILLE_PIED, color=COULEUR_PIED)
         # Pagination alignée à droite : le rappel du portail occupe la gauche.
         libelle = f"{numero} / {total}"
         largeur = pymupdf.get_text_length(
@@ -180,7 +192,7 @@ def paginer(pdf: Path, langue: str, empreinte: str = "") -> int:
     # Empreinte du HTML source : la recette refuse un PDF qui ne lui correspond plus.
     if empreinte:
         meta = dict(document.metadata or {})
-        meta["keywords"] = f"source-sha256={empreinte}"
+        meta["keywords"] = f"source-sha256={empreinte} regenere={_J.isoformat(timespec='minutes')}"
         document.set_metadata(meta)
     # Réécriture en place : sur ce support, un renommage-remplacement est
     # refusé par le système de fichiers (WinError 5).
