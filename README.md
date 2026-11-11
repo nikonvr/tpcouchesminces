@@ -12,10 +12,11 @@ Portail en ligne : <https://tpcouchesminces.vercel.app>
 |---|---|
 | `index.html` | Portail étudiant |
 | `simulateur_couches_minces.html` | Simulateur autonome : méthode matricielle d'Abelès (TMM), polarisations S/P, optimisation quasi-Newton BFGS, méthode de l'aiguille, analyseur de bandes, qualification Monte-Carlo |
-| `tp_couches_minces_fr.html` | Énoncé français — 10 exercices, 32 questions, durées indicatives |
+| `tp_couches_minces_fr.html` | Énoncé français — 10 exercices, 32 questions, durées indicatives ; exercice XI de recherche (filtre linéairement variable, hors barème) |
 | `tp_couches_minces_en.html` | Énoncé anglais, homologue strict du français |
 | `theorie en francais.html` | Cours et rappels théoriques |
 | `outputs/tp_couches_minces/squelette_excel_couches_minces.xlsx` | Classeur étudiant pour Q12 (matrice d'une couche) et Q14 (cartographie 2D) |
+| `outputs/tp_couches_minces/indices_*_H800_OpticsContinuum.csv` | Indices Nb₂O₅ et SiO₂ publiés (Helios 800), à importer dans l’exercice XI |
 | `outputs/tp_couches_minces_hors_ligne/` | Paquet autonome pour les salles sans réseau, avec manifeste SHA-256 |
 | `GUIDE_MIGRATION_ET_ACTIONS_TP.md` | Référentiel enseignant : invariants, conventions, recette |
 | `tests/` | Recette automatisée (voir `tests/README.md`) |
