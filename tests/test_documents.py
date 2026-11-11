@@ -29,6 +29,22 @@ COURS = "theorie en francais.html"
 COURS_EN = "theorie en anglais.html"
 
 
+def _pdf_a_jour():
+    """Pour chaque PDF publié : (nom, empreinte inscrite, empreinte du HTML actuel)."""
+    res = []
+    for src in (ENONCE_FR, ENONCE_EN, COURS, COURS_EN):
+        pdf = os.path.join(RACINE, os.path.splitext(src)[0] + ".pdf")
+        try:
+            brut = open(pdf, "rb").read()
+        except OSError:
+            res.append((src, None, None))
+            continue
+        m = re.search(rb"source-sha256=([0-9a-f]{64})", brut)
+        actuel = hashlib.sha256(open(os.path.join(RACINE, src), "rb").read()).hexdigest()
+        res.append((src, m.group(1).decode() if m else None, actuel))
+    return res
+
+
 def _dates_maj():
     """Dates de mise à jour affichées par le simulateur, sa copie hors ligne et le portail."""
     vues = {}
@@ -686,6 +702,12 @@ for nom in ("index.html", "README.md"):
     verifie(f"« {nom} » ne renvoie pas les étudiants vers le dépôt source",
             nom != "index.html" or "github.com" not in texte, "lien GitHub présent")
 
+
+groupe("13. Versions imprimables (PDF) à jour")
+for _src, _inscrite, _actuelle in _pdf_a_jour():
+    verifie(f"le PDF de « {_src} » correspond au HTML actuel (lancer .build_pdf.py)",
+            _inscrite is not None and _inscrite == _actuelle,
+            "PDF absent" if _actuelle is None else ("empreinte absente" if _inscrite is None else "PDF périmé"))
 
 groupe("12. Date de mise à jour affichée en ligne")
 _vues = _dates_maj()

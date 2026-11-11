@@ -14,6 +14,8 @@ Usage :
     python .build_pdf.py tp_couches_minces_fr.html  # un seul
 """
 
+import datetime
+import hashlib
 import os
 import re
 import shutil
@@ -38,9 +40,15 @@ MARGE_GAUCHE = 40  # points, alignée sur la marge de @page
 # Le PDF ne donne accès ni au simulateur ni aux corrections d'ancres : chaque
 # page rappelle donc l'adresse du portail, où le TP s'utilise réellement.
 URL_PORTAIL = "https://tpcouchesminces.vercel.app"
+MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août",
+        "septembre", "octobre", "novembre", "décembre"]
+MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August",
+          "September", "October", "November", "December"]
+_J = datetime.date.today()
+# La version imprimable est datée ; la version en ligne reste la référence.
 MENTION_PORTAIL = {
-    "fr": f"Version en ligne et simulateur interactif : {URL_PORTAIL}",
-    "en": f"Online version and interactive simulator: {URL_PORTAIL}",
+    "fr": f"Version imprimable du {_J.day} {MOIS[_J.month - 1]} {_J.year} — la version en ligne fait foi : {URL_PORTAIL}",
+    "en": f"Printable version of {_J.day} {MONTHS[_J.month - 1]} {_J.year} — the online version prevails: {URL_PORTAIL}",
 }
 
 # document source -> langue du pied de page
@@ -145,7 +153,7 @@ def piedbanniere(page, mention: str) -> None:
     )
 
 
-def paginer(pdf: Path, langue: str) -> int:
+def paginer(pdf: Path, langue: str, empreinte: str = "") -> int:
     """Compose le pied de chaque page et renvoie le nombre total de pages.
 
     Chrome ne sait pas produire ce pied sans y accoler l'URL du fichier
@@ -169,6 +177,11 @@ def paginer(pdf: Path, langue: str) -> int:
             fontsize=TAILLE_PIED,
             color=COULEUR_PIED,
         )
+    # Empreinte du HTML source : la recette refuse un PDF qui ne lui correspond plus.
+    if empreinte:
+        meta = dict(document.metadata or {})
+        meta["keywords"] = f"source-sha256={empreinte}"
+        document.set_metadata(meta)
     # Réécriture en place : sur ce support, un renommage-remplacement est
     # refusé par le système de fichiers (WinError 5).
     donnees = document.tobytes(garbage=3, deflate=True)
@@ -183,6 +196,7 @@ def construire(nom: str, chrome: str) -> None:
         print(f"  ignoré (absent) : {nom}")
         return
 
+    empreinte = hashlib.sha256(source.read_bytes()).hexdigest()
     html = source.read_text(encoding="utf-8")
     for motif, remplacement in SUBSTITUTIONS:
         html = re.sub(motif, remplacement, html)
@@ -215,7 +229,7 @@ def construire(nom: str, chrome: str) -> None:
     finally:
         temporaire.unlink(missing_ok=True)
 
-    total = paginer(pdf, DOCUMENTS.get(nom, "fr"))
+    total = paginer(pdf, DOCUMENTS.get(nom, "fr"), empreinte)
     poids = pdf.stat().st_size / 1024
     print(f"  {pdf.name} : {total} pages, {poids:.0f} Ko")
 
