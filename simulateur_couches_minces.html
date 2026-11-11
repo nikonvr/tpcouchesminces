@@ -208,7 +208,7 @@
                         Simulateur Couches Minces Optiques
                         <span id="txtAudienceBadge" class="text-xs bg-indigo-500/40 text-indigo-200 font-semibold px-2 py-0.5 rounded-full border border-indigo-400/30">BUT 3 FI Parcours MCPC — étudiants L2 · L3 · M1 · M2</span>
                     </h1>
-                    <p class="text-xs text-indigo-300">Méthode matricielle d'Abelès (TMM)</p>
+                    <p class="text-xs text-indigo-300">Méthode matricielle d'Abelès (TMM) · <span id="txtLastUpdate" data-date="2026-11-11">Mis à jour le 11 novembre 2026</span></p>
                 </div>
             </div>
 
@@ -2680,6 +2680,19 @@
     /* Mérite actuel, recalculé à chaque modification : l'étudiant peut le relever
        avant toute optimisation (verre nu, fenêtre mal choisie…). Jamais pour Qr :
        le facteur de réjection est construit à la main en Q24. */
+    /* Date de dernière mise à jour du logiciel : écrite par .sync_offline.py
+       (attribut data-date), affichée dans la langue courante. */
+    function paintLastUpdate() {
+        const el = document.getElementById('txtLastUpdate');
+        if (!el || !/^\d{4}-\d{2}-\d{2}$/.test(el.dataset.date || '')) return;
+        liveText('txtLastUpdate', () => {
+            const d = new Date(el.dataset.date + 'T12:00:00');
+            const fr = currentLang === 'fr';
+            const txt = d.toLocaleDateString(fr ? 'fr-FR' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+            return fr ? `Mis à jour le ${txt}` : `Updated ${txt}`;
+        });
+    }
+
     function updateMeritNow() {
         if (!document.getElementById('txtMeritNow')) return;
         liveText('txtMeritNow', () => {
@@ -2707,6 +2720,7 @@
         const el = document.getElementById('txtMeritGridNote');
         if (!el) return;
         updateMeritNow();
+        paintLastUpdate();
         document.getElementById('divArWindow')?.classList.toggle('hidden', getObjectiveMode() !== 'ar');
         renderArWindows();
         const o = getObjectiveMode();

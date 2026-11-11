@@ -27,6 +27,19 @@ ENONCE_FR = "tp_couches_minces_fr.html"
 ENONCE_EN = "tp_couches_minces_en.html"
 COURS = "theorie en francais.html"
 COURS_EN = "theorie en anglais.html"
+
+
+def _dates_maj():
+    """Dates de mise à jour affichées par le simulateur, sa copie hors ligne et le portail."""
+    vues = {}
+    for nom in ("simulateur_couches_minces.html", "index.html",
+                "outputs/tp_couches_minces_hors_ligne/simulateur_couches_minces.html"):
+        try:
+            src = io.open(os.path.join(RACINE, nom), encoding="utf-8").read()
+        except OSError:
+            continue
+        vues[nom] = re.findall(r'id="txtLastUpdate" data-date="(\d{4}-\d{2}-\d{2})"', src)
+    return vues
 HORS_LIGNE = os.path.join("outputs", "tp_couches_minces_hors_ligne")
 
 FORMULE_FRESNEL = "H L 2H L H L H L 2H L H L H L 2H L H L"
@@ -673,6 +686,25 @@ for nom in ("index.html", "README.md"):
     verifie(f"« {nom} » ne renvoie pas les étudiants vers le dépôt source",
             nom != "index.html" or "github.com" not in texte, "lien GitHub présent")
 
+
+groupe("12. Date de mise à jour affichée en ligne")
+_vues = _dates_maj()
+_toutes = [d for v in _vues.values() for d in v]
+verifie("le simulateur, sa copie hors ligne et le portail affichent une date de mise à jour",
+        len(_vues) == 3 and all(len(v) == 1 for v in _vues.values()), str(_vues))
+verifie("la date de mise à jour est la même partout (lancer .sync_offline.py)",
+        len(set(_toutes)) == 1, str(_vues))
+try:
+    import datetime as _dt
+    _modif = subprocess.run(["git", "diff", "--quiet", "HEAD", "--", "simulateur_couches_minces.html"],
+                            cwd=RACINE).returncode != 0
+    _attendue = _dt.date.today().isoformat() if _modif else subprocess.run(
+        ["git", "log", "-1", "--format=%cs", "--", "simulateur_couches_minces.html"],
+        cwd=RACINE, capture_output=True, text=True).stdout.strip()
+    verifie("la date affichée est celle de la dernière modification du simulateur",
+            set(_toutes) == {_attendue}, f"affichée {sorted(set(_toutes))}, attendue {_attendue}")
+except OSError:
+    pass
 
 # ---------------------------------------------------------------------------
 print("\n" + "=" * 78)

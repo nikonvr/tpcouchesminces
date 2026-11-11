@@ -4,6 +4,48 @@ en retablissant les references locales aux bibliotheques (vendor/)."""
 import io, os, re, hashlib, shutil
 
 SRC = '.'
+
+# --- Date de dernière mise à jour du simulateur, affichée en ligne -----------
+# Simulateur modifié depuis le dernier commit : date du jour ; sinon, date du
+# dernier commit qui l'a touché. Écrite dans le simulateur et le portail.
+import datetime, subprocess
+MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août',
+        'septembre', 'octobre', 'novembre', 'décembre']
+MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+          'September', 'October', 'November', 'December']
+def _date_maj():
+    sim = 'simulateur_couches_minces.html'
+    try:
+        modifie = subprocess.run(['git', 'diff', '--quiet', 'HEAD', '--', sim]).returncode != 0
+        if not modifie:
+            out = subprocess.run(['git', 'log', '-1', '--format=%cs', '--', sim],
+                                 capture_output=True, text=True).stdout.strip()
+            if re.fullmatch(r'\d{4}-\d{2}-\d{2}', out):
+                return datetime.date.fromisoformat(out)
+    except OSError:
+        pass
+    return datetime.date.today()
+_d = _date_maj()
+_iso = _d.isoformat()
+_fr = '%d %s %d' % (_d.day, MOIS[_d.month - 1], _d.year)
+_en = '%d %s %d' % (_d.day, MONTHS[_d.month - 1], _d.year)
+for _f, _regles in (
+        ('simulateur_couches_minces.html',
+         [(r'<span id="txtLastUpdate" data-date="[^"]*">[^<]*</span>',
+           '<span id="txtLastUpdate" data-date="%s">Mis à jour le %s</span>' % (_iso, _fr))]),
+        ('index.html',
+         [(r'<span id="txtLastUpdate" data-date="[^"]*">[^<]*</span>',
+           '<span id="txtLastUpdate" data-date="%s">%s</span>' % (_iso, _fr)),
+          (r'<span data-date-en="[^"]*">[^<]*</span>',
+           '<span data-date-en="%s">%s</span>' % (_iso, _en))])):
+    _s = io.open(_f, encoding='utf-8').read()
+    _n = _s
+    for _motif, _rempl in _regles:
+        _n, _k = re.subn(_motif, lambda m, r=_rempl: r, _n)
+        assert _k == 1, (_f, _motif)
+    if _n != _s:
+        io.open(_f, 'w', encoding='utf-8', newline='').write(_n)
+print('Date de mise a jour affichee : %s' % _iso)
 DST = os.path.join('outputs', 'tp_couches_minces_hors_ligne')
 FILES = ['simulateur_couches_minces.html', 'tp_couches_minces_fr.html', 'tp_couches_minces_en.html',
          'theorie en francais.html', 'theorie en anglais.html']
