@@ -1096,7 +1096,7 @@
 
     <h3>9.3 Fabry–Pérot cavity and bandpass filters</h3>
     <p>A single-cavity bandpass filter reads $(HL)^p\,2qH\,(LH)^p$: two Bragg mirrors separated by a <strong>spacer</strong> of $q$ half waves. At $\lambda_0$ the spacer is optically absent and the two symmetric mirrors cancel out: transmission rises close to 1 (in the absence of absorption). Slightly away from $\lambda_0$, the phase in the spacer destroys this cancellation and the mirror blocks.</p>
-    <p>The full width at half maximum of the resonance is understood as that of a Fabry–Pérot interferometer: if $R$ is the reflectance of each mirror, the finesse is $\mathcal{F}=\pi\sqrt{R}/(1-R)$, and the relative width decreases when $R$ or the order $q$ increases. Each period added to the mirrors multiplies their admittance by $(n_H/n_L)^2$: the width therefore decreases roughly by that factor per period. Increasing $q$ reduces it only in proportion to the order.</p>
+    <p>The full width at half maximum of the resonance is understood as that of a Fabry–Pérot interferometer: if $R$ is the reflectance of each mirror, the finesse is $\mathcal{F}=\pi\sqrt{R}/(1-R)$, and the relative width decreases when $R$ or the order $q$ increases. Each period added to the mirrors multiplies their admittance by $(n_H/n_L)^2$: the width therefore decreases roughly by that factor per period. Increasing $q$ reduces it much more slowly — and even less than proportionally to $q$, because field penetration into the Bragg mirrors adds a fixed effective order (which dominates at small $q$).</p>
     <p><strong>Multi-cavity filters.</strong> Coupling several cavities through $L$ layers gives a wider passband with a <em>flat, rippled top</em> and steeper edges. The transmission maximum is no longer a reliable marker of the band: use the <strong>half-maximum centre</strong>, midway between the two wavelengths where $T = T_{max}/2$.</p>
     <p><strong>Dispersion and scaling.</strong> Multiplying every thickness by $s$ would shift the spectrum by a factor $s$ <em>if indices did not depend on $\lambda$</em>. In reality $n(\lambda)$ varies: the measured shift departs from $s\,\lambda_0$, and the deviation grows far from $\lambda_0$.</p>
 
@@ -1167,12 +1167,14 @@
             $$CI_{95\%}=\frac{\hat p+z^2/(2N)\ \pm\ z\sqrt{\hat p(1-\hat p)/N+z^2/(4N^2)}}{1+z^2/N},\qquad z=1.96.$$
         </div>
         <p>The yield must be reported <em>together with</em> this interval. A displayed value of 100% over a finite number of draws never means "zero risk".</p>
+        <p><strong>Three qualification verdicts.</strong> Comparing the 95% CI bounds $[p_{low},\,p_{high}]$ with the required yield $p_{req}$ yields three outcomes: <strong>qualified</strong> if $p_{low} \ge p_{req}$, <strong>not qualified</strong> if $p_{high} &lt; p_{req}$, and <strong>inconclusive</strong> when $p_{req}$ lies inside the interval (even if the point estimate $\hat p$ exceeds $p_{req}$). Increasing $N$ narrows the interval (as $1/\sqrt{N}$ away from the boundaries) and can resolve an inconclusive verdict, without guaranteeing qualification if the true yield lies below $p_{req}$.</p>
+        <p><strong>Paired A/B comparison.</strong> When two stacks A and B are simulated with the exact same random seed and process settings, each draw $k$ applies the same underlying perturbations to both designs: estimating the difference $\Delta\hat p = \hat p_B - \hat p_A$ cancels most of the sampling variance, yielding a much narrower confidence interval than an unpaired comparison.</p>
 
         <table style="margin-top: 12px;">
             <tr><th>Indicator</th><th>Engineering question</th><th>Correct use</th></tr>
             <tr><td>Mean ± standard deviation</td><td>Where does the population sit and how dispersed is it?</td><td>Description, not a decision on its own</td></tr>
-            <tr><td>P05</td><td>What low performance is still exceeded by 95% of realisations?</td><td>Quantity to maximise: $Q_r$, $T_{pass}$</td></tr>
-            <tr><td>P95</td><td>What high cost is exceeded by only 5% of realisations?</td><td>Quantity to minimise: $\overline R$, RMSE</td></tr>
+            <tr><td>P05</td><td>What low performance is still exceeded by 95% of <em>manufacturable</em> realisations?</td><td>Conditional on manufacturability; quantity to maximise: $Q_r$, $T_{pass}$</td></tr>
+            <tr><td>P95</td><td>What high cost is exceeded by only 5% of <em>manufacturable</em> realisations?</td><td>Conditional on manufacturability; quantity to minimise: $\overline R$, RMSE</td></tr>
             <tr><td>Wilson 95% CI</td><td>What is the sampling uncertainty on the yield?</td><td>Compare the lower bound with the requirement</td></tr>
         </table>
 

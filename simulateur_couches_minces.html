@@ -416,7 +416,7 @@
                 <div id="formulaBox" class="hidden p-3 bg-indigo-50/70 border-b border-indigo-100 space-y-2 text-xs">
                     <label class="font-bold text-indigo-900 flex items-center gap-1">Saisie rapide d'empilement : <span id="tipFormula" class="tip" tabindex="0" role="button" data-tip="H = ZnS (ou haut indice), L = YF3 (ou bas indice). Le préfixe est un multiple de quart d'onde : 2H = demi-onde. Parenthèses et puissances acceptées, ex. (HL)^3 2H (LH)^3." aria-label="H = ZnS (ou haut indice), L = YF3 (ou bas indice). Le préfixe est un multiple de quart d'onde : 2H = demi-onde. Parenthèses et puissances acceptées, ex. (HL)^3 2H (LH)^3.">i</span></label>
                     <div class="flex gap-2">
-                        <input type="text" id="inpFormulaStr" title="Tapez H L 2H etc. puis cliquez sur Appliquer" placeholder="Ex: (HL)^3 2H (LH)^3 ou H,L,2H,L" class="w-full bg-white border border-indigo-300 rounded px-2.5 py-1.5 font-mono text-xs focus:ring-2 focus:ring-indigo-400 outline-none">
+                        <input type="text" id="inpFormulaStr" title="Tapez H L 2H etc. puis cliquez sur Appliquer" placeholder="Ex: (HL)^3 2H (LH)^3 ou H L 2H L" class="w-full bg-white border border-indigo-300 rounded px-2.5 py-1.5 font-mono text-xs focus:ring-2 focus:ring-indigo-400 outline-none">
                         <button id="btnApplyFormula" title="Générer les couches" class="bg-indigo-600 text-white px-3 py-1.5 rounded font-bold hover:bg-indigo-700 transition flex-shrink-0">
                             Appliquer
                         </button>
@@ -719,11 +719,12 @@
                                 </div>
                                 <label>Tolérance $\Delta d$
                                 <select id="selMonteCarloSigma" class="mt-0.5 w-full bg-white border border-amber-300 rounded px-1 py-0.5 text-[9px]">
-                                    <option value="1">± 1 nm</option>
-                                    <option value="2" selected>± 2 nm</option>
-                                    <option value="3">± 3 nm</option>
-                                    <option value="4">± 4 nm</option>
-                                    <option value="5">± 5 nm</option>
+                                    <option value="1">Δd = 1 nm</option>
+                                    <option value="1.5">Δd = 1,5 nm</option>
+                                    <option value="2" selected>Δd = 2 nm</option>
+                                    <option value="3">Δd = 3 nm</option>
+                                    <option value="4">Δd = 4 nm</option>
+                                    <option value="5">Δd = 5 nm</option>
                                 </select>
                                 </label>
                                 <label>Nombre $N$
@@ -961,7 +962,7 @@
                             <option value="Au">Au - Or (Johnson & Christy)</option>
                         </select>
                         <div class="pt-1 text-[11px] text-slate-500 leading-tight" id="txtMatDescription">
-                            ZnS : Matériau à haut indice ($n \approx 2.35$ à 550nm), transparent dans le visible.
+                            ZnS : Matériau à haut indice ($n \approx 2,37$ à 550 nm), transparent dans le visible.
                         </div>
                         <div class="pt-1 flex flex-wrap gap-1.5">
                             <button id="btnCloneInspectToCustom" type="button" class="text-[11px] bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded px-2 py-1 font-semibold transition flex items-center gap-1" title="Copier ce matériau dans une nouvelle table (λ, n, k) modifiable librement">
@@ -1401,7 +1402,7 @@
         "ZnS_fresnel": {
             name: "ZnS (Fresnel / H)",
             type: "dielectric",
-            description: "Sulfure de zinc déposé en salle blanche (Haut indice n ~ 2.35)",
+            description: "Sulfure de zinc déposé en salle blanche (Haut indice n ≈ 2,37 à 550 nm)",
             table: [
                 { l: 350, n: 2.713, k: 0.2379 },
                 { l: 400, n: 2.558, k: 0.0066 },
@@ -2137,6 +2138,13 @@
     function renderArWindows() {
         const box = document.getElementById('arWindowList');
         if (!box) return;
+        // Ne pas détruire les champs pendant une saisie clavier active.
+        if (typeof document.activeElement !== 'undefined' && document.activeElement
+            && typeof box.contains === 'function' && box.contains(document.activeElement)
+            && typeof box.querySelectorAll === 'function'
+            && box.querySelectorAll('input[data-ar="lmin"]').length === appState.arWindows.length) {
+            return;
+        }
         const fr = currentLang === 'fr';
         box.innerHTML = appState.arWindows.map((w, i) => `
             <div class="flex items-center gap-1">
@@ -2583,6 +2591,7 @@
                 : `${r.points} points evaluated. Current RMSE: ${Number.isFinite(r.rmse) ? formatStat(r.rmse, 2) + '%' : '—'}.`)
                 + targetValidityNote(t);
             updateMeritGridNote();
+            if (typeof updateMeritIncidenceWarning === 'function') updateMeritIncidenceWarning();
             updateAcceptanceUI();
             updateCharts();
         });
@@ -2606,7 +2615,9 @@
             arBox.addEventListener('input', e => {
                 const k = e.target.dataset.ar, i = Number(e.target.dataset.i);
                 if (!k || !Number.isFinite(i) || !appState.arWindows[i]) return;
-                appState.arWindows[i][k] = Number(e.target.value);
+                const raw = String(e.target.value ?? '').trim();
+                if (raw === '') return;
+                appState.arWindows[i][k] = Number(raw);
                 invalidateForSpec();
                 updateMeritGridNote();
             });
@@ -2628,6 +2639,7 @@
         ['inpArThreshold'].forEach(id =>
             document.getElementById(id)?.addEventListener('input', () => {
                 updateMeritGridNote();
+                updateAcceptanceUI();
                 // Le seuil fait partie des hypothèses de la qualification : la
                 // précédente ne vaut plus pour le nouveau critère.
                 invalidateForSpec();
@@ -3313,12 +3325,14 @@
             // Seuls les tirages de la fenêtre affichée coûtent un spectre complet.
             const rank = feasibleCount - 1;
             if (rank >= showFrom && rank < showFrom + SHOW_N) {
+                const sampleQty = objective === 'ar' ? 'R' : 'T';
                 shownSamples.push({
                     conforme: ok,
-                    data: spectralGrid.map(l => ({
-                        x: l,
-                        y: computeTMMPoint(l, appState.incSpecDeg, appState, noisyThicknesses).T_avg * 100
-                    }))
+                    qty: sampleQty,
+                    data: spectralGrid.map(l => {
+                        const pt = computeTMMPoint(l, appState.incSpecDeg, appState, noisyThicknesses);
+                        return { x: l, y: (sampleQty === 'R' ? pt.R_avg : pt.T_avg) * 100 };
+                    })
                 });
             }
         };
@@ -3769,6 +3783,14 @@
             notify(currentLang === 'fr' ? "Déposez au moins une couche avant d'analyser l'insertion d'une aiguille." : "Deposit at least one layer before analyzing needle insertion.");
             return;
         }
+        if (meritUndefinedReason('fr')) {
+            needleBestInfo = null;
+            recommendedNeedleStack = null;
+            document.getElementById('divNeedleAdvice')?.classList.remove('hidden');
+            document.getElementById('btnApplyNeedleSplit')?.classList.add('hidden');
+            liveBi('txtNeedleAdvice', meritUndefinedReason('fr'), meritUndefinedReason('en'));
+            return;
+        }
         if (!applyOptimizationScope({ render: true, alertOnError: true })) return;
 
         const N_super_design = getMediumIndex(appState.superstrat, appState.designL0, appState.customSuperN).r;
@@ -3924,6 +3946,12 @@
         }
         // Sauvegarde intégrale de l'état précédent : couches (épaisseurs, unités,
         // verrous) et portée BFGS telle qu'affichée.
+        const nSupBefore = getMediumIndex(appState.superstrat, appState.designL0, appState.customSuperN).r;
+        const preStackNm = appState.layers.map(lay => ({
+            ...lay, unit: 'nm',
+            val: getPhysicalThicknessNm(lay, appState.designL0, appState.designIncDeg, nSupBefore)
+        }));
+        const meritBeforeNeedle = evaluateNeedleStack(preStackNm, getObjectiveMode());
         needleUndoState = {
             layers: appState.layers.map(l => ({ ...l })),
             scope: document.getElementById('selOptimizeScope')?.value || 'all',
@@ -3952,13 +3980,17 @@
         const movedList = projected.map(m => m.layer).join(', ');
         liveText('txtOptiResult', () => {
             const fr = currentLang === 'fr';
-            const head = fr
+            const preStr = Number.isFinite(meritBeforeNeedle?.value)
+                ? (fr ? `Avant insertion : ${formatStat(meritBeforeNeedle.value, 3)}. `
+                      : `Before insertion: ${formatStat(meritBeforeNeedle.value, 3)}. `)
+                : '';
+            const head = preStr + (fr
                 ? 'Aiguille 0,1 nm insérée'
                   + (projected.length ? `, portée à la borne basse BFGS (${formatStat(min, 1)} nm ; couche(s) ${movedList})` : '')
                   + ', puis BFGS exécuté automatiquement. '
                 : '0.1 nm needle inserted'
                   + (projected.length ? `, raised to the BFGS lower bound (${formatStat(min, 1)} nm; layer(s) ${movedList})` : '')
-                  + ', then BFGS ran automatically. ';
+                  + ', then BFGS ran automatically. ');
             return head + (reportAfter ? reportAfter() : '');
         });
         updateSynthesisCycle('needle');
@@ -5156,6 +5188,11 @@
     /* La boîte de lecture suit la polarisation tracée : si seule P est affichée,
        elle donne Rp (et non la moyenne, qui ne s'annule jamais à Brewster). */
     let cursorIndex = -1;
+    function formatPctCursor(val) {
+        if (!Number.isFinite(val)) return '—';
+        const d = (val > 0 && val < 0.1) ? 4 : 2;
+        return formatStat(val, d);
+    }
     function updateCursorReadout(index) {
         const calc = appState.lastCalc;
         if (!calc || index < 0 || index >= calc.x.length) return;
@@ -5163,16 +5200,27 @@
         const fr = currentLang === 'fr';
         const unit = appState.mode === 'spectral' ? 'nm' : '°';
         const shown = [appState.showAvg && 'avg', appState.showS && 's', appState.showP && 'p'].filter(Boolean);
+        const set = (id, frT, enT) => { const el = document.getElementById(id); if (el) el.textContent = fr ? frT : enT; };
+        document.getElementById('valCursorX').textContent = `${formatStat(calc.x[index], 1)} ${unit}`;
+        if (!appState.showAvg && appState.showS && appState.showP) {
+            const As = Math.max(0, 100 - calc.Rs[index] - calc.Ts[index]);
+            const Ap = Math.max(0, 100 - calc.Rp[index] - calc.Tp[index]);
+            document.getElementById('valCursorR').textContent = `${formatPctCursor(calc.Rs[index])} / ${formatPctCursor(calc.Rp[index])} %`;
+            document.getElementById('valCursorT').textContent = `${formatPctCursor(calc.Ts[index])} / ${formatPctCursor(calc.Tp[index])} %`;
+            document.getElementById('valCursorA').textContent = `${formatPctCursor(As)} / ${formatPctCursor(Ap)} %`;
+            set('lblCursorR', 'Réflexion R (S / P)', 'Reflectance R (S / P)');
+            set('lblCursorT', 'Transmission T (S / P)', 'Transmittance T (S / P)');
+            set('lblCursorA', 'Absorption A (S / P)', 'Absorption A (S / P)');
+            return;
+        }
         const pol = shown.length === 1 ? shown[0] : 'avg';
         const R = pol === 's' ? calc.Rs : pol === 'p' ? calc.Rp : calc.R_avg;
         const T = pol === 's' ? calc.Ts : pol === 'p' ? calc.Tp : calc.T_avg;
         const A = pol === 'avg' ? calc.A_avg[index] : Math.max(0, 100 - R[index] - T[index]);
         const tag = pol === 's' ? 'S' : pol === 'p' ? 'P' : (fr ? 'Moy' : 'avg');
-        document.getElementById('valCursorX').textContent = `${formatStat(calc.x[index], 1)} ${unit}`;
-        document.getElementById('valCursorR').textContent = `${formatStat(R[index], 2)} %`;
-        document.getElementById('valCursorT').textContent = `${formatStat(T[index], 2)} %`;
-        document.getElementById('valCursorA').textContent = `${formatStat(A, 2)} %`;
-        const set = (id, frT, enT) => { const el = document.getElementById(id); if (el) el.textContent = fr ? frT : enT; };
+        document.getElementById('valCursorR').textContent = `${formatPctCursor(R[index])} %`;
+        document.getElementById('valCursorT').textContent = `${formatPctCursor(T[index])} %`;
+        document.getElementById('valCursorA').textContent = `${formatPctCursor(A)} %`;
         set('lblCursorR', `Réflexion R (${tag})`, `Reflectance R (${tag})`);
         set('lblCursorT', `Transmission T (${tag})`, `Transmittance T (${tag})`);
         set('lblCursorA', `Absorption A (${tag})`, `Absorption A (${tag})`);
@@ -5229,7 +5277,7 @@
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return `${context.dataset.label} : ${formatStat(context.parsed.y, 2)} %`;
+                                return `${context.dataset.label} : ${formatPctCursor(context.parsed.y)} %`;
                             }
                         }
                     }
@@ -5245,6 +5293,7 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 animation: false,
+                interaction: { mode: 'nearest', axis: 'x', intersect: false },
                 scales: {
                     x: {
                         type: 'linear',
@@ -5258,7 +5307,13 @@
                     }
                 },
                 plugins: {
-                    legend: { labels: { boxWidth: 10, font: { size: 9 } } }
+                    legend: { labels: { boxWidth: 10, font: { size: 9 } } },
+                    tooltip: {
+                        callbacks: {
+                            title: items => items.length ? `λ = ${formatStat(items[0].parsed.x, 0)} nm` : '',
+                            label: ctx => `${ctx.dataset.label} : ${formatStat(ctx.parsed.y, 4)}`
+                        }
+                    }
                 }
             }
         });
@@ -5270,6 +5325,7 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 animation: false,
+                interaction: { mode: 'nearest', axis: 'x', intersect: false },
                 scales: {
                     x: {
                         type: 'linear',
@@ -5283,7 +5339,17 @@
                     }
                 },
                 plugins: {
-                    legend: { labels: { boxWidth: 10, font: { size: 9 } } }
+                    legend: { labels: { boxWidth: 10, font: { size: 9 } } },
+                    tooltip: {
+                        callbacks: {
+                            title: items => items.length ? `λ = ${formatStat(items[0].parsed.x, 0)} nm` : '',
+                            label: ctx => {
+                                const v = ctx.parsed.y;
+                                const s = (v > 0 && v < 0.001) ? v.toExponential(2) : formatStat(v, 4);
+                                return `${ctx.dataset.label} : ${s}`;
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -5476,7 +5542,6 @@
         document.getElementById('lblCursorX').textContent = isSpec
             ? (currentLang === 'fr' ? 'λ sélectionné' : 'Selected λ')
             : (currentLang === 'fr' ? 'θ sélectionné' : 'Selected θ');
-        if (cursorIndex >= 0) setTimeout(() => updateCursorReadout(Math.min(cursorIndex, (appState.lastCalc?.x.length || 1) - 1)), 0);
 
         // Spectres archivés du comparateur A/B : la décision se prend en regardant
         // les deux composants, pas seulement leurs statistiques.
@@ -5545,9 +5610,10 @@
         // rendement cesse d'être un pourcentage abstrait.
         if (isSpec && Array.isArray(appState.monteCarloSamples) && appState.monteCarloSamples.length) {
             appState.monteCarloSamples.forEach((smp, i) => {
+                const qTag = smp.qty ? ` (${smp.qty})` : '';
                 datasets.push({
                     label: i === 0
-                        ? (currentLang === 'fr' ? `${appState.monteCarloSamples.length} tirages` : `${appState.monteCarloSamples.length} draws`)
+                        ? (currentLang === 'fr' ? `${appState.monteCarloSamples.length} tirages${qTag}` : `${appState.monteCarloSamples.length} draws${qTag}`)
                         : `_mc${i}`,
                     data: smp.data,
                     borderColor: smp.conforme ? 'rgba(217, 119, 6, 0.55)' : 'rgba(220, 38, 38, 0.55)',
@@ -5719,7 +5785,8 @@
 
         mainChart.data.datasets = datasets;
         const viewSignature = `${appState.mode}:${calc.x[0]}:${calc.x[calc.x.length - 1]}`;
-        if (mainChartViewSignature !== viewSignature) {
+        const viewChanged = mainChartViewSignature !== viewSignature;
+        if (viewChanged) {
             mainChartViewSignature = viewSignature;
             mainChart.options.scales.x.min = calc.x[0];
             mainChart.options.scales.x.max = calc.x[calc.x.length - 1];
@@ -5729,8 +5796,10 @@
         mainChart.update('none');
 
         if (calc.x.length > 0) {
-            const midIdx = Math.floor(calc.x.length / 2);
-            updateCursorReadout(midIdx);
+            const targetIdx = (!viewChanged && cursorIndex >= 0 && cursorIndex < calc.x.length)
+                ? cursorIndex
+                : Math.floor(calc.x.length / 2);
+            updateCursorReadout(targetIdx);
         }
     }
 
@@ -6805,12 +6874,21 @@
     function enterFreeMode() {
         appState.uiMode = 'libre';
         appState.exercise = null;
+        if (appState.fresnelPreset) {
+            appState.fresnelPreset = false;
+            appState.layers.forEach(l => { l.locked = false; });
+            if (typeof setOptimizationScope === 'function') setOptimizationScope('all', '', false);
+            if (typeof renderLayersTable === 'function') renderLayersTable();
+        }
         applyUiMode();
         scheduleProjectSave();
     }
 
     function loadPreset(presetKey) {
         appState.considerBackside = false;
+        const chkBack = document.getElementById('chkBackside');
+        if (chkBack) chkBack.checked = false;
+        document.getElementById('bannerBacksideNote')?.classList.add('hidden');
         appState.monteCarloRuns = [];
         appState.monteCarloSamples = [];
         // Les résultats affichés se rapportaient à l'empilement précédent : les
@@ -6886,6 +6964,13 @@
             const objectiveSelect = document.getElementById('selMeritObjective');
             if (objectiveSelect) objectiveSelect.value = presetObjective;
         }
+        if (presetKey === 'fresnel18' && (!appState.bands || appState.bands.length === 0)) {
+            appState.bands = JSON.parse(DEFAULT_BANDS_JSON);
+            if (typeof renderBandAnalyzer === 'function') renderBandAnalyzer();
+        }
+        if (typeof updateAcceptanceUI === 'function') updateAcceptanceUI();
+        if (typeof renderCustomTargetEditor === 'function') renderCustomTargetEditor();
+        if (typeof updateMeritGridNote === 'function') updateMeritGridNote();
         document.getElementById('panelSpectralControls').classList.remove('hidden');
         document.getElementById('panelAngularControls').classList.add('hidden');
         renderLayersTable();
@@ -7263,6 +7348,7 @@
         document.getElementById('btnClearReview')?.addEventListener('click', () => {
             appState.reviewRecords = [null, null];
             renderDesignReview();
+            updateCharts();
         });
 
         document.getElementById('btnRunOptimizer').addEventListener('click', () => runNumericalOptimizer(false));
@@ -7866,6 +7952,7 @@
             if (!ok) return;
             const mode = appState.uiMode, ex = appState.exercise;
             appState.customTarget.segments = [];
+            appState.arWindows = [{ lmin: 400, lmax: 750 }];
             loadPreset('empty');
             appState.uiMode = mode; appState.exercise = ex;
             applyUiMode();
@@ -7968,6 +8055,7 @@
        puis BFGS. Si aucune position n'améliore le mérite, on le dit. */
     function addUsefulLayer() {
         if (!appState.layers.length) return;
+        if (showMeritUndefinedReason('txtOptiResult')) { renderFreeGuide(); return; }
         analyzeNeedlePosition();
         if (recommendedNeedleStack && !fresnelPresetActive()) { applyRecommendedNeedle(); return; }
         liveBi('txtOptiResult',
@@ -8628,7 +8716,7 @@
         ["Longueur d'onde de référence pour calculer l'épaisseur physique à partir du QWOT", "Reference wavelength used to convert QWOT into physical thickness"],
         ["Angle de référence pour l'épaisseur QWOT (souvent 0°)", "Reference angle for QWOT thickness (usually 0°)"],
         ["Tapez H L 2H etc. puis cliquez sur Appliquer", "Enter H L 2H etc., then click Apply"],
-        ["Ex: (HL)^3 2H (LH)^3 ou H,L,2H,L", "e.g. (HL)^3 2H (LH)^3 or H,L,2H,L"],
+        ["Ex: (HL)^3 2H (LH)^3 ou H L 2H L", "e.g. (HL)^3 2H (LH)^3 or H L 2H L"],
         ["Ajouter une fenêtre spectrale à évaluer. Le mérite est la moyenne de R sur l'ensemble des fenêtres déclarées ; ce qui n'est couvert par aucune d'elles est indifférent.",
          "Add a spectral window to evaluate. The merit is the mean of R over all declared windows; anything covered by none of them is \"don't care\"."],
         ["Comparer deux empilements qualifiés sur des hypothèses strictement identiques",
@@ -8735,7 +8823,7 @@
         Air: "Standard incident medium (n = 1.0000, no dispersion)",
         BK7: "Standard borosilicate glass for optical substrates (Sellmeier)",
         FusedSilica: "Amorphous fused silica (Palik/Malitson)",
-        ZnS_fresnel: "Cleanroom-deposited zinc sulfide (high index, n ≈ 2.35)",
+        ZnS_fresnel: "Cleanroom-deposited zinc sulfide (high index, n ≈ 2.37 at 550 nm)",
         YF3_fresnel: "Cleanroom-deposited yttrium fluoride (low index, n ≈ 1.47)",
         TiO2: "Titanium dioxide: high index, approximate Cauchy dispersion, absorption neglected in the visible",
         Si3N4: "Silicon nitride: upper-mid index, approximate Cauchy dispersion, negligible absorption",

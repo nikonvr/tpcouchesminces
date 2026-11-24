@@ -1097,7 +1097,7 @@
 
     <h3>9.3 Cavité Fabry-Pérot et filtres passe-bande</h3>
     <p>Un filtre passe-bande à une cavité s'écrit $(HL)^p\,2qH\,(LH)^p$ : deux miroirs de Bragg séparés par une <strong>couche cavité</strong> de $q$ demi-ondes. À $\lambda_0$, cette couche cavité est optiquement absente et les deux miroirs, symétriques, se compensent : la transmission remonte près de 1 (en l'absence d'absorption). Un peu à côté de $\lambda_0$, le déphasage dans la cavité détruit cette compensation et le miroir bloque.</p>
-    <p>La largeur à mi-hauteur de la résonance se comprend comme celle d'un interféromètre de Fabry-Pérot : si $R$ est la réflectivité de chaque miroir, la finesse vaut $\mathcal{F}=\pi\sqrt{R}/(1-R)$ et la largeur relative diminue quand $R$ augmente ou quand l'ordre $q$ augmente. Chaque période ajoutée aux miroirs multiplie leur admittance par $(n_H/n_L)^2$ : la largeur diminue donc à peu près de ce facteur par période. Augmenter $q$ ne la réduit que proportionnellement à l'ordre.</p>
+    <p>La largeur à mi-hauteur de la résonance se comprend comme celle d'un interféromètre de Fabry-Pérot : si $R$ est la réflectivité de chaque miroir, la finesse vaut $\mathcal{F}=\pi\sqrt{R}/(1-R)$ et la largeur relative diminue quand $R$ augmente ou quand l'ordre $q$ augmente. Chaque période ajoutée aux miroirs multiplie leur admittance par $(n_H/n_L)^2$ : la largeur diminue donc à peu près de ce facteur par période. Augmenter $q$ la réduit bien plus lentement — et même moins que proportionnellement à $q$, car la pénétration du champ dans les miroirs de Bragg ajoute un ordre effectif fixe (qui domine à petit $q$).</p>
     <p><strong>Filtres multi-cavités.</strong> En couplant plusieurs cavités par des couches $L$, on obtient une bande passante plus large, à <em>sommet plat et ondulé</em> et à flancs plus raides. Le maximum de transmission n'est plus un repère fiable de la bande : on utilise le <strong>centre à mi-hauteur</strong>, milieu des deux longueurs d'onde où $T = T_{max}/2$.</p>
     <p><strong>Dispersion et échelle.</strong> Multiplier toutes les épaisseurs par $s$ déplace le spectre d'un facteur $s$ <em>si les indices ne dépendaient pas de $\lambda$</em>. En réalité $n(\lambda)$ varie : le déplacement mesuré s'écarte de $s\,\lambda_0$, et l'écart grandit loin de $\lambda_0$.</p>
 
@@ -1168,12 +1168,14 @@
             $$IC_{95\%}=\frac{\hat p+z^2/(2N)\ \pm\ z\sqrt{\hat p(1-\hat p)/N+z^2/(4N^2)}}{1+z^2/N},\qquad z=1{,}96.$$
         </div>
         <p>Il faut rapporter le rendement <em>avec</em> cet intervalle. Une valeur affichée de 100 % sur un nombre fini de tirages ne signifie jamais « zéro risque ».</p>
+        <p><strong>Trois verdicts de qualification.</strong> En comparant les bornes $[p_{inf},\,p_{sup}]$ de l'IC95 % au rendement minimal exigé $p_{req}$, trois issues se distinguent : <strong>qualifié</strong> si $p_{inf} \ge p_{req}$, <strong>non qualifié</strong> si $p_{sup} &lt; p_{req}$, et <strong>inconclusif</strong> lorsque $p_{req}$ tombe à l'intérieur de l'intervalle (même si l'estimation ponctuelle $\hat p$ dépasse $p_{req}$). Augmenter $N$ resserre l'intervalle (en $1/\sqrt{N}$ loin des bords) et peut lever l'indécision, sans garantir une qualification si le rendement réel est inférieur à $p_{req}$.</p>
+        <p><strong>Comparaison A/B appariée.</strong> Quand deux empilements A et B sont simulés avec exactement la même graine et les mêmes réglages de procédé, chaque tirage $k$ applique les mêmes perturbations élémentaires aux deux designs : l'estimation de l'écart $\Delta\hat p = \hat p_B - \hat p_A$ élimine une grande part de la variance d'échantillonnage, produisant un intervalle de confiance nettement plus étroit qu'une comparaison non appariée.</p>
 
         <table style="margin-top: 12px;">
             <tr><th>Indicateur</th><th>Question d'ingénierie</th><th>Usage correct</th></tr>
             <tr><td>Moyenne ± écart-type</td><td>Où se situe la population et quelle est sa dispersion ?</td><td>Description, pas décision unique</td></tr>
-            <tr><td>P05</td><td>Quelle performance basse reste dépassée par 95 % des réalisations ?</td><td>Grandeur à maximiser : $Q_r$, $T_{pass}$</td></tr>
-            <tr><td>P95</td><td>Quel coût élevé n'est dépassé que par 5 % des réalisations ?</td><td>Grandeur à minimiser : $\overline R$, RMSE</td></tr>
+            <tr><td>P05</td><td>Quelle performance basse reste dépassée par 95 % des réalisations <em>fabricables</em> ?</td><td>Conditionnel à la fabricabilité ; grandeur à maximiser : $Q_r$, $T_{pass}$</td></tr>
+            <tr><td>P95</td><td>Quel coût élevé n'est dépassé que par 5 % des réalisations <em>fabricables</em> ?</td><td>Conditionnel à la fabricabilité ; grandeur à minimiser : $\overline R$, RMSE</td></tr>
             <tr><td>IC95 % de Wilson</td><td>Quelle est l'incertitude d'échantillonnage sur le rendement ?</td><td>Comparer la borne basse à l'exigence</td></tr>
         </table>
 
