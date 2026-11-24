@@ -35,6 +35,9 @@
                         <span class="bg-indigo-600 text-white font-bold px-3 py-1 rounded-lg text-xs shadow">🇫🇷 FR</span>
                         <a href="tp_couches_minces_en.html" class="text-indigo-300 hover:text-white font-medium px-3 py-1 rounded-lg text-xs transition">🇬🇧 EN</a>
                     </div>
+                    <a href="theorie%20en%20francais.html" target="_blank" rel="noopener" class="bg-indigo-800/80 hover:bg-indigo-700 text-indigo-100 font-semibold px-3 py-2 rounded-xl border border-indigo-600 shadow transition flex items-center gap-1.5 text-xs">
+                        <span>📖 Cours de théorie</span>
+                    </a>
                     <a href="https://tpcouchesminces.vercel.app" target="_blank" rel="noopener" class="bg-indigo-800/80 hover:bg-indigo-700 text-indigo-100 font-semibold px-3 py-2 rounded-xl border border-indigo-600 shadow transition flex items-center gap-1.5 text-xs">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 1155 1000" fill="currentColor"><path d="m577.3 0 577.4 1000H0z"/></svg>
                         <span>Portail du TP</span>
@@ -137,13 +140,13 @@
                         <li><strong>Accès direct :</strong> Ouvrez <a href="simulateur_couches_minces.html" class="text-indigo-600 font-bold underline" target="_blank" rel="noopener">simulateur_couches_minces.html</a> dans votre navigateur. Une connexion réseau est requise pour charger les bibliothèques graphiques (une distribution hors ligne existe : voir votre enseignant).</li>
                         <li><strong>Banc de mesure virtuel :</strong> Le simulateur ne donne pas de résultats pré-mâchés. Vous devez saisir vos couches, pointer vos mesures au curseur et traiter vos données sous Excel.</li>
                         <li><strong>Formules symboliques :</strong> Saisie rapide d'empilements comme <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-indigo-700">(HL)^3 2H (LH)^3</code>.</li>
-                        <li><strong>Exports :</strong> Boutons <strong>CSV</strong> (données pour Excel/Python) et <strong>Image</strong> pour vos comptes-rendus.</li>
+                        <li><strong>Exports :</strong> Boutons <strong>CSV</strong> (données pour Excel/Python) et <strong>Image</strong> pour vos comptes-rendus. Si Excel affiche les nombres importés comme texte, utilisez <em>Données → Convertir</em> ou vérifiez le séparateur décimal (point vs virgule).</li>
                         <li><strong>Lecture au curseur :</strong> survolez le graphique ; pour une valeur précise, cliquez dessus puis avancez avec ← → (Maj : dix pas). La boîte de lecture suit la polarisation affichée. Le mérite actuel s'affiche sous le sélecteur de mérite ; le bouton <strong>× Échelle</strong> multiplie les épaisseurs.</li>
                         <li><strong>Grilles publiées :</strong> sous le sélecteur de mérite, le simulateur affiche <strong>la grille exacte</strong> de son calcul. Reprenez-la à l'identique sous Excel : vous devez retrouver le même nombre.</li>
                         <li><strong>Export CSV universel :</strong> <strong>clic droit sur n'importe quel graphique</strong> (ou appui long sur mobile) exporte toutes ses courbes visibles, sur la grille réellement tracée — y compris les enveloppes Monte-Carlo et les courbes mémorisées.</li>
                         <li><strong>Raccourcis clavier :</strong> touche <code class="bg-slate-100 px-1 rounded font-mono">?</code> pour la liste complète. Les plus utiles : <code class="bg-slate-100 px-1 rounded font-mono">O</code> optimiser, <code class="bg-slate-100 px-1 rounded font-mono">N</code> aiguille et <code class="bg-slate-100 px-1 rounded font-mono">M</code> mémoriser.</li>
                         <li><strong>Accueil Étudiant — choisissez votre exercice :</strong> cliquez sur la carte de l'exercice en cours à l'ouverture du simulateur, ou choisissez-le dans le menu <strong>Exercice</strong>. Les panneaux utiles et une consigne s'affichent ; le mérite de l'exercice (<code>R moyen</code> en IV et V, <code>Maximiser Qr</code> en VIII et IX) devient disponible. Le bouton <strong>🎛 Libre</strong> ouvre la conception d'un composant personnel avec votre propre cible.</li>
-                        <li><strong>Conception libre :</strong> cliquez sur <strong>🎛 Libre</strong> dans l'en-tête (puis touche <code class="bg-slate-100 px-1 rounded font-mono">D</code> pour ouvrir la conception libre) — vous définissez <em>votre</em> cahier des charges. Voir l'atelier libre en fin de document.</li>
+                        <li><strong>Conception libre :</strong> cliquez sur <strong>🎛 Libre</strong> dans l'en-tête pour ouvrir directement l'éditeur de cible personnalisée et définir <em>votre</em> cahier des charges. Voir l'atelier libre en fin de document.</li>
                         <li><strong>Classeur actif :</strong> utilisez <a href="outputs/tp_couches_minces/squelette_excel_couches_minces.xlsx" class="text-indigo-600 font-bold underline">le squelette Q12/Q14</a> ; les cellules de calcul restent à programmer.</li>
                     </ul>
                 </div>
@@ -181,6 +184,11 @@
             <div class="text-slate-700 text-sm leading-relaxed space-y-3">
                 <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100 text-indigo-900 mb-2">
                     <strong>💡 Le phénomène physique :</strong> Les propriétés d'un empilement optique reposent sur les <strong>interférences multiples</strong>. À chaque interface, la lumière est partiellement réfléchie et transmise. La notion clé est l'<strong>épaisseur optique</strong> ($n \times d$).
+                </div>
+                <div class="bg-indigo-50/70 p-3 rounded-lg border border-indigo-100 text-xs text-indigo-950 space-y-1">
+                    <div class="font-bold text-indigo-900">🔍 Réflectance à une interface et saut de phase à la réflexion :</div>
+                    <p>À incidence normale entre deux milieux non absorbants d'indices $n_a$ et $n_b$, le coefficient de réflexion en amplitude s'écrit $r = \frac{n_a - n_b}{n_a + n_b}$, soit un facteur de réflexion en puissance $R = |r|^2$ et en transmission $T = 1 - R$.</p>
+                    <p><strong>Saut de phase de $\pi$ :</strong> Si $n_a < n_b$, $r < 0$ : l'onde réfléchie subit un déphasage de $\pi$. Si $n_a > n_b$, $r > 0$ : il n'y a aucun déphasage ($\Delta\phi = 0$). Dans un antireflet quart d'onde ($n_0 < n_1 < n_s$), les deux réflexions subissent <em>toutes deux</em> un saut de phase de $\pi$ ; l'interférence destructive provient donc uniquement du déphasage par aller-retour optique $2 n_1 d_1 = \lambda_0 / 2$.</p>
                 </div>
                 <p>
                     Pour chaque couche $i$ d'épaisseur $d_i$ et d'indice complexe $\hat{n}_i = n_i - i\kappa_i$, le déphasage optique vaut :
@@ -333,20 +341,19 @@
   <line x1="320" y1="130" x2="460" y2="45" stroke="#6366f1" stroke-width="2.5"/>
   <polygon points="460,45 448,48 454,56" fill="#6366f1"/>
   <text x="466" y="40" font-size="10" fill="#4338ca" font-family="Inter,system-ui,sans-serif">Réfléchie</text>
-  <line x1="320" y1="130" x2="410" y2="205" stroke="#10b981" stroke-width="2.5"/>
-  <polygon points="410,205 398,198 402,210" fill="#10b981"/>
-  <text x="416" y="205" font-size="10" fill="#047857" font-family="Inter,system-ui,sans-serif">Transmise</text>
+  <line x1="320" y1="130" x2="372" y2="205" stroke="#10b981" stroke-width="2.5"/>
+  <polygon points="372,205 363,196 366,208" fill="#10b981"/>
+  <text x="378" y="205" font-size="10" fill="#047857" font-family="Inter,system-ui,sans-serif">Transmise</text>
   <path d="M 320 100 A 30 30 0 0 0 302 111" fill="none" stroke="#94a3b8" stroke-width="1"/>
   <text x="292" y="102" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">θ₀</text>
   <circle cx="250" cy="87" r="6" fill="none" stroke="#dc2626" stroke-width="1.6"/>
   <circle cx="250" cy="87" r="1.8" fill="#dc2626"/>
   <text x="152" y="70" font-size="10" fill="#dc2626" font-weight="600" font-family="Inter,system-ui,sans-serif">S (TE) : E ⊥ au plan</text>
-  <line x1="228" y1="79" x2="242" y2="70" stroke="#7c3aed" stroke-width="2"/>
-  <polygon points="242,70 234,70 238,76" fill="#7c3aed"/>
-  <line x1="228" y1="79" x2="214" y2="88" stroke="#7c3aed" stroke-width="2"/>
-  <polygon points="214,88 222,88 218,82" fill="#7c3aed"/>
+  <line x1="228" y1="79" x2="236" y2="66" stroke="#7c3aed" stroke-width="2"/>
+  <polygon points="236,66 228,68 233,74" fill="#7c3aed"/>
+  <line x1="228" y1="79" x2="220" y2="92" stroke="#7c3aed" stroke-width="2"/>
+  <polygon points="220,92 228,90 223,84" fill="#7c3aed"/>
   <text x="152" y="235" font-size="10" fill="#7c3aed" font-weight="600" font-family="Inter,system-ui,sans-serif">P (TM) : E dans le plan</text>
-  <line x1="196" y1="228" x2="240" y2="228" stroke="#7c3aed" stroke-width="1" stroke-dasharray="2 2"/>
 </svg>
                     </div>
                     <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">En S (TE), le champ électrique est <strong>perpendiculaire au plan d'incidence</strong> (symbole ⊙). En P (TM), il est <strong>contenu dans ce plan</strong> (double flèche). Les deux voient des admittances différentes, η<sub>s</sub> = γ et η<sub>p</sub> = n̂²/γ : c'est toute l'origine de l'angle de Brewster, où R<sub>p</sub> s'annule alors que R<sub>s</sub> ne s'annule jamais.</p>
@@ -423,8 +430,9 @@
                 <div class="qbox">
                     <div class="flex items-start gap-3">
                         <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q9</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Niveau 1 — Application : relevé, lecture de courbe, formule directe">&#9733;&#9734;&#9734;</span></div>
-                        <div class="text-sm text-slate-800">
-                            <strong>Inversion des milieux :</strong> Définissez Superstrat = <code>BK7</code> et Substrat = <code>Air</code>. Identifiez l'angle de réflexion totale interne $\theta_{lim}$ et reliez-le à la loi de Snell-Descartes et aux fibres optiques.
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Inversion des milieux :</strong> Définissez Superstrat = <code>BK7</code> et Substrat = <code>Air</code>. Identifiez l'angle de réflexion totale interne $\theta_{lim}$ et reliez-le à la loi de Snell-Descartes et aux fibres optiques.</p>
+                            <p class="text-xs font-semibold text-slate-700"><strong>Remise à zéro :</strong> Rétablissez ensuite Superstrat = <code>Air</code>, Substrat = <code>BK7</code> et revenez en mode <code>Spectre &lambda;</code> avant l'exercice III.</p>
                         </div>
                     </div>
                 </div>
@@ -451,14 +459,14 @@
   <text x="98" y="149" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">Substrat</text>
   <line x1="150" y1="20" x2="230" y2="78" stroke="#f59e0b" stroke-width="2.5"/>
   <polygon points="230,78 219,73 222,84" fill="#f59e0b"/>
-  <line x1="230" y1="78" x2="300" y2="24" stroke="#dc2626" stroke-width="2.5"/>
-  <polygon points="300,24 289,28 295,35" fill="#dc2626"/>
-  <text x="306" y="22" font-size="10" fill="#dc2626" font-family="Inter,system-ui,sans-serif">r₁ (interface air / couche)</text>
-  <line x1="230" y1="78" x2="300" y2="124" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="4 3"/>
-  <line x1="300" y1="124" x2="372" y2="76" stroke="#0891b2" stroke-width="2.5"/>
-  <line x1="372" y1="76" x2="440" y2="24" stroke="#0891b2" stroke-width="2.5"/>
-  <polygon points="440,24 429,28 435,35" fill="#0891b2"/>
-  <text x="446" y="22" font-size="10" fill="#0e7490" font-family="Inter,system-ui,sans-serif">r₂ (interface couche / substrat)</text>
+  <line x1="230" y1="78" x2="310" y2="20" stroke="#dc2626" stroke-width="2.5"/>
+  <polygon points="310,20 299,24 305,31" fill="#dc2626"/>
+  <text x="316" y="20" font-size="10" fill="#dc2626" font-family="Inter,system-ui,sans-serif">r₁ (interface air / couche)</text>
+  <line x1="230" y1="78" x2="266" y2="124" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <line x1="266" y1="124" x2="302" y2="78" stroke="#0891b2" stroke-width="2.5"/>
+  <line x1="302" y1="78" x2="382" y2="20" stroke="#0891b2" stroke-width="2.5"/>
+  <polygon points="382,20 371,24 377,31" fill="#0891b2"/>
+  <text x="388" y="20" font-size="10" fill="#0e7490" font-family="Inter,system-ui,sans-serif">r₂ (interface couche / substrat)</text>
   <line x1="540" y1="78" x2="540" y2="124" stroke="#334155" stroke-width="1"/>
   <line x1="536" y1="78" x2="544" y2="78" stroke="#334155" stroke-width="1"/>
   <line x1="536" y1="124" x2="544" y2="124" stroke="#334155" stroke-width="1"/>
@@ -468,11 +476,11 @@
   <text x="330" y="216" font-size="11" fill="#312e81" font-family="Inter,system-ui,sans-serif">Condition d'amplitude : n = √(n₀·n_s)</text>
 </svg>
                     </div>
-                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">Le rayon r₂ parcourt <strong>2·n·d</strong> de plus que r₁. Pour n·d = λ₀/4, cet écart vaut λ₀/2 : les deux ondes sont en opposition de phase. Mais l'annulation n'est <strong>totale</strong> que si leurs amplitudes sont égales, ce qui impose n = √(n₀·n<sub>s</sub>). Deux conditions indépendantes — la question Q10 vous fait vérifier que la seconde n'est ici pas exactement satisfaite.</p>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">Le rayon r₂ parcourt <strong>2·n·d</strong> de plus que r₁. Pour n·d = λ₀/4, cet écart vaut λ₀/2. Comme n₀ &lt; n<sub>couche</sub> &lt; n<sub>s</sub>, les réflexions aux deux interfaces subissent toutes deux un saut de phase de π : le déphasage relatif provient donc uniquement de l'aller-retour optique dans la couche, créant l'opposition de phase. Mais l'annulation n'est <strong>totale</strong> que si leurs amplitudes sont égales, ce qui impose n = √(n₀·n<sub>s</sub>). Deux conditions indépendantes — la question Q10 vous fait vérifier que la seconde n'est ici pas exactement satisfaite.</p>
                 </figure>
 
                 <div class="bg-amber-50 border-l-4 border-amber-400 p-3 text-xs text-amber-900 rounded-r-lg mb-2">
-                    <strong>💡 Principe de l'antireflet :</strong> Condition quart d'onde : $n \cdot d = \lambda_0 / 4$ et $n_{couche} = \sqrt{n_{substrat} \cdot n_{inc}}$. On appelle <strong>QWOT</strong> (<em>quarter-wave optical thickness</em>) l'épaisseur optique $\lambda_0/4$ : une couche de 1 QWOT vérifie $n \cdot d = \lambda_0/4$, et « 2H » désigne 2 QWOT de H.
+                    <strong>💡 Principe de l'antireflet :</strong> Condition quart d'onde : $n \cdot d = \lambda_0 / 4$ et $n_{couche} = \sqrt{n_{substrat} \cdot n_{inc}}$. À $\lambda_0$, une couche quart d'onde d'indice $n_1$ sur substrat $n_s$ donne la réflectance résiduelle $R(\lambda_0) = \left(\frac{n_0 n_s - n_1^2}{n_0 n_s + n_1^2}\right)^2$. On appelle <strong>QWOT</strong> (<em>quarter-wave optical thickness</em>) l'épaisseur optique $\lambda_0/4$ : une couche de 1 QWOT vérifie $n \cdot d = \lambda_0/4$, et « 2H » désigne 2 QWOT de H.
                 </div>
 
                 <div class="border-b border-slate-100 pb-4 qbox">
@@ -502,6 +510,7 @@
                                     🧠 <strong>L'écart sur la position du minimum est inférieur au nanomètre — donc négligeable.</strong> Ce n'est pas une erreur : c'est le résultat. Expliquez-le. Indice : la <em>position</em> du minimum est fixée par la condition de phase $n_c d = \lambda/4$, qui ne fait intervenir que la couche — non dispersive ici. La dispersion du substrat n'agit que sur la condition d'<em>amplitude</em> $n_c=\sqrt{n_s}$, donc sur la <strong>profondeur</strong> du minimum, pas sur sa longueur d'onde.
                                 </div>
                                 <p class="text-xs text-slate-600">Concluez en désignant, dans ce TP, <strong>deux situations où la dispersion devient au contraire visible</strong> : vous en avez déjà rencontré une à l'exercice I, et vous rencontrerez l'autre à l'exercice VI.</p>
+                                <p class="text-xs font-semibold text-slate-700"><strong>Remise à zéro :</strong> Rétablissez le substrat <code>BK7</code> avant de poursuivre.</p>
                             </div>
                         </div>
                     </div>
@@ -515,7 +524,7 @@
                             <p><strong>Démystifier la boîte noire avec Excel :</strong> Calculez vous-même la réflectivité $R$ de cette monocouche à $550\,\text{nm}$ sous Excel.</p>
                             <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
                                 <li>Calculez le déphasage $\delta_1$.</li>
-                                <li>Construisez la matrice $M_1$. <i>Astuce Excel : <code>=COMPLEXE(reel; imag)</code>, <code>=IMPRODUIT</code>, <code>=IMSOMME</code>, <code>=IMSOUSTRAIRE</code>, <code>=IMDIV</code> et <code>=IMABS</code>.</i></li>
+                                <li>Construisez la matrice $M_1$. <i>Astuce Excel (version française) : <code>=COMPLEXE(reel; imag)</code>, <code>=COMPLEXE.PRODUIT()</code>, <code>=COMPLEXE.SOMME()</code>, <code>=COMPLEXE.DIFFERENCE()</code>, <code>=COMPLEXE.DIV()</code> et <code>=COMPLEXE.MODULE()</code>.</i></li>
                                 <li>Calculez l'admittance équivalente $Y=\frac{m_{10}+\eta_{sub} m_{11}}{m_{00}+\eta_{sub} m_{01}}$ puis $R=\left|\frac{\eta_0-Y}{\eta_0+Y}\right|^2$.</li>
                                 <li>Vérifiez que vous retrouvez la valeur du simulateur.</li>
                             </ul>
@@ -576,7 +585,7 @@
                                 <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
                                     <li>Affinez d'abord votre design de Q13 jusqu'au fond de sa vallée ($R < 0{,}01\,\%$ à 550 nm) et notez lequel des minima de Q14 vous avez retenu : toute la suite en dépend.</li>
                                 <li>Réglez la <strong>fenêtre AR à 520–580 nm</strong> et le <strong>seuil à 0,8 %</strong> (champs situés sous le sélecteur de mérite). Vérifiez que le nominal passe désormais le critère, et avec quelle marge.</li>
-                                    <li>Qualifiez : $d_{min}=1$ nm, $N=500$. Comparez $\Delta d = 3$ puis $5\,\text{nm}$ ; la graine étant figée, les deux essais portent sur les mêmes réalisations.</li>
+                                    <li>Qualifiez : $d_{min}=1$ nm, $N=500$. Cliquez sur <strong>Évaluer la robustesse</strong> pour $\Delta d = 3$ puis $5\,\text{nm}$ ; la graine étant figée, les deux essais portent sur les mêmes réalisations (comparaison appariée).</li>
                                     <li>Rapportez rendement, IC95 % de Wilson et P95 de $R_{moy}$ dans les deux cas. Les deux intervalles de confiance se recouvrent-ils ? Pouvez-vous affirmer que $\pm5$ est significativement pire, ou est-ce du bruit d'échantillonnage ?</li>
                                     <li>Comparez le P95 à $\pm5\,\text{nm}$ au seuil. Selon votre vallée, il reste dessous ou le dépasse alors que la moyenne le respecte : dans ce second cas, que signifie concrètement cet écart pour un lot de production ? Comparez avec un binôme qui a retenu une autre vallée : laquelle est la plus robuste, et pourquoi ?</li>
                                     <li><strong>Isolez la couche critique — à la main, pas au Monte-Carlo.</strong> Le tirage perturbe <em>toujours</em> les deux couches : le verrouillage ne concerne que BFGS, jamais la fabrication. Procédez donc par sensibilité : partez du nominal, ajoutez $+3\,\text{nm}$ à ZnS seul et relevez le mérite ; revenez au nominal, ajoutez $+3\,\text{nm}$ à YF₃ seul et relevez. Laquelle des deux dégrade le plus ? Reliez votre réponse à l'indice et à l'épaisseur optique $n\cdot d$ de chaque couche.</li>
@@ -589,7 +598,7 @@
                 </div>
                 <details class="hint"><summary>💡 Coup de pouce</summary><p>Suivez les puces dans l'ordre. La ligne « Mérite actuel », sous le sélecteur de mérite, se met à jour à chaque modification : relevez-la avant et après avoir changé la fenêtre. Le résultat du Monte-Carlo donne directement rendement, intervalle et P95. Cours §11.</p></details>
                 <div class="border-t border-slate-100 pt-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q16</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Convergence statistique.</strong> La graine étant figée, les tirages sont rigoureusement identiques d'une exécution à l'autre. Reprenez votre design de Q15 dans un réglage où le rendement est intermédiaire — par exemple le seuil resserré à 0,3 % et $\Delta d=5$ nm (adaptez le seuil si le rendement obtenu sur votre vallée n'est pas intermédiaire) — et exécutez $N=100$, 500 puis 1000. Tabulez le rendement et les bornes de l'IC95 % de Wilson, et mesurez la largeur de l'intervalle dans les trois cas : par quel facteur se resserre-t-elle quand $N$ est multiplié par 10 ? Cela correspond-il à la loi en $1/\sqrt{N}$ ? Refaites l'essai dans un réglage où le rendement est proche de 100 % (par exemple seuil 0,8 %, $\Delta d=3$ nm ; adaptez si besoin) : pourquoi la loi ne s'applique-t-elle plus ? Concluez : pourquoi 100 tirages suffisent-ils pour explorer, mais pas pour qualifier ?</div></div></div>
-                <details class="hint"><summary>💡 Coup de pouce</summary><p>Ne changez que N d'un essai à l'autre. Largeur de l'intervalle = borne haute − borne basse ; divisez la largeur obtenue à N = 100 par celle obtenue à N = 1000.</p></details>
+                <details class="hint"><summary>💡 Coup de pouce</summary><p>Ne changez que N d'un essai à l'autre. Largeur de l'intervalle = borne haute − borne basse ; divisez la largeur obtenue à N = 100 par celle obtenue à N = 1000. Consultez le Cours §11 pour le calcul de l'intervalle de confiance.</p></details>
             </div>
         </section>
 
@@ -869,7 +878,7 @@
                                 <li>Dans l'analyseur, vérifiez les trois bandes du cahier des charges déjà pré-remplies (grandeur <code>T</code>, pas de 0,5 nm) et relevez les trois moyennes $\overline{T}$. Les choix <code>R</code> et <code>A</code> servent à d'autres mesures, jamais à définir un rôle dans un mérite.</li>
                                 <li>Calculez $Q_r$ vous-même à partir de ces trois nombres, à la main puis sous Excel à partir du CSV exporté (le CSV étant au pas de 0,1 nm, ne gardez qu'une ligne sur 5 pour retrouver exactement la grille au pas de 0,5 nm). Les deux voies doivent coïncider.</li>
                                 <li>Vérifiez l'effet du pas : refaites les mêmes moyennes à 0,1 nm puis à 2 nm. Laquelle des trois bandes est la plus sensible au pas, et pourquoi ?</li>
-                                <li>Complétez l'audit nominal — nombre de couches, nombre de matériaux, $d_{min}$, $d_{max}$, épaisseur totale — <strong>en le calculant depuis le tableau des couches</strong>. Le bouton <em>« vérifier mon audit »</em> ne sert qu'à contrôler votre résultat <strong>après</strong> l'avoir établi.</li>
+                                <li>Complétez l'audit nominal — nombre de couches, nombre de matériaux, $d_{min}$, $d_{max}$, épaisseur totale — <strong>en le calculant depuis le tableau des couches</strong>. Le bouton <em>« vérifier mon audit »</em> (au bas du panneau Monte-Carlo) ne sert qu'à contrôler votre résultat <strong>après</strong> l'avoir établi. (Sous Excel, la fonction <code>=SOUS.TOTAL(101; ...)</code> moyenne les seules lignes visibles si vous filtrez le tableau).</li>
                             </ul>
                             <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
                                 🧠 <strong>L'expérience décisive :</strong> gardez la passante 535–565 nm et le rejet haut 620–680 nm, puis <strong>recalculez $Q_r$ trois fois</strong>, en changeant seulement la bande de rejet bas : <code>400–500</code>, puis <code>430–500</code>, puis la prescription <code>460–500</code>. <strong>De combien $Q_r$ varie-t-il ?</strong> Reliez ce résultat au spectre réellement obtenu. Que vaut une spécification de réjection qui ne précise pas ses bandes ?
@@ -879,7 +888,7 @@
                         </div>
                     </div>
                 </div>
-                <details class="hint"><summary>💡 Coup de pouce</summary><p>Vérifiez les trois bandes pré-remplies dans l'analyseur, grandeur T, pas de 0,5 nm. Puis Q_r = 2 × T̄(passante) / (T̄(rejet 1) + T̄(rejet 2)) : vérifiez les parenthèses.</p></details>
+                <details class="hint"><summary>💡 Coup de pouce</summary><p>Vérifiez les trois bandes pré-remplies dans l'analyseur, grandeur T, pas de 0,5 nm. Puis Q_r = 2 × T̄(passante) / (T̄(rejet 1) + T̄(rejet 2)) : vérifiez les parenthèses. Cliquez sur « Bandes par défaut » avant de passer à Q25.</p></details>
 
                 <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
@@ -889,7 +898,7 @@
                             <p class="text-xs text-slate-600 mb-1.5">La question n'est pas rhétorique. Commencez par mesurer $Q_r$ et $\overline{T}_{pass}$ <em>avant</em> toute optimisation et comparez-les aux deux exigences du cahier des charges. <strong>Si la prescription déposée les satisfait déjà, et largement, dites-le : c'est un résultat, pas un échec de votre part.</strong> Vous devrez alors répondre à une autre question, plus intéressante : à quoi sert d'optimiser un composant qui passe déjà ? Regardez du côté de la marge — de combien le nominal dépasse-t-il le seuil, et cette marge survit-elle aux erreurs de dépôt de Q26 ? C'est là, et non sur le nominal, que se joue l'intérêt des trois couches libres.</p>
                             <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
                                 <li>Vérifiez que vous êtes bien en mode <strong>🎓 Étudiant</strong>, exercice VIII : le mérite <code>Maximiser Qr</code> y est sélectionné d'office. Sa formule reprend strictement les bandes 460–500, 535–565 et 620–680 nm ; l'analyseur de bandes reste un instrument de mesure indépendant.</li>
-                                <li>Fixez à <strong>2 nm</strong> le seuil de nettoyage : il devient aussi la borne basse de BFGS. Notez cette contrainte dans le dossier de conception ; un optimum numérique sous ce seuil n'est pas admissible.</li>
+                                <li>Fixez à <strong>2 nm</strong> le seuil de nettoyage (cliquez sur Nettoyer dans le panneau 2. Empilement de Couches) : il devient aussi la borne basse de BFGS. Notez cette contrainte dans le dossier de conception ; un optimum numérique sous ce seuil n'est pas admissible.</li>
                                 <li>Choisissez <code>Couches spécifiques</code>, puis autorisez <strong>uniquement les couches 16, 17 et 18</strong>. Contrôlez dans le tableau que les couches 1 à 15 sont figées. Cette contrainte correspond au composant qui sera déposé et ne doit jamais être relâchée.</li>
                                 <li>Lancez BFGS et consignez $Q_r$, $\overline{T}_{pass}$ et les trois épaisseurs avant/après. Les deux grandeurs évoluent-elles dans le même sens ? Que devient la couche 18 ? Vérifiez que le nombre de couches, leur ordre et les quinze premières épaisseurs sont rigoureusement inchangés.</li>
                                 <li>Testez la reproductibilité en rechargeant la prescription puis en relançant BFGS avec les mêmes réglages. Expliquez pourquoi l'identité des résultats est attendue d'un algorithme déterministe.</li>
@@ -932,10 +941,10 @@
             <div class="p-6 space-y-4">
                 <div class="bg-emerald-50 border-l-4 border-emerald-500 p-3 text-xs text-emerald-950 rounded-r-lg"><strong>Livrable :</strong> une fiche de décision d'une page, suffisamment explicite pour qu'un autre binôme puisse reproduire la simulation et contester la conclusion.</div>
 
-                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q27</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Contrat de qualification :</strong> travaillez sur la prescription Fresnel optimisée de Q25 (couches 16 à 18 — si vous venez de Q26 (f), qui a rechargé le nominal, relancez d'abord BFGS sur les couches 16 à 18), ou sur une extension personnalisée préalablement validée dont le rendement n'est pas proche de 100 %. Passez le simulateur en mode <code>Étudiant → IX. Revue de conception</code>. Vérifiez les milieux extérieurs, puis écrivez avant tout calcul la fenêtre, l'incidence, la polarisation, la métrique, <strong>les bandes exactes</strong>, la grille de calcul, les <strong>tolérances d'acceptation</strong>, $d_{min}$, $\Delta d$ et le rendement minimal exigé. Reportez ce dernier dans le champ <em>Rendement exigé</em>. Distinguez exigences et simples objectifs d'amélioration.</div></div></div>
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q27</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Contrat de qualification :</strong> travaillez sur la prescription Fresnel optimisée de Q25 (couches 16 à 18 — si vous venez de Q26 (f), qui a rechargé le nominal, relancez d'abord BFGS sur les couches 16 à 18), ou sur une extension personnalisée préalablement validée dont le rendement n'est pas proche de 100 %. Passez le simulateur en mode <code>Étudiant → IX. Revue de conception</code>. Vérifiez les milieux extérieurs, puis écrivez avant tout calcul la fenêtre, l'incidence, la polarisation, la métrique, <strong>les bandes exactes</strong>, la grille de calcul, les <strong>tolérances d'acceptation</strong>, $d_{min}$, $\Delta d$ et le rendement minimal exigé. Reportez ce dernier dans le champ <em>Rendement exigé</em>. Distinguez exigences et simples objectifs d'amélioration (la graine étant fixée à 42 pour garantir la reproductibilité).</div></div></div>
                 <details class="hint"><summary>💡 Coup de pouce</summary><p>Il s'agit d'écrire, pas de calculer : dressez la liste de tous les réglages qui changent le résultat, avec leur valeur.</p></details>
 
-                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q28</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Audit de fabricabilité nominale :</strong> produisez le tableau matériau/épaisseur/ordre, puis <strong>établissez vous-même</strong> nombre de couches et de matériaux, $d_{min}$, $d_{max}$ et épaisseur totale — le simulateur ne les affiche pas ; le bouton <em>« vérifier mon audit »</em> n'est là que pour contrôler votre résultat une fois celui-ci écrit. Identifiez les couches sous le seuil, les épaisseurs incompatibles avec la résolution et toute complexité non justifiée par le gain optique. <em>Remarque à discuter :</em> sur un empilement quart d'onde à 550 nm, la couche la plus fine dépasse 55 nm, soit plus de cinquante fois le seuil $d_{min}=1$ nm. Ce garde-fou est-il alors inactif ? Dans quelles circonstances redevient-il contraignant ?</div></div></div>
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q28</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Niveau 2 — Analyse : plusieurs étapes, traitement de données, interprétation physique">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Audit de fabricabilité nominale :</strong> produisez le tableau matériau/épaisseur/ordre, puis <strong>établissez vous-même</strong> nombre de couches et de matériaux, $d_{min}$, $d_{max}$ et épaisseur totale — le simulateur ne les affiche pas ; le bouton <em>« vérifier mon audit »</em> n'est là que pour contrôler votre résultat une fois celui-ci écrit. Identifiez les couches sous le seuil, les épaisseurs incompatibles avec le contrôle de quartz et toute complexité non justifiée par le gain optique. <em>Remarque à discuter :</em> sur un empilement quart d'onde à 550 nm, la couche la plus fine dépasse 55 nm, soit plus de cinquante fois le seuil $d_{min}=1$ nm. Ce garde-fou est-il alors inactif ? Dans quelles circonstances redevient-il contraignant ?</div></div></div>
                 <details class="hint"><summary>💡 Coup de pouce</summary><p>Le tableau des couches donne les épaisseurs en nm : comptez les lignes, repérez la plus petite et la plus grande, faites la somme. « vérifier mon audit » ne sert qu'à contrôler.</p></details>
 
 

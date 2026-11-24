@@ -25,19 +25,22 @@ def _date_maj():
     except OSError:
         pass
     return datetime.date.today()
+_now = datetime.datetime.now()
+_time = _now.strftime('%H:%M')
+_time_fr = _now.strftime('%Hh%M')
 _d = _date_maj()
 _iso = _d.isoformat()
 _fr = '%d %s %d' % (_d.day, MOIS[_d.month - 1], _d.year)
 _en = '%d %s %d' % (_d.day, MONTHS[_d.month - 1], _d.year)
 for _f, _regles in (
         ('simulateur_couches_minces.html',
-         [(r'<span id="txtLastUpdate" data-date="[^"]*">[^<]*</span>',
-           '<span id="txtLastUpdate" data-date="%s">Mis à jour le %s</span>' % (_iso, _fr))]),
+         [(r'<span id="txtLastUpdate" data-date="[^"]*"[^>]*>[^<]*</span>',
+           '<span id="txtLastUpdate" data-date="%s" data-time="%s">Mis à jour le %s à %s</span>' % (_iso, _time, _fr, _time_fr))]),
         ('index.html',
-         [(r'<span id="txtLastUpdate" data-date="[^"]*">[^<]*</span>',
-           '<span id="txtLastUpdate" data-date="%s">%s</span>' % (_iso, _fr)),
-          (r'<span data-date-en="[^"]*">[^<]*</span>',
-           '<span data-date-en="%s">%s</span>' % (_iso, _en))])):
+         [(r'<span id="txtLastUpdate" data-date="[^"]*"[^>]*>[^<]*</span>',
+           '<span id="txtLastUpdate" data-date="%s" data-time="%s">%s à %s</span>' % (_iso, _time, _fr, _time_fr)),
+          (r'<span data-date-en="[^"]*"[^>]*>[^<]*</span>',
+           '<span data-date-en="%s" data-time="%s">%s at %s</span>' % (_iso, _time, _en, _time))])):
     _s = io.open(_f, encoding='utf-8').read()
     _n = _s
     for _motif, _rempl in _regles:
@@ -45,7 +48,7 @@ for _f, _regles in (
         assert _k == 1, (_f, _motif)
     if _n != _s:
         io.open(_f, 'w', encoding='utf-8', newline='').write(_n)
-print('Date de mise a jour affichee : %s' % _iso)
+print('Date et heure de mise a jour affichee : %s %s' % (_iso, _time))
 DST = os.path.join('outputs', 'tp_couches_minces_hors_ligne')
 FILES = ['simulateur_couches_minces.html', 'tp_couches_minces_fr.html', 'tp_couches_minces_en.html',
          'theorie en francais.html', 'theorie en anglais.html']

@@ -21,6 +21,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pymupdf
@@ -167,7 +168,7 @@ def paginer(pdf: Path, langue: str, empreinte: str = "") -> int:
     source ; on l'ajoute donc après coup, quand le total est connu.
     """
     mention = MENTION_PORTAIL[langue]
-    document = pymupdf.open(pdf)
+    document = pymupdf.open(stream=pdf.read_bytes(), filetype="pdf")
     total = document.page_count
     for numero in range(1, total + 1):
         page = document[numero - 1]
@@ -198,7 +199,14 @@ def paginer(pdf: Path, langue: str, empreinte: str = "") -> int:
     # refusé par le système de fichiers (WinError 5).
     donnees = document.tobytes(garbage=3, deflate=True)
     document.close()
-    pdf.write_bytes(donnees)
+    for tentative in range(10):
+        try:
+            pdf.write_bytes(donnees)
+            break
+        except OSError:
+            if tentative == 9:
+                raise
+            time.sleep(0.5)
     return total
 
 

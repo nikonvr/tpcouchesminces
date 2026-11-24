@@ -433,6 +433,7 @@
         <tr><td>$\delta$ ou $\delta_j$</td><td>Déphasage optique de couche</td><td>$\text{rad}$</td><td>$\delta_j = k_{z,j} d_j = \frac{2\pi}{\lambda} \hat{n}_j d_j \cos\theta_j$.</td></tr>
         <tr><td>$m$</td><td>Nombre total de couches</td><td>entier</td><td>Nombre de couches du multicouche (numérotées de $j=1$ à la base à $j=m$ au sommet).</td></tr>
     </table>
+    <p class="mt-2 text-xs text-slate-700"><strong>Classes de matériaux optiques :</strong> On distingue les <em>diélectriques</em> ($\kappa \approx 0$ dans leur fenêtre de transparence : $SiO_2$, $ZnS$, $YF_3$), les <em>semiconducteurs</em> (absorbants pour $h\nu > E_g$, très transparents et réfringents dans l'infrarouge : $Si$, $Ge$), et les <em>métaux</em> dont les électrons libres confèrent une extinction très élevée ($\kappa \gg 1$) et une forte réflectivité ($Al$, $Ag$, $Au$).</p>
 
     <h3>2.3 Électromagnétisme, champs et formalisme matriciel (Macleod)</h3>
     <table>
@@ -603,7 +604,7 @@
             <!-- Result box inside SVG -->
             <rect x="55" y="200" width="550" height="40" fill="#ffffff" stroke="#cbd5e1" rx="4"/>
             <text x="330" y="225" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="bold" fill="#0f172a">
-                ∮ E · dl = (E_∥₁ - E_∥₂) Δl + O(Δh) = 0  ⟹  E_∥(zₖ⁻) = E_∥(zₖ⁺)
+                ∮ E · dl = (E_∥₁ - E_∥₂) Δl + O(Δh) = 0  ⟹  E_∥(zₖ⁺) = E_∥(zₖ⁻)
             </text>
 
             <defs>
@@ -873,7 +874,7 @@
             </div>
             
             <h4>Condition physique d'atténuation</h4>
-            <p>Le champ électrique dans la couche $j$ évolue en $E_j(z,t) \propto \exp[-i k_{z,j} z]$ avec $k_{z,j} = \frac{2\pi}{\lambda} \hat{n}_j \cos\theta_j$. Pour que l'amplitude <strong>s'atténue</strong> en pénétrant dans la matière (absorption ou onde évanescente), il faut impérativement satisfaire :</p>
+            <p>Le champ électrique dans la couche $j$ est la superposition d\'une onde se propageant vers le bas $E_j^-(z,t) \propto \exp[+i k_{z,j} z]$ et d\'une onde se propageant vers le haut $E_j^+(z,t) \propto \exp[-i k_{z,j} z]$, avec $k_{z,j} = \frac{2\pi}{\lambda} \hat{n}_j \cos\theta_j$. Pour que l'amplitude <strong>s'atténue</strong> en pénétrant dans la matière (absorption ou onde évanescente), il faut impérativement satisfaire :</p>
             <div class="formula-box" style="margin: 10px 0; padding: 10px;">
                 $$ \text{Im}(\hat{n}_j \cos\theta_j) \leq 0 \quad \text{(Avec la convention } n-i\kappa \text{)}$$
             </div>
@@ -915,7 +916,7 @@
 
     <p>Les coefficients d'amplitude en réflexion ($r$) et en transmission ($t$) s'écrivent :</p>
     <div class="formula-box">
-        $$r = \frac{\eta_0 B - C}{\eta_0 B + C} \qquad \text{et} \qquad t = \frac{2 \eta_0}{\eta_0 B + C}$$
+        $$Y = \frac{C}{B} = \frac{m_{21} + \eta_{sub} m_{22}}{m_{11} + \eta_{sub} m_{12}}, \qquad r = \frac{\eta_0 - Y}{\eta_0 + Y} = \frac{\eta_0 B - C}{\eta_0 B + C}, \qquad t = \frac{2 \eta_0}{\eta_0 B + C}$$
     </div>
 
     <p>On en déduit les grandeurs mesurables expérimentalement, à savoir la réflectance $R$ et la transmittance $T$ (avec conservation de l'énergie $R+T+A=1$, où $A$ est l'absorption) :</p>
@@ -959,7 +960,7 @@
                 $$S_z = |\vec{S}| \cos\theta = \frac{1}{2} \mathrm{Re}(\underbrace{\hat{n} \cos\theta}_{\text{Admittance }\eta_s}) \, |E_\parallel|^2$$
             </div>
 
-            <p>Remarquez le terme $\hat{n} \cos\theta$ : il correspond *exactement* à la définition de l'admittance optique $\eta_s$ en polarisation TE (s). L'admittance $\eta$ n'est donc pas qu'une commodité mathématique matricielle, elle intègre intrinsèquement l'indice matériel et la projection géométrique du faisceau (cette démonstration est également valide pour TM avec $\eta_p$).</p>
+            <p>Remarquez le terme $\hat{n} \cos\theta$ : il correspond <em>exactement</em> à la définition de l'admittance optique $\eta_s$ en polarisation TE (s). L'admittance $\eta$ n'est donc pas qu'une commodité mathématique matricielle, elle intègre intrinsèquement l'indice matériel et la projection géométrique du faisceau (cette démonstration est également valide pour TM avec $\eta_p$).</p>
             
             <p>La réflectance reste simple $R = |r|^2$ car l'onde incidente et réfléchie évoluent dans le même milieu (l'admittance s'annule dans le ratio). Mais l'onde transmise entre dans un nouveau substrat, d'où le facteur correctif de transmission faisant intervenir la partie réelle des admittances.</p>
         </div>
@@ -1168,8 +1169,8 @@
             $$IC_{95\%}=\frac{\hat p+z^2/(2N)\ \pm\ z\sqrt{\hat p(1-\hat p)/N+z^2/(4N^2)}}{1+z^2/N},\qquad z=1{,}96.$$
         </div>
         <p>Il faut rapporter le rendement <em>avec</em> cet intervalle. Une valeur affichée de 100 % sur un nombre fini de tirages ne signifie jamais « zéro risque ».</p>
-        <p><strong>Trois verdicts de qualification.</strong> En comparant les bornes $[p_{inf},\,p_{sup}]$ de l'IC95 % au rendement minimal exigé $p_{req}$, trois issues se distinguent : <strong>qualifié</strong> si $p_{inf} \ge p_{req}$, <strong>non qualifié</strong> si $p_{sup} &lt; p_{req}$, et <strong>inconclusif</strong> lorsque $p_{req}$ tombe à l'intérieur de l'intervalle (même si l'estimation ponctuelle $\hat p$ dépasse $p_{req}$). Augmenter $N$ resserre l'intervalle (en $1/\sqrt{N}$ loin des bords) et peut lever l'indécision, sans garantir une qualification si le rendement réel est inférieur à $p_{req}$.</p>
-        <p><strong>Comparaison A/B appariée.</strong> Quand deux empilements A et B sont simulés avec exactement la même graine et les mêmes réglages de procédé, chaque tirage $k$ applique les mêmes perturbations élémentaires aux deux designs : l'estimation de l'écart $\Delta\hat p = \hat p_B - \hat p_A$ élimine une grande part de la variance d'échantillonnage, produisant un intervalle de confiance nettement plus étroit qu'une comparaison non appariée.</p>
+        <p><strong>Trois verdicts de qualification.</strong> En comparant les bornes $[p_{inf},\,p_{sup}]$ de l'IC95 % au rendement minimal exigé $p_{req}$, trois issues se distinguent : <strong>qualifié</strong> si $p_{inf} \ge p_{req}$, <strong>non qualifié</strong> si $p_{sup} &lt; p_{req}$, et <strong>inconclusif</strong> lorsque $p_{req}$ tombe à l'intérieur de l'intervalle (même si l'estimation ponctuelle $\hat p$ dépasse $p_{req}$). Augmenter $N$ resserre l'intervalle (en $1/\sqrt{N}$ pour un rendement intermédiaire, et en $1/N$ près des bords $\hat p \approx 1$) et peut lever l'indécision, sans garantir une qualification si le rendement réel est inférieur à $p_{req}$.</p>
+        <p><strong>Comparaison A/B appariée.</strong> Quand deux empilements A et B sont simulés avec exactement la même graine et les mêmes réglages de procédé, chaque tirage $k$ applique les mêmes perturbations élémentaires aux deux designs : l'estimation de l'écart $\Delta\hat p = \hat p_B - \hat p_A$ élimine la variance commune d'échantillonnage, produisant un intervalle de confiance apparié beaucoup plus étroit. La règle de décision industrielle vérifie si 0 appartient à l'IC de $\Delta\hat p$ : si l'intervalle exclut 0 du côté positif, l'amélioration est statistiquement démontrée.</p>
 
         <table style="margin-top: 12px;">
             <tr><th>Indicateur</th><th>Question d'ingénierie</th><th>Usage correct</th></tr>
@@ -1219,13 +1220,16 @@
             <line x1="50" y1="80" x2="390" y2="80" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5"/>
             <text x="330" y="70" font-family="sans-serif" font-size="11" fill="#64748b">Verre nu (4%)</text>
             
-            <!-- AR Curve -->
-            <path d="M 60 100 Q 140 190 225 190 T 390 100" fill="none" stroke="#d97706" stroke-width="3" />
-            <text x="225" y="175" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#d97706" font-weight="bold">Verre + AR (MgF₂)</text>
+            <!-- AR MgF2 Curve (Rmin approx 1.4% -> y=151) -->
+            <path d="M 60 105 Q 140 151 225 151 T 390 105" fill="none" stroke="#d97706" stroke-width="2.5" />
+            <text x="225" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#d97706" font-weight="bold">Verre + AR MgF₂ (R_min ≈ 1,4 %)</text>
+            <!-- Ideal AR Curve (R = 0% -> y=190) -->
+            <path d="M 60 100 Q 140 190 225 190 T 390 100" fill="none" stroke="#059669" stroke-width="2" stroke-dasharray="4 3" />
+            <text x="225" y="182" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#059669" font-weight="bold">AR idéal (R = 0 % à 550 nm)</text>
         </svg>
     </div>
     
-    <p>La réflexion s'annule complètement si l'indice de la couche vérifie $n_{couche} = \sqrt{n_{air} \cdot n_{verre}}$. Pour un verre standard, on voudrait $n \approx 1.22$. Le Fluorure de Magnésium (MgF₂, $n=1.38$) est le matériau approchant le plus couramment utilisé en optique classique pour s'approcher de cet idéal.</p>
+    <p>La réflexion s'annule complètement si l'indice de la couche vérifie $n_{couche} = \sqrt{n_{air} \cdot n_{verre}}$. À $\lambda_0$, une couche quart d'onde d'indice $n_1$ sur substrat $n_s$ donne la réflectance résiduelle exacte : $R(\lambda_0) = \left(\frac{n_0 n_s - n_1^2}{n_0 n_s + n_1^2}\right)^2$. Pour un verre standard ($n_s=1{,}5185$), l'indice idéal serait $n_1 = \sqrt{n_0 n_s} \approx 1{,}232$. Avec le Fluorure de Magnésium (MgF₂, $n_1=1{,}38$), on obtient $R_{min} \approx 1{,}4\%$, ce qui divise déjà par près de 3 la réflectance du verre nu (4 %).</p>
 
 
     <h3>Cas 2 : Filtre de validation à 5 couches (avec métal absorbant)</h3>

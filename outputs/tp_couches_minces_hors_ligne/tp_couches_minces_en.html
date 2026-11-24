@@ -35,11 +35,14 @@
                         <a href="tp_couches_minces_fr.html" class="text-indigo-300 hover:text-white font-medium px-3 py-1 rounded-lg text-xs transition">🇫🇷 FR</a>
                         <span class="bg-indigo-600 text-white font-bold px-3 py-1 rounded-lg text-xs shadow">🇬🇧 EN</span>
                     </div>
+                    <a href="theorie%20en%20anglais.html" target="_blank" rel="noopener" class="bg-indigo-800/80 hover:bg-indigo-700 text-indigo-100 font-semibold px-3 py-2 rounded-xl border border-indigo-600 shadow transition flex items-center gap-1.5 text-xs">
+                        <span>📖 Theory Course</span>
+                    </a>
                     <a href="index.html" target="_blank" rel="noopener" class="bg-indigo-800/80 hover:bg-indigo-700 text-indigo-100 font-semibold px-3 py-2 rounded-xl border border-indigo-600 shadow transition flex items-center gap-1.5 text-xs">
                         <svg class="w-3.5 h-3.5" viewBox="0 0 1155 1000" fill="currentColor"><path d="m577.3 0 577.4 1000H0z"/></svg>
                         <span>Course portal</span>
                     </a>
-                    <a href="simulateur_couches_minces.html" target="_blank" rel="noopener" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2.5 rounded-xl shadow-lg transition flex items-center gap-2 text-sm">
+                    <a href="simulateur_couches_minces.html?lang=en" target="_blank" rel="noopener" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2.5 rounded-xl shadow-lg transition flex items-center gap-2 text-sm">
                         <span>🚀 Launch Web Simulator</span>
                     </a>
                 </div>
@@ -137,13 +140,13 @@
                         <li><strong>Direct access:</strong> Open <a href="simulateur_couches_minces.html" class="text-indigo-600 font-bold underline" target="_blank" rel="noopener">simulateur_couches_minces.html</a> in a browser. All libraries (charts, icons, fonts, equations) are bundled in this folder: no network connection is required.</li>
                         <li><strong>Virtual Spectrophotometer:</strong> Build your stacks manually, take pointer measurements, and analyze data in Excel.</li>
                         <li><strong>Symbolic formulas:</strong> Fast formula entry such as <code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-indigo-700">(HL)^3 2H (LH)^3</code>.</li>
-                        <li><strong>Exports:</strong> Use <strong>CSV</strong> (for spreadsheet processing) and <strong>Image</strong> for your lab report.</li>
+                        <li><strong>Exports:</strong> Use <strong>CSV</strong> (for spreadsheet processing) and <strong>Image</strong> for your lab report. If Excel parses imported numbers as text, use <em>Data → Text to Columns</em> or check your regional decimal separator (period vs comma).</li>
                         <li><strong>Cursor reading:</strong> hover over the chart; for a precise value, click it then step with ← → (Shift: ten steps). The readout box follows the displayed polarisation. The current merit is shown below the merit selector; the <strong>× Scale</strong> button multiplies thicknesses.</li>
                         <li><strong>Published grids:</strong> below the merit selector, the simulator displays <strong>the exact grid</strong> it uses. Reproduce it in Excel: you must recover the same number.</li>
                         <li><strong>Universal CSV export:</strong> <strong>right-click any chart</strong> (or long-press on mobile) to export all its visible curves on the grid actually plotted — including Monte-Carlo envelopes and saved curves.</li>
                         <li><strong>Keyboard shortcuts:</strong> press <code class="bg-slate-100 px-1 rounded font-mono">?</code> for the full list. Most useful: <code class="bg-slate-100 px-1 rounded font-mono">O</code> optimize, <code class="bg-slate-100 px-1 rounded font-mono">N</code> needle, and <code class="bg-slate-100 px-1 rounded font-mono">M</code> memorize.</li>
                         <li><strong>Student welcome — choose your exercise:</strong> click the current exercise card when the simulator opens, or choose it from the <strong>Exercise</strong> menu. The relevant panels and an instruction appear; the exercise merit (<code>Mean R</code> in IV and V, <code>Maximize Qr</code> in VIII and IX) becomes available. The <strong>🎛 Free</strong> button opens personal component design with your own target.</li>
-                        <li><strong>Free design:</strong> click <strong>🎛 Free</strong> in the header (then press <code class="bg-slate-100 px-1 rounded font-mono">D</code> to open free design) — you write <em>your own</em> specification. See the open workshop at the end of this document.</li>
+                        <li><strong>Free design:</strong> click <strong>🎛 Free</strong> in the header to directly open the custom target designer and define <em>your own</em> specification. See the open workshop at the end of this document.</li>
                         <li><strong>Active workbook:</strong> use the <a href="outputs/tp_couches_minces/squelette_excel_couches_minces.xlsx" class="text-indigo-600 font-bold underline">Q12/Q14 scaffold</a>; calculation cells are intentionally left for you to program.</li>
                     </ul>
                 </div>
@@ -181,6 +184,11 @@
             <div class="text-slate-700 text-sm leading-relaxed space-y-3">
                 <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100 text-indigo-900 mb-2">
                     <strong>💡 Physical Principle:</strong> Coatings rely on <strong>multiple beam interference</strong>. Optical path differences govern reflection and transmission. The core metric is the <strong>Optical Thickness</strong> ($n \times d$).
+                </div>
+                <div class="bg-indigo-50/70 p-3 rounded-lg border border-indigo-100 text-xs text-indigo-950 space-y-1">
+                    <div class="font-bold text-indigo-900">🔍 Interface reflectance and reflection phase shift:</div>
+                    <p>At normal incidence between two non-absorbing media with refractive indices $n_a$ and $n_b$, the amplitude reflection coefficient is $r = \frac{n_a - n_b}{n_a + n_b}$, yielding power reflectance $R = |r|^2$ and transmittance $T = 1 - R$.</p>
+                    <p><strong>Phase shift of $\pi$:</strong> If $n_a < n_b$, $r < 0$: the reflected wave undergoes a phase shift of $\pi$. If $n_a > n_b$, $r > 0$: there is no phase shift ($\Delta\phi = 0$). In a quarter-wave AR coating ($n_0 < n_1 < n_s$), both reflections undergo a $\pi$ phase shift; destructive interference therefore results solely from the optical round-trip phase shift $2 n_1 d_1 = \lambda_0 / 2$.</p>
                 </div>
                 <p>
                     For each layer $i$ with thickness $d_i$ and complex index $\hat{n}_i = n_i - i\kappa_i$, the optical phase shift is:
@@ -333,20 +341,19 @@
   <line x1="320" y1="130" x2="460" y2="45" stroke="#6366f1" stroke-width="2.5"/>
   <polygon points="460,45 448,48 454,56" fill="#6366f1"/>
   <text x="466" y="40" font-size="10" fill="#4338ca" font-family="Inter,system-ui,sans-serif">Reflected</text>
-  <line x1="320" y1="130" x2="410" y2="205" stroke="#10b981" stroke-width="2.5"/>
-  <polygon points="410,205 398,198 402,210" fill="#10b981"/>
-  <text x="416" y="205" font-size="10" fill="#047857" font-family="Inter,system-ui,sans-serif">Transmitted</text>
+  <line x1="320" y1="130" x2="372" y2="205" stroke="#10b981" stroke-width="2.5"/>
+  <polygon points="372,205 363,196 366,208" fill="#10b981"/>
+  <text x="378" y="205" font-size="10" fill="#047857" font-family="Inter,system-ui,sans-serif">Transmitted</text>
   <path d="M 320 100 A 30 30 0 0 0 302 111" fill="none" stroke="#94a3b8" stroke-width="1"/>
   <text x="292" y="102" font-size="10" fill="#64748b" font-family="Inter,system-ui,sans-serif">θ₀</text>
   <circle cx="250" cy="87" r="6" fill="none" stroke="#dc2626" stroke-width="1.6"/>
   <circle cx="250" cy="87" r="1.8" fill="#dc2626"/>
   <text x="152" y="70" font-size="10" fill="#dc2626" font-weight="600" font-family="Inter,system-ui,sans-serif">S (TE): E ⊥ to plane</text>
-  <line x1="228" y1="79" x2="242" y2="70" stroke="#7c3aed" stroke-width="2"/>
-  <polygon points="242,70 234,70 238,76" fill="#7c3aed"/>
-  <line x1="228" y1="79" x2="214" y2="88" stroke="#7c3aed" stroke-width="2"/>
-  <polygon points="214,88 222,88 218,82" fill="#7c3aed"/>
+  <line x1="228" y1="79" x2="236" y2="66" stroke="#7c3aed" stroke-width="2"/>
+  <polygon points="236,66 228,68 233,74" fill="#7c3aed"/>
+  <line x1="228" y1="79" x2="220" y2="92" stroke="#7c3aed" stroke-width="2"/>
+  <polygon points="220,92 228,90 223,84" fill="#7c3aed"/>
   <text x="152" y="235" font-size="10" fill="#7c3aed" font-weight="600" font-family="Inter,system-ui,sans-serif">P (TM): E in the plane</text>
-  <line x1="196" y1="228" x2="240" y2="228" stroke="#7c3aed" stroke-width="1" stroke-dasharray="2 2"/>
 </svg>
                     </div>
                     <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">In S (TE) the electric field is <strong>perpendicular to the plane of incidence</strong> (⊙ symbol). In P (TM) it <strong>lies in that plane</strong> (double arrow). The two see different admittances, η<sub>s</sub> = γ and η<sub>p</sub> = n̂²/γ: this is the whole origin of the Brewster angle, where R<sub>p</sub> vanishes while R<sub>s</sub> never does.</p>
@@ -423,8 +430,9 @@
                 <div class="qbox">
                     <div class="flex items-start gap-3">
                         <div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q9</span><span class="text-[9px] leading-none tracking-tight text-emerald-600" title="Level 1 — Application: reading, curve inspection, direct formula">&#9733;&#9734;&#9734;</span></div>
-                        <div class="text-sm text-slate-800">
-                            <strong>Total Internal Reflection:</strong> Set Superstrate = <code>BK7</code> and Substrate = <code>Air</code>. Identify $\theta_{lim}$ and link it to Snell-Descartes law and optical fiber waveguides.
+                        <div class="text-sm text-slate-800 space-y-2">
+                            <p><strong>Total Internal Reflection:</strong> Set Superstrate = <code>BK7</code> and Substrate = <code>Air</code>. Identify $\theta_{lim}$ and link it to Snell-Descartes law and optical fiber waveguides.</p>
+                            <p class="text-xs font-semibold text-slate-700"><strong>Reset:</strong> Then restore Superstrate = <code>Air</code>, Substrate = <code>BK7</code> and return to <code>Spectrum &lambda;</code> mode before exercise III.</p>
                         </div>
                     </div>
                 </div>
@@ -451,14 +459,14 @@
   <text x="98" y="149" font-size="10" fill="#334155" font-family="Inter,system-ui,sans-serif">Substrate</text>
   <line x1="150" y1="20" x2="230" y2="78" stroke="#f59e0b" stroke-width="2.5"/>
   <polygon points="230,78 219,73 222,84" fill="#f59e0b"/>
-  <line x1="230" y1="78" x2="300" y2="24" stroke="#dc2626" stroke-width="2.5"/>
-  <polygon points="300,24 289,28 295,35" fill="#dc2626"/>
-  <text x="306" y="22" font-size="10" fill="#dc2626" font-family="Inter,system-ui,sans-serif">r₁ (air / layer interface)</text>
-  <line x1="230" y1="78" x2="300" y2="124" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="4 3"/>
-  <line x1="300" y1="124" x2="372" y2="76" stroke="#0891b2" stroke-width="2.5"/>
-  <line x1="372" y1="76" x2="440" y2="24" stroke="#0891b2" stroke-width="2.5"/>
-  <polygon points="440,24 429,28 435,35" fill="#0891b2"/>
-  <text x="446" y="22" font-size="10" fill="#0e7490" font-family="Inter,system-ui,sans-serif">r₂ (layer / substrate interface)</text>
+  <line x1="230" y1="78" x2="310" y2="20" stroke="#dc2626" stroke-width="2.5"/>
+  <polygon points="310,20 299,24 305,31" fill="#dc2626"/>
+  <text x="316" y="20" font-size="10" fill="#dc2626" font-family="Inter,system-ui,sans-serif">r₁ (air / layer interface)</text>
+  <line x1="230" y1="78" x2="266" y2="124" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <line x1="266" y1="124" x2="302" y2="78" stroke="#0891b2" stroke-width="2.5"/>
+  <line x1="302" y1="78" x2="382" y2="20" stroke="#0891b2" stroke-width="2.5"/>
+  <polygon points="382,20 371,24 377,31" fill="#0891b2"/>
+  <text x="388" y="20" font-size="10" fill="#0e7490" font-family="Inter,system-ui,sans-serif">r₂ (layer / substrate interface)</text>
   <line x1="540" y1="78" x2="540" y2="124" stroke="#334155" stroke-width="1"/>
   <line x1="536" y1="78" x2="544" y2="78" stroke="#334155" stroke-width="1"/>
   <line x1="536" y1="124" x2="544" y2="124" stroke="#334155" stroke-width="1"/>
@@ -468,11 +476,11 @@
   <text x="330" y="216" font-size="11" fill="#312e81" font-family="Inter,system-ui,sans-serif">Amplitude condition: n = √(n₀·n_s)</text>
 </svg>
                     </div>
-                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">Ray r₂ travels <strong>2·n·d</strong> further than r₁. For n·d = λ₀/4 this difference is λ₀/2: the two waves are in antiphase. But cancellation is <strong>complete</strong> only if their amplitudes match, which requires n = √(n₀·n<sub>s</sub>). Two independent conditions — question Q10 has you verify that the second one is not exactly met here.</p>
+                    <p class="px-3 pb-2.5 text-[11px] text-slate-600 leading-snug">Ray r₂ travels <strong>2·n·d</strong> further than r₁. For n·d = λ₀/4 this difference is λ₀/2. Since n₀ &lt; n<sub>layer</sub> &lt; n<sub>s</sub>, reflections at both interfaces undergo a π phase shift: the relative phase shift arises solely from the optical round trip in the layer, producing destructive interference. But cancellation is <strong>complete</strong> only if their amplitudes match, which requires n = √(n₀·n<sub>s</sub>). Two independent conditions — question Q10 has you verify that the second one is not exactly met here.</p>
                 </figure>
 
                 <div class="bg-amber-50 border-l-4 border-amber-400 p-3 text-xs text-amber-900 rounded-r-lg mb-2">
-                    <strong>💡 AR principle:</strong> quarter-wave condition $n \cdot d = \lambda_0 / 4$ with $n_{layer} = \sqrt{n_{substrate} \cdot n_{inc}}$. <strong>QWOT</strong> (<em>quarter-wave optical thickness</em>) is the optical thickness $\lambda_0/4$: a 1 QWOT layer satisfies $n \cdot d = \lambda_0/4$, and “2H” means 2 QWOT of H.
+                    <strong>💡 AR principle:</strong> quarter-wave condition $n \cdot d = \lambda_0 / 4$ with $n_{layer} = \sqrt{n_{substrate} \cdot n_{inc}}$. At $\lambda_0$, a quarter-wave layer of index $n_1$ on substrate $n_s$ gives the residual reflectance $R(\lambda_0) = \left(\frac{n_0 n_s - n_1^2}{n_0 n_s + n_1^2}\right)^2$. <strong>QWOT</strong> (<em>quarter-wave optical thickness</em>) is the optical thickness $\lambda_0/4$: a 1 QWOT layer satisfies $n \cdot d = \lambda_0/4$, and “2H” means 2 QWOT of H.
                 </div>
 
                 <div class="border-b border-slate-100 pb-4 qbox">
@@ -502,6 +510,7 @@
                                     🧠 <strong>The shift in the minimum position is below one nanometre — hence negligible.</strong> This is not an error: it is the result. Explain it. Hint: the <em>position</em> of the minimum is set by the phase condition $n_c d = \lambda/4$, which involves only the layer — non-dispersive here. Substrate dispersion acts solely on the <em>amplitude</em> condition $n_c=\sqrt{n_s}$, hence on the <strong>depth</strong> of the minimum, not on its wavelength.
                                 </div>
                                 <p class="text-xs text-slate-600">Conclude by naming, within this lab, <strong>two situations where dispersion does become visible</strong>: you have met one already in Exercise I, and you will meet the other in Exercise VI.</p>
+                                <p class="text-xs font-semibold text-slate-700"><strong>Reset:</strong> Restore the <code>BK7</code> substrate before continuing.</p>
                             </div>
                         </div>
                     </div>
@@ -515,7 +524,7 @@
                             <p><strong>Demystifying the Black Box in Excel:</strong> Compute reflection $R$ of this layer at $550\,\text{nm}$ in Excel.</p>
                             <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
                                 <li>Compute the optical phase $\delta_1$.</li>
-                                <li>Build matrix $M_1$ using <code>=COMPLEX(real, imag)</code>, <code>=IMPRODUCT</code>, <code>=IMSUM</code>, <code>=IMSUB</code>, <code>=IMDIV</code>, and <code>=IMABS</code>.</li>
+                                <li>Build matrix $M_1$. <i>Excel tip (English version): <code>=COMPLEX(real, imag)</code>, <code>=IMPRODUCT()</code>, <code>=IMSUM()</code>, <code>=IMSUB()</code>, <code>=IMDIV()</code>, and <code>=IMABS()</code>.</i></li>
                                 <li>Compute the equivalent admittance $Y=\frac{m_{10}+\eta_{sub} m_{11}}{m_{00}+\eta_{sub} m_{01}}$ then $R=\left|\frac{\eta_0-Y}{\eta_0+Y}\right|^2$.</li>
                                 <li>Check that you recover the simulator value.</li>
                             </ul>
@@ -576,7 +585,7 @@
                                 <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
                                     <li>First refine your Q13 design down to the bottom of its valley ($R < 0.01\%$ at 550 nm) and note which Q14 minimum you kept: everything that follows depends on it.</li>
                                 <li>Set the <strong>AR window to 520–580 nm</strong> and the <strong>threshold to 0.8%</strong> (fields below the merit selector). Check that the nominal design now meets the criterion, and with what margin.</li>
-                                    <li>Qualify: $d_{min}=1$ nm, $N=500$. Compare $\Delta d = 3$ and $5\,\text{nm}$; the seed being fixed, both runs use the same realizations.</li>
+                                    <li>Qualify: $d_{min}=1$ nm, $N=500$. Click <strong>Assess robustness</strong> for $\Delta d = 3$ and $5\,\text{nm}$; the seed being fixed, both runs use the same realizations (paired comparison).</li>
                                     <li>Report yield, the 95% Wilson CI and P95 of mean reflectance in both cases. Do the two confidence intervals overlap? Can you claim $\pm5$ is significantly worse, or is it sampling noise?</li>
                                     <li>Compare P95 at $\pm5\,\text{nm}$ with the threshold. Depending on your valley, it stays below or exceeds it while the mean respects it: in the latter case, what does that gap mean concretely for a production batch? Compare with a pair who kept another valley: which one is more robust, and why?</li>
                                     <li><strong>Isolate the critical layer — by hand, not with Monte-Carlo.</strong> The draw <em>always</em> perturbs both layers: locking applies to BFGS only, never to manufacturing. So work by sensitivity instead: from the nominal design, add $+3\,\text{nm}$ to ZnS alone and record the merit; return to nominal, add $+3\,\text{nm}$ to YF₃ alone and record. Which one degrades it more? Relate your answer to the index and the optical thickness $n\cdot d$ of each layer.</li>
@@ -589,7 +598,7 @@
                 </div>
                 <details class="hint"><summary>💡 Hint</summary><p>Follow the bullets in order. The “Current merit” line, below the merit selector, updates with every change: read it before and after changing the window. The Monte-Carlo result directly gives yield, interval and P95. Course §11.</p></details>
                 <div class="border-t border-slate-100 pt-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">Q16</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Statistical convergence.</strong> Since the seed is fixed, the draws are strictly identical from one run to the next. Take your Q15 design in a setting where the yield is intermediate — for example the tightened threshold of 0.3% and $\Delta d=5$ nm (adapt the threshold if the yield obtained on your valley is not intermediate) — and run $N=100$, 500 then 1000. Tabulate the yield and the bounds of the 95% Wilson CI, and measure the interval width in all three cases: by what factor does it narrow when $N$ is multiplied by 10? Does that match the $1/\sqrt{N}$ law? Repeat the test in a setting where the yield is close to 100% (for example threshold 0.8%, $\Delta d=3$ nm; adapt if needed): why does the law no longer apply? Conclude: why are 100 runs enough to explore, but not to qualify?</div></div></div>
-                <details class="hint"><summary>💡 Hint</summary><p>Change only N from one run to the next. Interval width = upper bound − lower bound; divide the width obtained at N = 100 by the one obtained at N = 1000.</p></details>
+                <details class="hint"><summary>💡 Hint</summary><p>Change only N from one run to the next. Interval width = upper bound − lower bound; divide the width obtained at N = 100 by the one obtained at N = 1000. Consult Course §11 for the confidence interval calculation.</p></details>
             </div>
         </section>
 
@@ -869,7 +878,7 @@
                                 <li>In the analyzer, verify the three pre-filled specification bands (quantity <code>T</code>, 0.5 nm step) and record the three $\overline{T}$ averages. The <code>R</code> and <code>A</code> choices support other measurements; they never assign a role in a merit.</li>
                                 <li>Compute $Q_r$ yourself from those three numbers, by hand and then in Excel from the exported CSV (since the CSV uses a 0.1 nm step, keep one row in 5 to match the 0.5 nm grid exactly). Both routes must agree.</li>
                                 <li>Check the effect of the step: repeat the same averages at 0.1 nm and then at 2 nm. Which of the three bands is the most sensitive to the step, and why?</li>
-                                <li>Complete the nominal audit — number of layers, number of materials, $d_{min}$, $d_{max}$, total thickness — <strong>by computing it from the layer table</strong>. The <em>"check my audit"</em> button is only there to verify your result <strong>after</strong> you have established it.</li>
+                                <li>Complete the nominal audit — number of layers, number of materials, $d_{min}$, $d_{max}$, total thickness — <strong>by computing it from the layer table</strong>. The <em>"check my audit"</em> button (at the bottom of the Monte-Carlo panel) only serves to verify your result <strong>after</strong> you have established it. (In Excel, the <code>=SUBTOTAL(101, ...)</code> function averages visible rows only if you filter the table).</li>
                             </ul>
                             <div class="bg-rose-50 border-l-4 border-rose-400 p-2 rounded-r text-xs text-rose-900">
                                 🧠 <strong>The decisive experiment:</strong> keep the 535–565 nm passband and 620–680 nm upper rejection band, then <strong>recompute $Q_r$ three times</strong>, changing only the lower rejection band: <code>400–500</code>, then <code>430–500</code>, then the prescribed <code>460–500</code>. <strong>By how much does $Q_r$ vary?</strong> Relate this to the actual spectrum. What is a rejection specification worth if it does not state its bands?
@@ -879,7 +888,7 @@
                         </div>
                     </div>
                 </div>
-                <details class="hint"><summary>💡 Hint</summary><p>Verify the three pre-filled bands in the analyzer, quantity T, 0.5 nm step. Then Q_r = 2 × T̄(pass) / (T̄(reject 1) + T̄(reject 2)): check the brackets.</p></details>
+                <details class="hint"><summary>💡 Hint</summary><p>Verify the three pre-filled bands in the analyzer, quantity T, 0.5 nm step. Then Q_r = 2 × T̄(pass) / (T̄(reject 1) + T̄(reject 2)): check the brackets. Click "Default bands" before moving to Q25.</p></details>
 
                 <div class="border-b border-slate-100 pb-4 qbox">
                     <div class="flex items-start gap-3">
@@ -889,7 +898,7 @@
                             <p class="text-xs text-slate-600 mb-1.5">The question is not rhetorical. Start by measuring $Q_r$ and $\overline{T}_{pass}$ <em>before</em> any optimization and compare them with the two requirements of the specification. <strong>If the deposited prescription already meets them, and by a wide margin, say so: that is a result, not a failure on your part.</strong> You then have to answer a more interesting question: what is the point of optimizing a component that already passes? Look at the margin — by how much does the nominal exceed the threshold, and does that margin survive the deposition errors of Q26? That, rather than the nominal value, is where the three free layers earn their keep.</p>
                             <ul class="list-disc list-inside text-xs text-slate-600 bg-slate-50 p-2 rounded space-y-1">
                                 <li>Verify that you are in <strong>🎓 Student</strong> mode, exercise VIII: the <code>Maximize Qr</code> merit is selected automatically there. Its formula already uses exactly the 460–500, 535–565, and 620–680 nm bands; the band analyzer remains an independent measurement instrument.</li>
-                                <li>Set the cleanup threshold to <strong>2 nm</strong>: it is also BFGS's lower bound. Record this constraint in the design dossier; a numerical optimum below it is not admissible.</li>
+                                <li>Set the cleanup threshold to <strong>2 nm</strong> (click Clean in panel 2. Layer Stack): it is also BFGS's lower bound. Record this constraint in the design dossier; a numerical optimum below it is not admissible.</li>
                                 <li>Choose <code>Specific layers</code>, then allow <strong>layers 16, 17, and 18 only</strong>. Check in the table that layers 1 to 15 are fixed. This constraint belongs to the component that will be deposited and must never be relaxed.</li>
                                 <li>Run BFGS and record $Q_r$, $\overline{T}_{pass}$, and the three thicknesses before/after. Do both quantities move in the same direction? What happens to layer 18? Verify that the layer count, ordering, and first fifteen thicknesses are strictly unchanged.</li>
                                 <li>Test reproducibility by reloading the prescription and rerunning BFGS with identical settings. Explain why identical results are expected from a deterministic algorithm.</li>
@@ -932,10 +941,10 @@
             <div class="p-6 space-y-4">
                 <div class="bg-emerald-50 border-l-4 border-emerald-500 p-3 text-xs text-emerald-950 rounded-r-lg"><strong>Deliverable:</strong> a one-page decision sheet detailed enough for another team to reproduce the simulation and challenge the conclusion.</div>
 
-                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q27</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Qualification contract:</strong> work on the Q25 optimized Fresnel prescription (layers 16 to 18 — if you are coming from Q26 (f), which reloaded the nominal stack, rerun BFGS on layers 16 to 18 first), or on a previously approved custom extension whose yield is not close to 100%. Switch the simulator to <code>Student → IX. Design review</code>. Check the external media, then state before any calculation the window, incidence, polarization, metric, <strong>the exact bands</strong>, calculation grid, optical threshold, $d_{min}$, resolution, seed, and minimum required yield. Enter the latter in the <em>Required yield</em> field. Distinguish requirements from improvement goals.</div></div></div>
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q27</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Qualification contract:</strong> work on the Q25 optimized Fresnel prescription (layers 16 to 18 — if you are coming from Q26 (f), which reloaded the nominal stack, rerun BFGS on layers 16 to 18 first), or on a previously approved custom extension whose yield is not close to 100%. Switch the simulator to <code>Student → IX. Design review</code>. Check the external media, then state before any calculation the window, incidence, polarization, metric, <strong>the exact bands</strong>, calculation grid, optical threshold, $d_{min}$, resolution, seed, and minimum required yield. Enter the latter in the <em>Required yield</em> field. Distinguish requirements from improvement goals (the seed being fixed at 42 to ensure reproducibility).</div></div></div>
                 <details class="hint"><summary>💡 Hint</summary><p>This is about writing, not computing: list every setting that changes the result, with its value.</p></details>
 
-                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q28</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Nominal manufacturability audit:</strong> produce the material/thickness/order table, then <strong>establish yourself</strong> the number of layers and materials, $d_{min}$, $d_{max}$, and total thickness — the simulator does not display them; the <em>"check my audit"</em> button is only there to verify your result once you have written it down. Identify layers below the threshold, thicknesses incompatible with the resolution, and any complexity not justified by optical gain. <em>Point to discuss:</em> on a quarter-wave stack at 550 nm, the thinnest layer exceeds 55 nm, i.e. more than fifty times the $d_{min}=1$ nm threshold. Is this guard therefore inactive? Under what circumstances does it become binding again?</div></div></div>
+                <div class="border-b border-slate-100 pb-4 qbox"><div class="flex items-start gap-3"><div class="flex flex-col items-center gap-1 shrink-0"><span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Q28</span><span class="text-[9px] leading-none tracking-tight text-amber-600" title="Level 2 — Analysis: multiple steps, data processing, physical interpretation">&#9733;&#9733;&#9734;</span></div><div class="text-sm text-slate-800"><strong>Nominal manufacturability audit:</strong> produce the material/thickness/order table, then <strong>establish yourself</strong> the number of layers and materials, $d_{min}$, $d_{max}$, and total thickness — the simulator does not display them; the <em>"check my audit"</em> button is only there to verify your result once you have written it down. Identify layers below the threshold, thicknesses incompatible with quartz monitoring, and any complexity not justified by optical gain. <em>Point to discuss:</em> on a quarter-wave stack at 550 nm, the thinnest layer exceeds 55 nm, i.e. more than fifty times the $d_{min}=1$ nm threshold. Is this guard therefore inactive? Under what circumstances does it become binding again?</div></div></div>
                 <details class="hint"><summary>💡 Hint</summary><p>The layer table gives thicknesses in nm: count the rows, find the smallest and the largest, add them up. “check my audit” is only for checking.</p></details>
 
 

@@ -681,7 +681,7 @@ else:
     attendu_yf3 = list(range(y0, y1 + 1, pas))
     with zipfile.ZipFile(xlsx) as z:
         feuille = z.read("xl/worksheets/sheet3.xml").decode("utf-8")
-    lit = lambda ref: re.search(r'<x:c r="%s"[^>]*>.*?<x:v>([^<]*)</x:v>' % ref, feuille, re.S)
+    lit = lambda ref: re.search(r'<(?:x:)?c r="%s"[^>]*>.*?<(?:x:)?v>([^<]*)</(?:x:)?v>' % ref, feuille, re.S)
     axe_yf3 = [int(float(lit(r).group(1))) if lit(r) else None for r in ("B5", "C5", "D5", "E5", "F5")]
     axe_zns = [int(float(lit(r).group(1))) if lit(r) else None for r in ("A6", "A7", "A8", "A9", "A10")]
     verifie(f"classeur Q14 : axe d_ZnS conforme à l'énoncé ({attendu_znS})",

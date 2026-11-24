@@ -15,7 +15,17 @@
     <script>
         window.MathJax = {
             tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-            svg: { fontCache: 'global' }
+            svg: { fontCache: 'global' },
+            startup: {
+                ready: () => {
+                    MathJax.startup.defaultReady();
+                    MathJax.startup.promise.then(() => {
+                        if (typeof translateExactNodes === 'function' && typeof currentLang !== 'undefined' && currentLang !== 'fr') {
+                            translateExactNodes(currentLang);
+                        }
+                    });
+                }
+            }
         };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -208,7 +218,7 @@
                         Simulateur Couches Minces Optiques
                         <span id="txtAudienceBadge" class="text-xs bg-indigo-500/40 text-indigo-200 font-semibold px-2 py-0.5 rounded-full border border-indigo-400/30">BUT 3 FI Parcours MCPC — étudiants L2 · L3 · M1 · M2</span>
                     </h1>
-                    <p class="text-xs text-indigo-300">Méthode matricielle d'Abelès (TMM) · <span id="txtLastUpdate" data-date="2026-11-24">Mis à jour le 24 novembre 2026</span></p>
+                    <p class="text-xs text-indigo-300"><span>Méthode matricielle d'Abelès (TMM)</span> · <span id="txtLastUpdate" data-date="2026-11-24" data-time="11:59">Mis à jour le 24 novembre 2026 à 11h59</span></p>
                 </div>
             </div>
 
@@ -328,7 +338,7 @@
                             <option value="Custom">Indice personnalisé</option>
                         </select>
                         <div id="divCustomSuper" class="hidden mt-1.5 flex gap-1">
-                            <input type="number" id="inpCustomSuperN" value="1.0" step="0.01" min="0.1" class="w-full bg-slate-50 border border-slate-300 rounded px-2 py-1 text-xs" placeholder="n">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="inpCustomSuperN" value="1.0" class="w-full bg-slate-50 border border-slate-300 rounded px-2 py-1 text-xs" placeholder="n">
                         </div>
                     </div>
                     <!-- Substrat -->
@@ -345,8 +355,8 @@
                             <option value="Custom">Indice personnalisé</option>
                         </select>
                         <div id="divCustomSub" class="hidden mt-1.5 flex gap-1">
-                            <input type="number" id="inpCustomSubN" value="1.52" step="0.01" min="0.1" class="w-1/2 bg-slate-50 border border-slate-300 rounded px-2 py-1 text-xs" placeholder="n">
-                            <input type="number" id="inpCustomSubK" value="0.00" step="0.0001" min="0" class="w-1/2 bg-slate-50 border border-slate-300 rounded px-2 py-1 text-xs" placeholder="k">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="inpCustomSubN" value="1.52" class="w-1/2 bg-slate-50 border border-slate-300 rounded px-2 py-1 text-xs" placeholder="n">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="inpCustomSubK" value="0.00" class="w-1/2 bg-slate-50 border border-slate-300 rounded px-2 py-1 text-xs" placeholder="k">
                         </div>
                     </div>
                 </div>
@@ -2703,6 +2713,11 @@
             const d = new Date(el.dataset.date + 'T12:00:00');
             const fr = currentLang === 'fr';
             const txt = d.toLocaleDateString(fr ? 'fr-FR' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+            const tm = /^\d{2}:\d{2}$/.test(el.dataset.time || '') ? el.dataset.time : '';
+            if (tm) {
+                const [hh, mm] = tm.split(':');
+                return fr ? `Mis à jour le ${txt} à ${hh}h${mm}` : `Updated ${txt}, ${hh}:${mm}`;
+            }
             return fr ? `Mis à jour le ${txt}` : `Updated ${txt}`;
         });
     }
@@ -2757,10 +2772,20 @@
             el.textContent = txt;
             return;
         }
+        const arOpt = document.querySelector('#selMeritObjective option[value="ar"]');
+        if (arOpt) {
+            const gAr = getArConfig();
+            const spanTxt = gAr.windows.length
+                ? gAr.windows.map(w => `${w.min}–${w.max} nm`).join(' + ')
+                : '400–750 nm';
+            arOpt.textContent = fr ? `R moyen ${spanTxt} (AR)` : `Mean R, ${spanTxt} (AR)`;
+        }
         if (o === 'qr') {
+            const qrMin = parseFloat(document.getElementById('inpAcceptQr')?.value) || ACCEPTANCE.qr.qr;
+            const tpMin = parseFloat(document.getElementById('inpAcceptTpass')?.value) || ACCEPTANCE.qr.tpass;
             txt = fr
-                ? `Mérite Qr figé : T̄(535–565) ÷ moyenne[T̄(460–500), T̄(620–680)], pas ${MERIT_GRIDS.qr.step} nm. Critère : Qr ≥ ${ACCEPTANCE.qr.qr} et Tpass ≥ ${ACCEPTANCE.qr.tpass} %.`
-                : `Fixed Qr merit: T̄(535–565) ÷ mean[T̄(460–500), T̄(620–680)], ${MERIT_GRIDS.qr.step} nm step. Criterion: Qr ≥ ${ACCEPTANCE.qr.qr} and Tpass ≥ ${ACCEPTANCE.qr.tpass}%.`;
+                ? `Mérite Qr figé : T̄(535–565) ÷ moyenne[T̄(460–500), T̄(620–680)], pas ${MERIT_GRIDS.qr.step} nm. Critère : Qr ≥ ${qrMin} et Tpass ≥ ${tpMin} %.`
+                : `Fixed Qr merit: T̄(535–565) ÷ mean[T̄(460–500), T̄(620–680)], ${MERIT_GRIDS.qr.step} nm step. Criterion: Qr ≥ ${qrMin} and Tpass ≥ ${tpMin}%.`;
         } else {
             const g = getArConfig();
             if (!g.windows.length) {
@@ -4235,7 +4260,7 @@
        geste qui renumérote les couches (aiguille, nettoyage, suppression). */
     function syncOptimizationScopeFromLocks() {
         const free = appState.layers.map((layer, idx) => layer.locked ? null : idx + 1).filter(Boolean);
-        const all = free.length === appState.layers.length && free.length > 0;
+        const all = free.length === appState.layers.length;
         const select = document.getElementById('selOptimizeScope');
         const input = document.getElementById('inpOptimizeLayers');
         if (select) select.value = all ? 'all' : 'specific';
@@ -4652,12 +4677,16 @@
                         const number = /^\d+/.exec(input.slice(pos));
                         if (!number) fail();
                         count = Number(number[0]); pos += number[0].length;
+                    } else if (/^\d/.test(input[pos] || '')) {
+                        throw new Error(currentLang === 'fr'
+                            ? 'Répétition de groupe : utilisez « ^ », par exemple (HL)^3 H.'
+                            : 'Group repetition: use "^", for example (HL)^3 H.');
                     }
                     if (!Number.isSafeInteger(count) || count < 1 || layers.length + group.length * count > 2000) fail();
                     for (let i = 0; i < count; i++) layers.push(...group.map(l => ({ ...l })));
                 } else {
-                    const number = /^(?:\d+(?:\.\d*)?|\.\d+)/.exec(input.slice(pos));
-                    const mult = number ? Number(number[0]) : 1;
+                    const number = /^(?:\d+(?:[.,]\d*)?|[.,]\d+)/.exec(input.slice(pos));
+                    const mult = number ? Number(number[0].replace(',', '.')) : 1;
                     if (number) pos += number[0].length;
                     spaces();
                     const key = keys.find(k => input.startsWith(k, pos));
@@ -5628,7 +5657,7 @@
         // séparément afficherait trois courbes superposées et suggérerait à tort
         // trois grandeurs distinctes. On fusionne, et on le dit.
         const spDegenerate = isSpec && Math.abs(appState.incSpecDeg) < 1e-9;
-        const anyPol = appState.showAvg || appState.showS || appState.showP;
+        const anyPol = spDegenerate || appState.showAvg || appState.showS || appState.showP;
 
         if (appState.showR) {
             if (spDegenerate) {
@@ -6232,6 +6261,10 @@
         const openCustomMatEditorFromAnywhere = (targetMatId = null) => {
             const matPanel = document.querySelector('[data-panel="materials"]');
             if (matPanel) matPanel.classList.remove('hidden');
+            if (appState.uiMode === 'libre' && typeof freeOpen !== 'undefined') {
+                freeOpen.add('fold:materials');
+                if (typeof renderFreeLayoutState === 'function') renderFreeLayoutState();
+            }
             let mat = targetMatId ? appState.customMaterials.find(m => m.id === targetMatId) : getActiveCustomMat();
             if (!mat && appState.customMaterials.length === 0) {
                 document.getElementById('btnNewCustomMat')?.click();
@@ -6274,6 +6307,8 @@
             saveCustomMaterialsToStorage();
             refreshMaterialSelectors(true);
             renderLayersTable();
+            const chip = document.querySelector(`#divCustomMatChips .btnSelectCustomChip[data-matid="${mat.id}"]`);
+            if (chip) chip.textContent = mat.name || mat.id;
         });
 
         document.getElementById('inpCustomMatSym')?.addEventListener('change', e => {
@@ -6294,6 +6329,8 @@
             saveCustomMaterialsToStorage();
             refreshMaterialSelectors(true);
             renderLayersTable();
+            const chip = document.querySelector(`#divCustomMatChips .btnSelectCustomChip[data-matid="${mat.id}"]`);
+            if (chip) chip.textContent = mat.name || mat.id;
         });
 
         const createCustomMaterial = () => {
@@ -6616,13 +6653,20 @@
         const xData = [];
         const nData = [];
         const kData = [];
-
-        for (let l = 350; l <= 850; l += 10) {
+        let xMin = 350, xMax = 850;
+        if (isCustom && Array.isArray(mat.table) && mat.table.length >= 2) {
+            const tMin = mat.table[0].l, tMax = mat.table[mat.table.length - 1].l;
+            xMin = Math.min(350, Math.floor(tMin / 50) * 50);
+            xMax = Math.max(850, Math.ceil(tMax / 50) * 50);
+        }
+        const xStep = (xMax - xMin) > 700 ? 15 : 10;
+        for (let l = xMin; l <= xMax; l += xStep) {
             const N = mat.getN(l);
             xData.push(l);
             nData.push(N.r);
             kData.push(N.i);
         }
+        const ptRad = (Array.isArray(mat.table) && mat.table.length > 40) ? 2.2 : 4.5;
 
         const nDatasets = [{
             label: currentLang === 'fr' ? 'n (interpolation)' : 'n (interpolation)',
@@ -6637,11 +6681,15 @@
                 data: mat.table.map(pt => ({ x: pt.l, y: pt.n })),
                 borderColor: '#312e81',
                 backgroundColor: '#4338ca',
-                pointRadius: 4.5,
-                pointHoverRadius: 6.5,
+                pointRadius: ptRad,
+                pointHoverRadius: 6,
                 showLine: false,
                 fill: false
             });
+        }
+        if (matChart.options?.scales?.x) {
+            matChart.options.scales.x.min = xMin;
+            matChart.options.scales.x.max = xMax;
         }
         matChart.data.datasets = nDatasets;
         matChart.update();
@@ -6660,18 +6708,26 @@
                     data: mat.table.map(pt => ({ x: pt.l, y: pt.k || 0 })),
                     borderColor: '#7f1d1d',
                     backgroundColor: '#dc2626',
-                    pointRadius: 4.5,
-                    pointHoverRadius: 6.5,
+                    pointRadius: ptRad,
+                    pointHoverRadius: 6,
                     showLine: false,
                     fill: false
                 });
             }
+            if (matKChart.options?.scales?.x) {
+                matKChart.options.scales.x.min = xMin;
+                matKChart.options.scales.x.max = xMax;
+            }
+            if (matKChart.options?.scales?.y) {
+                matKChart.options.scales.y.min = 0;
+                matKChart.options.scales.y.max = kmax > 1e-6 ? undefined : 1;
+                if (matKChart.options.scales.y.title) {
+                    matKChart.options.scales.y.title.text = kmax > 1e-6
+                        ? 'k'
+                        : (currentLang === 'fr' ? 'k = 0 (transparent)' : 'k = 0 (transparent)');
+                }
+            }
             matKChart.data.datasets = kDatasets;
-            matKChart.options.scales.y.min = 0;
-            matKChart.options.scales.y.max = kmax > 1e-6 ? undefined : 1;
-            matKChart.options.scales.y.title.text = kmax > 1e-6
-                ? 'k'
-                : (currentLang === 'fr' ? 'k = 0 (transparent)' : 'k = 0 (transparent)');
             matKChart.update();
         }
     }
@@ -6853,7 +6909,7 @@
                     + `<p class="mt-1">${fr ? ex.taskFr : ex.taskEn}</p>`
                     + (ex.id === 2
                         ? `<button type="button" data-single-interface class="mt-2 font-bold underline underline-offset-2" title="${fr ? 'Retirer les couches et désactiver la face arrière, en conservant les deux milieux choisis.' : 'Remove layers and disable the rear surface, keeping the two selected media.'}">${fr ? 'Revenir à une seule interface' : 'Return to a single interface'}</button>` : '')
-                    + `<p id="bannerBacksideNote" class="mt-2 font-bold text-amber-800${appState.considerBackside && ex.id !== 2 ? '' : ' hidden'}">${fr ? '⚠ La face arrière est incluse : décochez « Inclure la face arrière » si l’énoncé porte sur la face traitée seule.' : '⚠ The rear surface is included: untick “Include rear surface” if the handout deals with the coated face alone.'}</p>`;
+                    + `<p id="bannerBacksideNote" class="mt-2 font-bold text-amber-800${appState.considerBackside && ex.id !== 2 ? '' : ' hidden'}">${fr ? '⚠ La face arrière est incluse : décochez « Inclure la face arrière » si l’énoncé porte sur la face traitée seule.' : '⚠ The rear surface is included: untick “Include rear surface” if the handout deals with the coated face alone.'} <button type="button" data-disable-backside class="ml-1 underline underline-offset-2 text-amber-950 hover:text-indigo-700">${fr ? 'Désactiver maintenant' : 'Disable now'}</button></p>`;
             }
         }
         if (window.lucide) lucide.createIcons();
@@ -6866,6 +6922,13 @@
     function enterExercise(id) {
         appState.uiMode = 'etudiant';
         appState.exercise = id;
+        const ex = EXERCISES.find(e => e.id === id);
+        if (appState.reviewOverlay && (!ex || !ex.panels.includes('review'))) {
+            appState.reviewOverlay = false;
+            const chk = document.getElementById('chkReviewOverlay');
+            if (chk) chk.checked = false;
+            if (typeof updateCharts === 'function') updateCharts();
+        }
         renderExerciseSelector();
         applyUiMode();
         scheduleProjectSave();
@@ -6889,6 +6952,9 @@
         const chkBack = document.getElementById('chkBackside');
         if (chkBack) chkBack.checked = false;
         document.getElementById('bannerBacksideNote')?.classList.add('hidden');
+        appState.reviewOverlay = false;
+        const chkRevOv = document.getElementById('chkReviewOverlay');
+        if (chkRevOv) chkRevOv.checked = false;
         appState.monteCarloRuns = [];
         appState.monteCarloSamples = [];
         // Les résultats affichés se rapportaient à l'empilement précédent : les
@@ -6952,6 +7018,8 @@
 
         document.getElementById('selSuperstrat').value = appState.superstrat;
         document.getElementById('selSubstrat').value = appState.substrat;
+        document.getElementById('divCustomSuper')?.classList.toggle('hidden', appState.superstrat !== 'Custom');
+        document.getElementById('divCustomSub')?.classList.toggle('hidden', appState.substrat !== 'Custom');
         document.getElementById('inpL0Design').value = appState.designL0;
         document.getElementById('inpIncDesign').value = appState.designIncDeg;
         document.getElementById('inpLMin').value = appState.lMin;
@@ -6973,6 +7041,10 @@
         if (typeof updateMeritGridNote === 'function') updateMeritGridNote();
         document.getElementById('panelSpectralControls').classList.remove('hidden');
         document.getElementById('panelAngularControls').classList.add('hidden');
+        const tabSpec = document.getElementById('tabBtnSpectral');
+        const tabAng = document.getElementById('tabBtnAngular');
+        if (tabSpec) tabSpec.className = "text-xs px-2.5 py-1 rounded-md font-bold bg-indigo-600 text-white transition";
+        if (tabAng) tabAng.className = "text-xs px-2.5 py-1 rounded-md font-medium text-slate-600 hover:bg-slate-100 transition";
         renderLayersTable();
         runFullSimulation();
     }
@@ -7123,19 +7195,26 @@
         bindNumericControl('inpAMax', 'aMax', { min: 0.05, max: 89.9, check: v => v >= appState.aMin + 0.05 ? null
             : ['θmax doit dépasser θmin.', 'θmax must exceed θmin.'] });
 
-        document.getElementById('inpCustomSuperN')?.addEventListener('change', (e) => {
-            appState.customSuperN = Math.max(0.1, parseFloat(e.target.value) || 1);
-            renderLayersTable();
-            runFullSimulation();
-        });
-        document.getElementById('inpCustomSubN')?.addEventListener('change', (e) => {
-            appState.customSubN = Math.max(0.1, parseFloat(e.target.value) || 1.52);
-            runFullSimulation();
-        });
-        document.getElementById('inpCustomSubK')?.addEventListener('change', (e) => {
-            appState.customSubK = Math.max(0, parseFloat(e.target.value) || 0);
-            runFullSimulation();
-        });
+        const bindMediumIndexInput = (id, key, minVal, maxVal, fallback) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const applyVal = (commit) => {
+                const parsed = parseDecimalInput(el.value);
+                if (!Number.isFinite(parsed) || parsed < minVal || parsed > maxVal) {
+                    if (commit) el.value = appState[key];
+                    return;
+                }
+                appState[key] = parsed;
+                if (commit) el.value = parsed;
+                if (key === 'customSuperN') renderLayersTable();
+                runFullSimulation();
+            };
+            el.addEventListener('input', () => applyVal(false));
+            el.addEventListener('change', () => applyVal(true));
+        };
+        bindMediumIndexInput('inpCustomSuperN', 'customSuperN', 0.1, 20, 1);
+        bindMediumIndexInput('inpCustomSubN', 'customSubN', 0.1, 20, 1.52);
+        bindMediumIndexInput('inpCustomSubK', 'customSubK', 0, 30, 0);
 
         document.getElementById('selSuperstrat').addEventListener('change', (e) => {
             const mat = MATERIALS_DB[e.target.value];
@@ -7235,9 +7314,15 @@
             if (box && !box.classList.contains('hidden')) renderScaleMaterials();
         });
         document.getElementById('btnApplyScale')?.addEventListener('click', applyStackScale);
+        document.getElementById('inpScaleFactor')?.addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); applyStackScale(); }
+        });
 
         document.getElementById('btnParseFormula').addEventListener('click', () => {
             document.getElementById('formulaBox').classList.toggle('hidden');
+        });
+        document.getElementById('inpFormulaStr')?.addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); document.getElementById('btnApplyFormula')?.click(); }
         });
 
         document.getElementById('btnApplyFormula').addEventListener('click', () => {
@@ -7300,6 +7385,7 @@
             document.getElementById(id)?.addEventListener('change', () => {
                 invalidateDerivedResults('les hypothèses de qualification ont changé.',
                     'the qualification assumptions changed.');
+                updateMeritGridNote();
                 updateFabricationSummary();
                 updateCharts();
             });
@@ -7708,13 +7794,23 @@
         const state = {};
         PROJECT_FIELDS.forEach(k => { state[k] = JSON.parse(JSON.stringify(appState[k] ?? null)); });
         const val = id => document.getElementById(id)?.value;
-        return {
+        const usedIds = new Set([
+            ...state.layers.map(l => l?.matId),
+            ...state.backLayers.map(l => l?.matId),
+            state.superstrat, state.substrat, state.backMedium
+        ].filter(Boolean));
+        const customMaterials = (appState.customMaterials || [])
+            .filter(m => usedIds.has(m.id))
+            .map(m => ({ id: m.id, name: m.name, sym: m.sym, description: m.description, table: (m.table || []).map(pt => ({ ...pt })) }));
+        const out = {
             format: 'simulateur-couches-minces', version: 1, savedAt: new Date().toISOString(),
             uiMode: appState.uiMode, exercise: appState.exercise, lang: currentLang,
             objective: getObjectiveMode(), targetSegments: appState.customTarget.segments.map(s => ({ ...s })),
             targetStep: val('inpTargetStep'), targetThreshold: val('inpTargetThreshold'), arThreshold: val('inpArThreshold'),
             state
         };
+        if (customMaterials.length) out.customMaterials = customMaterials;
+        return out;
     }
 
     /* Historique du travail : chaque état enregistré est mémorisé (50 au plus).
@@ -7812,10 +7908,29 @@
             throw fail('ce fichier n’est pas un travail du simulateur.', 'this file is not a simulator work file.');
         const s = o.state;
         const finite = (v, lo, hi) => typeof v === 'number' && Number.isFinite(v) && v >= lo && v <= hi;
-        const layerOk = l => l && typeof l === 'object' && Object.hasOwn(MATERIALS_DB, l.matId)
+        const embedded = [];
+        const embeddedIds = new Set();
+        if (o.customMaterials !== undefined) {
+            if (!Array.isArray(o.customMaterials) || o.customMaterials.length > 50)
+                throw fail('matériaux personnels invalides.', 'invalid custom materials.');
+            for (const m of o.customMaterials) {
+                if (!m || typeof m.id !== 'string' || !/^custom_mat_[A-Za-z0-9_]+$/.test(m.id) || embeddedIds.has(m.id))
+                    throw fail('matériau personnel invalide.', 'invalid custom material.');
+                const cleanTable = sanitizeMatTable(m.table, s.superstrat === m.id);
+                embeddedIds.add(m.id);
+                embedded.push({
+                    id: m.id,
+                    name: String(m.name || m.id).slice(0, 200),
+                    sym: typeof m.sym === 'string' ? m.sym.trim().toUpperCase() : '',
+                    description: String(m.description || '').slice(0, 2000),
+                    table: cleanTable
+                });
+            }
+        }
+        const layerOk = l => l && typeof l === 'object' && (Object.hasOwn(MATERIALS_DB, l.matId) || embeddedIds.has(l.matId))
             && ['QWOT', 'nm'].includes(l.unit)
             && finite(l.val, 0, l.unit === 'nm' ? LAYER_LIMITS.nm : LAYER_LIMITS.qwot);
-        const mediumOk = id => id === 'Custom' || Object.hasOwn(MATERIALS_DB, id);
+        const mediumOk = id => id === 'Custom' || Object.hasOwn(MATERIALS_DB, id) || embeddedIds.has(id);
         if (!Array.isArray(s.layers) || s.layers.length > 2000 || !s.layers.every(layerOk))
             throw fail('couches invalides ou matériau inconnu (importez d’abord vos matériaux personnels).',
                 'invalid layers or unknown material (import your custom materials first).');
@@ -7844,10 +7959,39 @@
         if (!['etudiant', 'libre'].includes(o.uiMode)) throw fail('mode inconnu.', 'unknown mode.');
         if (o.exercise !== null && !EXERCISES.some(e => e.id === o.exercise)) throw fail('exercice inconnu.', 'unknown exercise.');
         if (!['ar', 'qr', 'custom'].includes(o.objective)) throw fail('mérite inconnu.', 'unknown merit.');
-        return { ...o, targetSegments: segs };
+        return { ...o, targetSegments: segs, customMaterials: embedded };
     }
 
     function applyProject(o) {
+        if (Array.isArray(o.customMaterials) && o.customMaterials.length) {
+            let added = false;
+            const stockM1 = '[{"l":400,"n":1.53,"k":0},{"l":550,"n":1.518,"k":0},{"l":700,"n":1.513,"k":0}]';
+            for (const srcMat of o.customMaterials) {
+                const exists = Object.hasOwn(MATERIALS_DB, srcMat.id);
+                const existingObj = (appState.customMaterials || []).find(m => m.id === srcMat.id);
+                const isUntouchedStock = exists && existingObj && existingObj.id === 'custom_mat_1'
+                    && JSON.stringify(existingObj.table) === stockM1 && JSON.stringify(srcMat.table) !== stockM1;
+                if (!exists) {
+                    let sym = srcMat.sym;
+                    if (!validCustomMaterialSymbol(sym, srcMat.id)) sym = nextCustomMaterialSymbol();
+                    const mat = { id: srcMat.id, name: srcMat.name, sym, type: 'custom_table', description: srcMat.description, table: srcMat.table.map(pt => ({ ...pt })) };
+                    appState.customMaterials.push(mat);
+                    registerCustomMaterialInDb(mat);
+                    added = true;
+                } else if (isUntouchedStock) {
+                    existingObj.name = srcMat.name;
+                    existingObj.description = srcMat.description;
+                    existingObj.table = srcMat.table.map(pt => ({ ...pt }));
+                    registerCustomMaterialInDb(existingObj);
+                    added = true;
+                }
+            }
+            if (added) {
+                saveCustomMaterialsToStorage();
+                refreshMaterialSelectors(true);
+                renderCustomMatEditor();
+            }
+        }
         const s = o.state;
         PROJECT_FIELDS.forEach(k => { if (k in s) appState[k] = JSON.parse(JSON.stringify(s[k])); });
         appState.fresnelPreset = !!s.fresnelPreset;
@@ -7871,8 +8015,11 @@
         const spectral = appState.mode === 'spectral';
         document.getElementById('panelSpectralControls')?.classList.toggle('hidden', !spectral);
         document.getElementById('panelAngularControls')?.classList.toggle('hidden', spectral);
-        document.getElementById('tabBtnSpectral')?.classList.toggle('bg-indigo-600', spectral);
-        document.getElementById('tabBtnAngular')?.classList.toggle('bg-indigo-600', !spectral);
+        const tabSpec = document.getElementById('tabBtnSpectral'), tabAng = document.getElementById('tabBtnAngular');
+        const tabActive = "text-xs px-2.5 py-1 rounded-md font-bold bg-indigo-600 text-white transition";
+        const tabIdle = "text-xs px-2.5 py-1 rounded-md font-medium text-slate-600 hover:bg-slate-100 transition";
+        if (tabSpec) tabSpec.className = spectral ? tabActive : tabIdle;
+        if (tabAng) tabAng.className = spectral ? tabIdle : tabActive;
         invalidateMaterialAnalysis();
         syncOptimizationScopeFromLocks();
         appState.uiMode = o.uiMode;
@@ -7953,11 +8100,23 @@
             const mode = appState.uiMode, ex = appState.exercise;
             appState.customTarget.segments = [];
             appState.arWindows = [{ lmin: 400, lmax: 750 }];
+            appState.savedMemories = [];
+            document.getElementById('btnClearMemories')?.classList.add('hidden');
+            appState.reviewRecords = [null, null];
+            appState.reviewOverlay = false;
+            const chkRev = document.getElementById('chkReviewOverlay');
+            if (chkRev) chkRev.checked = false;
+            appState.backLayers = [];
+            appState.bands = JSON.parse(DEFAULT_BANDS_JSON);
             loadPreset('empty');
             appState.uiMode = mode; appState.exercise = ex;
             applyUiMode();
             renderCustomTargetEditor();
             renderBandAnalyzer();
+            renderDesignReview();
+            renderBacksideEditor();
+            renderArWindows();
+            updateCharts();
             setProjectStatus('reset');
             saveProjectNow();
         });
@@ -8221,8 +8380,7 @@
             b.addEventListener('click', () => { addUsefulLayer(); renderFreeGuide(); });
             needleBox.insertBefore(b, needleBox.firstChild);
         }
-        // Graphique sur écran étroit : sans le titre ni les relevés du curseur.
-        mark(byId('valCursorX')?.closest?.('.grid'), 'free-narrow-hide');
+        // Graphique sur écran étroit : sans le titre (on garde les relevés du curseur).
         mark(byId('chartTitle'), 'free-narrow-hide');
         // Sous-titres courts sous les termes clés.
         const sub = (anchor, key, where = 'after', id = null) => {
@@ -8351,7 +8509,12 @@
         const node = [...span.childNodes].reverse().find(n => n.nodeType === 3 && n.nodeValue.trim());
         if (!node) return;
         if (node.__orig === undefined) node.__orig = node.nodeValue;
-        node.nodeValue = text === null ? node.__orig : ' ' + text;
+        if (text === null) {
+            node.nodeValue = node.__orig;
+            if (currentLang !== 'fr' && typeof translateExactNodes === 'function') translateExactNodes(currentLang, span);
+        } else {
+            node.nodeValue = ' ' + text;
+        }
     }
 
     function applyFreeLayout() {
@@ -8387,7 +8550,10 @@
             freeRestoreAll();
             ['media', 'stack', 'sim'].forEach(n => setPanelHeading(n, null));
             const matHead = panel('materials')?.firstElementChild?.querySelector?.('span');
-            if (matHead && matHead.__orig !== undefined) matHead.innerHTML = matHead.__orig;
+            if (matHead && matHead.__orig !== undefined) {
+                matHead.innerHTML = matHead.__orig;
+                if (currentLang !== 'fr' && typeof translateExactNodes === 'function') translateExactNodes(currentLang, matHead);
+            }
             const band = byId('lblBandAnalyzer');
             if (band) band.textContent = currentLang === 'fr' ? 'Analyseur de bandes spectrales' : 'Spectral band analyzer';
         }
@@ -8451,6 +8617,15 @@
                 renderLayersTable();
                 runFullSimulation();
                 applyUiMode();
+            } else if (e.target.closest('[data-disable-backside]')) {
+                appState.considerBackside = false;
+                const chkBack = document.getElementById('chkBackside');
+                if (chkBack) chkBack.checked = false;
+                invalidateMaterialAnalysis();
+                renderBacksideEditor();
+                runFullSimulation();
+                applyUiMode();
+                scheduleProjectSave();
             }
         });
         document.getElementById('btnModeEtudiant')?.addEventListener('click', () => {
@@ -8472,6 +8647,10 @@
         renderBacksideEditor();
         setAppLanguagePro('fr');
         restoreSavedProjectAtStartup();
+        try {
+            const urlLang = typeof location !== 'undefined' ? new URLSearchParams(location.search || '').get('lang') : null;
+            if (urlLang === 'en' || urlLang === 'fr') setAppLanguagePro(urlLang);
+        } catch (_err) {}
     });
     
     /* =========================================================================
@@ -8548,12 +8727,17 @@
         ["Aucune couche déposée (interface nue). Cliquez sur \"+ Couche\" ou saisissez une formule symbolique.", "No layer deposited (bare interface). Click \"+ Layer\" or enter a symbolic formula."],
         ["Profil de dépôt (Substrat", "Deposition profile (Substrate"],
         ["Superstrat) :", "Superstrate):"],
+        ["Profil de dépôt (Substrat $\\to$ Superstrat) :", "Deposition profile (Substrate $\\to$ Superstrate):"],
         ["3. Paramètres de Simulation", "3. Simulation parameters"],
         ["Spectre", "Spectrum"],
+        ["Spectre $\\lambda$", "Spectrum $\\lambda$"],
         ["Angle", "Angle"],
         ["Pas", "Step"],
+        ["Pas $\\Delta\\lambda$", "Step $\\Delta\\lambda$"],
+        ["Pas $\\Delta\\theta$", "Step $\\Delta\\theta$"],
         ["Angle d'incidence d'analyse :", "Analysis incidence angle:"],
         ["Longueur d'onde d'analyse", "Analysis wavelength"],
+        ["Longueur d'onde d'analyse $\\lambda$ :", "Analysis wavelength $\\lambda$:"],
         ["Moyenne (Non Pola)", "Average (unpolarized)"],
         ["Pola S (TE)", "S polarization (TE)"],
         ["Pola P (TM)", "P polarization (TM)"],
@@ -8568,7 +8752,10 @@
         ["⚡ Insérer + optimiser par BFGS", "⚡ Insert + optimize with BFGS"],
         ["Qualification fabrication :", "Manufacturing qualification:"],
         ["Tolérance", "Tolerance"],
+        ["Tolérance $\\Delta d$", "Tolerance $\\Delta d$"],
+        ["Δd = 1,5 nm", "Δd = 1.5 nm"],
         ["Nombre", "Number"],
+        ["Nombre $N$", "Number $N$"],
         ["Épaisseur min.", "Minimum thickness"],
         ["Rendement exigé", "Required yield"],
         ["Comparateur A/B — revue :", "A/B comparator — review:"],
@@ -8603,6 +8790,7 @@
         ["Transmission T (Moy)", "Transmittance T (avg)"],
         ["Absorption A (Moy)", "Absorption A (avg)"],
         ["Base Matériaux & Dispersion", "Materials database & dispersion"],
+        ["Base Matériaux & Dispersion $N(\\lambda) = n - ik$", "Materials database & dispersion $N(\\lambda) = n - ik$"],
         ["Sources :", "Sources:"],
         ["& Mesures Institut Fresnel", "& Institut Fresnel measurements"],
         ["Examiner un matériau :", "Inspect a material:"],
@@ -8735,6 +8923,7 @@
         ["Calcul configurable pour n'importe quel filtre", "Calculation configurable for any filter"],
         ["Une réalisation contenant une couche plus mince est déclarée non fabricable", "A realization containing a thinner layer is declared non-manufacturable"],
         ["Rétablir les bandes de référence du TP (550nm)", "Restore the lab reference bands (550 nm)"],
+        ["Rétablir les trois bandes de mesure de référence (460–500, 535–565, 620–680 nm)", "Restore the three reference measurement bands (460–500, 535–565, 620–680 nm)"],
         ["Ajouter une bande de mesure", "Add a measurement band"],
         ["Exporter le tableau des moyennes en CSV", "Export the table of averages as CSV"],
         ["Nettoyer l'empilement : supprimer les couches trop fines et fusionner les couches voisines de même matériau (indispensable après plusieurs cycles d'aiguille)", "Clean the stack: remove layers that are too thin and merge adjacent layers of the same material (essential after several needle cycles)"],
@@ -8832,17 +9021,17 @@
         Ge: "Very-high-index semiconductor, n > 4 (Palik)",
         Al: "Metal with high UV-visible reflectance (Rakic)",
         Au: "Noble metal with high red/IR reflectance (Johnson & Christy)",
-        AR_Theorique: "Theoretical index matched to BK7: n = sqrt(1.50) = 1.2247"
+        AR_Theorique: "Theoretical index for an ideal n = 1.50 glass: n = sqrt(1.50) = 1.2247 (check real BK7!)"
     };
 
-    function translateExactNodes(lang) {
+    function translateExactNodes(lang, root = document.body) {
         const targetIndex = lang === 'fr' ? 0 : 1;
         const lookup = new Map();
         UI_TEXT_PAIRS.forEach(pair => {
             lookup.set(pair[0], pair[targetIndex]);
             lookup.set(pair[1], pair[targetIndex]);
         });
-        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
         const nodes = [];
         while (walker.nextNode()) nodes.push(walker.currentNode);
         nodes.forEach(node => {
@@ -8856,7 +9045,7 @@
             attrLookup.set(pair[0], pair[targetIndex]);
             attrLookup.set(pair[1], pair[targetIndex]);
         });
-        document.querySelectorAll('[title],[placeholder],[data-tip],[aria-label]').forEach(el => {
+        root.querySelectorAll?.('[title],[placeholder],[data-tip],[aria-label]')?.forEach(el => {
             ['title', 'placeholder', 'data-tip', 'aria-label'].forEach(attr => {
                 const value = el.getAttribute(attr);
                 if (value && attrLookup.has(value)) el.setAttribute(attr, attrLookup.get(value));
@@ -9134,8 +9323,8 @@
         if (window.MathJax?.typesetPromise) MathJax.typesetPromise(helpBody ? [helpBody] : undefined).catch(() => {});
     }
 
-    document.getElementById('btnLangFR')?.addEventListener('click', () => setAppLanguagePro('fr'));
-    document.getElementById('btnLangEN')?.addEventListener('click', () => setAppLanguagePro('en'));
+    document.getElementById('btnLangFR')?.addEventListener('click', () => { setAppLanguagePro('fr'); scheduleProjectSave(); });
+    document.getElementById('btnLangEN')?.addEventListener('click', () => { setAppLanguagePro('en'); scheduleProjectSave(); });
 </script>
     <div id="tipBubble" role="tooltip" hidden></div>
 </body>
