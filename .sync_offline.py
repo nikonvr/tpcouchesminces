@@ -13,22 +13,22 @@ MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août
         'septembre', 'octobre', 'novembre', 'décembre']
 MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
           'September', 'October', 'November', 'December']
-def _date_maj():
+def _date_heure_maj():
     sim = 'simulateur_couches_minces.html'
     try:
         modifie = subprocess.run(['git', 'diff', '--quiet', 'HEAD', '--', sim]).returncode != 0
         if not modifie:
-            out = subprocess.run(['git', 'log', '-1', '--format=%cs', '--', sim],
+            out = subprocess.run(['git', 'log', '-1', '--format=%cI', '--', sim],
                                  capture_output=True, text=True).stdout.strip()
-            if re.fullmatch(r'\d{4}-\d{2}-\d{2}', out):
-                return datetime.date.fromisoformat(out)
+            if out:
+                dt = datetime.datetime.fromisoformat(out)
+                return dt.date(), dt.strftime('%H:%M'), dt.strftime('%Hh%M')
     except OSError:
         pass
-    return datetime.date.today()
-_now = datetime.datetime.now()
-_time = _now.strftime('%H:%M')
-_time_fr = _now.strftime('%Hh%M')
-_d = _date_maj()
+    now = datetime.datetime.now()
+    return now.date(), now.strftime('%H:%M'), now.strftime('%Hh%M')
+
+_d, _time, _time_fr = _date_heure_maj()
 _iso = _d.isoformat()
 _fr = '%d %s %d' % (_d.day, MOIS[_d.month - 1], _d.year)
 _en = '%d %s %d' % (_d.day, MONTHS[_d.month - 1], _d.year)

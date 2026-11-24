@@ -575,8 +575,8 @@
             <rect x="35" y="120" width="590" height="70" fill="#e0f2fe" opacity="0.6" stroke="#cbd5e1" stroke-width="1"/>
             <line x1="35" y1="120" x2="625" y2="120" stroke="#0f172a" stroke-width="2.5" />
             
-            <text x="55" y="60" font-family="sans-serif" font-weight="bold" font-size="13" fill="#334155">Medium 1 (n̂₁, z &lt; zₖ)</text>
-            <text x="55" y="160" font-family="sans-serif" font-weight="bold" font-size="13" fill="#0284c7">Medium 2 (n̂₂, z &gt; zₖ)</text>
+            <text x="55" y="60" font-family="sans-serif" font-weight="bold" font-size="13" fill="#334155">Medium 1 (n̂₁, z &gt; zₖ)</text>
+            <text x="55" y="160" font-family="sans-serif" font-weight="bold" font-size="13" fill="#0284c7">Medium 2 (n̂₂, z &lt; zₖ)</text>
             <text x="600" y="112" text-anchor="end" font-family="sans-serif" font-size="12" font-style="italic" fill="#0f172a">Interface z = zₖ</text>
 
             <!-- Stokes loop -->
@@ -596,8 +596,8 @@
             <text x="330" y="180" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#64748b">Δl</text>
 
             <!-- Vectors -->
-            <text x="320" y="80" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#dc2626">E_∥(zₖ⁻)</text>
-            <text x="320" y="142" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#dc2626">E_∥(zₖ⁺)</text>
+            <text x="320" y="80" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#dc2626">E_∥(zₖ⁺)</text>
+            <text x="320" y="142" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#dc2626">E_∥(zₖ⁻)</text>
 
             <!-- Result box inside SVG -->
             <rect x="55" y="200" width="550" height="40" fill="#ffffff" stroke="#cbd5e1" rx="4"/>
@@ -733,8 +733,9 @@
     <h3 id="maxwell_matrix">3.5 Analytical derivation of the 2×2 characteristic matrix</h3>
     <p>To relate the tangential magnetic field $H_\parallel$ to the tangential electric field $E_\parallel$, we use the Maxwell-Faraday equation $\nabla \times \vec{E} = -i\omega\mu_0 \vec{H}$:</p>
     <ul>
-        <li><strong>TE (s) polarisation:</strong> $\vec{E} = (0, E_y, 0)$. Then $H_x = -\frac{1}{i\omega\mu_0} \frac{\partial E_y}{\partial z} = \eta_s (E^- e^{+ik_z z} - E^+ e^{-ik_z z})$ with the admittance $\eta_s = \hat{n}\cos\theta$.</li>
-        <li><strong>TM (p) polarisation:</strong> $\vec{H} = (0, H_y, 0)$. Then $E_x = \frac{1}{i\omega\varepsilon_0\hat{n}^2} \frac{\partial H_y}{\partial z}$ with the admittance $\eta_p = \frac{\hat{n}}{\cos\theta}$.</li>
+        <li><strong>TE (s) polarisation:</strong> $\vec{E} = (0, E_y, 0)$. The $x$ component of Maxwell-Faraday gives $-\partial_z E_y = -i\omega\mu_0 H_x$, so $H_x = \frac{1}{i\omega\mu_0} \frac{\partial E_y}{\partial z} = \eta_s (E^- e^{+ik_z z} - E^+ e^{-ik_z z})$ with admittance $\eta_s = \hat{n}\cos\theta$.</li>
+        <li><strong>TM (p) polarisation:</strong> $\vec{H} = (0, H_y, 0)$. The $x$ component of Maxwell-Ampère gives $-\partial_z H_y = i\omega\varepsilon_0\hat{n}^2 E_x$, so $E_x = -\frac{1}{i\omega\varepsilon_0\hat{n}^2} \frac{\partial H_y}{\partial z}$ with admittance $\eta_p = \frac{\hat{n}}{\cos\theta}$.</li>
+        <li><em>Watch out in textbooks:</em> these signs follow the $e^{+i\omega t}$ convention of § 3.1. Under $e^{-i\omega t}$ (Born &amp; Wolf, Jackson), both signs invert; the final physical result is identical.</li>
     </ul>
 
     <p>Consider a layer $j$ of thickness $d$ lying between its <strong>upper input interface</strong> $a$ ($z = z_j$) and its <strong>lower output interface</strong> $b$ ($z = z_{j-1} = z_j - d$):</p>
@@ -1217,16 +1218,16 @@
             <line x1="50" y1="80" x2="390" y2="80" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5"/>
             <text x="330" y="70" font-family="sans-serif" font-size="11" fill="#64748b">Bare glass (4%)</text>
 
-            <!-- AR MgF2 Curve (Rmin approx 1.4% -> y=151) -->
-            <path d="M 60 105 Q 140 151 225 151 T 390 105" fill="none" stroke="#d97706" stroke-width="2.5" />
-            <text x="225" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#d97706" font-weight="bold">Glass + AR MgF₂ (R_min ≈ 1.4%)</text>
+            <!-- AR MgF2 Curve (Rmin approx 1.3% -> y=155) -->
+            <path d="M 60 105 Q 140 155 225 155 T 390 105" fill="none" stroke="#d97706" stroke-width="2.5" />
+            <text x="225" y="142" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#d97706" font-weight="bold">Glass + AR MgF₂ (R_min ≈ 1.3%)</text>
             <!-- Ideal AR Curve (R = 0% -> y=190) -->
             <path d="M 60 100 Q 140 190 225 190 T 390 100" fill="none" stroke="#059669" stroke-width="2" stroke-dasharray="4 3" />
             <text x="225" y="182" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#059669" font-weight="bold">Ideal AR (R = 0% at 550 nm)</text>
         </svg>
     </div>
 
-    <p>The reflection vanishes completely if the film index satisfies $n_{film} = \sqrt{n_{air} \cdot n_{glass}}$. For standard glass one would want $n \approx 1.22$. Magnesium fluoride (MgF₂, $n=1.38$) is the closest material commonly used in classical optics to approach this ideal.</p>
+    <p>The reflection vanishes completely if the film index satisfies $n_{film} = \sqrt{n_{air} \cdot n_{glass}}$. At $\lambda_0$, a quarter-wave layer of index $n_1$ on substrate $n_s$ yields the exact residual reflectance: $R(\lambda_0) = \left(\frac{n_0 n_s - n_1^2}{n_0 n_s + n_1^2}\right)^2$. For standard glass ($n_s=1.5185$), the ideal index would be $n_1 = \sqrt{n_0 n_s} \approx 1.232$. With Magnesium Fluoride (MgF₂, $n_1=1.38$), one obtains $R_{min} \approx 1.3\%$, which already reduces the bare glass reflectance (4%) by nearly a factor of 3.</p>
 
 
     <h3>Case 2: five-layer validation filter (with absorbing metal)</h3>

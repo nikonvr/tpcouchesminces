@@ -218,7 +218,7 @@
                         Simulateur Couches Minces Optiques
                         <span id="txtAudienceBadge" class="text-xs bg-indigo-500/40 text-indigo-200 font-semibold px-2 py-0.5 rounded-full border border-indigo-400/30">BUT 3 FI Parcours MCPC — étudiants L2 · L3 · M1 · M2</span>
                     </h1>
-                    <p class="text-xs text-indigo-300"><span>Méthode matricielle d'Abelès (TMM)</span> · <span id="txtLastUpdate" data-date="2026-11-24" data-time="11:59">Mis à jour le 24 novembre 2026 à 11h59</span></p>
+                    <p class="text-xs text-indigo-300"><span>Méthode matricielle d'Abelès (TMM)</span> · <span id="txtLastUpdate" data-date="2026-11-24" data-time="13:22">Mis à jour le 24 novembre 2026 à 13h22</span></p>
                 </div>
             </div>
 
@@ -3256,7 +3256,13 @@
     }
 
     function runMonteCarloTolerance(toleranceNm, numRuns = 500, options = {}) {
-        if (appState.layers.length === 0 || appState.mode !== "spectral") return;
+        if (appState.layers.length === 0) {
+            notify(currentLang === 'fr'
+                ? "Déposez au moins une couche avant d'évaluer la robustesse."
+                : "Deposit at least one layer before assessing robustness.");
+            return;
+        }
+        if (appState.mode !== "spectral") return;
         if (showMeritUndefinedReason('txtMonteCarloResult')) return;
         const N_super_design = getMediumIndex(appState.superstrat, appState.designL0, appState.customSuperN).r;
         const baseThicknesses = appState.layers.map(lay =>
@@ -4497,7 +4503,12 @@
 
     function runNumericalOptimizer(isRefinementPass = false, preserveCurrentLocks = false) {
         if (!isRefinementPass) { optiTrace = []; optiProjected = []; }
-        if (appState.layers.length === 0) return;
+        if (appState.layers.length === 0) {
+            notify(currentLang === 'fr'
+                ? "Déposez au moins une couche avant de lancer l'optimisation."
+                : "Deposit at least one layer before running optimization.");
+            return;
+        }
         if (!isRefinementPass && !preserveCurrentLocks
             && !applyOptimizationScope({ render: true, alertOnError: true })) return;
         if (showMeritUndefinedReason('txtOptiResult')) return;
@@ -6937,6 +6948,11 @@
     function enterFreeMode() {
         appState.uiMode = 'libre';
         appState.exercise = null;
+        if (appState.reviewOverlay) {
+            appState.reviewOverlay = false;
+            const chkRev = document.getElementById('chkReviewOverlay');
+            if (chkRev) chkRev.checked = false;
+        }
         if (appState.fresnelPreset) {
             appState.fresnelPreset = false;
             appState.layers.forEach(l => { l.locked = false; });
