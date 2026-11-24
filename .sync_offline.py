@@ -103,7 +103,7 @@ if os.path.exists(src_x):
     shutil.copy2(src_x, dst_x)
 
 # Tables d'indices de l'exercice XI (Nb2O5 et SiO2 publiés, Helios 800)
-for nom in ('indices_Nb2O5_H800_OpticsContinuum.csv', 'indices_SiO2_H800_OpticsContinuum.csv'):
+for nom in ('indices_Nb2O5_H800_OpticsContinuum.csv', 'indices_Ta2O5_H800_OpticsContinuum.csv', 'indices_SiO2_H800_OpticsContinuum.csv'):
     src_c = os.path.join('outputs', 'tp_couches_minces', nom)
     if os.path.exists(src_c):
         shutil.copy2(src_c, os.path.join(DST, 'outputs', 'tp_couches_minces', nom))
