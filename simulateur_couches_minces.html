@@ -208,7 +208,7 @@
                         Simulateur Couches Minces Optiques
                         <span id="txtAudienceBadge" class="text-xs bg-indigo-500/40 text-indigo-200 font-semibold px-2 py-0.5 rounded-full border border-indigo-400/30">BUT 3 FI Parcours MCPC — étudiants L2 · L3 · M1 · M2</span>
                     </h1>
-                    <p class="text-xs text-indigo-300">Méthode matricielle d'Abelès (TMM) · <span id="txtLastUpdate" data-date="2026-11-11">Mis à jour le 11 novembre 2026</span></p>
+                    <p class="text-xs text-indigo-300">Méthode matricielle d'Abelès (TMM) · <span id="txtLastUpdate" data-date="2026-11-24">Mis à jour le 24 novembre 2026</span></p>
                 </div>
             </div>
 
@@ -2582,6 +2582,8 @@
                 ? `${r.points} points évalués. RMSE actuelle : ${Number.isFinite(r.rmse) ? formatStat(r.rmse, 2) + ' %' : '—'}.`
                 : `${r.points} points evaluated. Current RMSE: ${Number.isFinite(r.rmse) ? formatStat(r.rmse, 2) + '%' : '—'}.`)
                 + targetValidityNote(t);
+            updateMeritGridNote();
+            updateAcceptanceUI();
             updateCharts();
         });
         tbody.addEventListener('change', e => { if (['quantity', 'pol'].includes(e.target.dataset.tg)) refresh(); });
@@ -2631,7 +2633,7 @@
                 invalidateForSpec();
             }));
         ['inpTargetStep', 'inpTargetThreshold'].forEach(id =>
-            document.getElementById(id)?.addEventListener('input', () => { invalidateForSpec(); renderCustomTargetEditor(); updateMeritGridNote(); }));
+            document.getElementById(id)?.addEventListener('input', () => { invalidateForSpec(); renderCustomTargetEditor(); updateMeritGridNote(); updateAcceptanceUI(); }));
         document.getElementById('btnTargetPreset')?.addEventListener('click', () => {
             appState.customTarget.segments = DEFAULT_TARGET_SEGMENTS.map(s => ({ ...s }));
             refresh();
@@ -4743,6 +4745,9 @@
 
         updateFabricationSummary();
         renderVisualStackBar(totalThick);
+        if (typeof renderScaleMaterials === 'function' && !document.getElementById('scaleBox')?.classList.contains('hidden')) {
+            renderScaleMaterials();
+        }
         updateFresnelScopeWarning();
         lucide.createIcons();
         attachTableEvents();
@@ -4989,8 +4994,8 @@
         const fr = currentLang === 'fr';
         const f = parseDecimalInput(document.getElementById('inpScaleFactor')?.value);
         if (!(f >= 0.2 && f <= 5)) {
-            notify(fr ? 'Facteur invalide : entrez un nombre entre 0,2 et 5 (par exemple 1,016).'
-                      : 'Invalid factor: enter a number between 0.2 and 5 (for example 1.016).');
+            notify(fr ? 'Facteur invalide : entrez un nombre entre 0,2 et 5 (par exemple 1,05).'
+                      : 'Invalid factor: enter a number between 0.2 and 5 (for example 1.05).');
             return;
         }
         if (!appState.layers.length) { notify(fr ? 'Ajoutez d’abord des couches.' : 'Add layers first.'); return; }
@@ -5089,8 +5094,20 @@
         document.querySelectorAll('.selLayerUnit').forEach(el => {
             el.onchange = (e) => {
                 const idx = parseInt(e.target.dataset.idx);
-                appState.layers[idx].unit = e.target.value;
-                    renderLayersTable();
+                const lay = appState.layers[idx];
+                const nextUnit = e.target.value;
+                if (lay && lay.unit !== nextUnit) {
+                    const nSup = getMediumIndex(appState.superstrat, appState.designL0, appState.customSuperN).r;
+                    if (nextUnit === 'nm') {
+                        const dNm = getPhysicalThicknessNm(lay, appState.designL0, appState.designIncDeg, nSup);
+                        lay.val = Math.round(dNm * 100) / 100;
+                    } else {
+                        const oneQwot = getPhysicalThicknessNm({ matId: lay.matId, unit: 'QWOT', val: 1 }, appState.designL0, appState.designIncDeg, nSup);
+                        if (oneQwot > 0) lay.val = Math.round((lay.val / oneQwot) * 1e4) / 1e4;
+                    }
+                    lay.unit = nextUnit;
+                }
+                renderLayersTable();
                 runFullSimulation();
             };
         });
@@ -6650,14 +6667,14 @@
           taskEn: 'Compare two designs on the same realizations and issue a reasoned qualification decision.' },
 
         { id: 10, num: 'X', fr: 'Rétro-ingénierie et diagnostic', en: 'Reverse engineering and diagnosis',
-          qFr: 'Q31 – Q32', panels: ['stack', 'sim', 'chart'],
-          taskFr: 'Reproduisez les scénarios de défaut et comparez leur signature spectrale au spectre nominal mémorisé.',
-          taskEn: 'Reproduce the defect scenarios and compare their spectral signature with the memorized nominal spectrum.' },
+          qFr: 'Q31 – Q32', panels: ['stack', 'sim', 'tools', 'bands', 'chart'],
+          taskFr: 'Reproduisez les scénarios de défaut et comparez leur signature spectrale (et les moyennes de bandes) au spectre nominal mémorisé.',
+          taskEn: 'Reproduce the defect scenarios and compare their spectral signature (and band averages) with the memorized nominal spectrum.' },
 
         { id: 11, num: 'XI', fr: 'Filtre linéairement variable', en: 'Linear variable filter',
           qFr: 'V1 – V7', panels: ['media', 'stack', 'sim', 'chart', 'materials'],
-          taskFr: 'Chaque position du filtre est un empilement : appliquez le facteur d’épaisseur aux coefficients de la formule et mesurez le centre et la largeur à mi-hauteur.',
-          taskEn: 'Each position on the filter is a stack: apply the thickness factor to the formula coefficients and measure the half-maximum centre and width.' }
+          taskFr: 'Chaque position du filtre est un empilement : appliquez le facteur d’épaisseur avec « × Échelle » (sans toucher à λ₀) et mesurez le centre et la largeur à mi-hauteur.',
+          taskEn: 'Each position on the filter is a stack: apply the thickness factor with "× Scale" (without changing λ₀) and measure the half-maximum centre and width.' }
     ];
 
     function renderExerciseSelector() {
@@ -8764,7 +8781,7 @@
        jamais donner de réponse d’exercice. */
     const CONTROL_TIPS = {
         btnScaleStack: ['Multiplier toutes les épaisseurs, ou celles d’un seul matériau, par un même facteur : erreur de dépôt uniforme, filtre variable', 'Multiply all thicknesses, or those of one material, by the same factor: uniform deposition error, variable filter'],
-        inpScaleFactor: ['Facteur multiplicatif (virgule ou point décimal), par exemple 1,016', 'Multiplying factor (decimal comma or point), for example 1.016'],
+        inpScaleFactor: ['Facteur multiplicatif (virgule ou point décimal), par exemple 1,05', 'Multiplying factor (decimal comma or point), for example 1.05'],
         selScaleMaterial: ['Couches concernées : toutes, ou un seul matériau', 'Layers concerned: all, or a single material'],
         btnApplyScale: ['Appliquer le facteur aux couches choisies', 'Apply the factor to the selected layers'],
         btnCloseShortcuts: ['Fermer la liste des raccourcis (Échap)', 'Close the shortcut list (Esc)'],
