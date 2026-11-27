@@ -267,7 +267,7 @@
                         Simulateur Couches Minces Optiques
                         <span id="txtAudienceBadge" class="text-xs bg-indigo-500/40 text-indigo-200 font-semibold px-2 py-0.5 rounded-full border border-indigo-400/30">BUT 3 FI Parcours MCPC — étudiants L2 · L3 · M1 · M2</span>
                     </h1>
-                    <p class="text-xs text-indigo-300"><span>Méthode matricielle d'Abelès (TMM)</span> · <span id="txtLastUpdate" data-date="2026-11-24" data-time="16:20">Mis à jour le 24 novembre 2026 à 16h20</span></p>
+                    <p class="text-xs text-indigo-300"><span>Méthode matricielle d'Abelès (TMM)</span> · <span id="txtLastUpdate" data-date="2026-11-27" data-time="12:21">Mis à jour le 27 novembre 2026 à 12h21</span></p>
                 </div>
             </div>
 
@@ -1184,7 +1184,7 @@
                             <i data-lucide="layers" class="w-4 h-4 text-indigo-600"></i> <span id="lvfTitleSpan">Studio gradient LVF — Helios 800</span>
                         </span>
                         <span id="lvfSubTitleText" class="text-[11px] bg-indigo-50 text-indigo-800 border border-indigo-200 font-semibold px-2 py-0.5 rounded-full">
-                            Optics Continuum 5(12):3831 (2026) · UV–MWIR (252–5250 nm) · Substrat silice fondue fixe
+                            Optics Continuum 5(12):3831 (2026) · UV–MWIR (252–5250 nm) · Silice fondue semi-infinie (AR arrière)
                         </span>
                     </div>
                     <div class="flex flex-wrap items-center gap-1.5 text-xs">
@@ -1273,7 +1273,7 @@
                     </span>
                 </div>
 
-                <canvas id="lvfBenchCanvas" class="lvf-canvas" style="height:245px; cursor:ew-resize; background:#090e1a;"></canvas>
+                <canvas id="lvfBenchCanvas" aria-label="Coupe géométrique et faisceau sonde du filtre variable" class="lvf-canvas" style="height:245px; cursor:ew-resize; background:#090e1a;"></canvas>
 
                 <!-- Commandes directes de sonde spatiale et taille de spot -->
                 <div class="flex flex-wrap items-center gap-4 pt-1 text-xs">
@@ -1281,8 +1281,8 @@
                         <label for="lvfRngPos" id="lvfLblPos" class="font-bold text-slate-200 whitespace-nowrap">Position x₀ :</label>
                         <input id="lvfRngPos" type="range" min="0" max="1000" step="1" value="115" class="w-full cursor-pointer">
                         <span id="lvfTxtPos" class="font-mono font-bold text-sky-300 w-20 text-right whitespace-nowrap">11,5 mm</span>
-                        <button id="lvfBtnPlay" type="button" class="bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded font-bold transition whitespace-nowrap">
-                            ▶ <span id="lvfPlayLabel">Balayer</span>
+                        <button id="lvfBtnPlay" type="button" aria-pressed="false" class="bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded font-bold transition whitespace-nowrap">
+                            <span id="lvfPlayIcon">▶</span> <span id="lvfPlayLabel">Balayer</span>
                         </button>
                     </div>
 
@@ -1304,13 +1304,13 @@
                     <div class="flex flex-wrap items-center gap-2">
                         <div class="lvf-seg">
                             <button id="lvfSegProfRect" type="button" data-lvf-prof="rect" class="lvf-on">Fente</button>
-                            <button id="lvfSegProfGauss" type="button" data-lvf-prof="gauss">Gaussien</button>
+                            <button id="lvfSegProfGauss" type="button" data-lvf-prof="gauss">Gaussien (1/e²)</button>
                         </div>
                         <label class="flex items-center gap-1 text-[11px] font-semibold text-slate-200 cursor-pointer">
                             <input id="lvfChkArray" type="checkbox" class="rounded text-indigo-500">
                             <span id="lvfLblArray">Barrette</span>
                         </label>
-                        <select id="lvfSelPixel" class="bg-slate-800 text-slate-100 border border-slate-600 rounded px-1.5 py-0.5 text-[11px] font-semibold">
+                        <select id="lvfSelPixel" aria-label="Pas des pixels de la barrette" class="bg-slate-800 text-slate-100 border border-slate-600 rounded px-1.5 py-0.5 text-[11px] font-semibold">
                             <option value="14">14 µm</option>
                             <option value="25" selected>25 µm</option>
                             <option value="100">100 µm</option>
@@ -1320,7 +1320,7 @@
                 </div>
 
                 <div id="lvfNaWarn" class="text-[11px] bg-sky-950/80 border border-sky-700/70 text-sky-200 rounded px-2.5 py-1.5">
-                    <span id="lvfNaText">ℹ Note physique (w ≤ 50 µm) : la convolution ci-dessous suppose une ouverture/pixel collée au LVF sous faisceau collimaté (θ = 0°). Un faisceau libre focalisé à 10 µm imposerait une ouverture numérique NA ≈ 1,22·λ/w (θ ≈ 4–12°), induisant un décalage vers le bleu supplémentaire.</span>
+                    <span id="lvfNaText">ℹ Note physique (w ≤ 50 µm) : la convolution ci-dessous suppose une ouverture/pixel collée au LVF sous faisceau collimaté (θ = 0°). Un faisceau libre focalisé à 10 µm imposerait une ouverture numérique NA ≈ 1,22·λ/w (tache d'Airy, θ ≈ 3–12°), induisant un décalage vers le bleu supplémentaire.</span>
                 </div>
             </div>
 
@@ -1376,8 +1376,8 @@
                             <i data-lucide="activity" class="w-4 h-4 text-indigo-600"></i> <span id="lvfAnimTitleSpan">Réponse spectrale animée T(λ, x₀)</span>
                         </span>
                         <div class="flex flex-wrap items-center gap-2 text-[11px]">
-                            <button id="lvfBtnPlaySpec" type="button" class="bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-0.5 rounded font-bold transition whitespace-nowrap text-[11px]">
-                                ▶ <span id="lvfPlaySpecLabel">Balayer</span>
+                            <button id="lvfBtnPlaySpec" type="button" aria-pressed="false" class="bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-0.5 rounded font-bold transition whitespace-nowrap text-[11px]">
+                                <span id="lvfPlaySpecIcon">▶</span> <span id="lvfPlaySpecLabel">Balayer</span>
                             </button>
                             <label class="flex items-center gap-1 text-[11px] font-semibold text-slate-700 cursor-pointer select-none">
                                 <input id="lvfChkGhosts" type="checkbox" checked class="rounded text-indigo-600">
@@ -1390,7 +1390,7 @@
                         </div>
                     </div>
 
-                    <canvas id="lvfAnimCanvas" class="lvf-canvas" style="height:270px; cursor:crosshair; background:#ffffff; border:1px solid #e2e8f0;"></canvas>
+                    <canvas id="lvfAnimCanvas" aria-label="Réponse spectrale animée T(λ, x₀)" class="lvf-canvas" style="height:270px; cursor:crosshair; background:#ffffff; border:1px solid #e2e8f0;"></canvas>
 
                     <div id="lvfAnimLegend" class="text-[11px] text-slate-600 bg-slate-50 border border-slate-200 rounded px-2.5 py-1.5">
                         ━━ T(λ) à x₀ · — Traces multi-x · - - - Cible λ_cible(x₀) · T = 5 % · Survolez pour lire (λ, T), cliquez pour déplacer x₀.
@@ -1439,7 +1439,7 @@
                             <button id="lvfSegScaleDb" type="button" data-lvf-scale="db">Log (dB)</button>
                         </div>
                     </div>
-                    <canvas id="lvfZoomCanvas" class="lvf-canvas" style="height:250px; background:#ffffff; border:1px solid #e2e8f0;"></canvas>
+                    <canvas id="lvfZoomCanvas" aria-label="Spectre transmis zoomé autour de λc" class="lvf-canvas" style="height:250px; background:#ffffff; border:1px solid #e2e8f0;"></canvas>
                     <div id="lvfZoomLegend" class="text-[11px] text-slate-600 flex flex-wrap gap-3">
                         <span><strong>- - -</strong> Réponse ponctuelle (w = 0)</span>
                         <span><strong class="text-indigo-700">━━</strong> Réponse mesurée avec spot w</span>
@@ -1457,7 +1457,7 @@
                             <button id="lvfSegCalibErr" type="button" data-lvf-cview="err">Écart Δλ (nm)</button>
                         </div>
                     </div>
-                    <canvas id="lvfCalibCanvas" class="lvf-canvas" style="height:250px; cursor:ew-resize; background:#ffffff; border:1px solid #e2e8f0;"></canvas>
+                    <canvas id="lvfCalibCanvas" aria-label="Loi spectrale λc(x) et erreur de linéarité" class="lvf-canvas" style="height:250px; cursor:ew-resize; background:#ffffff; border:1px solid #e2e8f0;"></canvas>
                     <div id="lvfCalibLegend" class="text-[11px] text-slate-600 flex flex-wrap gap-3">
                         <span><strong class="text-indigo-700">━━</strong> λc(x) simulée</span>
                         <span><strong>- - -</strong> Cible linéaire λ₁ → λ₂</span>
@@ -1469,10 +1469,10 @@
             <!-- Rangée 6 : Indices dispersifs H800 repliables -->
             <details id="lvfDispDetails" class="lvf-card">
                 <summary id="lvfDispSummary" class="px-4 py-2.5 bg-slate-50 cursor-pointer text-xs font-bold text-slate-700 select-none">
-                    ▶ Courbes de dispersion n(λ) et extinction k(λ) — Nb₂O₅, Ta₂O₅ &amp; SiO₂ (Helios 800, Optics Continuum 5(12):3831, 2026)
+                    Courbes de dispersion n(λ) et extinction k(λ) — Nb₂O₅, Ta₂O₅ &amp; SiO₂ (Helios 800, Optics Continuum 5(12):3831, 2026)
                 </summary>
                 <div class="p-3 border-t border-slate-200">
-                    <canvas id="lvfDispCanvas" class="lvf-canvas" style="height:190px; background:#ffffff;"></canvas>
+                    <canvas id="lvfDispCanvas" aria-label="Courbes de dispersion n(λ) et k(λ)" class="lvf-canvas" style="height:190px; background:#ffffff;"></canvas>
                 </div>
             </details>
 
@@ -9591,9 +9591,11 @@
     }
 
     function lvfPhaseWeightH() {
-        return lvfState.spacer === 'H'
-            ? (2 * lvfState.m + 0.9) / (2 * lvfState.m + 2.7)
-            : 1.5 / (2 * lvfState.m + 2.5);
+        const nH = lvfState.nH550 || 2.365, nL = lvfState.nL550 || 1.4857;
+        const d2 = nH * nH - nL * nL;
+        const a = (nL * nL) / d2, b = (nH * nL) / d2;
+        const m = lvfState.m;
+        return lvfState.spacer === 'H' ? (m + a) / (m + a + b) : b / (m + a + b);
     }
 
     function lvfFindScaleForTarget(targetLambda) {
@@ -9603,7 +9605,7 @@
         const wH = lvfPhaseWeightH();
         const w = wH * rH + (1.0 - wH) * rL;
         const sGuess = (targetLambda / 550.0) / w;
-        const sLo = sGuess * 0.91, sHi = sGuess * 1.09, N = 121;
+        const sLo = sGuess * 0.91, sHi = sGuess * 1.09, N = lvfState.p >= 4 ? 241 : 121;
         const sArr = new Float64Array(N), tArr = new Float64Array(N);
         let tMax = 0, iMax = 0;
         const propsClean = { ...props, kH: 0, kL: 0 };
@@ -9614,17 +9616,28 @@
             tArr[i] = t;
             if (t > tMax) { tMax = t; iMax = i; }
         }
-        const half = 0.5 * tMax;
-        let iL = iMax, iR = iMax;
-        while (iL > 0 && tArr[iL] >= half) iL--;
-        while (iR < N - 1 && tArr[iR] >= half) iR++;
+        // Passe 2 : zoom fin autour de iMax pour verrouiller les filtres très sélectifs (p >= 4, m >= 2)
+        const s2Lo = sArr[Math.max(0, iMax - 2)], s2Hi = sArr[Math.min(N - 1, iMax + 2)], N2 = 121;
+        const sArr2 = new Float64Array(N2), tArr2 = new Float64Array(N2);
+        let tMax2 = 0, iMax2 = 0;
+        for (let i = 0; i < N2; i++) {
+            const s = s2Lo + (s2Hi - s2Lo) * (i / (N2 - 1));
+            sArr2[i] = s;
+            const t = lvfTMM(targetLambda, propsClean, lvfState.stackBase, s, s).T;
+            tArr2[i] = t;
+            if (t > tMax2) { tMax2 = t; iMax2 = i; }
+        }
+        const half = 0.5 * tMax2;
+        let iL = iMax2, iR = iMax2;
+        while (iL > 0 && tArr2[iL] >= half) iL--;
+        while (iR < N2 - 1 && tArr2[iR] >= half) iR++;
         const interp = (idxA, idxB) => {
-            const dt = tArr[idxB] - tArr[idxA];
-            const frac = Math.abs(dt) > 1e-9 ? (half - tArr[idxA]) / dt : 0.5;
-            return sArr[idxA] + frac * (sArr[idxB] - sArr[idxA]);
+            const dt = tArr2[idxB] - tArr2[idxA];
+            const frac = Math.abs(dt) > 1e-9 ? (half - tArr2[idxA]) / dt : 0.5;
+            return sArr2[idxA] + frac * (sArr2[idxB] - sArr2[idxA]);
         };
-        const sLeft = iL < iMax ? interp(iL, iL + 1) : sArr[iMax];
-        const sRight = iR > iMax ? interp(iR - 1, iR) : sArr[iMax];
+        const sLeft = iL < iMax2 ? interp(iL, iL + 1) : sArr2[iMax2];
+        const sRight = iR > iMax2 ? interp(iR - 1, iR) : sArr2[iMax2];
         return 0.5 * (sLeft + sRight);
     }
 
@@ -9746,7 +9759,7 @@
         return wl;
     }
 
-    function lvfSampleSpot(lambda_nm, props, x0Mm, widthUm, profile, maxNq = 85) {
+    function lvfSampleSpot(lambda_nm, props, x0Mm, widthUm, profile, maxNq = 181, bwEst = 4.0, gLocHint = NaN) {
         if (!widthUm || widthUm <= 0.1) {
             const sc = lvfScalesAt(x0Mm / lvfState.lengthMm);
             return lvfTMM(lambda_nm, props, lvfState.stackBase, sc.sH, sc.sL);
@@ -9754,24 +9767,30 @@
         const wMm = widthUm / 1000.0;
         const L = lvfState.lengthMm;
         const u0 = x0Mm / L;
-        const du = Math.min(0.02, Math.max(0.002, wMm / L));
-        const lcA = lvfEstimateCenterAt(Math.max(0, u0 - du));
-        const lcB = lvfEstimateCenterAt(Math.min(1, u0 + du));
-        const localSlope = Math.abs(lcB - lcA) / Math.max(1e-6, (Math.min(1, u0 + du) - Math.max(0, u0 - du)) * L);
-        const spanNm = localSlope * wMm;
-        if (spanNm < 0.02) {
+        let slope = gLocHint;
+        if (!Number.isFinite(slope) || slope <= 0) {
+            const du = Math.min(0.02, Math.max(0.002, wMm / L));
+            const lcA = lvfEstimateCenterAt(Math.max(0, u0 - du));
+            const lcB = lvfEstimateCenterAt(Math.min(1, u0 + du));
+            slope = Math.abs(lcB - lcA) / Math.max(1e-6, (Math.min(1, u0 + du) - Math.max(0, u0 - du)) * L);
+        }
+        if (slope * wMm < 0.02) {
             const sc = lvfScalesAt(u0);
             return lvfTMM(lambda_nm, props, lvfState.stackBase, sc.sH, sc.sL);
         }
-        const Nq = Math.min(maxNq, Math.max(9, Math.ceil(spanNm / 0.35) | 1));
+        const stepNm = Math.max(0.06, Math.min(0.35, 0.25 * Math.max(0.24, bwEst)));
         if (profile === 'gauss') {
             const half = 1.15 * wMm;
+            const xMin = Math.max(0, x0Mm - half), xMax = Math.min(L, x0Mm + half);
+            if (xMax <= xMin) {
+                const sc = lvfScalesAt(u0);
+                return lvfTMM(lambda_nm, props, lvfState.stackBase, sc.sH, sc.sL);
+            }
+            const Nq = Math.min(maxNq, Math.max(11, Math.ceil((slope * (xMax - xMin)) / stepNm) | 1));
             let sumW = 0, sumT = 0, sumR = 0;
             for (let k = 0; k < Nq; k++) {
-                const xi = -1 + 2 * (k + 0.5) / Nq;
-                const dx = xi * half;
-                const x = x0Mm + dx;
-                if (x < 0 || x > L) continue;
+                const x = xMin + (xMax - xMin) * (k + 0.5) / Nq;
+                const dx = x - x0Mm;
                 const wt = Math.exp(-8.0 * (dx / wMm) * (dx / wMm));
                 const sc = lvfScalesAt(x / L);
                 const rt = lvfTMM(lambda_nm, props, lvfState.stackBase, sc.sH, sc.sL);
@@ -9789,6 +9808,7 @@
             const sc = lvfScalesAt(u0);
             return lvfTMM(lambda_nm, props, lvfState.stackBase, sc.sH, sc.sL);
         }
+        const Nq = Math.min(maxNq, Math.max(9, Math.ceil((slope * (xMax - xMin)) / stepNm) | 1));
         let sumT = 0, sumR = 0;
         for (let k = 0; k < Nq; k++) {
             const x = xMin + (xMax - xMin) * (k + 0.5) / Nq;
@@ -9908,13 +9928,20 @@
 
         const sc0 = lvfScalesAt(u0);
         const bwEst = lcEst * 0.032 / Math.pow(2.4, lvfState.p - 2) / lvfState.m;
-        const spotSpan = gLoc * (lvfState.spotUm / 1000.0);
-        const arrSpan = lvfState.arrayOn ? 1.45 * gLoc * (lvfState.pixelUm / 1000.0) : 0;
+        const wMm = lvfState.spotUm / 1000.0;
+        const spotSpan = gLoc * wMm;
+        const edgeClipped = lvfState.spotUm > 0.1 && (x0 - 0.5 * wMm < -1e-6 || x0 + 0.5 * wMm > L + 1e-6);
+        const effWmm = Math.max(0, Math.min(L, x0 + 0.5 * wMm) - Math.max(0, x0 - 0.5 * wMm));
+        const spotSpanEff = gLoc * effWmm;
+        const spotFwhmSpan = lvfState.spotProfile === 'gauss' ? 0.5887 * spotSpan : spotSpan;
+        const arrSpan = lvfState.arrayOn ? 1.9 * gLoc * (lvfState.pixelUm / 1000.0) : 0;
         const diffMargin = 0.16 * lcEst * Math.abs(sc0.sH - sc0.sL) / Math.max(sc0.sH, sc0.sL);
-        const halfWin = Math.max(14, Math.min(180, 3.2 * bwEst + 0.9 * spotSpan + arrSpan + diffMargin));
+        const minHalf = (lvfState.spotUm <= 50 && !lvfState.arrayOn) ? Math.max(2.5, Math.min(14, 5 * bwEst)) : 14;
+        const maxHalf = Math.max(180, 0.78 * spotSpan + arrSpan + 30);
+        const halfWin = Math.max(minHalf, Math.min(maxHalf, 3.2 * bwEst + 0.9 * spotSpan + arrSpan + diffMargin));
         const zMin = Math.max(300, lcEst - halfWin);
         const zMax = Math.min(5000, lcEst + halfWin);
-        const Nz = 200;
+        const Nz = bwEst < 1.2 ? 360 : 240;
         const zWls = new Float64Array(Nz), zT0 = new Float64Array(Nz), zTw = new Float64Array(Nz), zR0 = new Float64Array(Nz);
 
         for (let i = 0; i < Nz; i++) {
@@ -9924,29 +9951,29 @@
             const pt0 = lvfTMM(wl, props, lvfState.stackBase, sc0.sH, sc0.sL);
             zT0[i] = pt0.T; zR0[i] = pt0.R;
             zTw[i] = (lvfState.spotUm > 0.1 && spotSpan > 0.02)
-                ? lvfSampleSpot(wl, props, x0, lvfState.spotUm, lvfState.spotProfile).T
+                ? lvfSampleSpot(wl, props, x0, lvfState.spotUm, lvfState.spotProfile, 181, bwEst, gLoc).T
                 : pt0.T;
         }
 
         let zArr = null;
         if (lvfState.arrayOn) {
             const pitchMm = lvfState.pixelUm / 1000.0;
-            zArr = [new Float64Array(Nz), new Float64Array(Nz), new Float64Array(Nz)];
             const offsets = [-pitchMm, 0, pitchMm];
+            zArr = offsets.map(off => (x0 + off < -1e-6 || x0 + off > L + 1e-6) ? null : new Float64Array(Nz));
             for (let i = 0; i < Nz; i++) {
                 const props = lvfGetOpticalProps(zWls[i]);
                 for (let c = 0; c < 3; c++) {
-                    const xc = Math.min(L, Math.max(0, x0 + offsets[c]));
-                    zArr[c][i] = lvfSampleSpot(zWls[i], props, xc, lvfState.pixelUm, 'rect', 35).T;
+                    if (!zArr[c]) continue;
+                    zArr[c][i] = lvfSampleSpot(zWls[i], props, x0 + offsets[c], lvfState.pixelUm, 'rect', 61, bwEst, gLoc).T;
                 }
             }
         }
 
         const { wMin, wMax } = lvfWideBounds();
-        const NwBase = 640;
+        const NwBase = 900;
         const wlList = [];
         for (let i = 0; i < NwBase; i++) wlList.push(wMin + (wMax - wMin) * (i / (NwBase - 1)));
-        // Raffinement local autour du pic fondamental et de l'ordre 3 (évite tout scintillement à p = 5)
+        // Raffinement local autour du pic fondamental et de l'ordre 3 dispersé (évite l'aliasing à p = 3..5)
         const pkHalf = Math.max(2.5, 2.5 * bwEst);
         for (let k = -12; k <= 12; k++) {
             const w1 = lcEst + pkHalf * (k / 12);
@@ -9959,6 +9986,15 @@
                 if (w3 >= wMin && w3 <= wMax) wlList.push(w3);
             }
         }
+        const p1 = lvfGetOpticalProps(lcEst), p3 = lvfGetOpticalProps(Math.max(300, h3));
+        const h3Disp = h3 * (p3.nH / p1.nH);
+        if (h3Disp >= wMin && h3Disp <= wMax) {
+            const h3Span = Math.max(3.5, 2.0 * bwEst);
+            for (let k = -10; k <= 10; k++) {
+                const w3d = h3Disp + h3Span * (k / 10);
+                if (w3d >= wMin && w3d <= wMax) wlList.push(w3d);
+            }
+        }
         wlList.sort((a, b) => a - b);
         const wWls = new Float64Array(wlList.length), wT0 = new Float64Array(wlList.length), wTw = new Float64Array(wlList.length);
         const convolveWide = lvfState.spotUm > 0.1 && spotSpan > 0.4;
@@ -9969,7 +10005,7 @@
             const t0 = lvfTMM(wl, props, lvfState.stackBase, sc0.sH, sc0.sL).T;
             wT0[i] = t0;
             if (convolveWide && (Math.abs(wl - lcEst) <= halfWin * 1.6 || spotSpan > 3.0)) {
-                wTw[i] = lvfSampleSpot(wl, props, x0, lvfState.spotUm, lvfState.spotProfile, 15).T;
+                wTw[i] = lvfSampleSpot(wl, props, x0, lvfState.spotUm, lvfState.spotProfile, 25, Math.max(0.8, bwEst), gLoc).T;
             } else {
                 wTw[i] = t0;
             }
@@ -9982,10 +10018,11 @@
             thickNm += lay.qwot * (lay.mat === 'H' ? lvfState.dQH_550 * sc0.sH : lvfState.dQL_550 * sc0.sL);
         }
         const lcTarget = lvfState.l1 + (lvfState.l2 - lvfState.l1) * u0;
-        const linErr = (Number.isFinite(m0.lc) ? m0.lc : lcEst) - lcTarget;
+        const linErr0 = (Number.isFinite(m0.lc) ? m0.lc : lcEst) - lcTarget;
+        const linErr = (Number.isFinite(mw.lc) ? mw.lc : lcEst) - lcTarget;
 
         lvfState.lastSpec = {
-            x0, u0, lcEst, lcTarget, linErr, gLoc, spotSpan, thickNm, sc0,
+            x0, u0, lcEst, lcTarget, linErr, linErr0, gLoc, spotSpan, spotSpanEff, spotFwhmSpan, edgeClipped, thickNm, sc0,
             zMin, zMax, zWls, zT0, zTw, zR0, zArr,
             wMin, wMax, wWls, wT0, wTw,
             m0, mw
@@ -10015,7 +10052,8 @@
         ctx.lineWidth = 1;
         ctx.strokeRect(padL, rulerY, mainW, rulerH);
 
-        const ticks = 5;
+        const ticks = mainW < 260 ? 2 : 5;
+        const lenDec = Number.isInteger(lvfState.lengthMm) ? 0 : 1;
         ctx.font = '10px monospace';
         for (let k = 0; k <= ticks; k++) {
             const u = k / ticks;
@@ -10023,9 +10061,9 @@
             const lcK = Math.round(lvfEstimateCenterAt(u));
             ctx.strokeStyle = '#475569';
             ctx.beginPath(); ctx.moveTo(tx, rulerY + rulerH - 5); ctx.lineTo(tx, rulerY + rulerH); ctx.stroke();
-            const xLbl = `${Math.round(u * lvfState.lengthMm)} mm`;
+            const xLbl = `${lvfFmt(u * lvfState.lengthMm, k === ticks ? lenDec : 0)} mm`;
             const lLbl = `${lcK} nm`;
-            const offX = k === ticks ? -40 : (k === 0 ? 4 : -18);
+            const offX = k === ticks ? -44 : (k === 0 ? 4 : -18);
             ctx.fillStyle = '#cbd5e1';
             ctx.fillText(xLbl, tx + offX, rulerY + 11);
             ctx.fillStyle = '#93c5fd';
@@ -10112,24 +10150,31 @@
 
         ctx.font = 'bold 9.5px Inter, system-ui, sans-serif';
         ctx.fillStyle = '#a5b4fc'; ctx.fillText(`■ Mat. 1 : ${lvfMatHLabel()} (H)`, padL + 2, topLegendY);
-        ctx.fillStyle = '#7dd3fc'; ctx.fillText('■ Mat. 2 : SiO₂ (L)', padL + 114, topLegendY);
-        ctx.fillStyle = lvfState.spacer === 'H' ? '#fbbf24' : '#34d399';
-        ctx.fillText(fr ? '■ Cavités (2×)' : '■ Cavities (2×)', padL + 220, topLegendY);
+        if (mainW >= 260) {
+            ctx.fillStyle = '#7dd3fc'; ctx.fillText('■ Mat. 2 : SiO₂ (L)', padL + 114, topLegendY);
+            ctx.fillStyle = lvfState.spacer === 'H' ? '#fbbf24' : '#34d399';
+            ctx.fillText(fr
+                ? `■ ${lvfState.cavities === 1 ? 'Cavité' : 'Cavités'} (${2 * lvfState.m}×)`
+                : `■ ${lvfState.cavities === 1 ? 'Cavity' : 'Cavities'} (${2 * lvfState.m}×)`, padL + 220, topLegendY);
+        }
         ctx.fillStyle = '#cbd5e1'; ctx.font = '10px monospace';
         const isFlat = Math.abs(maxThickNm - minThickNm) < 5;
         const thickSummary = isFlat
-            ? (fr ? `Uniforme : ${(maxThickNm / 1000).toFixed(2)} µm` : `Uniform: ${(maxThickNm / 1000).toFixed(2)} µm`)
-            : `${(minThickNm / 1000).toFixed(2)} → ${(maxThickNm / 1000).toFixed(2)} µm`;
-        ctx.fillText(thickSummary, mainX1 - Math.min(130, thickSummary.length * 6.3), topLegendY);
+            ? (fr ? `Uniforme : ${lvfFmt(maxThickNm / 1000, 2)} µm` : `Uniform: ${lvfFmt(maxThickNm / 1000, 2)} µm`)
+            : `${lvfFmt(minThickNm / 1000, 2)} → ${lvfFmt(maxThickNm / 1000, 2)} µm`;
+        if (mainW >= 360) ctx.fillText(thickSummary, mainX1 - Math.min(130, thickSummary.length * 6.3), topLegendY);
 
-        // 3. Draggable Optical Probe Beam at x0
+        // 3. Draggable Optical Probe Beam at x0 (clipped to [padL, mainX1])
         const beamX = padL + spec.u0 * mainW;
         const beamPx = Math.max(3, Math.min(28, (lvfState.spotUm / 1000.0 / lvfState.lengthMm) * mainW));
+        ctx.save();
+        ctx.beginPath(); ctx.rect(padL, 0, mainW, h); ctx.clip();
         ctx.fillStyle = 'rgba(251, 191, 36, 0.22)';
         ctx.fillRect(beamX - beamPx / 2, rulerY, beamPx, subY + subH - rulerY);
         ctx.strokeStyle = '#fbbf24';
         ctx.lineWidth = 2;
         ctx.beginPath(); ctx.moveTo(beamX, rulerY); ctx.lineTo(beamX, subY + subH); ctx.stroke();
+        ctx.restore();
         ctx.fillStyle = '#fbbf24';
         ctx.beginPath(); ctx.arc(beamX, rulerY, 5.5, 0, Math.PI * 2); ctx.fill();
         ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.6; ctx.stroke();
@@ -10199,7 +10244,7 @@
         }
 
         ctx.fillStyle = '#e2e8f0'; ctx.font = 'bold 10.5px monospace';
-        const spotLbl = lvfState.spotUm === 0 ? '0 µm' : (lvfState.spotUm >= 1000 ? `${(lvfState.spotUm / 1000).toFixed(2)} mm` : `${Math.round(lvfState.spotUm)} µm`);
+        const spotLbl = lvfState.spotUm === 0 ? '0 µm' : (lvfState.spotUm >= 1000 ? `${lvfFmt(lvfState.spotUm / 1000, 2)} mm` : `${Math.round(lvfState.spotUm)} µm`);
         ctx.fillText(`w = ${spotLbl}`, insetX + zPad, boxY + boxH - 24);
         ctx.fillStyle = '#fbbf24';
         ctx.fillText(`Δλ_spot = ${lvfFmt(spec.spotSpan, 1)} nm`, insetX + zPad, boxY + boxH - 8);
@@ -10625,6 +10670,7 @@
             if (spec.zArr) {
                 const cols = ['rgba(2,132,199,0.6)', 'rgba(16,185,129,0.8)', 'rgba(124,58,237,0.6)'];
                 spec.zArr.forEach((arr, idx) => {
+                    if (!arr) return;
                     ctx.strokeStyle = cols[idx]; ctx.lineWidth = idx === 1 ? 1.8 : 1.4;
                     ctx.beginPath();
                     for (let i = 0; i < spec.zWls.length; i++) {
@@ -10659,14 +10705,18 @@
         const Rres = Number.isFinite(spec.mw.fwhm) && spec.mw.fwhm > 0 ? lcShown / spec.mw.fwhm : NaN;
         const t0Pct = spec.m0.tMax * 100, twPct = spec.mw.tMax * 100;
         const setT = (id, t) => { const el = document.getElementById(id); if (el) el.textContent = t; };
+        const col = fr ? ' :' : ':', pct = fr ? ' %' : '%';
+        const edgeTag = spec.edgeClipped ? (fr ? ' (bord)' : ' (edge)') : '';
         setT('lvfKpiLc', `${lvfFmt(lcShown, 1)} nm`);
-        setT('lvfKpiLcSub', `Δlin : ${spec.linErr >= 0 ? '+' : ''}${lvfFmt(spec.linErr, 1)} nm`);
-        setT('lvfKpiTmax', `${lvfFmt(twPct, 1)} %`);
+        setT('lvfKpiLcSub', `Δlin${col} ${spec.linErr >= 0 ? '+' : ''}${lvfFmt(spec.linErr, 1)} nm${edgeTag}`);
+        setT('lvfKpiTmax', `${lvfFmt(twPct, 1)}${pct}`);
         setT('lvfKpiTmaxSub', `${lvfFmt(t0Pct, 1)}% → ${lvfFmt(twPct, 1)}%`);
         setT('lvfKpiFwhm', Number.isFinite(spec.mw.fwhm) ? `${lvfFmt(spec.mw.fwhm, 2)} nm` : '-- nm');
-        setT('lvfKpiFwhmSub', `R = ${Number.isFinite(Rres) ? Math.round(Rres) : '--'} · ${fr ? 'ponct.' : 'pt.'} ${Number.isFinite(spec.m0.fwhm) ? lvfFmt(spec.m0.fwhm, 2) + ' nm' : '--'}`);
+        setT('lvfKpiFwhmSub', `R = ${Number.isFinite(Rres) ? Math.round(Rres) : '--'} · ${fr ? 'ponct.' : 'w=0:'} ${Number.isFinite(spec.m0.fwhm) ? lvfFmt(spec.m0.fwhm, 2) + ' nm' : '--'}`);
         setT('lvfKpiSlope', `${lvfFmt(spec.gLoc, 1)} nm/mm`);
-        setT('lvfKpiSlopeSub', `Δλ spot : ${lvfFmt(spec.spotSpan, 1)} nm`);
+        setT('lvfKpiSlopeSub', lvfState.spotProfile === 'gauss'
+            ? `Δλ FWHM${col} ${lvfFmt(spec.spotFwhmSpan, 1)} nm`
+            : `Δλ spot${col} ${lvfFmt(spec.spotSpanEff, 1)} nm${edgeTag}`);
         setT('lvfKpiThick', `${lvfFmt(spec.thickNm / 1000, 2)} µm`);
         setT('lvfKpiThickSub', `sH = ${lvfFmt(spec.sc0.sH, 2)} · sL = ${lvfFmt(spec.sc0.sL, 2)}`);
 
@@ -10704,7 +10754,7 @@
         if (!fit) return;
         const { ctx, w, h } = fit;
         ctx.clearRect(0, 0, w, h);
-        const padL = 48, padR = 48, padT = 18, padB = 26;
+        const padL = 48, padR = 48, padT = 28, padB = 26;
         const pw = w - padL - padR, ph = h - padT - padB;
         const wMin = 350, wMax = Math.min(5000, Math.max(2500, Math.ceil((lvfState.l2 + 300) / 500) * 500));
         const toX = wl => padL + ((wl - wMin) / (wMax - wMin)) * pw;
@@ -10760,15 +10810,20 @@
         plotCurve(wl => toYk(lvfGetOpticalProps(wl).kH), '#e11d48', [4, 3], 1.6);
         ctx.font = 'bold 10px Inter, system-ui, sans-serif';
         const hLbl = lvfMatHLabel(), oLbl = otherH === 'Ta2O5_H800' ? 'Ta₂O₅' : 'Nb₂O₅';
-        ctx.fillStyle = '#4f46e5'; ctx.fillText(`n(${hLbl})`, padL + 8, padT + 10);
-        ctx.fillStyle = '#64748b'; ctx.fillText(`n(${oLbl})`, padL + 72, padT + 10);
-        ctx.fillStyle = '#0284c7'; ctx.fillText('n(SiO₂)', padL + 136, padT + 10);
-        ctx.fillStyle = '#e11d48'; ctx.fillText(`k(${hLbl})`, padL + 190, padT + 10);
+        ctx.fillStyle = '#4f46e5'; ctx.fillText(`n(${hLbl})`, padL + 8, 14);
+        ctx.fillStyle = '#64748b'; ctx.fillText(`n(${oLbl})`, padL + 72, 14);
+        ctx.fillStyle = '#0284c7'; ctx.fillText('n(SiO₂)', padL + 136, 14);
+        ctx.fillStyle = '#e11d48'; ctx.fillText(`k(${hLbl})`, padL + 190, 14);
     }
 
     function renderLvfAll(forceFamily = false) {
         if (forceFamily) lvfState.familyDirty = true;
         lvfComputeLocalSpec();
+        redrawLvfCanvases();
+    }
+
+    function redrawLvfCanvases() {
+        if (!lvfState.lastSpec) { renderLvfAll(false); return; }
         drawLvfBench();
         drawLvfGradEditor();
         drawLvfAnimSpectrum();
@@ -10789,10 +10844,18 @@
 
     function lvfSyncPlayLabels() {
         const txt = lvfState.playing ? 'Pause' : (currentLang === 'fr' ? 'Balayer' : 'Sweep');
+        const glyph = lvfState.playing ? '⏸' : '▶';
         const l1 = document.getElementById('lvfPlayLabel');
         const l2 = document.getElementById('lvfPlaySpecLabel');
+        const i1 = document.getElementById('lvfPlayIcon');
+        const i2 = document.getElementById('lvfPlaySpecIcon');
         if (l1) l1.textContent = txt;
         if (l2) l2.textContent = txt;
+        if (i1) i1.textContent = glyph;
+        if (i2) i2.textContent = glyph;
+        const p = lvfState.playing ? 'true' : 'false';
+        document.getElementById('lvfBtnPlay')?.setAttribute('aria-pressed', p);
+        document.getElementById('lvfBtnPlaySpec')?.setAttribute('aria-pressed', p);
     }
 
     function lvfStopPlay() {
@@ -10852,8 +10915,8 @@
         setT('lvfTitleSpan', 'Studio gradient LVF — Helios 800', 'LVF Gradient Studio — Helios 800');
         const mH = lvfMatHLabel();
         setT('lvfSubTitleText',
-            'Optics Continuum 5(12):3831 (2026) · UV–MWIR (252–5250 nm) · Substrat silice fondue fixe',
-            'Optics Continuum 5(12):3831 (2026) · UV–MWIR (252–5250 nm) · Fixed fused silica substrate');
+            'Optics Continuum 5(12):3831 (2026) · UV–MWIR (252–5250 nm) · Silice fondue semi-infinie (AR arrière)',
+            'Optics Continuum 5(12):3831 (2026) · UV–MWIR (252–5250 nm) · Semi-infinite fused silica (AR rear)');
         setT('lvfLblMatH', 'Mat. 1 (H) :', 'Mat. 1 (H):');
         setT('lvfSegSpH', `H (${mH})`, `H (${mH})`);
         setT('lvfLblExportCsv', 'CSV spectre', 'Spectrum CSV');
@@ -10872,11 +10935,12 @@
         lvfSyncPlayLabels();
         setT('lvfLblSpot', 'Spot w :', 'Spot w:');
         setT('lvfSegProfRect', 'Fente', 'Slit');
-        setT('lvfSegProfGauss', 'Gaussien', 'Gaussian');
+        setT('lvfSegProfGauss', 'Gaussien (1/e²)', 'Gaussian (1/e²)');
         setT('lvfLblArray', 'Barrette', 'Array');
+        document.getElementById('lvfSelPixel')?.setAttribute('aria-label', fr ? 'Pas des pixels de la barrette' : 'Array pixel pitch');
         setT('lvfNaText',
-            'ℹ Note physique (w ≤ 50 µm) : la convolution ci-dessous suppose une ouverture/pixel collée au LVF sous faisceau collimaté (θ = 0°). Un faisceau libre focalisé à 10 µm imposerait une ouverture numérique NA ≈ 1,22·λ/w (θ ≈ 4–12°), induisant un décalage vers le bleu supplémentaire.',
-            'ℹ Physics note (w ≤ 50 µm): the convolution below assumes a pixel/aperture in close proximity under a collimated beam (θ = 0°). A free-space beam focused to 10 µm imposes a numerical aperture NA ≈ 1.22·λ/w (θ ≈ 4–12°), adding a blueshift.');
+            'ℹ Note physique (w ≤ 50 µm) : la convolution ci-dessous suppose une ouverture/pixel collée au LVF sous faisceau collimaté (θ = 0°). Un faisceau libre focalisé à 10 µm imposerait une ouverture numérique NA ≈ 1,22·λ/w (tache d\'Airy, θ ≈ 3–12°), induisant un décalage vers le bleu supplémentaire.',
+            'ℹ Physics note (w ≤ 50 µm): the convolution below assumes a pixel/aperture in close proximity under a collimated beam (θ = 0°). A free-space beam focused to 10 µm imposes a numerical aperture NA ≈ 1.22·λ/w (Airy disk, θ ≈ 3–12°), adding a blueshift.');
         setT('lvfGradTitleSpan', "Profil d'épaisseur — Mat. 1 (H) & Mat. 2 (L)", 'Thickness profile — Mat. 1 (H) & Mat. 2 (L)');
         setT('lvfSegToolDraw', '✎ Dessin libre', '✎ Freehand');
         setT('lvfBtnSmooth', 'Lisser', 'Smooth');
@@ -10908,9 +10972,9 @@
             '<span><strong class="text-indigo-700">━━</strong> λc(x) simulée</span><span><strong>- - -</strong> Cible linéaire λ₁ → λ₂</span><span>Cliquez pour déplacer x₀</span>',
             '<span><strong class="text-indigo-700">━━</strong> Simulated λc(x)</span><span><strong>- - -</strong> Linear target λ₁ → λ₂</span><span>Click to move x₀</span>');
         setT('lvfDispSummary',
-            '▶ Courbes de dispersion n(λ) et extinction k(λ) — Nb₂O₅, Ta₂O₅ & SiO₂ (Helios 800, Optics Continuum 5(12):3831, 2026)',
-            '▶ Dispersion curves n(λ) and extinction k(λ) — Nb₂O₅, Ta₂O₅ & SiO₂ (Helios 800, Optics Continuum 5(12):3831, 2026)');
-        setT('lvfKpiLblLc', 'Centre λc (spot)', 'Centre λc (spot)');
+            'Courbes de dispersion n(λ) et extinction k(λ) — Nb₂O₅, Ta₂O₅ & SiO₂ (Helios 800, Optics Continuum 5(12):3831, 2026)',
+            'Dispersion curves n(λ) and extinction k(λ) — Nb₂O₅, Ta₂O₅ & SiO₂ (Helios 800, Optics Continuum 5(12):3831, 2026)');
+        setT('lvfKpiLblLc', 'Centre λc (spot)', 'Center λc (spot)');
         setT('lvfKpiLblTmax', 'Transmission T max', 'Peak T max');
         setT('lvfKpiLblFwhm', 'FWHM (spot) & Résolution', 'FWHM (spot) & Resolving power');
         setT('lvfKpiLblSlope', 'Pente & Excursion', 'Slope & Span');
@@ -10925,15 +10989,19 @@
     function exportLvfSpectrumCsv() {
         const spec = lvfState.lastSpec;
         if (!spec) return;
-        let csv = `# LVF Helios 800 ${lvfState.matH.replace('_H800','')}/SiO2 (Optics Continuum 5(12):3831, 2026) | formula=${lvfState.formulaStr} | x0=${spec.x0.toFixed(3)} mm | spot_um=${lvfState.spotUm.toFixed(1)}\n`;
-        csv += 'lambda_nm;T_pointwise_pct;T_spot_pct;R_pointwise_pct\n';
+        let csv = `# LVF Helios 800 ${lvfState.matH.replace('_H800','')}/SiO2 (Optics Continuum 5(12):3831, 2026) | formula=${lvfState.formulaStr} | range=${lvfState.l1}-${lvfState.l2}nm | L_mm=${lvfState.lengthMm} | x0=${spec.x0.toFixed(3)} mm | spot_um=${lvfState.spotUm.toFixed(1)} | profile=${lvfState.spotProfile} | sH=${spec.sc0.sH.toFixed(4)} | sL=${spec.sc0.sL.toFixed(4)}\n`;
+        csv += 'lambda_nm;T_pointwise_pct;T_spot_pct;R_pointwise_pct';
+        if (spec.zArr) csv += ';T_pix_m1_pct;T_pix_0_pct;T_pix_p1_pct';
+        csv += '\n';
         for (let i = 0; i < spec.zWls.length; i++) {
-            csv += [csvNum(spec.zWls[i], 2), csvNum(spec.zT0[i] * 100, 4), csvNum(spec.zTw[i] * 100, 4), csvNum(spec.zR0[i] * 100, 4)].join(';') + '\n';
+            const cols = [csvNum(spec.zWls[i], 2), csvNum(spec.zT0[i] * 100, 4), csvNum(spec.zTw[i] * 100, 4), csvNum(spec.zR0[i] * 100, 4)];
+            if (spec.zArr) spec.zArr.forEach(a => cols.push(a ? csvNum(a[i] * 100, 4) : ''));
+            csv += cols.join(';') + '\n';
         }
         const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = `lvf_spectrum_x${Math.round(spec.x0)}mm.csv`;
+        link.download = `lvf_spectrum_x${spec.x0.toFixed(1)}mm.csv`;
         link.click();
         setTimeout(() => URL.revokeObjectURL(link.href), 1000);
     }
@@ -11336,8 +11404,12 @@
         }
 
         if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+            let lvfResizeRaf = null;
             window.addEventListener('resize', () => {
-                if (!document.getElementById('lvfStudioPanel')?.classList.contains('hidden')) renderLvfAll(false);
+                if (document.getElementById('lvfStudioPanel')?.classList.contains('hidden')) return;
+                if (lvfResizeRaf && typeof cancelAnimationFrame === 'function') cancelAnimationFrame(lvfResizeRaf);
+                const run = () => { lvfResizeRaf = null; redrawLvfCanvases(); };
+                lvfResizeRaf = typeof requestAnimationFrame === 'function' ? requestAnimationFrame(run) : (run(), null);
             });
         }
     }
